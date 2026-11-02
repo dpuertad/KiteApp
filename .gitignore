@@ -1,0 +1,17 @@
+# Credentials & Secrets (Never commit secrets!)
+.env
+*.env
+*credentials*
+*secret*
+*password*
+*passwords*
+*.pem
+*.key
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local forecast cache
+forecast_cache.json
