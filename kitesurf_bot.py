@@ -38,7 +38,7 @@ SSL_CTX = ssl._create_unverified_context()
 REPLY_KEYBOARD = {
     "keyboard": [
         [{"text": "📍 Send Current Location & Report", "request_location": True}],
-        [{"text": "/report"}, {"text": "/kites"}]
+        [{"text": "/report"}, {"text": "/report tomorrow"}, {"text": "/kites"}]
     ],
     "resize_keyboard": True,
     "persistent": True
@@ -163,6 +163,11 @@ def degrees_to_cardinal(deg: float) -> str:
 
 
 def fetch_tides(lat: float, lon: float, timezone_str: str = "auto") -> list:
+    today_tides, _ = fetch_tides_both_days(lat, lon, timezone_str)
+    return today_tides
+
+
+def fetch_tides_both_days(lat: float, lon: float, timezone_str: str = "auto") -> tuple:
     url = (
         f"https://marine-api.open-meteo.com/v1/marine?"
         f"latitude={lat}&longitude={lon}&hourly=sea_level_height_msl&timezone={timezone_str}&forecast_days=2"
@@ -175,22 +180,30 @@ def fetch_tides(lat: float, lon: float, timezone_str: str = "auto") -> list:
         times = data.get("hourly", {}).get("time", [])
         levels = data.get("hourly", {}).get("sea_level_height_msl", [])
         if not times or not levels:
-            return []
+            return [], []
 
-        tides = []
-        for i in range(1, min(24, len(levels) - 1)):
+        today_tides = []
+        tomorrow_tides = []
+        for i in range(1, len(levels) - 1):
             prev_l, curr_l, next_l = levels[i-1], levels[i], levels[i+1]
             if curr_l is not None and prev_l is not None and next_l is not None:
                 time_str = times[i][-5:]
+                tide_item = None
                 if curr_l > prev_l and curr_l >= next_l:
-                    tides.append({"type": "High", "time": time_str, "height": curr_l})
+                    tide_item = {"type": "High", "time": time_str, "height": curr_l}
                 elif curr_l < prev_l and curr_l <= next_l:
-                    tides.append({"type": "Low", "time": time_str, "height": curr_l})
+                    tide_item = {"type": "Low", "time": time_str, "height": curr_l}
+                
+                if tide_item:
+                    if i < 24:
+                        today_tides.append(tide_item)
+                    else:
+                        tomorrow_tides.append(tide_item)
 
-        return tides
+        return today_tides, tomorrow_tides
     except Exception as e:
         print(f"Error fetching tides: {e}")
-        return []
+        return [], []
 
 
 def fetch_weather_openmeteo(spot: dict) -> dict:
@@ -201,7 +214,7 @@ def fetch_weather_openmeteo(spot: dict) -> dict:
         "hourly": "temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m",
         "wind_speed_unit": "kn",
         "timezone": spot.get("timezone", "auto"),
-        "forecast_days": 1
+        "forecast_days": 2
     }
     url = f"https://api.open-meteo.com/v1/forecast?{urllib.parse.urlencode(params)}"
     req = urllib.request.Request(url, headers={"User-Agent": "KiteForecastBot/1.0"})
@@ -225,6 +238,7 @@ def fetch_weather_openmeteo(spot: dict) -> dict:
         "Sunset (17:00)": 17
     }
 
+    # Today schedule (Day 0: 0..23)
     schedule = {}
     for label, hr in target_hours.items():
         if hr < len(speeds):
@@ -235,25 +249,46 @@ def fetch_weather_openmeteo(spot: dict) -> dict:
                 "temp": round(temps[hr], 1)
             }
 
+    # Tomorrow schedule (Day 1: 24..47)
+    schedule_tomorrow = {}
+    for label, hr in target_hours.items():
+        tmrw_hr = hr + 24
+        if tmrw_hr < len(speeds):
+            schedule_tomorrow[label] = {
+                "wind_kts": round(speeds[tmrw_hr], 1),
+                "gust_kts": round(gusts[tmrw_hr], 1),
+                "direction": degrees_to_cardinal(directions[tmrw_hr]),
+                "temp": round(temps[tmrw_hr], 1)
+            }
+
     cur_wind = round(current.get("wind_speed_10m", speeds[12] if len(speeds) > 12 else 16.0), 1)
     cur_gust = round(current.get("wind_gusts_10m", gusts[12] if len(gusts) > 12 else cur_wind), 1)
     cur_dir = degrees_to_cardinal(current.get("wind_direction_10m", 90))
     cur_temp = round(current.get("temperature_2m", 28.5), 1)
 
+    today_temps = temps[:24] if len(temps) >= 24 else temps
+    today_gusts = gusts[:24] if len(gusts) >= 24 else gusts
+    tmrw_temps = temps[24:48] if len(temps) >= 48 else temps
+    tmrw_gusts = gusts[24:48] if len(gusts) >= 48 else gusts
+
     return {
         "spot": spot["name"],
         "timezone": spot_tz,
         "utc_offset_seconds": utc_offset,
-        "temp_min": round(min(temps), 1) if temps else 25,
-        "temp_max": round(max(temps), 1) if temps else 31,
-        "max_gust": round(max(gusts), 1) if gusts else cur_gust,
+        "temp_min": round(min(today_temps), 1) if today_temps else 25,
+        "temp_max": round(max(today_temps), 1) if today_temps else 31,
+        "max_gust": round(max(today_gusts), 1) if today_gusts else cur_gust,
+        "tomorrow_temp_min": round(min(tmrw_temps), 1) if tmrw_temps else 25,
+        "tomorrow_temp_max": round(max(tmrw_temps), 1) if tmrw_temps else 31,
+        "tomorrow_max_gust": round(max(tmrw_gusts), 1) if tmrw_gusts else 26,
         "current": {
             "wind_kts": cur_wind,
             "gust_kts": cur_gust,
             "direction": cur_dir,
             "temp": cur_temp
         },
-        "schedule": schedule
+        "schedule": schedule,
+        "schedule_tomorrow": schedule_tomorrow
     }
 
 
@@ -280,6 +315,13 @@ def fetch_weather_metno(spot: dict) -> dict:
         "Sunset (17:00)": {"wind_kts": max(10, cur_wind - 3), "gust_kts": max(14, cur_gust - 3), "direction": cur_dir, "temp": cur_temp - 1}
     }
 
+    schedule_tomorrow = {
+        "Morning (09:00)": {"wind_kts": cur_wind, "gust_kts": cur_gust, "direction": cur_dir, "temp": cur_temp},
+        "Midday (12:00)": {"wind_kts": cur_wind + 1.0, "gust_kts": cur_gust + 2.0, "direction": cur_dir, "temp": cur_temp + 1},
+        "Afternoon (15:00)": {"wind_kts": max(12, cur_wind), "gust_kts": cur_gust, "direction": cur_dir, "temp": cur_temp},
+        "Sunset (17:00)": {"wind_kts": max(10, cur_wind - 2), "gust_kts": max(14, cur_gust - 2), "direction": cur_dir, "temp": cur_temp - 1}
+    }
+
     approx_offset = round(spot.get("lon", -38.7297) / 15.0) * 3600
     return {
         "spot": spot["name"],
@@ -288,13 +330,17 @@ def fetch_weather_metno(spot: dict) -> dict:
         "temp_min": round(cur_temp - 3, 1),
         "temp_max": round(cur_temp + 2, 1),
         "max_gust": max(s["gust_kts"] for s in schedule.values()),
+        "tomorrow_temp_min": round(cur_temp - 3, 1),
+        "tomorrow_temp_max": round(cur_temp + 2, 1),
+        "tomorrow_max_gust": max(s["gust_kts"] for s in schedule_tomorrow.values()),
         "current": {
             "wind_kts": cur_wind,
             "gust_kts": cur_gust,
             "direction": cur_dir,
             "temp": cur_temp
         },
-        "schedule": schedule
+        "schedule": schedule,
+        "schedule_tomorrow": schedule_tomorrow
     }
 
 
@@ -320,16 +366,27 @@ def fetch_live_forecast(spot: dict) -> dict:
             "temp_min": 25.5,
             "temp_max": 30.5,
             "max_gust": 28.0,
+            "tomorrow_temp_min": 25.0,
+            "tomorrow_temp_max": 31.0,
+            "tomorrow_max_gust": 26.0,
             "current": {"wind_kts": 16.0, "gust_kts": 25.0, "direction": "E", "temp": 29.0},
             "schedule": {
                 "Morning (09:00)": {"wind_kts": 15.0, "gust_kts": 24.0, "direction": "ESE", "temp": 27.5},
                 "Midday (12:00)": {"wind_kts": 18.0, "gust_kts": 28.0, "direction": "E", "temp": 30.0},
                 "Afternoon (15:00)": {"wind_kts": 16.5, "gust_kts": 26.0, "direction": "E", "temp": 29.5},
                 "Sunset (17:00)": {"wind_kts": 13.0, "gust_kts": 22.0, "direction": "E", "temp": 28.0}
+            },
+            "schedule_tomorrow": {
+                "Morning (09:00)": {"wind_kts": 14.5, "gust_kts": 23.0, "direction": "ESE", "temp": 27.0},
+                "Midday (12:00)": {"wind_kts": 17.5, "gust_kts": 27.0, "direction": "E", "temp": 29.5},
+                "Afternoon (15:00)": {"wind_kts": 16.0, "gust_kts": 25.0, "direction": "E", "temp": 29.0},
+                "Sunset (17:00)": {"wind_kts": 12.5, "gust_kts": 21.0, "direction": "E", "temp": 27.5}
             }
         }
 
-    forecast["tides"] = fetch_tides(spot["lat"], spot["lon"], spot.get("timezone", "auto"))
+    today_tides, tomorrow_tides = fetch_tides_both_days(spot["lat"], spot["lon"], spot.get("timezone", "auto"))
+    forecast["tides"] = today_tides
+    forecast["tides_tomorrow"] = tomorrow_tides
     try:
         with open(CACHE_FILE, "w", encoding="utf-8") as f:
             json.dump(forecast, f)
@@ -457,6 +514,60 @@ def format_briefing(forecast: dict, user_profile: dict) -> str:
     return "\n".join(lines)
 
 
+def format_tomorrow_report(forecast: dict, user_profile: dict, is_evening_auto: bool = False) -> str:
+    spot = user_profile.get("spot", {})
+    spot_now = get_spot_local_now(spot, forecast.get("utc_offset_seconds"))
+    tomorrow_date = spot_now + timedelta(days=1)
+    
+    local_time_str = spot_now.strftime("%H:%M")
+    tomorrow_date_str = tomorrow_date.strftime("%A, %b %d")
+
+    rider_name = user_profile.get("rider_name", "Kiter")
+    weight = user_profile.get("rider_weight_kg", 75.0)
+    board = user_profile.get("board_type", "Twintip")
+
+    inventory = user_profile.get("inventory", [])
+    active_kites = [k for k in inventory if k.get("active", True)]
+
+    t_min = forecast.get("tomorrow_temp_min", forecast.get("temp_min", 25))
+    t_max = forecast.get("tomorrow_temp_max", forecast.get("temp_max", 31))
+    max_gust = forecast.get("tomorrow_max_gust", forecast.get("max_gust", 26))
+
+    quiver_header_lines = []
+    for k in active_kites:
+        yr = f" ({k['year']})" if k.get("year") else ""
+        quiver_header_lines.append(f"  • {k['brand']} {k['model']}{yr} {k['size']}m")
+    quiver_str = "\n".join(quiver_header_lines) if quiver_header_lines else "  • No active kites selected"
+
+    lines = [
+        f"🌅 *Tomorrow's Kitesurf Forecast: {forecast['spot']}*",
+        f"📅 *Date:* {tomorrow_date_str} (Day After)",
+        f"📍 *Spot Local Time:* {local_time_str}",
+        f"👤 *Rider:* {rider_name} · {weight}kg ({board})",
+        f"🎒 *Available Quiver:*",
+        quiver_str,
+        f"\n🌡 *Temp:* {t_min}°C – {t_max}°C · 💨 *Max Gusts:* {max_gust} kts"
+    ]
+
+    if is_evening_auto:
+        lines.append(f"\n_🌙 Past 17:00 local time — showing tomorrow's forecast so you can pack your gear tonight!_")
+    else:
+        lines.append(f"\n_📋 Showing requested tomorrow's forecast:_")
+
+    lines.append(f"\n🌬 *Tomorrow's Rigging Schedule:*")
+    schedule = forecast.get("schedule_tomorrow") or forecast.get("schedule", {})
+    for slot_name, slot in schedule.items():
+        rec = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"])
+        lines.append(f"• *{slot_name}:* {slot['wind_kts']} kts (gusts {slot['gust_kts']} kts, {slot.get('direction', 'E')}) → {rec}")
+
+    lines.append(f"\n🌊 *Tomorrow's Tides:*")
+    lines.append(format_tides_text(forecast.get("tides_tomorrow", [])))
+
+    lines.append("\n_Tip: For live conditions right now, type `/report today`._")
+    lines.append("_On a new spot? Tap the button below to update via phone GPS!_")
+    return "\n".join(lines)
+
+
 def format_realtime_report(forecast: dict, user_profile: dict) -> str:
     spot = user_profile.get("spot", {})
     spot_now = get_spot_local_now(spot, forecast.get("utc_offset_seconds"))
@@ -486,7 +597,7 @@ def format_realtime_report(forecast: dict, user_profile: dict) -> str:
         f"🌬 *Wind Right Now:*",
         f"• *Speed:* *{wind_kts} knots* (Gusts: *{gust_kts} knots*, {direct})",
         f"• *Right Now Recommendation:* → {rec}\n",
-        f"🌊 *Tides:*",
+        f"🌊 *Tides Today:*",
         format_tides_text(forecast.get("tides", [])),
         f"\n📅 *Upcoming Today:*"
     ]
@@ -495,7 +606,8 @@ def format_realtime_report(forecast: dict, user_profile: dict) -> str:
         r = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"])
         lines.append(f"• *{slot_name}:* {slot['wind_kts']} kts (gusts {slot['gust_kts']} kts) → {r}")
 
-    lines.append("\n_Tip: On a new spot? Tap the button below to update via phone GPS!_")
+    lines.append("\n_Tip: Type `/report tomorrow` anytime to see tomorrow's forecast!_")
+    lines.append("_On a new spot? Tap the button below to update via phone GPS!_")
     return "\n".join(lines)
 
 
@@ -653,7 +765,11 @@ def handle_telegram_command(text: str, message_obj: dict, config: dict) -> str:
         }
         save_config(config)
         forecast = fetch_live_forecast(user_profile["spot"])
-        report = format_realtime_report(forecast, user_profile)
+        spot_now = get_spot_local_now(user_profile["spot"], forecast.get("utc_offset_seconds"))
+        if spot_now.hour >= 17:
+            report = format_tomorrow_report(forecast, user_profile, is_evening_auto=True)
+        else:
+            report = format_realtime_report(forecast, user_profile)
         return f"📍 *GPS Position Updated for {user_profile['rider_name']}:* {spot_name}\n\n" + report
 
     cmd = text.strip()
@@ -670,8 +786,10 @@ def handle_telegram_command(text: str, message_obj: dict, config: dict) -> str:
             "   • `/kite 1 Duotone Rebel SLS 11`\n"
             "   • `/kite 2 Core XR8 9`\n"
             "   • `/kite 3 North Orbit 8`\n"
-            "3️⃣ *Get live report:* Tap the button below!\n"
-            "   👉 `[ 📍 Send Current Location & Report ]`\n\n"
+            "3️⃣ *Get report:* Tap a button below!\n"
+            "   👉 `[ 📍 Send Current Location & Report ]`\n"
+            "   👉 `[ /report ]` (Live today, or auto-tomorrow after 17:00!)\n"
+            "   👉 `[ /report tomorrow ]` (Forecast for tomorrow anytime)\n\n"
             "_All calculations and wind ranges are tuned specifically to YOU and YOUR bag!_"
         )
         return welcome_intro
@@ -689,10 +807,22 @@ def handle_telegram_command(text: str, message_obj: dict, config: dict) -> str:
     elif cmd.startswith("/setup") or cmd.startswith("/help"):
         return get_user_kites_list_text(user_profile)
 
-    elif cmd.startswith("/report") or cmd.startswith("/now"):
-        parts = cmd.split(maxsplit=1)
-        if len(parts) > 1 and parts[1].strip():
-            target_spot = parts[1].strip()
+    elif cmd.startswith("/report") or cmd.startswith("/now") or cmd.startswith("/tomorrow"):
+        cmd_lower = cmd.lower()
+        force_tomorrow = any(w in cmd_lower for w in ["tomorrow", "tmrw", "manana", "mañana"]) or cmd.startswith("/tomorrow")
+        force_today = any(w in cmd_lower for w in ["today", "hoy"])
+
+        clean_text = cmd
+        for prefix in ["/report", "/now", "/tomorrow"]:
+            if clean_text.lower().startswith(prefix):
+                clean_text = clean_text[len(prefix):].strip()
+                break
+
+        words = clean_text.split()
+        spot_words = [w for w in words if w.lower() not in ["tomorrow", "tmrw", "manana", "mañana", "today", "hoy"]]
+        target_spot = " ".join(spot_words).strip()
+
+        if target_spot:
             lat, lon, resolved_name = geocode_place_name(target_spot)
             if lat and lon:
                 user_profile["spot"] = {
@@ -704,7 +834,14 @@ def handle_telegram_command(text: str, message_obj: dict, config: dict) -> str:
                 save_config(config)
 
         forecast = fetch_live_forecast(user_profile["spot"])
-        return format_realtime_report(forecast, user_profile)
+        spot_now = get_spot_local_now(user_profile["spot"], forecast.get("utc_offset_seconds"))
+
+        if force_tomorrow:
+            return format_tomorrow_report(forecast, user_profile, is_evening_auto=False)
+        elif not force_today and spot_now.hour >= 17:
+            return format_tomorrow_report(forecast, user_profile, is_evening_auto=True)
+        else:
+            return format_realtime_report(forecast, user_profile)
 
     elif cmd.startswith("/kites"):
         return get_user_kites_list_text(user_profile)
