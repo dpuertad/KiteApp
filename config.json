@@ -1,0 +1,42 @@
+{
+  "telegram_token": "9295432294:AAFK0ZZz_Gww6ewx7D-YpbYTvfbHdU9ogyc",
+  "admin_id": "7424865438",
+  "users": {
+    "7424865438": {
+      "user_id": 7424865438,
+      "rider_name": "Daniel",
+      "rider_weight_kg": 75.0,
+      "board_type": "Twintip",
+      "spot": {
+        "name": "Cumbuco, Brazil",
+        "lat": -3.6247,
+        "lon": -38.7297,
+        "timezone": "America/Fortaleza"
+      },
+      "inventory": [
+        {
+          "brand": "Core",
+          "model": "XR8",
+          "year": 2024,
+          "size": 7,
+          "active": true
+        },
+        {
+          "brand": "Core",
+          "model": "XR8",
+          "year": 2023,
+          "size": 9,
+          "active": true
+        },
+        {
+          "brand": "Duotone",
+          "model": "Dice SLS",
+          "year": 2023,
+          "size": 11,
+          "active": true
+        }
+      ],
+      "morning_briefing": true
+    }
+  }
+}

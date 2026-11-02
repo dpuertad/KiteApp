@@ -1,0 +1,2 @@
+# KiteForecast Bot requires Python 3.9+ with built-in libraries (urllib, json, ssl, zoneinfo, math)
+# Zero external package dependencies needed!
