@@ -153,6 +153,18 @@ def get_spot_local_now(spot: dict, utc_offset_seconds: int = None) -> datetime:
     return datetime.now(timezone(timedelta(hours=approx_hours)))
 
 
+def round_knots(kts) -> int:
+    """Rounds wind knots to a plain integer.
+    Rounds down if decimal <= .4, rounds up if decimal >= .6 (or .5).
+    Example: 15.1 -> 15, 15.4 -> 15, 15.6 -> 16, 16.1 -> 16.
+    """
+    try:
+        val = float(kts)
+        return int(math.floor(val + 0.5))
+    except (ValueError, TypeError):
+        return 0
+
+
 def degrees_to_cardinal(deg: float) -> str:
     dirs = [
         "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
@@ -243,8 +255,8 @@ def fetch_weather_openmeteo(spot: dict) -> dict:
     for label, hr in target_hours.items():
         if hr < len(speeds):
             schedule[label] = {
-                "wind_kts": round(speeds[hr], 1),
-                "gust_kts": round(gusts[hr], 1),
+                "wind_kts": round_knots(speeds[hr]),
+                "gust_kts": round_knots(gusts[hr]),
                 "direction": degrees_to_cardinal(directions[hr]),
                 "temp": round(temps[hr], 1)
             }
@@ -255,14 +267,14 @@ def fetch_weather_openmeteo(spot: dict) -> dict:
         tmrw_hr = hr + 24
         if tmrw_hr < len(speeds):
             schedule_tomorrow[label] = {
-                "wind_kts": round(speeds[tmrw_hr], 1),
-                "gust_kts": round(gusts[tmrw_hr], 1),
+                "wind_kts": round_knots(speeds[tmrw_hr]),
+                "gust_kts": round_knots(gusts[tmrw_hr]),
                 "direction": degrees_to_cardinal(directions[tmrw_hr]),
                 "temp": round(temps[tmrw_hr], 1)
             }
 
-    cur_wind = round(current.get("wind_speed_10m", speeds[12] if len(speeds) > 12 else 16.0), 1)
-    cur_gust = round(current.get("wind_gusts_10m", gusts[12] if len(gusts) > 12 else cur_wind), 1)
+    cur_wind = round_knots(current.get("wind_speed_10m", speeds[12] if len(speeds) > 12 else 16.0))
+    cur_gust = round_knots(current.get("wind_gusts_10m", gusts[12] if len(gusts) > 12 else cur_wind))
     cur_dir = degrees_to_cardinal(current.get("wind_direction_10m", 90))
     cur_temp = round(current.get("temperature_2m", 28.5), 1)
 
@@ -277,10 +289,10 @@ def fetch_weather_openmeteo(spot: dict) -> dict:
         "utc_offset_seconds": utc_offset,
         "temp_min": round(min(today_temps), 1) if today_temps else 25,
         "temp_max": round(max(today_temps), 1) if today_temps else 31,
-        "max_gust": round(max(today_gusts), 1) if today_gusts else cur_gust,
+        "max_gust": round_knots(max(today_gusts) if today_gusts else cur_gust),
         "tomorrow_temp_min": round(min(tmrw_temps), 1) if tmrw_temps else 25,
         "tomorrow_temp_max": round(max(tmrw_temps), 1) if tmrw_temps else 31,
-        "tomorrow_max_gust": round(max(tmrw_gusts), 1) if tmrw_gusts else 26,
+        "tomorrow_max_gust": round_knots(max(tmrw_gusts) if tmrw_gusts else 26),
         "current": {
             "wind_kts": cur_wind,
             "gust_kts": cur_gust,
@@ -303,8 +315,8 @@ def fetch_weather_metno(spot: dict) -> dict:
         raise ValueError("Empty timeseries from Met.no")
 
     cur_details = series[0]["data"]["instant"]["details"]
-    cur_wind = round(cur_details["wind_speed"] * 1.94384, 1)
-    cur_gust = round(cur_details.get("wind_speed_of_gust", cur_details["wind_speed"]) * 1.94384, 1)
+    cur_wind = round_knots(cur_details["wind_speed"] * 1.94384)
+    cur_gust = round_knots(cur_details.get("wind_speed_of_gust", cur_details["wind_speed"]) * 1.94384)
     cur_temp = round(cur_details["air_temperature"], 1)
     cur_dir = degrees_to_cardinal(cur_details.get("wind_from_direction", 90))
 
@@ -317,7 +329,7 @@ def fetch_weather_metno(spot: dict) -> dict:
 
     schedule_tomorrow = {
         "Morning (09:00)": {"wind_kts": cur_wind, "gust_kts": cur_gust, "direction": cur_dir, "temp": cur_temp},
-        "Midday (12:00)": {"wind_kts": cur_wind + 1.0, "gust_kts": cur_gust + 2.0, "direction": cur_dir, "temp": cur_temp + 1},
+        "Midday (12:00)": {"wind_kts": cur_wind + 1, "gust_kts": cur_gust + 2, "direction": cur_dir, "temp": cur_temp + 1},
         "Afternoon (15:00)": {"wind_kts": max(12, cur_wind), "gust_kts": cur_gust, "direction": cur_dir, "temp": cur_temp},
         "Sunset (17:00)": {"wind_kts": max(10, cur_wind - 2), "gust_kts": max(14, cur_gust - 2), "direction": cur_dir, "temp": cur_temp - 1}
     }
@@ -329,10 +341,10 @@ def fetch_weather_metno(spot: dict) -> dict:
         "utc_offset_seconds": approx_offset,
         "temp_min": round(cur_temp - 3, 1),
         "temp_max": round(cur_temp + 2, 1),
-        "max_gust": max(s["gust_kts"] for s in schedule.values()),
+        "max_gust": round_knots(max(s["gust_kts"] for s in schedule.values())),
         "tomorrow_temp_min": round(cur_temp - 3, 1),
         "tomorrow_temp_max": round(cur_temp + 2, 1),
-        "tomorrow_max_gust": max(s["gust_kts"] for s in schedule_tomorrow.values()),
+        "tomorrow_max_gust": round_knots(max(s["gust_kts"] for s in schedule_tomorrow.values())),
         "current": {
             "wind_kts": cur_wind,
             "gust_kts": cur_gust,
@@ -447,9 +459,9 @@ def recommend_from_available_quiver(weight_kg: float, active_inventory: list, wi
     mins = [k["min_k"] for k in evaluated]
     maxs = [k["max_k"] for k in evaluated]
     if wind_kts < min(mins):
-        return f"⚠️ Wind too light (<{round(min(mins))} kts for your quiver)"
+        return f"⚠️ Wind too light (<{round_knots(min(mins))} kts for your quiver)"
     if wind_kts > max(maxs):
-        return f"🚨 Wind too strong (>{round(max(maxs))} kts for your quiver)"
+        return f"🚨 Wind too strong (>{round_knots(max(maxs))} kts for your quiver)"
 
     nearest = min(evaluated, key=lambda k: k["dist_to_sweet"])
     return f"Rig {nearest['display_name']} (Marginal)"
@@ -502,13 +514,15 @@ def format_briefing(forecast: dict, user_profile: dict) -> str:
 
     for slot_name, slot in forecast["schedule"].items():
         rec = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"])
+        w_kts = round_knots(slot['wind_kts'])
+        g_kts = round_knots(slot['gust_kts'])
         lines.append(
-            f"• *{slot_name}:* {slot['wind_kts']} kts (gusts {slot['gust_kts']} kts, {slot['direction']}) "
+            f"• *{slot_name}:* {w_kts} kts (gusts {g_kts} kts, {slot['direction']}) "
             f"→ {rec}"
         )
 
     if forecast["max_gust"] >= GUST_WARNING_THRESHOLD_KTS:
-        lines.append(f"\n⚠️ *Gust Alert:* Max gusts reaching *{forecast['max_gust']} knots* today.")
+        lines.append(f"\n⚠️ *Gust Alert:* Max gusts reaching *{round_knots(forecast['max_gust'])} knots* today.")
 
     lines.append("\n_Need live conditions? Tap below for /report_")
     return "\n".join(lines)
@@ -531,7 +545,7 @@ def format_tomorrow_report(forecast: dict, user_profile: dict, is_evening_auto: 
 
     t_min = forecast.get("tomorrow_temp_min", forecast.get("temp_min", 25))
     t_max = forecast.get("tomorrow_temp_max", forecast.get("temp_max", 31))
-    max_gust = forecast.get("tomorrow_max_gust", forecast.get("max_gust", 26))
+    max_gust = round_knots(forecast.get("tomorrow_max_gust", forecast.get("max_gust", 26)))
 
     quiver_header_lines = []
     for k in active_kites:
@@ -558,7 +572,9 @@ def format_tomorrow_report(forecast: dict, user_profile: dict, is_evening_auto: 
     schedule = forecast.get("schedule_tomorrow") or forecast.get("schedule", {})
     for slot_name, slot in schedule.items():
         rec = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"])
-        lines.append(f"• *{slot_name}:* {slot['wind_kts']} kts (gusts {slot['gust_kts']} kts, {slot.get('direction', 'E')}) → {rec}")
+        w_kts = round_knots(slot['wind_kts'])
+        g_kts = round_knots(slot['gust_kts'])
+        lines.append(f"• *{slot_name}:* {w_kts} kts (gusts {g_kts} kts, {slot.get('direction', 'E')}) → {rec}")
 
     lines.append(f"\n🌊 *Tomorrow's Tides:*")
     lines.append(format_tides_text(forecast.get("tides_tomorrow", [])))
@@ -582,8 +598,8 @@ def format_realtime_report(forecast: dict, user_profile: dict) -> str:
     active_kites = [k for k in inventory if k.get("active", True)]
 
     cur = forecast.get("current", {})
-    wind_kts = cur.get("wind_kts", 16.0)
-    gust_kts = cur.get("gust_kts", 22.0)
+    wind_kts = round_knots(cur.get("wind_kts", 16.0))
+    gust_kts = round_knots(cur.get("gust_kts", 22.0))
     direct = cur.get("direction", "E")
     temp = cur.get("temp", 28.0)
 
@@ -604,7 +620,9 @@ def format_realtime_report(forecast: dict, user_profile: dict) -> str:
 
     for slot_name, slot in forecast.get("schedule", {}).items():
         r = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"])
-        lines.append(f"• *{slot_name}:* {slot['wind_kts']} kts (gusts {slot['gust_kts']} kts) → {r}")
+        w_kts = round_knots(slot['wind_kts'])
+        g_kts = round_knots(slot['gust_kts'])
+        lines.append(f"• *{slot_name}:* {w_kts} kts (gusts {g_kts} kts) → {r}")
 
     lines.append("\n_Tip: Type `/report tomorrow` anytime to see tomorrow's forecast!_")
     lines.append("_On a new spot? Tap the button below to update via phone GPS!_")
