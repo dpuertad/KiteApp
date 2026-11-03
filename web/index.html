@@ -108,11 +108,6 @@
             <p id="backpack-count-badge" class="text-[11px] text-slate-400">🎒 0 in backpack · 0 at home</p>
           </div>
         </div>
-
-        <button onclick="toggleModal('modal-profile')" class="text-xs font-medium text-sky-400 hover:text-sky-300 flex items-center space-x-1 bg-slate-800/80 px-2.5 py-1.5 rounded-lg border border-slate-700/80">
-          <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
-          <span>Setup</span>
-        </button>
       </div>
 
       <!-- Quick Weight Control -->
@@ -144,7 +139,7 @@
           </span>
           <span>LIVE CONDITIONS</span>
         </span>
-        <span id="live-time-str">12:00 Local</span>
+        <span id="live-time-str" class="font-mono font-medium text-slate-300">--:-- Local</span>
       </div>
 
       <!-- Live Wind & Compass Row -->
@@ -157,20 +152,32 @@
           <div class="text-xs text-slate-400 mt-1 flex items-center space-x-2">
             <span>Gusts: <strong id="live-gust-kts" class="text-slate-200 font-semibold">-- kts</strong></span>
             <span>•</span>
-            <span id="live-temp-str">28°C</span>
+            <span id="live-temp-str">--°C</span>
           </div>
         </div>
 
         <!-- Compass Visual -->
         <div class="flex flex-col items-center">
-          <div class="relative w-16 h-16 rounded-full bg-slate-950/80 border border-slate-700/80 flex items-center justify-center shadow-inner">
-            <!-- Compass needle -->
-            <div id="compass-needle" class="compass-arrow absolute w-full h-full flex items-center justify-center">
-              <div class="w-1.5 h-7 bg-gradient-to-t from-transparent via-sky-400 to-cyan-300 rounded-full -translate-y-2.5 shadow-md shadow-sky-400/50"></div>
+          <div class="relative w-16 h-16 rounded-full bg-slate-950 border border-slate-700/80 flex items-center justify-center shadow-inner select-none">
+            <!-- Compass Dial Markers -->
+            <span class="absolute top-1 text-[8px] font-bold text-slate-500 font-mono">N</span>
+            <span class="absolute right-1 text-[8px] font-bold text-slate-500 font-mono">E</span>
+            <span class="absolute bottom-1 text-[8px] font-bold text-slate-500 font-mono">S</span>
+            <span class="absolute left-1 text-[8px] font-bold text-slate-500 font-mono">W</span>
+
+            <!-- Compass Needle / Wind Direction Arrow -->
+            <div id="compass-needle" class="absolute w-full h-full flex items-center justify-center transition-transform duration-700 ease-out" style="transform: rotate(90deg);">
+              <div class="flex flex-col items-center h-full justify-between py-1.5 pointer-events-none">
+                <!-- Arrowhead pointing in wind direction -->
+                <div class="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-b-[8px] border-b-cyan-400 drop-shadow-[0_0_6px_rgba(56,189,248,0.8)]"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-slate-600/80"></div>
+              </div>
             </div>
-            <span id="compass-cardinal" class="text-xs font-black text-white relative z-10">E</span>
+
+            <!-- Cardinal center label -->
+            <span id="compass-cardinal" class="text-[11px] font-black text-white relative z-10 bg-slate-900/95 px-1.5 py-0.5 rounded border border-slate-800 shadow">--</span>
           </div>
-          <span id="compass-degrees" class="text-[10px] text-slate-400 mt-1 font-mono">90°</span>
+          <span id="compass-degrees" class="text-[10px] text-sky-400 mt-1 font-mono font-medium">--°</span>
         </div>
       </div>
 
@@ -687,9 +694,48 @@
       lucide.createIcons();
     }
 
+    function updateLiveSpotClock() {
+      const el = document.getElementById('live-time-str');
+      if (!el) return;
+      const now = new Date();
+      let tz = state.spot.timezone;
+      if (state.forecastData && state.forecastData.timezone && state.forecastData.timezone !== 'auto') {
+        tz = state.forecastData.timezone;
+      }
+
+      if (tz && tz !== 'auto') {
+        try {
+          const str = new Intl.DateTimeFormat('en-GB', {
+            timeZone: tz,
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+          }).format(now);
+          el.innerText = `${str} Local`;
+          return;
+        } catch (e) {}
+      }
+
+      if (state.forecastData && typeof state.forecastData.utc_offset_seconds === 'number') {
+        const utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
+        const spotDate = new Date(utcMs + (state.forecastData.utc_offset_seconds * 1000));
+        const h = String(spotDate.getHours()).padStart(2, '0');
+        const m = String(spotDate.getMinutes()).padStart(2, '0');
+        el.innerText = `${h}:${m} Local`;
+        return;
+      }
+
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      el.innerText = `${h}:${m} Local`;
+    }
+
     function renderForecast() {
       if (!state.forecastData) return;
       const f = state.forecastData;
+
+      // Update Live Spot Clock
+      updateLiveSpotClock();
 
       // Update Live Hero Banner
       const cur = f.current || {};
@@ -699,10 +745,10 @@
       document.getElementById('live-gust-kts').innerText = `${Math.round(liveGust)} kts`;
       document.getElementById('live-temp-str').innerText = `${cur.temp || 28}°C`;
 
-      const deg = cur.wind_direction_10m || 90;
+      const deg = typeof cur.degrees === 'number' ? cur.degrees : (cur.wind_direction_10m || 90);
       const cardinal = cur.direction || 'E';
       document.getElementById('compass-cardinal').innerText = cardinal;
-      document.getElementById('compass-degrees').innerText = `${deg}°`;
+      document.getElementById('compass-degrees').innerText = `${deg}° (From ${cardinal})`;
       document.getElementById('compass-needle').style.transform = `rotate(${deg}deg)`;
 
       // Rigging recommendation
@@ -812,19 +858,35 @@
         const spot = state.spot;
         const url = `/api/forecast?lat=${spot.lat}&lon=${spot.lon}&name=${encodeURIComponent(spot.name)}&timezone=${encodeURIComponent(spot.timezone || 'auto')}`;
         const resp = await fetch(url);
-        if (!resp.ok) throw new Error("API error");
+        if (!resp.ok) throw new Error("API error " + resp.status);
         const data = await resp.json();
         state.forecastData = data;
+        try {
+          localStorage.setItem('kf_last_forecast', JSON.stringify(data));
+        } catch (e) {}
 
-        // Auto-switch to tomorrow if hour >= 17
-        const now = new Date();
-        if (now.getHours() >= 17 && state.currentTab === 'today') {
+        updateLiveSpotClock();
+
+        // Auto-switch to tomorrow if spot local hour >= 17
+        let spotHour = new Date().getHours();
+        if (typeof data.utc_offset_seconds === 'number') {
+          const now = new Date();
+          const utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
+          const spotDate = new Date(utcMs + (data.utc_offset_seconds * 1000));
+          spotHour = spotDate.getHours();
+        }
+
+        if (spotHour >= 17 && state.currentTab === 'today') {
           switchDayTab('tomorrow', true);
         } else {
           renderForecast();
         }
       } catch (e) {
-        console.error("Forecast fetch failed, using fallback:", e);
+        console.error("Forecast fetch failed:", e);
+        if (!state.forecastData) {
+          const hero = document.getElementById('hero-rec-text');
+          if (hero) hero.innerHTML = '<span class="text-amber-400">Weather server waking up... <button onclick="fetchForecast()" class="underline text-sky-400 font-bold ml-1">Tap to Retry</button></span>';
+        }
       }
     }
 
@@ -1001,8 +1063,26 @@
       document.getElementById('slider-weight').value = state.user.weight;
       document.getElementById('header-spot-name').innerText = state.spot.name.split(',')[0];
 
+      // Instant local spot clock initialization & tick every 5 seconds
+      updateLiveSpotClock();
+      setInterval(updateLiveSpotClock, 5000);
+
+      // Instant cached forecast render if available
+      const cached = localStorage.getItem('kf_last_forecast');
+      if (cached) {
+        try {
+          state.forecastData = JSON.parse(cached);
+        } catch (e) {}
+      }
+
       renderQuiver();
+      if (state.forecastData) {
+        renderForecast();
+      }
       fetchForecast();
+
+      // Periodic auto-refresh every 5 minutes
+      setInterval(fetchForecast, 300000);
 
       // Register PWA Service Worker
       if ('serviceWorker' in navigator) {

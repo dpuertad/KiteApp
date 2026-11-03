@@ -252,6 +252,7 @@ def fetch_weather_openmeteo(spot: dict) -> dict:
                 "wind_kts": round_knots(speeds[hr]),
                 "gust_kts": round_knots(gusts[hr]),
                 "direction": degrees_to_cardinal(directions[hr]),
+                "degrees": round(directions[hr]),
                 "temp": round(temps[hr], 1)
             }
 
@@ -264,12 +265,14 @@ def fetch_weather_openmeteo(spot: dict) -> dict:
                 "wind_kts": round_knots(speeds[tmrw_hr]),
                 "gust_kts": round_knots(gusts[tmrw_hr]),
                 "direction": degrees_to_cardinal(directions[tmrw_hr]),
+                "degrees": round(directions[tmrw_hr]),
                 "temp": round(temps[tmrw_hr], 1)
             }
 
     cur_wind = round_knots(current.get("wind_speed_10m", speeds[12] if len(speeds) > 12 else 16.0))
     cur_gust = round_knots(current.get("wind_gusts_10m", gusts[12] if len(gusts) > 12 else cur_wind))
-    cur_dir = degrees_to_cardinal(current.get("wind_direction_10m", 90))
+    cur_dir_deg = round(current.get("wind_direction_10m", directions[12] if len(directions) > 12 else 90))
+    cur_dir = degrees_to_cardinal(cur_dir_deg)
     cur_temp = round(current.get("temperature_2m", 28.5), 1)
 
     today_temps = temps[:24] if len(temps) >= 24 else temps
@@ -291,6 +294,7 @@ def fetch_weather_openmeteo(spot: dict) -> dict:
             "wind_kts": cur_wind,
             "gust_kts": cur_gust,
             "direction": cur_dir,
+            "degrees": cur_dir_deg,
             "temp": cur_temp
         },
         "schedule": schedule,
@@ -312,20 +316,21 @@ def fetch_weather_metno(spot: dict) -> dict:
     cur_wind = round_knots(cur_details["wind_speed"] * 1.94384)
     cur_gust = round_knots(cur_details.get("wind_speed_of_gust", cur_details["wind_speed"]) * 1.94384)
     cur_temp = round(cur_details["air_temperature"], 1)
-    cur_dir = degrees_to_cardinal(cur_details.get("wind_from_direction", 90))
+    cur_dir_deg = round(cur_details.get("wind_from_direction", 90))
+    cur_dir = degrees_to_cardinal(cur_dir_deg)
 
     schedule = {
-        "Morning (09:00)": {"wind_kts": cur_wind, "gust_kts": cur_gust, "direction": cur_dir, "temp": cur_temp},
-        "Midday (12:00)": {"wind_kts": cur_wind, "gust_kts": cur_gust, "direction": cur_dir, "temp": cur_temp},
-        "Afternoon (15:00)": {"wind_kts": max(12, cur_wind - 1), "gust_kts": cur_gust, "direction": cur_dir, "temp": cur_temp},
-        "Sunset (17:00)": {"wind_kts": max(10, cur_wind - 3), "gust_kts": max(14, cur_gust - 3), "direction": cur_dir, "temp": cur_temp - 1}
+        "Morning (09:00)": {"wind_kts": cur_wind, "gust_kts": cur_gust, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp},
+        "Midday (12:00)": {"wind_kts": cur_wind, "gust_kts": cur_gust, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp},
+        "Afternoon (15:00)": {"wind_kts": max(12, cur_wind - 1), "gust_kts": cur_gust, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp},
+        "Sunset (17:00)": {"wind_kts": max(10, cur_wind - 3), "gust_kts": max(14, cur_gust - 3), "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp - 1}
     }
 
     schedule_tomorrow = {
-        "Morning (09:00)": {"wind_kts": cur_wind, "gust_kts": cur_gust, "direction": cur_dir, "temp": cur_temp},
-        "Midday (12:00)": {"wind_kts": cur_wind + 1, "gust_kts": cur_gust + 2, "direction": cur_dir, "temp": cur_temp + 1},
-        "Afternoon (15:00)": {"wind_kts": max(12, cur_wind), "gust_kts": cur_gust, "direction": cur_dir, "temp": cur_temp},
-        "Sunset (17:00)": {"wind_kts": max(10, cur_wind - 2), "gust_kts": max(14, cur_gust - 2), "direction": cur_dir, "temp": cur_temp - 1}
+        "Morning (09:00)": {"wind_kts": cur_wind, "gust_kts": cur_gust, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp},
+        "Midday (12:00)": {"wind_kts": cur_wind + 1, "gust_kts": cur_gust + 2, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp + 1},
+        "Afternoon (15:00)": {"wind_kts": max(12, cur_wind), "gust_kts": cur_gust, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp},
+        "Sunset (17:00)": {"wind_kts": max(10, cur_wind - 2), "gust_kts": max(14, cur_gust - 2), "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp - 1}
     }
 
     approx_offset = round(spot.get("lon", -38.7297) / 15.0) * 3600
@@ -343,6 +348,7 @@ def fetch_weather_metno(spot: dict) -> dict:
             "wind_kts": cur_wind,
             "gust_kts": cur_gust,
             "direction": cur_dir,
+            "degrees": cur_dir_deg,
             "temp": cur_temp
         },
         "schedule": schedule,

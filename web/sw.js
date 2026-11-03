@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kiteforecast-v2';
+const CACHE_NAME = 'kiteforecast-v3';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',
