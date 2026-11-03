@@ -91,11 +91,7 @@ def load_config() -> dict:
                     "lon": -38.7297,
                     "timezone": "America/Fortaleza"
                 },
-                "inventory": [
-                    {"brand": "Core", "model": "XR8", "year": 2024, "size": 7, "active": True},
-                    {"brand": "Core", "model": "XR8", "year": 2023, "size": 9, "active": True},
-                    {"brand": "Duotone", "model": "Dice SLS", "year": 2023, "size": 11, "active": True}
-                ],
+                "inventory": [],
                 "morning_briefing": True
             }
         }
@@ -116,7 +112,7 @@ def get_or_create_user(config: dict, user_id: int, first_name: str = "Kiter") ->
     if uid in users:
         return users[uid], False
 
-    # Initialize new profile for friend
+    # Initialize new profile for friend - start with completely empty quiver
     new_user = {
         "user_id": user_id,
         "rider_name": first_name or "Kiter",
@@ -128,10 +124,7 @@ def get_or_create_user(config: dict, user_id: int, first_name: str = "Kiter") ->
             "lon": -38.7297,
             "timezone": "America/Fortaleza"
         },
-        "inventory": [
-            {"brand": "Core", "model": "XR8", "year": 2024, "size": 9, "active": True},
-            {"brand": "Duotone", "model": "Rebel SLS", "year": 2024, "size": 11, "active": True}
-        ],
+        "inventory": [],
         "morning_briefing": True
     }
     users[uid] = new_user
@@ -447,10 +440,9 @@ def recommend_from_available_quiver(
     all_inventory: list = None
 ) -> str:
     if not active_inventory:
-        w_factor = math.sqrt(weight_kg / 75.0)
-        ideal_size = round(135.0 / max(wind_kts, 8) * w_factor, 1)
-        ideal_str = f"{int(ideal_size)}m" if ideal_size.is_integer() else f"{ideal_size}m"
-        return f"💡 Ideal size ~{ideal_str} (Add kites: `/kite 1 <brand> <model> <size>`)"
+        if all_inventory:
+            return "⚠️ No active kites in bag (type `/take all`)"
+        return "⚠️ No quiver existing (type `/kite 1 <Brand> <Model> <Size>`)"
 
     evaluated = [evaluate_active_kite(k, weight_kg, wind_kts, gust_kts) for k in active_inventory]
 
@@ -484,13 +476,31 @@ def recommend_from_available_quiver(
         yr_str = f" ({home_kite['year']})" if home_kite.get("year") else ""
         home_tip = f" 💡 Pack your {home_kite['brand']} {home_kite['model']}{yr_str} {home_kite['size']}m: `/take all`"
 
-    # 3. Wind too light (< min of active quiver)
+    # 3. Wind too light (< min of active quiver): DO NOT recommend rigging the biggest kite!
     if wind_kts < min(mins):
         biggest = max(evaluated, key=lambda k: k["size"])
         min_k_rounded = round_knots(biggest["min_k"])
-        if wind_kts >= biggest["min_k"] * 0.85 and wind_kts >= 10:
-            return f"Rig {biggest['display_name']} (⚠️ Marginal/Light — min ~{min_k_rounded} kts)"
-        return f"⚠️ Wind too light ({round_knots(wind_kts)} kts < min {min_k_rounded} kts for {biggest['display_name']})"
+        w_kts_rounded = round_knots(wind_kts)
+        yr_str = f" ({biggest['year']})" if biggest.get("year") else ""
+        kite_desc = f"{biggest['brand']} {biggest['model']}{yr_str} {biggest['size']}m"
+
+        # Check if user has an even bigger kite left at home (inactive in inventory)
+        bigger_at_home = []
+        if all_inventory:
+            for k in all_inventory:
+                if not k.get("active", True) and k.get("size", 0) > biggest["size"]:
+                    bigger_at_home.append(k)
+
+        bigger_home_tip = ""
+        if bigger_at_home:
+            b_home = max(bigger_at_home, key=lambda k: k["size"])
+            b_yr = f" ({b_home['year']})" if b_home.get("year") else ""
+            bigger_home_tip = f" 💡 Pack your {b_home['brand']} {b_home['model']}{b_yr} {b_home['size']}m from home: `/take all`"
+
+        if len(evaluated) > 1:
+            return f"⚠️ {w_kts_rounded} kts (not enough for your {kite_desc} kite, as the biggest one you have — needs min ~{min_k_rounded} kts){bigger_home_tip}"
+        else:
+            return f"⚠️ {w_kts_rounded} kts (not enough for your {kite_desc} kite — needs min ~{min_k_rounded} kts){bigger_home_tip}"
 
     # 4. Wind above max of active quiver
     if wind_kts > max(maxs):
@@ -506,6 +516,18 @@ def recommend_from_available_quiver(
 
     nearest = min(evaluated, key=lambda k: k["dist_to_sweet"])
     return f"Rig {nearest['display_name']} (Marginal)"
+
+
+def build_quiver_header_text(inventory: list, active_kites: list) -> str:
+    if not inventory:
+        return "  ⚠️ *No quiver existing yet!* Enter your gear:\n  👉 `/kite 1 <Brand> <Model> <Size> (<Year>)`"
+    if not active_kites:
+        return "  ⚠️ *No active kites in bag today!* Type `/take all` to activate your quiver."
+    lines = []
+    for k in active_kites:
+        yr = f" ({k['year']})" if k.get("year") else ""
+        lines.append(f"  • {k['brand']} {k['model']}{yr} {k['size']}m")
+    return "\n".join(lines)
 
 
 def format_tides_text(tides: list) -> str:
@@ -534,12 +556,7 @@ def format_briefing(forecast: dict, user_profile: dict) -> str:
     inventory = user_profile.get("inventory", [])
     active_kites = [k for k in inventory if k.get("active", True)]
 
-    quiver_header_lines = []
-    for k in active_kites:
-        yr = f" ({k['year']})" if k.get("year") else ""
-        quiver_header_lines.append(f"  • {k['brand']} {k['model']}{yr} {k['size']}m")
-    
-    quiver_str = "\n".join(quiver_header_lines) if quiver_header_lines else "  • No kites added yet (type `/kite 1 <brand> <model> <size>`)"
+    quiver_str = build_quiver_header_text(inventory, active_kites)
 
     lines = [
         f"🏄‍♂️ *Kitesurf Morning Briefing: {forecast['spot']}*",
@@ -565,6 +582,9 @@ def format_briefing(forecast: dict, user_profile: dict) -> str:
     if forecast["max_gust"] >= GUST_WARNING_THRESHOLD_KTS:
         lines.append(f"\n⚠️ *Gust Alert:* Max gusts reaching *{round_knots(forecast['max_gust'])} knots* today.")
 
+    if not inventory:
+        lines.append("\n⚠️ *Action Required:* No quiver existing yet! Please enter your kites:\n👉 `/kite 1 <Brand> <Model> <Size> (<Year>)`")
+
     lines.append("\n_Need live conditions? Tap below for /report_")
     return "\n".join(lines)
 
@@ -588,11 +608,7 @@ def format_tomorrow_report(forecast: dict, user_profile: dict, is_evening_auto: 
     t_max = forecast.get("tomorrow_temp_max", forecast.get("temp_max", 31))
     max_gust = round_knots(forecast.get("tomorrow_max_gust", forecast.get("max_gust", 26)))
 
-    quiver_header_lines = []
-    for k in active_kites:
-        yr = f" ({k['year']})" if k.get("year") else ""
-        quiver_header_lines.append(f"  • {k['brand']} {k['model']}{yr} {k['size']}m")
-    quiver_str = "\n".join(quiver_header_lines) if quiver_header_lines else "  • No kites added yet (type `/kite 1 <brand> <model> <size>`)"
+    quiver_str = build_quiver_header_text(inventory, active_kites)
 
     lines = [
         f"🌅 *Tomorrow's Kitesurf Forecast: {forecast['spot']}*",
@@ -623,6 +639,9 @@ def format_tomorrow_report(forecast: dict, user_profile: dict, is_evening_auto: 
     if max_gust >= GUST_WARNING_THRESHOLD_KTS:
         lines.append(f"\n⚠️ *Gust Alert:* Max gusts reaching *{max_gust} knots* tomorrow.")
 
+    if not inventory:
+        lines.append("\n⚠️ *Action Required:* No quiver existing yet! Please enter your kites:\n👉 `/kite 1 <Brand> <Model> <Size> (<Year>)`")
+
     lines.append("\n_Tip: For live conditions right now, type `/report today`._")
     lines.append("_On a new spot? Tap the button below to update via phone GPS!_")
     return "\n".join(lines)
@@ -648,12 +667,7 @@ def format_realtime_report(forecast: dict, user_profile: dict) -> str:
     temp = cur.get("temp", 28.0)
 
     rec = recommend_from_available_quiver(weight, active_kites, wind_kts, gust_kts, all_inventory=inventory)
-
-    quiver_header_lines = []
-    for k in active_kites:
-        yr = f" ({k['year']})" if k.get("year") else ""
-        quiver_header_lines.append(f"  • {k['brand']} {k['model']}{yr} {k['size']}m")
-    quiver_str = "\n".join(quiver_header_lines) if quiver_header_lines else "  • No kites added yet (type `/kite 1 <brand> <model> <size>`)"
+    quiver_str = build_quiver_header_text(inventory, active_kites)
 
     lines = [
         f"🏄‍♂️ *Live Spot Report: {forecast['spot']}*",
@@ -675,6 +689,9 @@ def format_realtime_report(forecast: dict, user_profile: dict) -> str:
         w_kts = round_knots(slot['wind_kts'])
         g_kts = round_knots(slot['gust_kts'])
         lines.append(f"• *{slot_name}:* {w_kts} kts (gusts {g_kts} kts) → {r}")
+
+    if not inventory:
+        lines.append("\n⚠️ *Action Required:* No quiver existing yet! Please enter your kites:\n👉 `/kite 1 <Brand> <Model> <Size> (<Year>)`")
 
     lines.append("\n_Tip: Type `/report tomorrow` anytime to see tomorrow's forecast!_")
     lines.append("_On a new spot? Tap the button below to update via phone GPS!_")
@@ -786,7 +803,8 @@ def get_user_kites_list_text(user_profile: dict) -> str:
         f"👤 Rider: {user_profile.get('rider_name', 'Kiter')} · {user_profile.get('rider_weight_kg', 75)}kg\n"
     ]
     if not inventory:
-        lines.append("  (No kites added yet! Add one below)")
+        lines.append("⚠️ *No quiver existing yet!*")
+        lines.append("You have not entered any kites. Please add your kites below to get personalized gear recommendations:\n")
     for idx, k in enumerate(inventory, start=1):
         status = "✅ In Bag" if k.get("active", True) else "🏠 Left Home"
         yr = f" ({k['year']})" if k.get("year") else ""
@@ -795,10 +813,9 @@ def get_user_kites_list_text(user_profile: dict) -> str:
 
     lines.append("\n✏️ *To set or change a kite slot:*")
     lines.append("• `/kite 1 Duotone Rebel SLS 10 (2024)`")
-    lines.append("• `/kite 1 Duotone Rebel SLS 10 (year) 2024`")
-    lines.append("• `/kite 1 Duotone Rebel SLS 10 2024`")
-    lines.append("• `/kite 2 Core XR8 9 2023`")
-    lines.append("• `/kite 1 (brand)Duotone (model)RebelSLS (size)10 (year)2024`")
+    lines.append("• `/kite 2 North Orbit 9 (2023)`")
+    lines.append("• `/kite 3 Cabrinha Switchblade 12 (2022)`")
+    lines.append("• `/kite 1 <Brand> <Model> <Size> (<Year>)`")
     lines.append("\n🎒 *To pick what you have with you today:*")
     lines.append("• `/take 1, 2` → (Only takes kite 1 & 2)")
     lines.append("• `/take all` → (Takes all kites)")
@@ -910,24 +927,37 @@ def handle_telegram_command(text: str, message_obj: dict, config: dict) -> str:
 
     cmd = text.strip()
 
-    # 2. First-time welcome or /start
-    if cmd.startswith("/start"):
+    # 2. First-time welcome or /start (QR code scan or fresh user)
+    if cmd.startswith("/start") or is_new:
         save_config(config)
+        has_kites = bool(user_profile.get("inventory"))
+        quiver_alert = (
+            "⚠️ *No quiver existing yet!* To calculate your personalized wind ranges and rigging choices, you need to enter your kites first."
+            if not has_kites
+            else f"🎒 *Your quiver has {len(user_profile.get('inventory', []))} kite(s) registered.* (Type `/kites` to inspect)"
+        )
         welcome_intro = (
             f"👋 *Welcome to KiteForecast, {first_name}!* 🏄‍♂️\n\n"
-            "Your personal private kitesurf assistant is ready.\n\n"
-            "⚡ *3 Quick Steps to Set Up Your Gear:*\n"
-            f"1️⃣ *Set your weight:* `/weight 75` (currently {user_profile['rider_weight_kg']}kg)\n"
+            f"{quiver_alert}\n\n"
+            "⚡ *Quick Setup Guide:*\n"
+            f"1️⃣ *Set your rider weight:* `/weight 75` (currently {user_profile['rider_weight_kg']} kg — tunes wind ranges)\n"
             "2️⃣ *Add your kites by slot (including year):*\n"
+            "   • `/kite 1 <Brand> <Model> <Size> (<Year>)`\n"
+            "   _Examples:_\n"
             "   • `/kite 1 Duotone Rebel SLS 10 (2024)`\n"
-            "   • `/kite 2 Core XR8 9 (2023)`\n"
-            "   • `/kite 3 North Orbit 8 2022`\n"
-            "3️⃣ *Get report:* Tap a button below!\n"
-            "   👉 `[ 📍 Send Current Location & Report ]`\n"
-            "   👉 `[ /report ]` (Live today, or auto-tomorrow after 17:00!)\n"
-            "   👉 `[ /report tomorrow ]` (Forecast for tomorrow anytime)\n\n"
-            "💡 _Need to wipe and start fresh? Type `/reset profile` anytime!_\n"
-            "_All calculations and wind ranges are tuned specifically to YOU and YOUR bag!_"
+            "   • `/kite 2 North Orbit 9 (2023)`\n"
+            "   • `/kite 3 Cabrinha Switchblade 12 (2022)`\n"
+            "3️⃣ *Pick your spot & get forecast:*\n"
+            "   • Tap `[ 📍 Send Current Location & Report ]` for instant phone GPS\n"
+            "   • Or type `/spot Tarifa` or `/spot Cumbuco`\n"
+            "   • Tap `[ /report ]` (Live conditions, auto-switches to tomorrow after 17:00)\n"
+            "   • Tap `[ /report tomorrow ]` anytime for tomorrow's forecast\n\n"
+            "🎒 *Quiver Management:*\n"
+            "• `/kites` → View your quiver and bag status\n"
+            "• `/take 1, 2` → Pick which kites you brought to the beach today\n"
+            "• `/take all` → Mark all your kites active in your bag\n"
+            "• `/reset profile` → Wipe your quiver and start over\n\n"
+            "_All calculations and wind ranges will be tuned specifically to YOU and YOUR bag!_"
         )
         return welcome_intro
 
@@ -941,12 +971,13 @@ def handle_telegram_command(text: str, message_obj: dict, config: dict) -> str:
         return (
             f"🗑️ *Profile & Kites Reset Successfully!* 🏄‍♂️\n\n"
             f"All your kites, custom weight, and saved gear have been wiped clean for *{first_name}*.\n\n"
+            "⚠️ *No quiver is currently loaded.*\n\n"
             "⚡ *Set up fresh in 3 quick steps:*\n"
             "1️⃣ *Set your weight:* `/weight 75` (or your weight in kg)\n"
             "2️⃣ *Add your kites by slot (including year):*\n"
             "   • `/kite 1 Duotone Rebel SLS 10 (2024)`\n"
-            "   • `/kite 2 Core XR8 9 (2023)`\n"
-            "   • `/kite 3 North Orbit 8 2022`\n"
+            "   • `/kite 2 North Orbit 9 (2023)`\n"
+            "   • `/kite 3 Cabrinha Switchblade 12 (2022)`\n"
             "3️⃣ *Get report:* Tap `[ 📍 Send Current Location & Report ]` or `/report`\n\n"
             "_You have a completely fresh profile! Check `/kites` anytime._"
         )
@@ -1036,10 +1067,9 @@ def handle_telegram_command(text: str, message_obj: dict, config: dict) -> str:
                 "❌ Couldn't parse kite details.\n"
                 "Examples:\n"
                 "• `/kite 1 Duotone Rebel SLS 10 (2024)`\n"
-                "• `/kite 1 Duotone Rebel SLS 10 (year) 2024`\n"
-                "• `/kite 1 Duotone Rebel SLS 10 2024`\n"
-                "• `/kite 2 Core XR8 9 2023`\n"
-                "• `/kite 1 (brand)Duotone (model)RebelSLS (size)10 (year)2024`"
+                "• `/kite 2 North Orbit 9 (2023)`\n"
+                "• `/kite 3 Cabrinha Switchblade 12 (2022)`\n"
+                "• `/kite 1 <Brand> <Model> <Size> (<Year>)`"
             )
 
         specs = lookup_kite_specs(brand, model, size)
