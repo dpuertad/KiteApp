@@ -605,12 +605,20 @@ def format_realtime_report(forecast: dict, user_profile: dict) -> str:
 
     rec = recommend_from_available_quiver(weight, active_kites, wind_kts, gust_kts)
 
+    quiver_header_lines = []
+    for k in active_kites:
+        yr = f" ({k['year']})" if k.get("year") else ""
+        quiver_header_lines.append(f"  • {k['brand']} {k['model']}{yr} {k['size']}m")
+    quiver_str = "\n".join(quiver_header_lines) if quiver_header_lines else "  • No active kites selected"
+
     lines = [
         f"🏄‍♂️ *Live Spot Report: {forecast['spot']}*",
         f"📍 *Spot Local Time:* {local_time_str} · {local_date_str}",
         f"🌡 *Temp:* {temp}°C",
-        f"👤 *Rider:* {rider_name} · {weight}kg ({board})\n",
-        f"🌬 *Wind Right Now:*",
+        f"👤 *Rider:* {rider_name} · {weight}kg ({board})",
+        f"🎒 *Available Quiver:*",
+        quiver_str,
+        f"\n🌬 *Wind Right Now:*",
         f"• *Speed:* *{wind_kts} knots* (Gusts: *{gust_kts} knots*, {direct})",
         f"• *Right Now Recommendation:* → {rec}\n",
         f"🌊 *Tides Today:*",
@@ -631,12 +639,12 @@ def format_realtime_report(forecast: dict, user_profile: dict) -> str:
 
 def parse_kite_params(raw_text: str):
     raw = raw_text.strip()
-    if "(" in raw and ")" in raw:
+
+    # 1. First, check if pure tagged format: (brand)... (model)... (size)... (year)...
+    if "(brand)" in raw.lower() or "(model)" in raw.lower() or "(size)" in raw.lower():
         tags = {}
         for m in re.finditer(r"\(([a-zA-Z]+)\)\s*([^\(]+)", raw):
-            k = m.group(1).lower().strip()
-            v = m.group(2).strip()
-            tags[k] = v
+            tags[m.group(1).lower().strip()] = m.group(2).strip()
         brand = tags.get("brand", "").strip()
         model = tags.get("model", "").strip()
         size_raw = tags.get("size", "0")
@@ -645,24 +653,84 @@ def parse_kite_params(raw_text: str):
         year = int(re.sub(r"[^\d]", "", year_raw)) if year_raw else 2024
         return brand, model, year, size
 
+    # 2. Extract Year if present
+    # Could be (year)2024, (year) 2024, (2024), [2024], year 2024, yr 2024, or a 4-digit number
+    year = 2024
+
+    # Look for (year) <num> or (year)<num>
+    m_year_tag = re.search(r"\(year\)\s*(\d{4})", raw, re.IGNORECASE)
+    if m_year_tag:
+        year = int(m_year_tag.group(1))
+        raw = raw[:m_year_tag.start()] + " " + raw[m_year_tag.end():]
+    else:
+        # Look for (2024) or [2024]
+        m_paren_year = re.search(r"[\(\[]\s*(\d{4})\s*[\)\]]", raw)
+        if m_paren_year:
+            year = int(m_paren_year.group(1))
+            raw = raw[:m_paren_year.start()] + " " + raw[m_paren_year.end():]
+        else:
+            # Look for 'year 2024' or 'yr 2024'
+            m_word_year = re.search(r"\b(?:year|yr)\s*[:=]?\s*(\d{4})\b", raw, re.IGNORECASE)
+            if m_word_year:
+                year = int(m_word_year.group(1))
+                raw = raw[:m_word_year.start()] + " " + raw[m_word_year.end():]
+
+    # Clean leftover (year) if user wrote (year) without digits
+    raw = re.sub(r"\(year\)", "", raw, flags=re.IGNORECASE).strip()
+
+    # Split into remaining tokens
     tokens = raw.split()
     if len(tokens) < 2:
         return None, None, None, None
 
-    size_token = tokens[-1].replace("m", "").replace("M", "")
-    try:
-        size = float(size_token)
-    except ValueError:
+    # Check if a 4-digit year is among remaining tokens (e.g. 1990-2035)
+    year_idx = None
+    for idx, t in enumerate(tokens):
+        if t.isdigit() and len(t) == 4 and 1990 <= int(t) <= 2035:
+            year = int(t)
+            year_idx = idx
+            break
+
+    if year_idx is not None:
+        tokens.pop(year_idx)
+
+    if len(tokens) < 2:
         return None, None, None, None
 
-    year = 2024
-    if len(tokens) >= 3 and tokens[-2].isdigit() and len(tokens[-2]) == 4:
-        year = int(tokens[-2])
-        brand = tokens[0]
-        model = " ".join(tokens[1:-2])
-    else:
-        brand = tokens[0]
-        model = " ".join(tokens[1:-1])
+    # Find size token: look for token with 'm' (e.g. 10m, 11M, 9.5m) or the last numeric token
+    size = None
+    size_idx = None
+    for idx, t in enumerate(tokens):
+        m_size = re.match(r"^(\d+(?:\.\d+)?)[mM]$", t)
+        if m_size:
+            size = float(m_size.group(1))
+            size_idx = idx
+            break
+
+    if size is None:
+        try:
+            size = float(tokens[-1])
+            size_idx = len(tokens) - 1
+        except ValueError:
+            for idx in range(len(tokens) - 1, 0, -1):
+                try:
+                    val = float(tokens[idx])
+                    if 3.0 <= val <= 25.0:
+                        size = val
+                        size_idx = idx
+                        break
+                except ValueError:
+                    pass
+
+    if size is None or size_idx is None:
+        return None, None, None, None
+
+    tokens.pop(size_idx)
+    if not tokens:
+        return None, None, None, None
+
+    brand = tokens[0]
+    model = " ".join(tokens[1:]) if len(tokens) > 1 else tokens[0]
 
     return brand, model, year, size
 
@@ -682,8 +750,11 @@ def get_user_kites_list_text(user_profile: dict) -> str:
         lines.append(f"  *{idx}.* [{status}] *{k['brand']} {k['model']}{yr} {k['size']}m* _{specs['material']}_")
 
     lines.append("\n✏️ *To set or change a kite slot:*")
-    lines.append("• `/kite 1 (brand)Duotone (model)RebelSLS (size)11`")
-    lines.append("• Or simple: `/kite 1 Duotone Rebel SLS 11`")
+    lines.append("• `/kite 1 Duotone Rebel SLS 10 (2024)`")
+    lines.append("• `/kite 1 Duotone Rebel SLS 10 (year) 2024`")
+    lines.append("• `/kite 1 Duotone Rebel SLS 10 2024`")
+    lines.append("• `/kite 2 Core XR8 9 2023`")
+    lines.append("• `/kite 1 (brand)Duotone (model)RebelSLS (size)10 (year)2024`")
     lines.append("\n🎒 *To pick what you have with you today:*")
     lines.append("• `/take 1, 2` → (Only takes kite 1 & 2)")
     lines.append("• `/take all` → (Takes all kites)")
@@ -800,10 +871,10 @@ def handle_telegram_command(text: str, message_obj: dict, config: dict) -> str:
             "Your personal private kitesurf assistant is ready.\n\n"
             "⚡ *3 Quick Steps to Set Up Your Gear:*\n"
             f"1️⃣ *Set your weight:* `/weight 75` (currently {user_profile['rider_weight_kg']}kg)\n"
-            "2️⃣ *Add your kites by slot:*\n"
-            "   • `/kite 1 Duotone Rebel SLS 11`\n"
-            "   • `/kite 2 Core XR8 9`\n"
-            "   • `/kite 3 North Orbit 8`\n"
+            "2️⃣ *Add your kites by slot (including year):*\n"
+            "   • `/kite 1 Duotone Rebel SLS 10 (2024)`\n"
+            "   • `/kite 2 Core XR8 9 (2023)`\n"
+            "   • `/kite 3 North Orbit 8 2022`\n"
             "3️⃣ *Get report:* Tap a button below!\n"
             "   👉 `[ 📍 Send Current Location & Report ]`\n"
             "   👉 `[ /report ]` (Live today, or auto-tomorrow after 17:00!)\n"
@@ -896,9 +967,11 @@ def handle_telegram_command(text: str, message_obj: dict, config: dict) -> str:
             return (
                 "❌ Couldn't parse kite details.\n"
                 "Examples:\n"
-                "• `/kite 1 (brand)Duotone (model)RebelSLS (size)11`\n"
-                "• `/kite 1 Duotone Rebel SLS 11`\n"
-                "• `/kite 2 Core XR8 2023 9`"
+                "• `/kite 1 Duotone Rebel SLS 10 (2024)`\n"
+                "• `/kite 1 Duotone Rebel SLS 10 (year) 2024`\n"
+                "• `/kite 1 Duotone Rebel SLS 10 2024`\n"
+                "• `/kite 2 Core XR8 9 2023`\n"
+                "• `/kite 1 (brand)Duotone (model)RebelSLS (size)10 (year)2024`"
             )
 
         specs = lookup_kite_specs(brand, model, size)
@@ -922,6 +995,7 @@ def handle_telegram_command(text: str, message_obj: dict, config: dict) -> str:
         return (
             f"✅ *Kite Slot {slot_idx + 1} Saved for {user_profile['rider_name']}!* 🪁\n"
             f"• *{specs['brand']} {specs['model']} ({year}) {size_clean}m*\n"
+            f"• Year: *{year}*\n"
             f"• Frame: _{specs['material']}_\n"
             f"• Discipline: _{specs['type']}_\n"
             f"• Status: Active in bag"
