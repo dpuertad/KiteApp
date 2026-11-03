@@ -1331,7 +1331,23 @@ def start_embedded_http_server(port: int = 8080):
                     self.wfile.write(content)
                     return
 
-            if path in ["/icon.png", "/kiteforecast_bot_qr.png"]:
+            # Static icon & asset handler
+            if path in ["/icon.png", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png", "/favicon.png", "/icon.svg"]:
+                clean_name = path.lstrip("/")
+                icon_file = os.path.join(web_dir, clean_name)
+                if os.path.exists(icon_file):
+                    mime = "image/svg+xml" if path.endswith(".svg") else "image/png"
+                    with open(icon_file, "rb") as f:
+                        content = f.read()
+                    self.send_response(200)
+                    self.send_header("Content-Type", mime)
+                    self.send_header("Cache-Control", "public, max-age=86400")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(content)
+                    return
+
+            if path == "/kiteforecast_bot_qr.png":
                 qr_path = os.path.join(base_dir, "kiteforecast_bot_qr.png")
                 if os.path.exists(qr_path):
                     with open(qr_path, "rb") as f:

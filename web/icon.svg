@@ -1,0 +1,161 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="10%" y1="0%" x2="90%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="45%" stop-color="#0369a1"/>
+      <stop offset="100%" stop-color="#0b1329"/>
+    </linearGradient>
+
+    <!-- Sky Sun / Wind Glow -->
+    <radialGradient id="sunGlow" cx="70%" cy="25%" r="60%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.45"/>
+      <stop offset="60%" stop-color="#0ea5e9" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#0369a1" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Wind Streamline Gradient -->
+    <linearGradient id="windGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="30%" stop-color="#ffffff" stop-opacity="0.6"/>
+      <stop offset="70%" stop-color="#38bdf8" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+    </linearGradient>
+
+    <linearGradient id="windGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0"/>
+      <stop offset="40%" stop-color="#7dd3fc" stop-opacity="0.7"/>
+      <stop offset="80%" stop-color="#ffffff" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Kite Canopy Gradients -->
+    <linearGradient id="canopyCoral" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff7e47"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+    
+    <linearGradient id="canopyGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+
+    <linearGradient id="canopyCyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+
+    <linearGradient id="canopyTeal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2dd4bf"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+
+    <linearGradient id="tubeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="50%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    
+    <filter id="kiteShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="-4" dy="12" stdDeviation="12" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <!-- Background Base (Full Bleed for PWA Maskable) -->
+  <rect width="512" height="512" fill="url(#bgGrad)"/>
+  <rect width="512" height="512" fill="url(#sunGlow)"/>
+
+  <!-- Dynamic Wind Gust Streamlines (Sweeping Waves) -->
+  <g opacity="0.85">
+    <!-- Gust Curve 1 (Deep low sweep) -->
+    <path d="M -40,380 C 100,430 220,390 350,300 C 420,250 480,180 540,110" 
+          fill="none" stroke="url(#windGrad1)" stroke-width="6" stroke-linecap="round"/>
+    
+    <!-- Gust Curve 2 (Mid aerodynamic burst) -->
+    <path d="M -20,280 C 110,310 210,270 330,190 C 400,140 470,80 530,20" 
+          fill="none" stroke="url(#windGrad2)" stroke-width="8" stroke-linecap="round" filter="url(#glow)"/>
+
+    <!-- Gust Curve 3 (Fast upper streak) -->
+    <path d="M 40,210 C 160,220 270,170 380,90 C 430,50 480,20 520, -10" 
+          fill="none" stroke="url(#windGrad1)" stroke-width="4" stroke-linecap="round"/>
+
+    <!-- Gust Curve 4 (Foreground power breeze) -->
+    <path d="M -60,460 C 120,490 280,440 420,330 C 490,270 530,200 550,150" 
+          fill="none" stroke="url(#windGrad2)" stroke-width="5" stroke-linecap="round"/>
+
+    <!-- Wind Gust Velocity Particles / Dashes -->
+    <circle cx="180" cy="275" r="3.5" fill="#ffffff" opacity="0.7"/>
+    <circle cx="280" cy="210" r="4" fill="#7dd3fc" opacity="0.8"/>
+    <circle cx="390" cy="130" r="4.5" fill="#ffffff" opacity="0.9"/>
+    <circle cx="460" cy="70" r="3" fill="#38bdf8" opacity="0.8"/>
+    <circle cx="120" cy="360" r="3" fill="#ffffff" opacity="0.5"/>
+    <circle cx="240" cy="380" r="3.5" fill="#7dd3fc" opacity="0.6"/>
+  </g>
+
+  <!-- Kitesurf Kite & Bridle System (Tilted dynamically at power angle ~35deg) -->
+  <g filter="url(#kiteShadow)">
+    <!-- Kite Flying Lines streaming from kite down towards rider (lower left) -->
+    <g opacity="0.75" stroke="#e2e8f0" stroke-width="2" stroke-linecap="round">
+      <!-- Line to Left Wingtip Bridle -->
+      <line x1="80" y1="460" x2="175" y2="285" stroke-dasharray="8 3" opacity="0.6"/>
+      <!-- Line to Center-Left Bridle -->
+      <line x1="80" y1="460" x2="255" y2="185"/>
+      <!-- Line to Center-Right Bridle -->
+      <line x1="80" y1="460" x2="335" y2="135"/>
+      <!-- Line to Right Wingtip Bridle -->
+      <line x1="80" y1="460" x2="425" y2="135" stroke-dasharray="8 3" opacity="0.6"/>
+      <!-- Small harness / spreader bar accent at lower-left -->
+      <circle cx="80" cy="460" r="5" fill="#f8fafc"/>
+      <line x1="68" y1="467" x2="92" y2="453" stroke="#f59e0b" stroke-width="4"/>
+    </g>
+
+    <!-- KITE CANOPY (Aero C-Shape Leading Edge & Segmented Panels) -->
+    <!-- Wingtip to Wingtip Leading Edge Arc: (150,280) -> Peak (290,95) -> Wingtip (435,145) -->
+    
+    <!-- Panel 1: Left Wingtip (Deep Cyan) -->
+    <path d="M 152,280 Q 200,210 230,175 L 210,230 Q 170,270 152,280 Z" 
+          fill="url(#canopyTeal)"/>
+
+    <!-- Panel 2: Left Center (Electric Sky Blue) -->
+    <path d="M 230,175 Q 260,140 295,118 L 275,178 Q 235,210 210,230 Z" 
+          fill="url(#canopyCyan)"/>
+
+    <!-- Panel 3: Center-Right Power Panel (Vibrant Coral Orange) -->
+    <path d="M 295,118 Q 345,102 385,115 L 360,168 Q 320,158 275,178 Z" 
+          fill="url(#canopyCoral)"/>
+
+    <!-- Panel 4: Right Wingtip (Bright Sunset Gold) -->
+    <path d="M 385,115 Q 415,128 435,148 L 402,185 Q 385,160 360,168 Z" 
+          fill="url(#canopyGold)"/>
+
+    <!-- Reinforcement Trailing Edge Band -->
+    <path d="M 152,280 Q 170,270 210,230 Q 235,210 275,178 Q 320,158 360,168 Q 385,160 402,185 L 435,148"
+          fill="none" stroke="#0f172a" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Inflatable Struts (Tubular Ribs crossing the canopy) -->
+    <path d="M 230,175 L 210,230" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/>
+    <path d="M 295,118 L 275,178" stroke="#0f172a" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 385,115 L 360,168" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/>
+
+    <!-- LEADING EDGE TUBE (The iconic thick, curved inflatable frame of a modern kite) -->
+    <path d="M 148,284 C 185,210 250,110 320,102 C 370,96 415,118 438,150" 
+          fill="none" stroke="url(#tubeGrad)" stroke-width="16" stroke-linecap="round"/>
+
+    <!-- Leading Edge Highlight / Rim Light (Gives 3D cylindrical shine) -->
+    <path d="M 156,276 C 190,206 252,114 320,106 C 366,101 408,122 432,150" 
+          fill="none" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round" opacity="0.85"/>
+
+    <!-- Wingtip Battens & Accent Badges -->
+    <ellipse cx="150" cy="282" rx="4.5" ry="7" transform="rotate(-30 150 282)" fill="#38bdf8"/>
+    <ellipse cx="436" cy="148" rx="4.5" ry="7" transform="rotate(25 436 148)" fill="#f97316"/>
+  </g>
+
+  <!-- Speed/Wind Whisps emerging off the kite tips -->
+  <path d="M 440,146 C 465,138 490,135 515,132" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+  <path d="M 436,156 C 455,152 475,150 495,148" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+</svg>

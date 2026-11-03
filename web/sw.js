@@ -1,7 +1,12 @@
-const CACHE_NAME = 'kiteforecast-v1';
+const CACHE_NAME = 'kiteforecast-v2';
 const STATIC_ASSETS = [
   '/',
-  '/manifest.json'
+  '/manifest.json',
+  '/icon.png',
+  '/icon-192.png',
+  '/icon-512.png',
+  '/apple-touch-icon.png',
+  '/favicon.png'
 ];
 
 self.addEventListener('install', (event) => {
