@@ -194,6 +194,77 @@
         </div>
       </div>
 
+      <!-- 4 SAFETY & CONDITIONS METRICS -->
+      <div class="grid grid-cols-2 gap-2 mb-4">
+        <!-- Metric 1: Shoreline Safety -->
+        <div id="badge-shoreline-box" class="bg-slate-950/80 border border-slate-800/90 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition">
+          <div class="flex items-center justify-between text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
+            <span class="flex items-center space-x-1">
+              <i data-lucide="shield" class="w-3 h-3 text-emerald-400"></i>
+              <span>Coast Safety</span>
+            </span>
+            <span id="badge-shoreline-rel" class="text-[9px] font-mono text-slate-500">--°</span>
+          </div>
+          <div class="mt-1">
+            <div id="badge-shoreline-text" class="text-xs font-bold text-emerald-400 flex items-center space-x-1">
+              <span>Loading...</span>
+            </div>
+            <p id="badge-shoreline-sub" class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">--</p>
+          </div>
+        </div>
+
+        <!-- Metric 2: Wind Stability -->
+        <div id="badge-stability-box" class="bg-slate-950/80 border border-slate-800/90 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition">
+          <div class="flex items-center justify-between text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
+            <span class="flex items-center space-x-1">
+              <i data-lucide="zap" class="w-3 h-3 text-amber-400"></i>
+              <span>Stability</span>
+            </span>
+            <span id="badge-stability-score" class="text-[10px] font-bold text-amber-400 font-mono">--/10</span>
+          </div>
+          <div class="mt-1">
+            <div id="badge-stability-text" class="text-xs font-bold text-slate-200">
+              <span>Loading...</span>
+            </div>
+            <p id="badge-stability-sub" class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">--</p>
+          </div>
+        </div>
+
+        <!-- Metric 3: Wetsuit Guide -->
+        <div id="badge-wetsuit-box" class="bg-slate-950/80 border border-slate-800/90 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition">
+          <div class="flex items-center justify-between text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
+            <span class="flex items-center space-x-1">
+              <i data-lucide="thermometer" class="w-3 h-3 text-cyan-400"></i>
+              <span>Thermal Guide</span>
+            </span>
+            <span id="badge-wetsuit-temp" class="text-[10px] font-bold text-cyan-400 font-mono">--°C</span>
+          </div>
+          <div class="mt-1">
+            <div id="badge-wetsuit-text" class="text-xs font-bold text-sky-300 flex items-center space-x-1">
+              <span>Loading...</span>
+            </div>
+            <p id="badge-wetsuit-sub" class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">--</p>
+          </div>
+        </div>
+
+        <!-- Metric 4: Forecast Consensus -->
+        <div id="badge-consensus-box" class="bg-slate-950/80 border border-slate-800/90 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition">
+          <div class="flex items-center justify-between text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
+            <span class="flex items-center space-x-1">
+              <i data-lucide="check-check" class="w-3 h-3 text-emerald-400"></i>
+              <span>Reliability</span>
+            </span>
+            <span id="badge-consensus-pct" class="text-[10px] font-bold text-emerald-400 font-mono">--%</span>
+          </div>
+          <div class="mt-1">
+            <div id="badge-consensus-text" class="text-xs font-bold text-slate-200">
+              <span>Loading...</span>
+            </div>
+            <p id="badge-consensus-sub" class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">ECMWF · GFS · ICON</p>
+          </div>
+        </div>
+      </div>
+
       <!-- PROMINENT RIGHT NOW RECOMMENDATION -->
       <div id="hero-rec-banner" class="bg-gradient-to-r from-sky-950/90 via-slate-900/90 to-sky-950/90 rounded-2xl p-4 border border-sky-500/40 shadow-lg">
         <div class="flex items-center space-x-2 text-xs font-semibold text-sky-400 uppercase tracking-wider mb-1">
@@ -396,12 +467,43 @@
 
         <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Popular Kitesurf Spots:</p>
         <div class="grid grid-cols-2 gap-1.5 text-xs">
-          <button onclick="setSpot('Cumbuco, Brazil', -3.6247, -38.7297, 'America/Fortaleza')" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇧🇷 Cumbuco</button>
-          <button onclick="setSpot('Taiba, Brazil', -3.5042, -38.8953, 'America/Fortaleza')" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇧🇷 Taíba</button>
-          <button onclick="setSpot('Tarifa, Spain', 36.0143, -5.6044, 'Europe/Madrid')" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇪🇸 Tarifa</button>
-          <button onclick="setSpot('Dakhla, Morocco', 23.7136, -15.9355, 'Africa/Casablanca')" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇲🇦 Dakhla</button>
-          <button onclick="setSpot('Leucate, France', 42.9094, 3.0278, 'Europe/Paris')" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇫🇷 Leucate</button>
-          <button onclick="setSpot('Pozo Izquierdo, Spain', 27.8184, -15.4243, 'Atlantic/Canary')" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇪🇸 Pozo</button>
+          <button onclick="setSpot('Cumbuco, Brazil', -3.6247, -38.7297, 'America/Fortaleza', 40)" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇧🇷 Cumbuco (NE)</button>
+          <button onclick="setSpot('Taiba, Brazil', -3.5042, -38.8953, 'America/Fortaleza', 35)" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇧🇷 Taíba (NNE)</button>
+          <button onclick="setSpot('Tarifa, Spain', 36.0143, -5.6044, 'Europe/Madrid', 220)" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇪🇸 Tarifa (SW)</button>
+          <button onclick="setSpot('Dakhla, Morocco', 23.7136, -15.9355, 'Africa/Casablanca', 270)" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇲🇦 Dakhla (W)</button>
+          <button onclick="setSpot('Leucate, France', 42.9094, 3.0278, 'Europe/Paris', 110)" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇫🇷 Leucate (ESE)</button>
+          <button onclick="setSpot('Pozo Izquierdo, Spain', 27.8184, -15.4243, 'Atlantic/Canary', 90)" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇪🇸 Pozo (E)</button>
+        </div>
+
+        <!-- Coastline / Beach Orientation Selector -->
+        <div class="pt-2 border-t border-slate-800 space-y-1.5">
+          <label class="block font-semibold text-slate-300 text-xs flex items-center justify-between">
+            <span class="flex items-center space-x-1">
+              <i data-lucide="compass" class="w-3.5 h-3.5 text-sky-400"></i>
+              <span>Beach Facing Angle</span>
+            </span>
+            <span id="label-beach-angle" class="text-sky-400 font-mono font-bold text-xs">40° (NE)</span>
+          </label>
+          <select id="select-beach-orientation" onchange="onBeachOrientationChange(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
+            <option value="40">NE (40° - Cumbuco, Taíba, Paracuru)</option>
+            <option value="220">SW (220° - Tarifa Los Lances / Valdevaqueros)</option>
+            <option value="270">W (270° - Dakhla, Bonaire Atlantis)</option>
+            <option value="90">E (90° - Pozo Izquierdo, El Gouna)</option>
+            <option value="110">ESE (110° - Leucate La Franqui)</option>
+            <option value="250">WSW (250° - Cape Town Bloubergstrand)</option>
+            <option value="30">NNE (30° - Cabarete Kite Beach)</option>
+            <option value="350">N (350° - Maui Kanaha)</option>
+            <option value="330">NNW (330° - Jericoacoara)</option>
+            <option value="0">North (0°)</option>
+            <option value="45">North-East (45°)</option>
+            <option value="90">East (90°)</option>
+            <option value="135">South-East (135°)</option>
+            <option value="180">South (180°)</option>
+            <option value="225">South-West (225°)</option>
+            <option value="270">West (270°)</option>
+            <option value="315">North-West (315°)</option>
+          </select>
+          <p class="text-[10px] text-slate-400">Direction looking from the beach out to open sea. Defines whether wind is safe Side-On vs. hazardous Offshore.</p>
         </div>
       </div>
     </div>
@@ -518,12 +620,175 @@
       }
     };
 
+    // SHORELINE & SAFETY METRICS LOGIC
+    const DEFAULT_BEACH_ORIENTATIONS = {
+      "cumbuco": 40.0,
+      "taiba": 35.0,
+      "paracuru": 45.0,
+      "ilha do guajiru": 45.0,
+      "jericoacoara": 330.0,
+      "tarifa": 220.0,
+      "dakhla": 270.0,
+      "leucate": 110.0,
+      "pozo": 90.0,
+      "bonaire": 260.0,
+      "el gouna": 90.0,
+      "cape town": 250.0,
+      "cabarete": 30.0,
+      "maui": 350.0
+    };
+
+    function resolveBeachAngle(spotName, customAngle) {
+      if (customAngle !== undefined && customAngle !== null && customAngle !== '') {
+        const val = parseFloat(customAngle);
+        if (!isNaN(val)) return val;
+      }
+      const clean = (spotName || '').toLowerCase();
+      for (const [key, angle] of Object.entries(DEFAULT_BEACH_ORIENTATIONS)) {
+        if (clean.includes(key)) return angle;
+      }
+      return 40.0;
+    }
+
+    function degreesToCardinal(deg) {
+      const dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+      const idx = Math.round(((deg % 360) + 360) % 360 / 22.5) % 16;
+      return dirs[idx];
+    }
+
+    function calculateShorelineStatus(windDeg, beachDeg) {
+      const diff = Math.abs(((windDeg - beachDeg + 180.0) % 360.0 + 360.0) % 360.0 - 180.0);
+      if (diff <= 30.0) {
+        return {
+          type: "Onshore",
+          tag: "🟡 Onshore",
+          badgeColor: "amber",
+          description: "Direct onshore: choppy shorebreak, harder waterstarts",
+          relative_angle: Math.round(diff)
+        };
+      } else if (diff <= 75.0) {
+        return {
+          type: "Side-Onshore",
+          tag: "🟢 Side-Onshore",
+          badgeColor: "emerald",
+          description: "Ideal & safe: prime riding angle, pushes back to shore",
+          relative_angle: Math.round(diff)
+        };
+      } else if (diff <= 105.0) {
+        return {
+          type: "Sideshore",
+          tag: "🟢 Sideshore",
+          badgeColor: "emerald",
+          description: "Safe & clean: parallel to beach, smooth speed runs",
+          relative_angle: Math.round(diff)
+        };
+      } else if (diff <= 150.0) {
+        return {
+          type: "Side-Offshore",
+          tag: "🟠 Side-Offshore",
+          badgeColor: "orange",
+          description: "Caution: blowing away from beach, stay aware",
+          relative_angle: Math.round(diff)
+        };
+      } else {
+        return {
+          type: "Offshore",
+          tag: "🚨 Offshore Hazard",
+          badgeColor: "rose",
+          description: "DANGER: wind blowing out to open sea! Rescue boat mandatory",
+          relative_angle: Math.round(diff)
+        };
+      }
+    }
+
+    function calculateStabilityScore(windKts, gustKts) {
+      if (windKts <= 4) {
+        return { score: 10, rating: "10/10", label: "Calm / Light", badgeColor: "sky", description: "Sub-planing breeze, ultra calm" };
+      }
+      const ratio = gustKts / Math.max(windKts, 1.0);
+      if (ratio <= 1.15) {
+        return { score: 10, rating: "10/10", label: "Butter Smooth", badgeColor: "emerald", description: "Ultra smooth trade winds, steady pull" };
+      } else if (ratio <= 1.25) {
+        return { score: 9, rating: "9/10", label: "Steady & Clean", badgeColor: "emerald", description: "Consistent steady wind with minimal gust variation" };
+      } else if (ratio <= 1.35) {
+        return { score: 8, rating: "8/10", label: "Clean Breezes", badgeColor: "teal", description: "Comfortable steady wind, gentle predictable pulses" };
+      } else if (ratio <= 1.45) {
+        return { score: 6, rating: "6/10", label: "Moderate Gusts", badgeColor: "amber", description: "Noticeable gusts, standard bar sheeting adjustments" };
+      } else if (ratio <= 1.60) {
+        return { score: 5, rating: "5/10", label: "Punchy / Gusty", badgeColor: "amber", description: "Punchy gusts: rig conservatively and keep depowered" };
+      } else if (ratio <= 1.80) {
+        return { score: 3, rating: "3/10", label: "Turbulent & Shifty", badgeColor: "orange", description: "Heavy turbulence and gust spikes, hold edge firmly" };
+      } else {
+        return { score: 2, rating: "2/10", label: "Squally & Volatile", badgeColor: "rose", description: "Violent gust differentials, advanced storm riding only" };
+      }
+    }
+
+    function calculateWetsuitGuide(waterTemp, airTemp) {
+      const effectiveTemp = (waterTemp !== undefined && waterTemp !== null) ? waterTemp : ((airTemp !== undefined && airTemp !== null) ? (airTemp - 1.5) : 26.0);
+      const wDisplay = Math.round(effectiveTemp * 10) / 10;
+      if (effectiveTemp >= 24.0 && (airTemp === undefined || airTemp === null || airTemp >= 23.0)) {
+        return { wetsuit: "Boardshorts & Lycra", tag: "🩳 Boardshorts & Lycra", badgeColor: "emerald", waterTemp: wDisplay, advice: `Tropical warm water (${wDisplay}°C) — No neoprene needed, wear rashguard & sunscreen` };
+      } else if (effectiveTemp >= 19.5) {
+        return { wetsuit: "2mm Shorty", tag: "🏄 2mm Shorty / Top", badgeColor: "teal", waterTemp: wDisplay, advice: `Pleasant water (${wDisplay}°C) — 2mm shorty or top protects from windchill` };
+      } else if (effectiveTemp >= 15.5) {
+        return { wetsuit: "3/2mm Fullsuit", tag: "🧥 3/2mm Fullsuit", badgeColor: "sky", waterTemp: wDisplay, advice: `Cool water (${wDisplay}°C) — 3/2mm full steamer recommended` };
+      } else if (effectiveTemp >= 11.5) {
+        return { wetsuit: "4/3mm Steamer", tag: "❄️ 4/3mm Steamer", badgeColor: "indigo", waterTemp: wDisplay, advice: `Cold water (${wDisplay}°C) — 4/3mm sealed wetsuit recommended` };
+      } else {
+        return { wetsuit: "5/4mm + Booties", tag: "🧊 5/4mm + Booties", badgeColor: "purple", waterTemp: wDisplay, advice: `Frigid water (${wDisplay}°C) — 5/4mm hooded suit and booties mandatory` };
+      }
+    }
+
+    function calculateModelConsensus(ecmwfVal, gfsVal, iconVal) {
+      const models = [ecmwfVal, gfsVal, iconVal].filter(x => x !== undefined && x !== null && !isNaN(x)).map(Number);
+      if (models.length < 2) {
+        return { confidence_pct: 85, rating: "85%", label: "Good Agreement", tag: "🎯 85% Confidence", badgeColor: "emerald", description: "Standard forecast agreement", models: { ecmwf: ecmwfVal, gfs: gfsVal, icon: iconVal } };
+      }
+      const mean = models.reduce((a,b) => a+b, 0) / models.length;
+      const variance = models.reduce((a,b) => a + Math.pow(b - mean, 2), 0) / models.length;
+      const spread = Math.sqrt(variance);
+      let pct = 85, label = "Good Agreement", desc = "Strong consensus across major models", color = "teal";
+      if (spread <= 1.5) {
+        pct = 95; label = "High Consensus"; desc = "All global models agree (ECMWF, GFS, ICON)"; color = "emerald";
+      } else if (spread <= 2.8) {
+        pct = 85; label = "Good Agreement"; desc = "Strong consensus across major models"; color = "teal";
+      } else if (spread <= 4.5) {
+        pct = 70; label = "Moderate Spread"; desc = "Minor model variance — slight timing shifts possible"; color = "amber";
+      } else {
+        pct = 55; label = "Volatile Divergence"; desc = "High model divergence — track station updates"; color = "rose";
+      }
+      return {
+        confidence_pct: pct,
+        rating: `${pct}%`,
+        label,
+        tag: `🎯 ${pct}% ${label}`,
+        badgeColor: color,
+        spread_kts: Math.round(spread * 10) / 10,
+        description: desc,
+        models: {
+          ecmwf: Math.round(ecmwfVal),
+          gfs: Math.round(gfsVal),
+          icon: Math.round(iconVal)
+        }
+      };
+    }
+
     // 2. STATE INITIALIZATION (LocalStorage)
     // Preserves existing saved profile data while keeping clean defaults for fresh riders
     const savedName = localStorage.getItem('kf_name');
     const savedWeight = localStorage.getItem('kf_weight');
     const savedLevel = localStorage.getItem('kf_level');
     const savedBoard = localStorage.getItem('kf_board');
+    const savedSpot = JSON.parse(localStorage.getItem('kf_spot')) || {
+      name: "Cumbuco, Brazil",
+      lat: -3.6247,
+      lon: -38.7297,
+      timezone: "America/Fortaleza",
+      beach_angle: 40.0
+    };
+    if (savedSpot.beach_angle === undefined) {
+      savedSpot.beach_angle = resolveBeachAngle(savedSpot.name);
+    }
 
     let state = {
       user: {
@@ -532,12 +797,7 @@
         level: savedLevel || 'intermediate',
         board: savedBoard || 'Twintip'
       },
-      spot: JSON.parse(localStorage.getItem('kf_spot')) || {
-        name: "Cumbuco, Brazil",
-        lat: -3.6247,
-        lon: -38.7297,
-        timezone: "America/Fortaleza"
-      },
+      spot: savedSpot,
       inventory: JSON.parse(localStorage.getItem('kf_inventory')) || [],
       currentTab: 'today',
       forecastData: null
@@ -844,13 +1104,109 @@
       document.getElementById('compass-degrees').innerText = `${deg}° (From ${cardinal})`;
       document.getElementById('compass-needle').style.transform = `rotate(${deg}deg)`;
 
+      // Beach Orientation
+      const beachAngle = state.spot.beach_angle !== undefined ? state.spot.beach_angle : resolveBeachAngle(state.spot.name);
+
+      // 1. Shoreline Safety Metric
+      const shore = f.shoreline || calculateShorelineStatus(deg, beachAngle);
+      const shoreBox = document.getElementById('badge-shoreline-box');
+      const shoreText = document.getElementById('badge-shoreline-text');
+      const shoreRel = document.getElementById('badge-shoreline-rel');
+      const shoreSub = document.getElementById('badge-shoreline-sub');
+      if (shoreBox && shoreText) {
+        shoreRel.innerText = `Δ ${shore.relative_angle || 0}°`;
+        shoreText.innerText = shore.tag || shore.type;
+        shoreSub.innerText = shore.description || '';
+        shoreSub.title = shore.description || '';
+        const col = shore.badge_color || shore.badgeColor || 'emerald';
+        if (col === 'rose') {
+          shoreBox.className = "bg-rose-950/40 border border-rose-500/60 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
+          shoreText.className = "text-xs font-bold text-rose-400 flex items-center space-x-1";
+        } else if (col === 'orange') {
+          shoreBox.className = "bg-orange-950/40 border border-orange-500/60 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
+          shoreText.className = "text-xs font-bold text-orange-400 flex items-center space-x-1";
+        } else if (col === 'amber') {
+          shoreBox.className = "bg-amber-950/40 border border-amber-500/60 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
+          shoreText.className = "text-xs font-bold text-amber-400 flex items-center space-x-1";
+        } else {
+          shoreBox.className = "bg-emerald-950/40 border border-emerald-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
+          shoreText.className = "text-xs font-bold text-emerald-400 flex items-center space-x-1";
+        }
+      }
+
+      // 2. Wind Stability Metric
+      const stab = f.stability || calculateStabilityScore(liveWind, liveGust);
+      const stabBox = document.getElementById('badge-stability-box');
+      const stabScore = document.getElementById('badge-stability-score');
+      const stabText = document.getElementById('badge-stability-text');
+      const stabSub = document.getElementById('badge-stability-sub');
+      if (stabBox && stabText) {
+        stabScore.innerText = stab.rating || `${stab.score}/10`;
+        stabText.innerText = stab.label || '';
+        stabSub.innerText = stab.description || '';
+        stabSub.title = stab.description || '';
+        if (stab.score >= 8) {
+          stabBox.className = "bg-emerald-950/40 border border-emerald-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
+          stabScore.className = "text-[10px] font-bold text-emerald-400 font-mono";
+        } else if (stab.score >= 5) {
+          stabBox.className = "bg-amber-950/40 border border-amber-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
+          stabScore.className = "text-[10px] font-bold text-amber-400 font-mono";
+        } else {
+          stabBox.className = "bg-rose-950/40 border border-rose-500/60 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
+          stabScore.className = "text-[10px] font-bold text-rose-400 font-mono";
+        }
+      }
+
+      // 3. Thermal Guide / Wetsuit Metric
+      const isTomorrow = state.currentTab === 'tomorrow';
+      const wet = (isTomorrow ? f.tomorrow_wetsuit : f.wetsuit) || calculateWetsuitGuide(isTomorrow ? f.tomorrow_sea_temp : f.sea_temp, cur.temp);
+      const wetBox = document.getElementById('badge-wetsuit-box');
+      const wetTemp = document.getElementById('badge-wetsuit-temp');
+      const wetText = document.getElementById('badge-wetsuit-text');
+      const wetSub = document.getElementById('badge-wetsuit-sub');
+      if (wetBox && wetText) {
+        const sTemp = wet.water_temp || wet.waterTemp || Math.round(cur.temp);
+        wetTemp.innerText = `${sTemp}°C Sea`;
+        wetText.innerText = wet.tag || wet.wetsuit || '';
+        wetSub.innerText = wet.advice || '';
+        wetSub.title = wet.advice || '';
+        wetBox.className = "bg-cyan-950/40 border border-cyan-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
+      }
+
+      // 4. Forecast Consensus / Reliability Metric
+      const cons = f.consensus || calculateModelConsensus(liveWind, liveWind + 1, liveWind);
+      const consBox = document.getElementById('badge-consensus-box');
+      const consPct = document.getElementById('badge-consensus-pct');
+      const consText = document.getElementById('badge-consensus-text');
+      const consSub = document.getElementById('badge-consensus-sub');
+      if (consBox && consText) {
+        consPct.innerText = cons.rating || `${cons.confidence_pct}%`;
+        consText.innerText = cons.label || '';
+        const m = cons.models;
+        if (m && m.ecmwf !== undefined && m.ecmwf !== null) {
+          consSub.innerText = `ECMWF ${m.ecmwf} · GFS ${m.gfs} · ICON ${m.icon} kts`;
+        } else {
+          consSub.innerText = cons.description || 'ECMWF · GFS · ICON';
+        }
+        consSub.title = cons.description || '';
+        if (cons.confidence_pct >= 85) {
+          consBox.className = "bg-emerald-950/40 border border-emerald-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
+          consPct.className = "text-[10px] font-bold text-emerald-400 font-mono";
+        } else if (cons.confidence_pct >= 70) {
+          consBox.className = "bg-amber-950/40 border border-amber-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
+          consPct.className = "text-[10px] font-bold text-amber-400 font-mono";
+        } else {
+          consBox.className = "bg-rose-950/40 border border-rose-500/60 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
+          consPct.className = "text-[10px] font-bold text-rose-400 font-mono";
+        }
+      }
+
       // Rigging recommendation
       const rec = recommendRigging(liveWind, liveGust);
       const heroText = document.getElementById('hero-rec-text');
       heroText.innerText = rec.text;
 
       // Render Schedule Cards
-      const isTomorrow = state.currentTab === 'tomorrow';
       const schedule = isTomorrow ? (f.schedule_tomorrow || f.schedule) : f.schedule;
       const schedContainer = document.getElementById('schedule-cards-container');
 
@@ -861,6 +1217,16 @@
 
       schedContainer.innerHTML = Object.entries(schedule).map(([timeLabel, slot]) => {
         const slotRec = recommendRigging(slot.wind_kts, slot.gust_kts);
+        const slotShore = slot.shoreline || calculateShorelineStatus(slot.degrees || 90, beachAngle);
+        const slotStab = slot.stability || calculateStabilityScore(slot.wind_kts, slot.gust_kts);
+        const slotCons = slot.consensus || calculateModelConsensus(slot.wind_kts, slot.wind_kts, slot.wind_kts);
+
+        const shoreBadgeClass = (slotShore.type || '').includes('Side-On') || (slotShore.type || '').includes('Sideshore')
+          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+          : (slotShore.type || '').includes('Offshore')
+            ? 'bg-rose-500/20 text-rose-300 border-rose-500/30'
+            : 'bg-amber-500/20 text-amber-300 border-amber-500/30';
+
         return `
           <div class="bg-slate-900/90 rounded-2xl p-3.5 border border-slate-800/80 shadow-md flex items-center justify-between">
             <div class="flex items-center space-x-3">
@@ -869,11 +1235,14 @@
                 <span class="text-[9px] text-sky-400 font-bold -mt-0.5">kts</span>
               </div>
               <div>
-                <div class="flex items-center space-x-1.5">
+                <div class="flex items-center space-x-1.5 flex-wrap gap-y-1">
                   <h4 class="text-xs font-bold text-white">${timeLabel}</h4>
                   <span class="text-[10px] text-slate-400 font-medium">Gusts ${Math.round(slot.gust_kts)} kts · ${slot.direction || 'E'}</span>
+                  <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold border ${shoreBadgeClass}">${slotShore.type}</span>
+                  <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold bg-slate-800 text-slate-300 border border-slate-700">⚡ ${slotStab.score}/10</span>
+                  <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/30">🎯 ${slotCons.confidence_pct}%</span>
                 </div>
-                <p class="text-[11px] font-semibold mt-0.5 ${slotRec.status === 'sweet' ? 'text-emerald-400' : slotRec.status === 'overpowered' ? 'text-amber-400' : slotRec.status === 'danger' ? 'text-rose-400' : 'text-slate-300'}">
+                <p class="text-[11px] font-semibold mt-1 ${slotRec.status === 'sweet' ? 'text-emerald-400' : slotRec.status === 'overpowered' ? 'text-amber-400' : slotRec.status === 'danger' ? 'text-rose-400' : 'text-slate-300'}">
                   ${slotRec.text}
                 </p>
               </div>
@@ -882,6 +1251,7 @@
           </div>
         `;
       }).join('');
+      lucide.createIcons();
 
       // Render SVG Wind Chart
       renderWindChart(schedule);
@@ -949,7 +1319,8 @@
     async function fetchForecast() {
       try {
         const spot = state.spot;
-        const url = `/api/forecast?lat=${spot.lat}&lon=${spot.lon}&name=${encodeURIComponent(spot.name)}&timezone=${encodeURIComponent(spot.timezone || 'auto')}`;
+        const bAngle = spot.beach_angle !== undefined ? spot.beach_angle : resolveBeachAngle(spot.name);
+        const url = `/api/forecast?lat=${spot.lat}&lon=${spot.lon}&name=${encodeURIComponent(spot.name)}&timezone=${encodeURIComponent(spot.timezone || 'auto')}&beach_angle=${bAngle}`;
         const resp = await fetch(url);
         if (!resp.ok) throw new Error("API error " + resp.status);
         const data = await resp.json();
@@ -1080,11 +1451,28 @@
       }
     }
 
-    function setSpot(name, lat, lon, tz = "auto") {
-      state.spot = { name, lat, lon, timezone: tz };
+    function setSpot(name, lat, lon, tz = "auto", beachAngle = null) {
+      let bAngle = beachAngle;
+      if (bAngle === null || bAngle === undefined) {
+        bAngle = resolveBeachAngle(name);
+      }
+      state.spot = { name, lat, lon, timezone: tz, beach_angle: bAngle };
       localStorage.setItem('kf_spot', JSON.stringify(state.spot));
       document.getElementById('header-spot-name').innerText = name.split(',')[0];
+      const bSelect = document.getElementById('select-beach-orientation');
+      if (bSelect) bSelect.value = String(bAngle);
+      const bLabel = document.getElementById('label-beach-angle');
+      if (bLabel) bLabel.innerText = `${bAngle}° (${degreesToCardinal(bAngle)})`;
       toggleModal('modal-spot');
+      fetchForecast();
+    }
+
+    function onBeachOrientationChange(val) {
+      const bAngle = parseFloat(val);
+      state.spot.beach_angle = bAngle;
+      localStorage.setItem('kf_spot', JSON.stringify(state.spot));
+      const bLabel = document.getElementById('label-beach-angle');
+      if (bLabel) bLabel.innerText = `${bAngle}° (${degreesToCardinal(bAngle)})`;
       fetchForecast();
     }
 
@@ -1176,6 +1564,14 @@
       document.getElementById('slider-weight').value = state.user.weight;
       document.getElementById('header-spot-name').innerText = state.spot.name.split(',')[0];
       updateLevelButtonsUI();
+
+      // Initialize Beach Orientation controls
+      const bAngle = state.spot.beach_angle !== undefined ? state.spot.beach_angle : resolveBeachAngle(state.spot.name);
+      state.spot.beach_angle = bAngle;
+      const bSelect = document.getElementById('select-beach-orientation');
+      if (bSelect) bSelect.value = String(bAngle);
+      const bLabel = document.getElementById('label-beach-angle');
+      if (bLabel) bLabel.innerText = `${bAngle}° (${degreesToCardinal(bAngle)})`;
 
       // Instant local spot clock initialization & tick every 5 seconds
       updateLiveSpotClock();

@@ -168,25 +168,350 @@ def degrees_to_cardinal(deg: float) -> str:
     return dirs[idx]
 
 
+# ---------------------------------------------------------
+# SHORELINE SAFETY, WIND STABILITY, WETSUIT & CONSENSUS
+# ---------------------------------------------------------
+DEFAULT_BEACH_ORIENTATIONS = {
+    "cumbuco": 40.0,        # NE
+    "taiba": 35.0,          # NNE
+    "paracuru": 45.0,       # NE
+    "ilha do guajiru": 45.0,# NE
+    "jericoacoara": 330.0,  # NNW
+    "tarifa": 220.0,        # SW (Los Lances / Valdevaqueros)
+    "dakhla": 270.0,        # W (Lagoon)
+    "leucate": 110.0,       # ESE (La Franqui)
+    "pozo": 90.0,           # E
+    "bonaire": 260.0,       # W (Atlantis)
+    "el gouna": 90.0,       # E
+    "cape town": 250.0,     # WSW (Bloubergstrand)
+    "cabarete": 30.0,       # NNE (Kite Beach)
+    "maui": 350.0,          # N (Kanaha)
+}
+
+CARDINAL_DEGREES = {
+    "N": 0.0, "NNE": 22.5, "NE": 45.0, "ENE": 67.5,
+    "E": 90.0, "ESE": 112.5, "SE": 135.0, "SSE": 157.5,
+    "S": 180.0, "SSW": 202.5, "SW": 225.0, "WSW": 247.5,
+    "W": 270.0, "WNW": 292.5, "NW": 315.0, "NNW": 337.5
+}
+
+
+def resolve_beach_angle(spot_name: str, custom_angle=None) -> float:
+    if custom_angle is not None:
+        if isinstance(custom_angle, (int, float)):
+            return float(custom_angle)
+        if isinstance(custom_angle, str) and custom_angle.upper() in CARDINAL_DEGREES:
+            return CARDINAL_DEGREES[custom_angle.upper()]
+        try:
+            return float(custom_angle)
+        except (ValueError, TypeError):
+            pass
+    clean_name = (spot_name or "").lower()
+    for key, angle in DEFAULT_BEACH_ORIENTATIONS.items():
+        if key in clean_name:
+            return float(angle)
+    return 45.0  # default generic NE coast
+
+
+def calculate_shoreline_status(wind_deg: float, beach_deg: float) -> dict:
+    """Calculates wind angle relative to beach coastline."""
+    diff = abs((wind_deg - beach_deg + 180.0) % 360.0 - 180.0)
+    if diff <= 30.0:
+        return {
+            "type": "Onshore",
+            "tag": "🟡 Onshore",
+            "pill": "Onshore",
+            "badge_color": "amber",
+            "description": "Direct onshore: choppy shorebreak, harder waterstarts",
+            "is_safe": True,
+            "warning": False,
+            "danger": False,
+            "relative_angle": round(diff)
+        }
+    elif diff <= 75.0:
+        return {
+            "type": "Side-Onshore",
+            "tag": "🟢 Side-Onshore",
+            "pill": "Side-Onshore",
+            "badge_color": "emerald",
+            "description": "Ideal & safe: prime riding angle, pushes back to shore",
+            "is_safe": True,
+            "warning": False,
+            "danger": False,
+            "relative_angle": round(diff)
+        }
+    elif diff <= 105.0:
+        return {
+            "type": "Sideshore",
+            "tag": "🟢 Sideshore",
+            "pill": "Sideshore",
+            "badge_color": "emerald",
+            "description": "Safe & clean: parallel to beach, smooth speed runs",
+            "is_safe": True,
+            "warning": False,
+            "danger": False,
+            "relative_angle": round(diff)
+        }
+    elif diff <= 150.0:
+        return {
+            "type": "Side-Offshore",
+            "tag": "🟠 Side-Offshore",
+            "pill": "Side-Offshore",
+            "badge_color": "orange",
+            "description": "Caution: blowing away from beach, safety cover advised",
+            "is_safe": False,
+            "warning": True,
+            "danger": False,
+            "relative_angle": round(diff)
+        }
+    else:
+        return {
+            "type": "Offshore",
+            "tag": "🚨 Offshore Hazard",
+            "pill": "Offshore Hazard",
+            "badge_color": "rose",
+            "description": "DANGER: blowing out to open sea! Rescue boat mandatory",
+            "is_safe": False,
+            "warning": True,
+            "danger": True,
+            "relative_angle": round(diff)
+        }
+
+
+def calculate_stability_score(wind_kts: float, gust_kts: float) -> dict:
+    """Calculates 1-10 wind punchiness / stability score comparing gusts to sustained wind."""
+    if wind_kts <= 4:
+        return {
+            "score": 10,
+            "rating": "10/10",
+            "label": "Calm / Light",
+            "pill": "10/10 Calm",
+            "badge_color": "sky",
+            "description": "Sub-planing breeze, ultra calm"
+        }
+    ratio = gust_kts / max(wind_kts, 1.0)
+    if ratio <= 1.15:
+        return {
+            "score": 10,
+            "rating": "10/10",
+            "label": "Butter Smooth",
+            "pill": "10/10 Smooth",
+            "badge_color": "emerald",
+            "description": "Ultra smooth laminar flow (trade winds), steady pull"
+        }
+    elif ratio <= 1.25:
+        return {
+            "score": 9,
+            "rating": "9/10",
+            "label": "Steady & Clean",
+            "pill": "9/10 Steady",
+            "badge_color": "emerald",
+            "description": "Consistent steady wind with minimal gust variation"
+        }
+    elif ratio <= 1.35:
+        return {
+            "score": 8,
+            "rating": "8/10",
+            "label": "Clean Breezes",
+            "pill": "8/10 Clean",
+            "badge_color": "teal",
+            "description": "Comfortable steady wind, gentle predictable pulses"
+        }
+    elif ratio <= 1.45:
+        return {
+            "score": 6,
+            "rating": "6/10",
+            "label": "Moderate Gusts",
+            "pill": "6/10 Moderate",
+            "badge_color": "amber",
+            "description": "Noticeable gusts, standard bar sheeting adjustments"
+        }
+    elif ratio <= 1.60:
+        return {
+            "score": 5,
+            "rating": "5/10",
+            "label": "Punchy / Gusty",
+            "pill": "5/10 Punchy",
+            "badge_color": "amber",
+            "description": "Punchy gusts: rig conservatively and keep depowered"
+        }
+    elif ratio <= 1.80:
+        return {
+            "score": 3,
+            "rating": "3/10",
+            "label": "Turbulent & Shifty",
+            "pill": "3/10 Turbulent",
+            "badge_color": "orange",
+            "description": "Heavy turbulence and gust spikes, hold edge firmly"
+        }
+    else:
+        return {
+            "score": 2,
+            "rating": "2/10",
+            "label": "Squally & Volatile",
+            "pill": "2/10 Squally",
+            "badge_color": "rose",
+            "description": "Violent gust differentials, advanced storm riding only"
+        }
+
+
+def calculate_wetsuit_guide(water_temp, air_temp) -> dict:
+    """Thermal comfort and wetsuit recommendation based on water & air temps."""
+    effective_temp = water_temp if water_temp is not None else (air_temp - 1.5 if air_temp is not None else 26.0)
+    w_display = round(effective_temp, 1)
+
+    if effective_temp >= 24.0 and (air_temp is None or air_temp >= 23.0):
+        return {
+            "wetsuit": "Boardshorts & Lycra",
+            "gear": "Boardshorts / Bikini & UV Lycra",
+            "icon": "🩳",
+            "tag": "🩳 Boardshorts & Lycra",
+            "pill": "Boardshorts & Lycra",
+            "badge_color": "emerald",
+            "water_temp": w_display,
+            "advice": f"Tropical warm water ({w_display}°C) — No neoprene needed, wear rashguard & sunscreen"
+        }
+    elif effective_temp >= 19.5:
+        return {
+            "wetsuit": "2mm Shorty",
+            "gear": "2mm Shorty / Neoprene Top",
+            "icon": "🏄",
+            "tag": "🏄 2mm Shorty / Top",
+            "pill": "2mm Shorty",
+            "badge_color": "teal",
+            "water_temp": w_display,
+            "advice": f"Pleasant water ({w_display}°C) — 2mm shorty or top protects from windchill"
+        }
+    elif effective_temp >= 15.5:
+        return {
+            "wetsuit": "3/2mm Fullsuit",
+            "gear": "3/2mm Full Wetsuit (Steamer)",
+            "icon": "🧥",
+            "tag": "🧥 3/2mm Fullsuit",
+            "pill": "3/2mm Fullsuit",
+            "badge_color": "sky",
+            "water_temp": w_display,
+            "advice": f"Cool water ({w_display}°C) — 3/2mm full steamer recommended"
+        }
+    elif effective_temp >= 11.5:
+        return {
+            "wetsuit": "4/3mm Steamer",
+            "gear": "4/3mm Sealed Steamer",
+            "icon": "❄️",
+            "tag": "❄️ 4/3mm Steamer",
+            "pill": "4/3mm Steamer",
+            "badge_color": "indigo",
+            "water_temp": w_display,
+            "advice": f"Cold water ({w_display}°C) — 4/3mm sealed wetsuit recommended"
+        }
+    else:
+        return {
+            "wetsuit": "5/4mm + Booties",
+            "gear": "5/4mm Wetsuit + Booties & Hood",
+            "icon": "🧊",
+            "tag": "🧊 5/4mm + Booties",
+            "pill": "5/4mm + Booties",
+            "badge_color": "purple",
+            "water_temp": w_display,
+            "advice": f"Frigid water ({w_display}°C) — 5/4mm hooded suit and booties mandatory"
+        }
+
+
+def calculate_model_consensus(ecmwf_val, gfs_val, icon_val) -> dict:
+    """Calculates forecast consensus and confidence percentage across ECMWF, GFS, and ICON."""
+    models = [ecmwf_val, gfs_val, icon_val]
+    valid = [float(m) for m in models if m is not None]
+    if len(valid) < 2:
+        return {
+            "confidence_pct": 85,
+            "rating": "85%",
+            "label": "Good Agreement",
+            "tag": "🎯 85% Confidence",
+            "pill": "85% Confidence",
+            "badge_color": "emerald",
+            "spread_kts": 1.0,
+            "models": {
+                "ecmwf": round_knots(ecmwf_val) if ecmwf_val is not None else None,
+                "gfs": round_knots(gfs_val) if gfs_val is not None else None,
+                "icon": round_knots(icon_val) if icon_val is not None else None
+            },
+            "description": "Standard forecast agreement"
+        }
+    mean = sum(valid) / len(valid)
+    variance = sum((x - mean) ** 2 for x in valid) / len(valid)
+    spread = math.sqrt(variance)
+
+    if spread <= 1.5:
+        pct = 95
+        label = "High Consensus"
+        desc = "All global models agree (ECMWF, GFS, ICON)"
+        color = "emerald"
+    elif spread <= 2.8:
+        pct = 85
+        label = "Good Agreement"
+        desc = "Strong consensus across major models"
+        color = "teal"
+    elif spread <= 4.5:
+        pct = 70
+        label = "Moderate Spread"
+        desc = "Minor model variance — slight timing shifts possible"
+        color = "amber"
+    else:
+        pct = 55
+        label = "Volatile Divergence"
+        desc = "High model divergence — track station updates"
+        color = "rose"
+
+    return {
+        "confidence_pct": pct,
+        "rating": f"{pct}%",
+        "label": label,
+        "tag": f"🎯 {pct}% {label}",
+        "pill": f"{pct}% Confidence",
+        "badge_color": color,
+        "spread_kts": round(spread, 1),
+        "models": {
+            "ecmwf": round_knots(ecmwf_val) if ecmwf_val is not None else None,
+            "gfs": round_knots(gfs_val) if gfs_val is not None else None,
+            "icon": round_knots(icon_val) if icon_val is not None else None
+        },
+        "description": desc
+    }
+
+
 def fetch_tides(lat: float, lon: float, timezone_str: str = "auto") -> list:
-    today_tides, _ = fetch_tides_both_days(lat, lon, timezone_str)
+    today_tides, _, _, _ = fetch_tides_both_days(lat, lon, timezone_str)
     return today_tides
 
 
 def fetch_tides_both_days(lat: float, lon: float, timezone_str: str = "auto") -> tuple:
     url = (
         f"https://marine-api.open-meteo.com/v1/marine?"
-        f"latitude={lat}&longitude={lon}&hourly=sea_level_height_msl&timezone={timezone_str}&forecast_days=2"
+        f"latitude={lat}&longitude={lon}&hourly=sea_level_height_msl,sea_surface_temperature&timezone={timezone_str}&forecast_days=2"
     )
     req = urllib.request.Request(url, headers={"User-Agent": "KiteForecastBot/1.0"})
     try:
         with urllib.request.urlopen(req, context=SSL_CTX, timeout=12) as response:
             data = json.loads(response.read().decode("utf-8"))
         
-        times = data.get("hourly", {}).get("time", [])
-        levels = data.get("hourly", {}).get("sea_level_height_msl", [])
+        hourly = data.get("hourly", {})
+        times = hourly.get("time", [])
+        levels = hourly.get("sea_level_height_msl", [])
+        sst_list = hourly.get("sea_surface_temperature", [])
+
+        # Extract representative sea surface temperature for today (midday hr 12) & tomorrow (hr 36)
+        today_sst = None
+        tmrw_sst = None
+        if sst_list:
+            valid_today = [x for x in sst_list[:24] if x is not None]
+            if valid_today:
+                today_sst = round(sum(valid_today) / len(valid_today), 1)
+            valid_tmrw = [x for x in sst_list[24:48] if x is not None]
+            if valid_tmrw:
+                tmrw_sst = round(sum(valid_tmrw) / len(valid_tmrw), 1)
+
         if not times or not levels:
-            return [], []
+            return [], [], today_sst, tmrw_sst
 
         today_tides = []
         tomorrow_tides = []
@@ -206,10 +531,10 @@ def fetch_tides_both_days(lat: float, lon: float, timezone_str: str = "auto") ->
                     else:
                         tomorrow_tides.append(tide_item)
 
-        return today_tides, tomorrow_tides
+        return today_tides, tomorrow_tides, today_sst, tmrw_sst
     except Exception as e:
-        print(f"Error fetching tides: {e}")
-        return [], []
+        print(f"Error fetching tides & SST: {e}")
+        return [], [], None, None
 
 
 def fetch_weather_openmeteo(spot: dict) -> dict:
@@ -218,6 +543,7 @@ def fetch_weather_openmeteo(spot: dict) -> dict:
         "longitude": spot["lon"],
         "current": "temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m",
         "hourly": "temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m",
+        "models": "best_match,ecmwf_ifs025,gfs_seamless,icon_seamless",
         "wind_speed_unit": "kn",
         "timezone": spot.get("timezone", "auto"),
         "forecast_days": 2
@@ -232,10 +558,16 @@ def fetch_weather_openmeteo(spot: dict) -> dict:
 
     current = data.get("current", {})
     hourly = data.get("hourly", {})
-    speeds = hourly.get("wind_speed_10m", [])
-    gusts = hourly.get("wind_gusts_10m", [])
-    directions = hourly.get("wind_direction_10m", [])
-    temps = hourly.get("temperature_2m", [])
+    speeds = hourly.get("wind_speed_10m_best_match") or hourly.get("wind_speed_10m", [])
+    gusts = hourly.get("wind_gusts_10m_best_match") or hourly.get("wind_gusts_10m", [])
+    directions = hourly.get("wind_direction_10m_best_match") or hourly.get("wind_direction_10m", [])
+    temps = hourly.get("temperature_2m_best_match") or hourly.get("temperature_2m", [])
+
+    ecmwf_speeds = hourly.get("wind_speed_10m_ecmwf_ifs025", [])
+    gfs_speeds = hourly.get("wind_speed_10m_gfs_seamless", [])
+    icon_speeds = hourly.get("wind_speed_10m_icon_seamless", [])
+
+    beach_angle = resolve_beach_angle(spot.get("name", ""), spot.get("beach_angle"))
 
     target_hours = {
         "Morning (09:00)": 9,
@@ -248,12 +580,22 @@ def fetch_weather_openmeteo(spot: dict) -> dict:
     schedule = {}
     for label, hr in target_hours.items():
         if hr < len(speeds):
+            w_val = round_knots(speeds[hr])
+            g_val = round_knots(gusts[hr])
+            d_val = round(directions[hr])
+            e_val = ecmwf_speeds[hr] if hr < len(ecmwf_speeds) else w_val
+            gf_val = gfs_speeds[hr] if hr < len(gfs_speeds) else w_val
+            ic_val = icon_speeds[hr] if hr < len(icon_speeds) else w_val
+            
             schedule[label] = {
-                "wind_kts": round_knots(speeds[hr]),
-                "gust_kts": round_knots(gusts[hr]),
+                "wind_kts": w_val,
+                "gust_kts": g_val,
                 "direction": degrees_to_cardinal(directions[hr]),
-                "degrees": round(directions[hr]),
-                "temp": round(temps[hr], 1)
+                "degrees": d_val,
+                "temp": round(temps[hr], 1),
+                "stability": calculate_stability_score(w_val, g_val),
+                "shoreline": calculate_shoreline_status(d_val, beach_angle),
+                "consensus": calculate_model_consensus(e_val, gf_val, ic_val)
             }
 
     # Tomorrow schedule (Day 1: 24..47)
@@ -261,12 +603,22 @@ def fetch_weather_openmeteo(spot: dict) -> dict:
     for label, hr in target_hours.items():
         tmrw_hr = hr + 24
         if tmrw_hr < len(speeds):
+            w_val = round_knots(speeds[tmrw_hr])
+            g_val = round_knots(gusts[tmrw_hr])
+            d_val = round(directions[tmrw_hr])
+            e_val = ecmwf_speeds[tmrw_hr] if tmrw_hr < len(ecmwf_speeds) else w_val
+            gf_val = gfs_speeds[tmrw_hr] if tmrw_hr < len(gfs_speeds) else w_val
+            ic_val = icon_speeds[tmrw_hr] if tmrw_hr < len(icon_speeds) else w_val
+
             schedule_tomorrow[label] = {
-                "wind_kts": round_knots(speeds[tmrw_hr]),
-                "gust_kts": round_knots(gusts[tmrw_hr]),
+                "wind_kts": w_val,
+                "gust_kts": g_val,
                 "direction": degrees_to_cardinal(directions[tmrw_hr]),
-                "degrees": round(directions[tmrw_hr]),
-                "temp": round(temps[tmrw_hr], 1)
+                "degrees": d_val,
+                "temp": round(temps[tmrw_hr], 1),
+                "stability": calculate_stability_score(w_val, g_val),
+                "shoreline": calculate_shoreline_status(d_val, beach_angle),
+                "consensus": calculate_model_consensus(e_val, gf_val, ic_val)
             }
 
     cur_wind = round_knots(current.get("wind_speed_10m", speeds[12] if len(speeds) > 12 else 16.0))
@@ -275,6 +627,14 @@ def fetch_weather_openmeteo(spot: dict) -> dict:
     cur_dir = degrees_to_cardinal(cur_dir_deg)
     cur_temp = round(current.get("temperature_2m", 28.5), 1)
 
+    cur_ecmwf = ecmwf_speeds[12] if len(ecmwf_speeds) > 12 else cur_wind
+    cur_gfs = gfs_speeds[12] if len(gfs_speeds) > 12 else cur_wind
+    cur_icon = icon_speeds[12] if len(icon_speeds) > 12 else cur_wind
+
+    cur_stability = calculate_stability_score(cur_wind, cur_gust)
+    cur_shoreline = calculate_shoreline_status(cur_dir_deg, beach_angle)
+    cur_consensus = calculate_model_consensus(cur_ecmwf, cur_gfs, cur_icon)
+
     today_temps = temps[:24] if len(temps) >= 24 else temps
     today_gusts = gusts[:24] if len(gusts) >= 24 else gusts
     tmrw_temps = temps[24:48] if len(temps) >= 48 else temps
@@ -282,6 +642,7 @@ def fetch_weather_openmeteo(spot: dict) -> dict:
 
     return {
         "spot": spot["name"],
+        "beach_angle": beach_angle,
         "timezone": spot_tz,
         "utc_offset_seconds": utc_offset,
         "temp_min": round(min(today_temps), 1) if today_temps else 25,
@@ -297,6 +658,9 @@ def fetch_weather_openmeteo(spot: dict) -> dict:
             "degrees": cur_dir_deg,
             "temp": cur_temp
         },
+        "shoreline": cur_shoreline,
+        "stability": cur_stability,
+        "consensus": cur_consensus,
         "schedule": schedule,
         "schedule_tomorrow": schedule_tomorrow
     }
@@ -319,23 +683,29 @@ def fetch_weather_metno(spot: dict) -> dict:
     cur_dir_deg = round(cur_details.get("wind_from_direction", 90))
     cur_dir = degrees_to_cardinal(cur_dir_deg)
 
+    beach_angle = resolve_beach_angle(spot.get("name", ""), spot.get("beach_angle"))
+    cur_stability = calculate_stability_score(cur_wind, cur_gust)
+    cur_shoreline = calculate_shoreline_status(cur_dir_deg, beach_angle)
+    cur_consensus = calculate_model_consensus(cur_wind, cur_wind + 1, cur_wind)
+
     schedule = {
-        "Morning (09:00)": {"wind_kts": cur_wind, "gust_kts": cur_gust, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp},
-        "Midday (12:00)": {"wind_kts": cur_wind, "gust_kts": cur_gust, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp},
-        "Afternoon (15:00)": {"wind_kts": max(12, cur_wind - 1), "gust_kts": cur_gust, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp},
-        "Sunset (17:00)": {"wind_kts": max(10, cur_wind - 3), "gust_kts": max(14, cur_gust - 3), "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp - 1}
+        "Morning (09:00)": {"wind_kts": cur_wind, "gust_kts": cur_gust, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp, "stability": cur_stability, "shoreline": cur_shoreline, "consensus": cur_consensus},
+        "Midday (12:00)": {"wind_kts": cur_wind, "gust_kts": cur_gust, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp, "stability": cur_stability, "shoreline": cur_shoreline, "consensus": cur_consensus},
+        "Afternoon (15:00)": {"wind_kts": max(12, cur_wind - 1), "gust_kts": cur_gust, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp, "stability": cur_stability, "shoreline": cur_shoreline, "consensus": cur_consensus},
+        "Sunset (17:00)": {"wind_kts": max(10, cur_wind - 3), "gust_kts": max(14, cur_gust - 3), "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp - 1, "stability": cur_stability, "shoreline": cur_shoreline, "consensus": cur_consensus}
     }
 
     schedule_tomorrow = {
-        "Morning (09:00)": {"wind_kts": cur_wind, "gust_kts": cur_gust, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp},
-        "Midday (12:00)": {"wind_kts": cur_wind + 1, "gust_kts": cur_gust + 2, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp + 1},
-        "Afternoon (15:00)": {"wind_kts": max(12, cur_wind), "gust_kts": cur_gust, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp},
-        "Sunset (17:00)": {"wind_kts": max(10, cur_wind - 2), "gust_kts": max(14, cur_gust - 2), "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp - 1}
+        "Morning (09:00)": {"wind_kts": cur_wind, "gust_kts": cur_gust, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp, "stability": cur_stability, "shoreline": cur_shoreline, "consensus": cur_consensus},
+        "Midday (12:00)": {"wind_kts": cur_wind + 1, "gust_kts": cur_gust + 2, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp + 1, "stability": cur_stability, "shoreline": cur_shoreline, "consensus": cur_consensus},
+        "Afternoon (15:00)": {"wind_kts": max(12, cur_wind), "gust_kts": cur_gust, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp, "stability": cur_stability, "shoreline": cur_shoreline, "consensus": cur_consensus},
+        "Sunset (17:00)": {"wind_kts": max(10, cur_wind - 2), "gust_kts": max(14, cur_gust - 2), "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp - 1, "stability": cur_stability, "shoreline": cur_shoreline, "consensus": cur_consensus}
     }
 
     approx_offset = round(spot.get("lon", -38.7297) / 15.0) * 3600
     return {
         "spot": spot["name"],
+        "beach_angle": beach_angle,
         "timezone": spot.get("timezone", "America/Fortaleza"),
         "utc_offset_seconds": approx_offset,
         "temp_min": round(cur_temp - 3, 1),
@@ -351,6 +721,9 @@ def fetch_weather_metno(spot: dict) -> dict:
             "degrees": cur_dir_deg,
             "temp": cur_temp
         },
+        "shoreline": cur_shoreline,
+        "stability": cur_stability,
+        "consensus": cur_consensus,
         "schedule": schedule,
         "schedule_tomorrow": schedule_tomorrow
     }
@@ -371,8 +744,14 @@ def fetch_live_forecast(spot: dict) -> dict:
                     forecast = json.load(f)
 
     if not forecast:
+        beach_angle = resolve_beach_angle(spot.get("name", ""), spot.get("beach_angle"))
+        stab_default = calculate_stability_score(16.0, 25.0)
+        shore_default = calculate_shoreline_status(90, beach_angle)
+        cons_default = calculate_model_consensus(16.0, 17.0, 15.5)
+
         forecast = {
             "spot": spot["name"],
+            "beach_angle": beach_angle,
             "timezone": spot.get("timezone", "America/Fortaleza"),
             "utc_offset_seconds": -10800,
             "temp_min": 25.5,
@@ -381,24 +760,50 @@ def fetch_live_forecast(spot: dict) -> dict:
             "tomorrow_temp_min": 25.0,
             "tomorrow_temp_max": 31.0,
             "tomorrow_max_gust": 26.0,
-            "current": {"wind_kts": 16.0, "gust_kts": 25.0, "direction": "E", "temp": 29.0},
+            "current": {"wind_kts": 16.0, "gust_kts": 25.0, "direction": "E", "degrees": 90, "temp": 29.0},
+            "shoreline": shore_default,
+            "stability": stab_default,
+            "consensus": cons_default,
             "schedule": {
-                "Morning (09:00)": {"wind_kts": 15.0, "gust_kts": 24.0, "direction": "ESE", "temp": 27.5},
-                "Midday (12:00)": {"wind_kts": 18.0, "gust_kts": 28.0, "direction": "E", "temp": 30.0},
-                "Afternoon (15:00)": {"wind_kts": 16.5, "gust_kts": 26.0, "direction": "E", "temp": 29.5},
-                "Sunset (17:00)": {"wind_kts": 13.0, "gust_kts": 22.0, "direction": "E", "temp": 28.0}
+                "Morning (09:00)": {"wind_kts": 15.0, "gust_kts": 24.0, "direction": "ESE", "degrees": 112, "temp": 27.5, "stability": stab_default, "shoreline": shore_default, "consensus": cons_default},
+                "Midday (12:00)": {"wind_kts": 18.0, "gust_kts": 28.0, "direction": "E", "degrees": 90, "temp": 30.0, "stability": stab_default, "shoreline": shore_default, "consensus": cons_default},
+                "Afternoon (15:00)": {"wind_kts": 16.5, "gust_kts": 26.0, "direction": "E", "degrees": 90, "temp": 29.5, "stability": stab_default, "shoreline": shore_default, "consensus": cons_default},
+                "Sunset (17:00)": {"wind_kts": 13.0, "gust_kts": 22.0, "direction": "E", "degrees": 90, "temp": 28.0, "stability": stab_default, "shoreline": shore_default, "consensus": cons_default}
             },
             "schedule_tomorrow": {
-                "Morning (09:00)": {"wind_kts": 14.5, "gust_kts": 23.0, "direction": "ESE", "temp": 27.0},
-                "Midday (12:00)": {"wind_kts": 17.5, "gust_kts": 27.0, "direction": "E", "temp": 29.5},
-                "Afternoon (15:00)": {"wind_kts": 16.0, "gust_kts": 25.0, "direction": "E", "temp": 29.0},
-                "Sunset (17:00)": {"wind_kts": 12.5, "gust_kts": 21.0, "direction": "E", "temp": 27.5}
+                "Morning (09:00)": {"wind_kts": 14.5, "gust_kts": 23.0, "direction": "ESE", "degrees": 112, "temp": 27.0, "stability": stab_default, "shoreline": shore_default, "consensus": cons_default},
+                "Midday (12:00)": {"wind_kts": 17.5, "gust_kts": 27.0, "direction": "E", "degrees": 90, "temp": 29.5, "stability": stab_default, "shoreline": shore_default, "consensus": cons_default},
+                "Afternoon (15:00)": {"wind_kts": 16.0, "gust_kts": 25.0, "direction": "E", "degrees": 90, "temp": 29.0, "stability": stab_default, "shoreline": shore_default, "consensus": cons_default},
+                "Sunset (17:00)": {"wind_kts": 12.5, "gust_kts": 21.0, "direction": "E", "degrees": 90, "temp": 27.5, "stability": stab_default, "shoreline": shore_default, "consensus": cons_default}
             }
         }
 
-    today_tides, tomorrow_tides = fetch_tides_both_days(spot["lat"], spot["lon"], spot.get("timezone", "auto"))
+    today_tides, tomorrow_tides, today_sst, tomorrow_sst = fetch_tides_both_days(spot["lat"], spot["lon"], spot.get("timezone", "auto"))
     forecast["tides"] = today_tides
     forecast["tides_tomorrow"] = tomorrow_tides
+    forecast["sea_temp"] = today_sst
+    forecast["tomorrow_sea_temp"] = tomorrow_sst
+
+    beach_angle = resolve_beach_angle(spot.get("name", ""), spot.get("beach_angle"))
+    forecast["beach_angle"] = beach_angle
+
+    cur_wind = forecast.get("current", {}).get("wind_kts", 16)
+    cur_gust = forecast.get("current", {}).get("gust_kts", 20)
+    cur_dir_deg = forecast.get("current", {}).get("degrees", 90)
+    cur_temp = forecast.get("current", {}).get("temp", 28.0)
+
+    if "shoreline" not in forecast:
+        forecast["shoreline"] = calculate_shoreline_status(cur_dir_deg, beach_angle)
+    if "stability" not in forecast:
+        forecast["stability"] = calculate_stability_score(cur_wind, cur_gust)
+    if "consensus" not in forecast:
+        forecast["consensus"] = calculate_model_consensus(cur_wind, cur_wind + 1, cur_wind - 1)
+
+    # Attach Wetsuit & Thermal Comfort Guide
+    forecast["wetsuit"] = calculate_wetsuit_guide(today_sst, cur_temp)
+    tmrw_temp = forecast.get("tomorrow_temp_max", cur_temp)
+    forecast["tomorrow_wetsuit"] = calculate_wetsuit_guide(tomorrow_sst, tmrw_temp)
+
     try:
         with open(CACHE_FILE, "w", encoding="utf-8") as f:
             json.dump(forecast, f)
@@ -598,14 +1003,24 @@ def format_briefing(forecast: dict, user_profile: dict) -> str:
 
     quiver_str = build_quiver_header_text(inventory, active_kites)
 
+    shore = forecast.get("shoreline", {})
+    stab = forecast.get("stability", {})
+    wet = forecast.get("wetsuit", {})
+    cons = forecast.get("consensus", {})
+
     lines = [
         f"🏄‍♂️ *Kitesurf Morning Briefing: {forecast['spot']}*",
         f"📅 *Date:* {date_str} (Local Time: {time_str})",
         f"👤 *Rider:* {rider_name} · {weight}kg ({board} · {level})",
         f"🎒 *Available Quiver:*",
         quiver_str,
-        f"\n🌡 *Temp:* {forecast['temp_min']}°C – {forecast['temp_max']}°C\n",
-        f"🌊 *Tides Today:*",
+        f"\n🌡 *Temp:* {forecast['temp_min']}°C – {forecast['temp_max']}°C · {wet.get('tag', '🩳 Boardshorts')}",
+        f"🛡 *Conditions Overview:*",
+        f"• *Coast Safety:* {shore.get('tag', '🟢 Safe')} ({shore.get('description', '')})",
+        f"• *Wind Stability:* ⚡ *{stab.get('rating', '9/10')}* ({stab.get('label', '')})",
+        f"• *Thermal Guide:* {wet.get('advice', '')}",
+        f"• *Model Consensus:* {cons.get('tag', '🎯 90% Consensus')}",
+        f"\n🌊 *Tides Today:*",
         format_tides_text(forecast.get("tides", [])),
         f"\n🎯 *Rigging Schedule:*"
     ]
@@ -614,8 +1029,11 @@ def format_briefing(forecast: dict, user_profile: dict) -> str:
         rec = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"], all_inventory=inventory, level=level, board=board)
         w_kts = round_knots(slot['wind_kts'])
         g_kts = round_knots(slot['gust_kts'])
+        slot_stab = slot.get("stability", {}).get("score", "-")
+        slot_shore = slot.get("shoreline", {}).get("type", "")
+        slot_tag = f" [{slot_shore} · ⚡{slot_stab}/10]" if slot_shore else ""
         lines.append(
-            f"• *{slot_name}:* {w_kts} kts (gusts {g_kts} kts, {slot['direction']}) "
+            f"• *{slot_name}:* {w_kts} kts (gusts {g_kts} kts, {slot['direction']}){slot_tag} "
             f"→ {rec}"
         )
 
@@ -649,6 +1067,8 @@ def format_tomorrow_report(forecast: dict, user_profile: dict, is_evening_auto: 
     t_max = forecast.get("tomorrow_temp_max", forecast.get("temp_max", 31))
     max_gust = round_knots(forecast.get("tomorrow_max_gust", forecast.get("max_gust", 26)))
 
+    tmrw_wet = forecast.get("tomorrow_wetsuit", forecast.get("wetsuit", {}))
+    cons = forecast.get("consensus", {})
     quiver_str = build_quiver_header_text(inventory, active_kites)
 
     lines = [
@@ -658,7 +1078,9 @@ def format_tomorrow_report(forecast: dict, user_profile: dict, is_evening_auto: 
         f"👤 *Rider:* {rider_name} · {weight}kg ({board} · {level})",
         f"🎒 *Available Quiver:*",
         quiver_str,
-        f"\n🌡 *Temp:* {t_min}°C – {t_max}°C · 💨 *Max Gusts:* {max_gust} kts"
+        f"\n🌡 *Temp:* {t_min}°C – {t_max}°C · 💨 *Max Gusts:* {max_gust} kts",
+        f"🩳 *Thermal Guide:* {tmrw_wet.get('tag', '🩳 Boardshorts')} ({tmrw_wet.get('advice', '')})",
+        f"🎯 *Forecast Reliability:* {cons.get('tag', '🎯 90% Consensus')}"
     ]
 
     if is_evening_auto:
@@ -672,7 +1094,10 @@ def format_tomorrow_report(forecast: dict, user_profile: dict, is_evening_auto: 
         rec = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"], all_inventory=inventory, level=level, board=board)
         w_kts = round_knots(slot['wind_kts'])
         g_kts = round_knots(slot['gust_kts'])
-        lines.append(f"• *{slot_name}:* {w_kts} kts (gusts {g_kts} kts, {slot.get('direction', 'E')}) → {rec}")
+        slot_stab = slot.get("stability", {}).get("score", "-")
+        slot_shore = slot.get("shoreline", {}).get("type", "")
+        slot_tag = f" [{slot_shore} · ⚡{slot_stab}/10]" if slot_shore else ""
+        lines.append(f"• *{slot_name}:* {w_kts} kts (gusts {g_kts} kts, {slot.get('direction', 'E')}){slot_tag} → {rec}")
 
     lines.append(f"\n🌊 *Tomorrow's Tides:*")
     lines.append(format_tides_text(forecast.get("tides_tomorrow", [])))
@@ -708,18 +1133,27 @@ def format_realtime_report(forecast: dict, user_profile: dict) -> str:
     direct = cur.get("direction", "E")
     temp = cur.get("temp", 28.0)
 
+    shore = forecast.get("shoreline", {})
+    stab = forecast.get("stability", {})
+    wet = forecast.get("wetsuit", {})
+    cons = forecast.get("consensus", {})
+
     rec = recommend_from_available_quiver(weight, active_kites, wind_kts, gust_kts, all_inventory=inventory, level=level, board=board)
     quiver_str = build_quiver_header_text(inventory, active_kites)
 
     lines = [
         f"🏄‍♂️ *Live Spot Report: {forecast['spot']}*",
         f"📍 *Spot Local Time:* {local_time_str} · {local_date_str}",
-        f"🌡 *Temp:* {temp}°C",
+        f"🌡 *Temp:* {temp}°C (Sea: {wet.get('water_temp', temp)}°C)",
         f"👤 *Rider:* {rider_name} · {weight}kg ({board} · {level})",
         f"🎒 *Available Quiver:*",
         quiver_str,
         f"\n🌬 *Wind Right Now:*",
         f"• *Speed:* *{wind_kts} knots* (Gusts: *{gust_kts} knots*, {direct})",
+        f"• *Coast Safety:* {shore.get('tag', '🟢 Safe')} ({shore.get('description', '')})",
+        f"• *Wind Stability:* ⚡ *{stab.get('rating', '9/10')}* ({stab.get('label', '')})",
+        f"• *Thermal Guide:* {wet.get('tag', '🩳 Boardshorts')} ({wet.get('advice', '')})",
+        f"• *Forecast Reliability:* {cons.get('tag', '🎯 90% Consensus')} ({cons.get('description', '')})",
         f"• *Right Now Recommendation:* → {rec}\n",
         f"🌊 *Tides Today:*",
         format_tides_text(forecast.get("tides", [])),
@@ -730,7 +1164,10 @@ def format_realtime_report(forecast: dict, user_profile: dict) -> str:
         r = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"], all_inventory=inventory, level=level, board=board)
         w_kts = round_knots(slot['wind_kts'])
         g_kts = round_knots(slot['gust_kts'])
-        lines.append(f"• *{slot_name}:* {w_kts} kts (gusts {g_kts} kts) → {r}")
+        slot_stab = slot.get("stability", {}).get("score", "-")
+        slot_shore = slot.get("shoreline", {}).get("type", "")
+        slot_tag = f" [{slot_shore} · ⚡{slot_stab}/10]" if slot_shore else ""
+        lines.append(f"• *{slot_name}:* {w_kts} kts (gusts {g_kts} kts){slot_tag} → {r}")
 
     if not inventory:
         lines.append("\n⚠️ *Action Required:* No quiver existing yet! Please enter your kites:\n👉 `/kite 1 <Brand> <Model> <Size> (<Year>)`")
@@ -1324,7 +1761,14 @@ def start_embedded_http_server(port: int = 8080):
                     lon = float(params.get("lon", [-38.7297])[0])
                     name = params.get("name", ["Spot"])[0]
                     tz = params.get("timezone", ["auto"])[0]
-                    f_data = fetch_live_forecast({"lat": lat, "lon": lon, "name": name, "timezone": tz})
+                    beach_angle_param = params.get("beach_angle", [None])[0]
+                    beach_angle = None
+                    if beach_angle_param not in [None, ""]:
+                        try:
+                            beach_angle = float(beach_angle_param)
+                        except ValueError:
+                            pass
+                    f_data = fetch_live_forecast({"lat": lat, "lon": lon, "name": name, "timezone": tz, "beach_angle": beach_angle})
                     out = json.dumps(f_data).encode("utf-8")
                     self.send_response(200)
                     self.send_header("Content-Type", "application/json")
