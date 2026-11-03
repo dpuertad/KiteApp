@@ -439,17 +439,28 @@ def evaluate_active_kite(kite_entry: dict, weight_kg: float, wind_kts: float, gu
     }
 
 
-def recommend_from_available_quiver(weight_kg: float, active_inventory: list, wind_kts: float, gust_kts: float) -> str:
+def recommend_from_available_quiver(
+    weight_kg: float,
+    active_inventory: list,
+    wind_kts: float,
+    gust_kts: float,
+    all_inventory: list = None
+) -> str:
     if not active_inventory:
-        return "⚠️ No active kites selected"
+        w_factor = math.sqrt(weight_kg / 75.0)
+        ideal_size = round(135.0 / max(wind_kts, 8) * w_factor, 1)
+        ideal_str = f"{int(ideal_size)}m" if ideal_size.is_integer() else f"{ideal_size}m"
+        return f"💡 Ideal size ~{ideal_str} (Add kites: `/kite 1 <brand> <model> <size>`)"
 
     evaluated = [evaluate_active_kite(k, weight_kg, wind_kts, gust_kts) for k in active_inventory]
 
+    # 1. Exact sweet spot match
     sweet_matches = [k for k in evaluated if k["in_sweet"]]
     if sweet_matches:
         best = min(sweet_matches, key=lambda k: k["dist_to_sweet"])
         return f"Rig {best['display_name']}"
 
+    # 2. Inside rideable wind range
     range_matches = [k for k in evaluated if k["in_range"]]
     if range_matches:
         best = min(range_matches, key=lambda k: k["dist_to_sweet"])
@@ -458,10 +469,40 @@ def recommend_from_available_quiver(weight_kg: float, active_inventory: list, wi
 
     mins = [k["min_k"] for k in evaluated]
     maxs = [k["max_k"] for k in evaluated]
+
+    # Check if user has an even smaller kite left at home (inactive in inventory)
+    smallest = min(evaluated, key=lambda k: k["size"])
+    smaller_at_home = []
+    if all_inventory:
+        for k in all_inventory:
+            if not k.get("active", True) and k.get("size", 99) < smallest["size"]:
+                smaller_at_home.append(k)
+
+    home_tip = ""
+    if smaller_at_home:
+        home_kite = min(smaller_at_home, key=lambda k: k["size"])
+        yr_str = f" ({home_kite['year']})" if home_kite.get("year") else ""
+        home_tip = f" 💡 Pack your {home_kite['brand']} {home_kite['model']}{yr_str} {home_kite['size']}m: `/take all`"
+
+    # 3. Wind too light (< min of active quiver)
     if wind_kts < min(mins):
-        return f"⚠️ Wind too light (<{round_knots(min(mins))} kts for your quiver)"
+        biggest = max(evaluated, key=lambda k: k["size"])
+        min_k_rounded = round_knots(biggest["min_k"])
+        if wind_kts >= biggest["min_k"] * 0.85 and wind_kts >= 10:
+            return f"Rig {biggest['display_name']} (⚠️ Marginal/Light — min ~{min_k_rounded} kts)"
+        return f"⚠️ Wind too light ({round_knots(wind_kts)} kts < min {min_k_rounded} kts for {biggest['display_name']})"
+
+    # 4. Wind above max of active quiver
     if wind_kts > max(maxs):
-        return f"🚨 Wind too strong (>{round_knots(max(maxs))} kts for your quiver)"
+        max_k_rounded = round_knots(smallest["max_k"])
+        if wind_kts <= smallest["max_k"] + 4:
+            return f"Rig {smallest['display_name']} (🚨 Overpowered — max ~{max_k_rounded} kts, depower fully){home_tip}"
+        elif wind_kts <= smallest["max_k"] + 8:
+            return f"Rig {smallest['display_name']} (🚨 Heavily Overpowered — max ~{max_k_rounded} kts!){home_tip}"
+        else:
+            if home_tip:
+                return f"🚨 Wind too strong ({round_knots(wind_kts)} kts) for {smallest['display_name']} (max ~{max_k_rounded} kts).{home_tip}"
+            return f"🚨 Wind too strong ({round_knots(wind_kts)} kts) for {smallest['display_name']} (max ~{max_k_rounded} kts) — hold off or rig smaller!"
 
     nearest = min(evaluated, key=lambda k: k["dist_to_sweet"])
     return f"Rig {nearest['display_name']} (Marginal)"
@@ -498,7 +539,7 @@ def format_briefing(forecast: dict, user_profile: dict) -> str:
         yr = f" ({k['year']})" if k.get("year") else ""
         quiver_header_lines.append(f"  • {k['brand']} {k['model']}{yr} {k['size']}m")
     
-    quiver_str = "\n".join(quiver_header_lines) if quiver_header_lines else "  • No kites selected"
+    quiver_str = "\n".join(quiver_header_lines) if quiver_header_lines else "  • No kites added yet (type `/kite 1 <brand> <model> <size>`)"
 
     lines = [
         f"🏄‍♂️ *Kitesurf Morning Briefing: {forecast['spot']}*",
@@ -513,7 +554,7 @@ def format_briefing(forecast: dict, user_profile: dict) -> str:
     ]
 
     for slot_name, slot in forecast["schedule"].items():
-        rec = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"])
+        rec = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"], all_inventory=inventory)
         w_kts = round_knots(slot['wind_kts'])
         g_kts = round_knots(slot['gust_kts'])
         lines.append(
@@ -551,7 +592,7 @@ def format_tomorrow_report(forecast: dict, user_profile: dict, is_evening_auto: 
     for k in active_kites:
         yr = f" ({k['year']})" if k.get("year") else ""
         quiver_header_lines.append(f"  • {k['brand']} {k['model']}{yr} {k['size']}m")
-    quiver_str = "\n".join(quiver_header_lines) if quiver_header_lines else "  • No active kites selected"
+    quiver_str = "\n".join(quiver_header_lines) if quiver_header_lines else "  • No kites added yet (type `/kite 1 <brand> <model> <size>`)"
 
     lines = [
         f"🌅 *Tomorrow's Kitesurf Forecast: {forecast['spot']}*",
@@ -571,13 +612,16 @@ def format_tomorrow_report(forecast: dict, user_profile: dict, is_evening_auto: 
     lines.append(f"\n🌬 *Tomorrow's Rigging Schedule:*")
     schedule = forecast.get("schedule_tomorrow") or forecast.get("schedule", {})
     for slot_name, slot in schedule.items():
-        rec = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"])
+        rec = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"], all_inventory=inventory)
         w_kts = round_knots(slot['wind_kts'])
         g_kts = round_knots(slot['gust_kts'])
         lines.append(f"• *{slot_name}:* {w_kts} kts (gusts {g_kts} kts, {slot.get('direction', 'E')}) → {rec}")
 
     lines.append(f"\n🌊 *Tomorrow's Tides:*")
     lines.append(format_tides_text(forecast.get("tides_tomorrow", [])))
+
+    if max_gust >= GUST_WARNING_THRESHOLD_KTS:
+        lines.append(f"\n⚠️ *Gust Alert:* Max gusts reaching *{max_gust} knots* tomorrow.")
 
     lines.append("\n_Tip: For live conditions right now, type `/report today`._")
     lines.append("_On a new spot? Tap the button below to update via phone GPS!_")
@@ -603,13 +647,13 @@ def format_realtime_report(forecast: dict, user_profile: dict) -> str:
     direct = cur.get("direction", "E")
     temp = cur.get("temp", 28.0)
 
-    rec = recommend_from_available_quiver(weight, active_kites, wind_kts, gust_kts)
+    rec = recommend_from_available_quiver(weight, active_kites, wind_kts, gust_kts, all_inventory=inventory)
 
     quiver_header_lines = []
     for k in active_kites:
         yr = f" ({k['year']})" if k.get("year") else ""
         quiver_header_lines.append(f"  • {k['brand']} {k['model']}{yr} {k['size']}m")
-    quiver_str = "\n".join(quiver_header_lines) if quiver_header_lines else "  • No active kites selected"
+    quiver_str = "\n".join(quiver_header_lines) if quiver_header_lines else "  • No kites added yet (type `/kite 1 <brand> <model> <size>`)"
 
     lines = [
         f"🏄‍♂️ *Live Spot Report: {forecast['spot']}*",
@@ -627,7 +671,7 @@ def format_realtime_report(forecast: dict, user_profile: dict) -> str:
     ]
 
     for slot_name, slot in forecast.get("schedule", {}).items():
-        r = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"])
+        r = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"], all_inventory=inventory)
         w_kts = round_knots(slot['wind_kts'])
         g_kts = round_knots(slot['gust_kts'])
         lines.append(f"• *{slot_name}:* {w_kts} kts (gusts {g_kts} kts) → {r}")
@@ -758,6 +802,9 @@ def get_user_kites_list_text(user_profile: dict) -> str:
     lines.append("\n🎒 *To pick what you have with you today:*")
     lines.append("• `/take 1, 2` → (Only takes kite 1 & 2)")
     lines.append("• `/take all` → (Takes all kites)")
+    lines.append("\n🗑️ *To delete or reset:*")
+    lines.append("• `/delkite 1` → (Deletes kite slot 1)")
+    lines.append("• `/reset profile` → (Wipes all kites & resets profile clean)")
     lines.append("\n🏄 *For live conditions & kite choice:* `/report`")
     return "\n".join(lines)
 
@@ -879,9 +926,30 @@ def handle_telegram_command(text: str, message_obj: dict, config: dict) -> str:
             "   👉 `[ 📍 Send Current Location & Report ]`\n"
             "   👉 `[ /report ]` (Live today, or auto-tomorrow after 17:00!)\n"
             "   👉 `[ /report tomorrow ]` (Forecast for tomorrow anytime)\n\n"
+            "💡 _Need to wipe and start fresh? Type `/reset profile` anytime!_\n"
             "_All calculations and wind ranges are tuned specifically to YOU and YOUR bag!_"
         )
         return welcome_intro
+
+    elif any(cmd.lower().startswith(p) for p in ["/reset", "/clear"]):
+        user_profile["inventory"] = []
+        user_profile["rider_weight_kg"] = 75.0
+        user_profile["rider_name"] = first_name
+        user_profile["board_type"] = "Twintip"
+        user_profile["morning_briefing"] = True
+        save_config(config)
+        return (
+            f"🗑️ *Profile & Kites Reset Successfully!* 🏄‍♂️\n\n"
+            f"All your kites, custom weight, and saved gear have been wiped clean for *{first_name}*.\n\n"
+            "⚡ *Set up fresh in 3 quick steps:*\n"
+            "1️⃣ *Set your weight:* `/weight 75` (or your weight in kg)\n"
+            "2️⃣ *Add your kites by slot (including year):*\n"
+            "   • `/kite 1 Duotone Rebel SLS 10 (2024)`\n"
+            "   • `/kite 2 Core XR8 9 (2023)`\n"
+            "   • `/kite 3 North Orbit 8 2022`\n"
+            "3️⃣ *Get report:* Tap `[ 📍 Send Current Location & Report ]` or `/report`\n\n"
+            "_You have a completely fresh profile! Check `/kites` anytime._"
+        )
 
     elif cmd.startswith("/qr") or cmd.startswith("/share") or cmd.startswith("/invite"):
         qr_url = "https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https://t.me/KiteForecast_bot&format=png&margin=20"
@@ -1163,8 +1231,13 @@ def run_poll_listener():
                     print(f"Replied to {msg.get('from', {}).get('first_name', 'user')}: {text or 'Location'}")
 
         except Exception as e:
-            print(f"Polling loop error: {e}")
-            time.sleep(3)
+            err_msg = str(e)
+            if "409" in err_msg or "Conflict" in err_msg:
+                print("Polling: HTTP 409 Conflict (waiting 5s for previous instance shutdown)...")
+                time.sleep(5)
+            else:
+                print(f"Polling loop error: {e}")
+                time.sleep(3)
 
 
 def send_morning_briefing_to_all():

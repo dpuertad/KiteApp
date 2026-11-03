@@ -13,29 +13,7 @@
         "lon": -38.7297,
         "timezone": "America/Fortaleza"
       },
-      "inventory": [
-        {
-          "brand": "Core",
-          "model": "XR8",
-          "year": 2024,
-          "size": 7,
-          "active": true
-        },
-        {
-          "brand": "Core",
-          "model": "XR8",
-          "year": 2023,
-          "size": 9,
-          "active": true
-        },
-        {
-          "brand": "Duotone",
-          "model": "Dice SLS",
-          "year": 2023,
-          "size": 11,
-          "active": true
-        }
-      ],
+      "inventory": [],
       "morning_briefing": true
     }
   }
