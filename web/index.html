@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>KiteForecast - Smart Rigging & Weather</title>
+  
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0284c7">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="KiteForecast">
+  <link rel="icon" type="image/png" href="/kiteforecast_bot_qr.png">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            ocean: {
+              950: '#020617',
+              900: '#08172e',
+              800: '#0c2445',
+              700: '#0f3868',
+              500: '#0284c7',
+              400: '#38bdf8',
+              300: '#7dd3fc',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Smooth iOS momentum scrolling & safe area support */
+    body {
+      -webkit-tap-highlight-color: transparent;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .custom-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    /* Wind direction arrow rotation */
+    .compass-arrow {
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-sky-500 selection:text-white pb-12">
+
+  <!-- TOP HEADER -->
+  <header class="sticky top-0 z-40 bg-slate-900/80 backdrop-blur-md border-b border-slate-800/80 px-4 py-3">
+    <div class="max-w-xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-sky-500/30 text-white font-black text-xl">
+          🪁
+        </div>
+        <div>
+          <h1 class="text-base font-bold tracking-tight bg-gradient-to-r from-white via-slate-100 to-sky-300 bg-clip-text text-transparent">KiteForecast</h1>
+          <p class="text-[11px] text-sky-400 font-medium">Smart Rigging Assistant</p>
+        </div>
+      </div>
+
+      <!-- Quick Spot / GPS Pill -->
+      <div class="flex items-center space-x-2">
+        <button id="btn-gps" onclick="useGpsLocation()" title="Use Current GPS" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 border border-slate-700 transition">
+          <i data-lucide="crosshair" class="w-4 h-4"></i>
+        </button>
+        <button onclick="toggleModal('modal-spot')" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-sky-950/60 hover:bg-sky-900/60 active:scale-95 text-sky-300 border border-sky-800/60 text-xs font-semibold transition">
+          <i data-lucide="map-pin" class="w-3.5 h-3.5 text-sky-400"></i>
+          <span id="header-spot-name" class="truncate max-w-[110px]">Cumbuco</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN APP CONTAINER -->
+  <main class="max-w-xl w-full mx-auto px-4 pt-4 space-y-4 flex-1">
+
+    <!-- RIDER PROFILE CARD -->
+    <section class="bg-gradient-to-br from-slate-900/90 to-slate-800/60 rounded-2xl p-4 border border-slate-800 shadow-xl relative overflow-hidden">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-300 border border-slate-700">
+            <i data-lucide="user" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <input id="rider-name-input" type="text" value="Daniel" onchange="updateRiderName(this.value)" class="bg-transparent font-bold text-sm text-white focus:outline-none border-b border-transparent focus:border-sky-500 transition px-0.5">
+              <span class="text-[11px] px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 font-semibold border border-sky-500/30">Rider</span>
+            </div>
+            <p id="backpack-count-badge" class="text-[11px] text-slate-400">🎒 0 in backpack · 0 at home</p>
+          </div>
+        </div>
+
+        <button onclick="toggleModal('modal-profile')" class="text-xs font-medium text-sky-400 hover:text-sky-300 flex items-center space-x-1 bg-slate-800/80 px-2.5 py-1.5 rounded-lg border border-slate-700/80">
+          <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+          <span>Setup</span>
+        </button>
+      </div>
+
+      <!-- Quick Weight Control -->
+      <div class="bg-slate-950/60 rounded-xl p-3 border border-slate-800/80 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="scale" class="w-4 h-4 text-sky-400"></i>
+          <span class="text-xs text-slate-400 font-medium">Rider Weight:</span>
+          <span id="profile-weight-display" class="text-sm font-bold text-white">75.0 kg</span>
+        </div>
+        <div class="flex items-center space-x-1.5">
+          <button onclick="adjustWeight(-2.5)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 text-xs font-bold border border-slate-700 flex items-center justify-center">-</button>
+          <input id="slider-weight" type="range" min="45" max="120" step="1" value="75" oninput="onWeightSlider(this.value)" class="w-24 accent-sky-500 cursor-pointer">
+          <button onclick="adjustWeight(2.5)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 text-xs font-bold border border-slate-700 flex items-center justify-center">+</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIVE CONDITIONS & RIG DECISION HERO BANNER -->
+    <section class="bg-gradient-to-b from-slate-900 to-ocean-900 rounded-3xl p-5 border border-sky-900/40 shadow-2xl relative overflow-hidden">
+      <!-- Glow background accent -->
+      <div class="absolute -top-12 -right-12 w-40 h-40 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <!-- Top info bar -->
+      <div class="flex items-center justify-between text-xs text-slate-400 mb-4">
+        <span class="flex items-center space-x-1.5 font-medium">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span>LIVE CONDITIONS</span>
+        </span>
+        <span id="live-time-str">12:00 Local</span>
+      </div>
+
+      <!-- Live Wind & Compass Row -->
+      <div class="flex items-center justify-between mb-5">
+        <div>
+          <div class="flex items-baseline space-x-1.5">
+            <span id="live-wind-kts" class="text-5xl font-black tracking-tight text-white font-mono">--</span>
+            <span class="text-sm font-bold text-sky-400 uppercase tracking-wide">knots</span>
+          </div>
+          <div class="text-xs text-slate-400 mt-1 flex items-center space-x-2">
+            <span>Gusts: <strong id="live-gust-kts" class="text-slate-200 font-semibold">-- kts</strong></span>
+            <span>•</span>
+            <span id="live-temp-str">28°C</span>
+          </div>
+        </div>
+
+        <!-- Compass Visual -->
+        <div class="flex flex-col items-center">
+          <div class="relative w-16 h-16 rounded-full bg-slate-950/80 border border-slate-700/80 flex items-center justify-center shadow-inner">
+            <!-- Compass needle -->
+            <div id="compass-needle" class="compass-arrow absolute w-full h-full flex items-center justify-center">
+              <div class="w-1.5 h-7 bg-gradient-to-t from-transparent via-sky-400 to-cyan-300 rounded-full -translate-y-2.5 shadow-md shadow-sky-400/50"></div>
+            </div>
+            <span id="compass-cardinal" class="text-xs font-black text-white relative z-10">E</span>
+          </div>
+          <span id="compass-degrees" class="text-[10px] text-slate-400 mt-1 font-mono">90°</span>
+        </div>
+      </div>
+
+      <!-- PROMINENT RIGHT NOW RECOMMENDATION -->
+      <div id="hero-rec-banner" class="bg-gradient-to-r from-sky-950/90 via-slate-900/90 to-sky-950/90 rounded-2xl p-4 border border-sky-500/40 shadow-lg">
+        <div class="flex items-center space-x-2 text-xs font-semibold text-sky-400 uppercase tracking-wider mb-1">
+          <i data-lucide="target" class="w-4 h-4 text-sky-400"></i>
+          <span>RIG RIGHT NOW RECOMMENDATION</span>
+        </div>
+        <p id="hero-rec-text" class="text-base font-bold text-white tracking-wide">Loading recommendations...</p>
+      </div>
+    </section>
+
+    <!-- DAY TOGGLE TABS (Today vs Tomorrow) -->
+    <div class="flex rounded-2xl bg-slate-900 p-1 border border-slate-800">
+      <button id="tab-today" onclick="switchDayTab('today')" class="flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-sky-600 text-white shadow-md">
+        <i data-lucide="sun" class="w-3.5 h-3.5"></i>
+        <span>Today's Schedule</span>
+      </button>
+      <button id="tab-tomorrow" onclick="switchDayTab('tomorrow')" class="flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 text-slate-400 hover:text-white">
+        <i data-lucide="sunrise" class="w-3.5 h-3.5"></i>
+        <span>Tomorrow's Forecast</span>
+      </button>
+    </div>
+
+    <!-- FORECAST SCHEDULE LIST -->
+    <section class="space-y-2.5">
+      <div class="flex items-center justify-between text-xs text-slate-400 px-1">
+        <span class="font-bold uppercase tracking-wider flex items-center space-x-1">
+          <i data-lucide="calendar" class="w-3.5 h-3.5 text-sky-400"></i>
+          <span id="schedule-title-date">Today's Rigging Schedule</span>
+        </span>
+        <span id="schedule-auto-note" class="text-[11px] text-sky-400 italic"></span>
+      </div>
+
+      <div id="schedule-cards-container" class="space-y-2">
+        <!-- Rendered dynamically -->
+        <div class="bg-slate-900/60 rounded-xl p-4 text-center text-xs text-slate-400 border border-slate-800">
+          Loading weather forecast...
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE WIND GRAPH (VISUAL CHART) -->
+    <section class="bg-slate-900/70 rounded-2xl p-4 border border-slate-800 shadow-md space-y-3">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
+          <i data-lucide="bar-chart-2" class="w-4 h-4 text-sky-400"></i>
+          <span>Wind & Gust Timeline</span>
+        </h3>
+        <span class="text-[11px] text-slate-400 flex items-center space-x-2">
+          <span class="inline-block w-2.5 h-2.5 rounded bg-sky-500"></span> <span>Wind</span>
+          <span class="inline-block w-2.5 h-2.5 rounded bg-amber-500"></span> <span>Gusts</span>
+        </span>
+      </div>
+
+      <!-- SVG Bar Graph -->
+      <div class="w-full h-36 bg-slate-950/80 rounded-xl p-3 border border-slate-800/80 flex items-end justify-around relative">
+        <svg id="wind-chart-svg" class="w-full h-full overflow-visible"></svg>
+      </div>
+    </section>
+
+    <!-- TIDES CARD -->
+    <section class="bg-slate-900/70 rounded-2xl p-4 border border-slate-800 shadow-md space-y-2.5">
+      <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
+        <i data-lucide="waves" class="w-4 h-4 text-cyan-400"></i>
+        <span>Tide Heights & Turnarounds</span>
+      </h3>
+      <div id="tides-container" class="grid grid-cols-2 gap-2 text-xs">
+        <div class="bg-slate-950/60 rounded-xl p-3 border border-slate-800/80">
+          <span class="text-slate-400">Loading tides...</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUIVER / GEAR GARAGE SECTION -->
+    <section class="bg-slate-900/80 rounded-3xl p-5 border border-slate-800 shadow-xl space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-sm font-bold text-white flex items-center space-x-2">
+            <span>🎒 My Quiver & Gear Garage</span>
+          </h2>
+          <p class="text-xs text-slate-400 mt-0.5">Toggle what's packed in your backpack today</p>
+        </div>
+        <button onclick="toggleModal('modal-add-kite')" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 text-white font-bold text-xs shadow-md shadow-sky-500/20 active:scale-95 transition flex items-center space-x-1">
+          <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+          <span>Add Kite</span>
+        </button>
+      </div>
+
+      <!-- Kite Cards List -->
+      <div id="quiver-list" class="space-y-2.5">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ADD KITE MODAL -->
+  <div id="modal-add-kite" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-sm text-white flex items-center space-x-2">
+          <span>🪁 Add Kite to Your Quiver</span>
+        </h3>
+        <button onclick="toggleModal('modal-add-kite')" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <form onsubmit="onAddKiteFormSubmit(event)" class="space-y-3.5 text-xs">
+        <!-- Brand Selector -->
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Brand</label>
+          <select id="select-brand" onchange="onBrandChange(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
+            <option value="Duotone">Duotone</option>
+            <option value="Core">Core</option>
+            <option value="North">North</option>
+            <option value="Cabrinha">Cabrinha</option>
+            <option value="Ozone">Ozone</option>
+            <option value="F-One">F-One</option>
+            <option value="Reedin">Reedin</option>
+            <option value="Naish">Naish</option>
+            <option value="Slingshot">Slingshot</option>
+            <option value="Harlem">Harlem</option>
+            <option value="Other">Other / Custom</option>
+          </select>
+        </div>
+
+        <!-- Model Selector (Cascading dynamic) -->
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Model</label>
+          <select id="select-model" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
+            <!-- Populated via JS based on brand -->
+          </select>
+        </div>
+
+        <!-- Size & Year Grid -->
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">Size (m²)</label>
+            <select id="select-size" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
+              <option value="6">6m</option>
+              <option value="7">7m</option>
+              <option value="8">8m</option>
+              <option value="9">9m</option>
+              <option value="10" selected>10m</option>
+              <option value="11">11m</option>
+              <option value="12">12m</option>
+              <option value="13">13m</option>
+              <option value="14">14m</option>
+              <option value="15">15m</option>
+              <option value="17">17m</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">Year</label>
+            <select id="select-year" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
+              <option value="2026">2026</option>
+              <option value="2025">2025</option>
+              <option value="2024" selected>2024</option>
+              <option value="2023">2023</option>
+              <option value="2022">2022</option>
+              <option value="2021">2021</option>
+              <option value="2020">2020</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Initial Status Checkbox -->
+        <div class="flex items-center space-x-2 pt-1">
+          <input type="checkbox" id="check-in-bag" checked class="w-4 h-4 rounded text-sky-500 bg-slate-950 border-slate-700 focus:ring-0">
+          <label for="check-in-bag" class="text-xs text-slate-300 font-medium cursor-pointer">Pack in backpack now (Active)</label>
+        </div>
+
+        <button type="submit" class="w-full mt-2 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-95 text-white font-bold text-xs shadow-lg shadow-sky-500/25 transition">
+          Add Kite to Garage
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- SPOT PICKER MODAL -->
+  <div id="modal-spot" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-sm text-white flex items-center space-x-2">
+          <span>📍 Select Beach / Spot</span>
+        </h3>
+        <button onclick="toggleModal('modal-spot')" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Search Input -->
+      <div class="space-y-3">
+        <div class="flex space-x-2">
+          <input id="input-spot-search" type="text" placeholder="Type spot (e.g. Tarifa, Taiba)..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
+          <button onclick="onSearchSpotSubmit()" class="px-3 py-2 rounded-xl bg-sky-600 text-white font-bold text-xs active:scale-95">Search</button>
+        </div>
+
+        <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Popular Kitesurf Spots:</p>
+        <div class="grid grid-cols-2 gap-1.5 text-xs">
+          <button onclick="setSpot('Cumbuco, Brazil', -3.6247, -38.7297, 'America/Fortaleza')" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇧🇷 Cumbuco</button>
+          <button onclick="setSpot('Taiba, Brazil', -3.5042, -38.8953, 'America/Fortaleza')" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇧🇷 Taíba</button>
+          <button onclick="setSpot('Tarifa, Spain', 36.0143, -5.6044, 'Europe/Madrid')" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇪🇸 Tarifa</button>
+          <button onclick="setSpot('Dakhla, Morocco', 23.7136, -15.9355, 'Africa/Casablanca')" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇲🇦 Dakhla</button>
+          <button onclick="setSpot('Leucate, France', 42.9094, 3.0278, 'Europe/Paris')" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇫🇷 Leucate</button>
+          <button onclick="setSpot('Pozo Izquierdo, Spain', 27.8184, -15.4243, 'Atlantic/Canary')" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇪🇸 Pozo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIDER SETUP MODAL -->
+  <div id="modal-profile" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-sm text-white flex items-center space-x-2">
+          <span>👤 Rider Profile Settings</span>
+        </h3>
+        <button onclick="toggleModal('modal-profile')" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3.5 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Your Name</label>
+          <input id="modal-rider-name" type="text" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
+        </div>
+
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label class="font-semibold text-slate-300">Rider Weight (kg)</label>
+            <span id="modal-weight-val" class="text-sky-400 font-bold">75 kg</span>
+          </div>
+          <input id="modal-rider-weight" type="range" min="45" max="120" step="1" oninput="document.getElementById('modal-weight-val').innerText = this.value + ' kg'" class="w-full accent-sky-500">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Board Discipline</label>
+          <select id="modal-board-type" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
+            <option value="Twintip">Twintip (Standard Freeride / Big Air)</option>
+            <option value="Surf / Strapless">Surfboard / Strapless Wave</option>
+            <option value="Foil">Hydrofoil</option>
+          </select>
+        </div>
+
+        <button onclick="saveModalProfile()" class="w-full py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-95 text-white font-bold text-xs shadow-lg shadow-sky-500/25 transition">
+          Save Settings
+        </button>
+
+        <button onclick="resetProfileAll()" class="w-full py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 font-semibold text-xs border border-rose-500/30 transition">
+          🗑️ Reset Profile & Clear Quiver
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APP LOGIC -->
+  <script>
+    // 1. KITE CATALOG DATABASE
+    const KITE_CATALOG = {
+      "Duotone": {
+        "Rebel SLS": { type: "5-Strut Big Air", material: "Penta TX SLS", sizes: { 7: [19, [22,32], 38], 8: [17, [20,29], 36], 9: [15, [18,27], 34], 10: [13, [16,24], 32], 11: [12, [14,22], 29], 12: [11, [13,20], 26] } },
+        "Rebel D/LAB": { type: "5-Strut Extreme Big Air", material: "Aluula D/LAB", sizes: { 7: [17, [20,31], 38], 8: [15, [18,28], 36], 9: [13.5, [16,26], 34], 10: [11.5, [14,23], 32], 11: [10.5, [13,21], 29], 12: [9.5, [12,19], 26] } },
+        "Evo SLS": { type: "3-Strut All-Round", material: "Penta TX SLS", sizes: { 7: [18, [21,30], 38], 8: [16, [19,28], 36], 9: [14, [17,26], 34], 10: [12, [15,24], 32], 11: [11, [13,21], 29], 12: [10, [12,19], 27] } },
+        "Dice SLS": { type: "3-Strut Freestyle", material: "Penta TX SLS", sizes: { 7: [19, [22,31], 37], 8: [17, [20,29], 35], 9: [15, [18,27], 33], 10: [13, [16,24], 31], 11: [12, [14,21], 28], 12: [11, [13,19], 25] } }
+      },
+      "North": {
+        "Orbit": { type: "5-Strut Big Air", material: "N-Force Dacron", sizes: { 7: [19, [22,31], 38], 8: [17, [20,29], 36], 9: [15, [18,27], 34], 10: [13, [16,24], 32], 11: [12, [14,22], 29], 12: [11, [13,20], 26] } },
+        "Orbit Pro": { type: "5-Strut Competition Big Air", material: "N-X2 Light Carbon", sizes: { 7: [18, [21,32], 39], 8: [16, [19,30], 37], 9: [14, [17,28], 35], 10: [12, [15,25], 33], 11: [11, [13,23], 30] } },
+        "Reach": { type: "3-Strut All-Round Freeride", material: "Dacron", sizes: { 7: [18, [21,29], 36], 8: [16, [19,27], 34], 9: [14, [17,25], 32], 10: [12, [15,23], 30], 12: [10, [12,19], 25] } }
+      },
+      "Core": {
+        "XR8": { type: "5-Strut High Performance Freeride", material: "ExoTex 2", sizes: { 7: [19, [22,31], 38], 8: [17, [20,29], 36], 9: [15, [18,27], 34], 10: [13, [16,24], 32], 11: [12, [14,22], 29], 12: [11, [13,20], 26] } },
+        "XR Pro": { type: "5-Strut Big Air Booster", material: "Aluula Airframe", sizes: { 7: [17, [20,32], 40], 8: [15, [18,30], 38], 9: [13.5, [16,28], 36], 10: [11.5, [14,25], 34], 12: [9.5, [12,21], 28] } },
+        "Nexus 3": { type: "3-Strut Universal Wave/Freestyle", material: "ExoTex Light", sizes: { 7: [18, [21,30], 36], 8: [16, [19,28], 34], 9: [14, [17,26], 32], 10: [12, [15,24], 30], 12: [10, [12,19], 25] } }
+      },
+      "Cabrinha": {
+        "Switchblade": { type: "5-Strut Freeride/Grunt", material: "HTD Plus Dacron", sizes: { 7: [18, [21,28], 32], 8: [16, [19,26], 30], 9: [13, [16,23], 27], 10: [11, [14,21], 25], 11: [10, [13,19], 23], 12: [9, [12,18], 21] } },
+        "Nitro Apex": { type: "5-Strut Big Air", material: "Apex Series Light", sizes: { 7: [18, [21,31], 38], 8: [16, [19,29], 36], 9: [14, [17,27], 34], 10: [12, [15,25], 32], 12: [10, [12,20], 26] } }
+      },
+      "Ozone": {
+        "Edge V11/V12": { type: "5-Strut High Aspect Booster", material: "Teijin TechnoForce", sizes: { 7: [18, [21,30], 36], 8: [16, [19,28], 34], 9: [14, [17,26], 32], 10: [12, [15,24], 30], 11: [11, [13,21], 28], 12: [10, [12,19], 26] } },
+        "Vortex": { type: "3-Strut High-Tension Big Air", material: "Aluula Airframe", sizes: { 7: [17, [20,31], 38], 8: [15, [18,29], 36], 9: [13, [16,27], 34], 10: [11.5, [14,25], 32], 11: [10.5, [13,22], 29] } }
+      },
+      "F-One": {
+        "Bandit (XVI/XVII)": { type: "3-Strut Delta C-Shape", material: "Teijin 130g", sizes: { 7: [18, [21,30], 36], 8: [16, [19,28], 34], 9: [14, [17,26], 32], 10: [12, [15,24], 30], 11: [11, [13,21], 28], 12: [10, [12,19], 26] } },
+        "Trigger": { type: "5-Strut Big Air", material: "High Tenacity Dacron", sizes: { 7: [19, [22,31], 38], 8: [17, [20,29], 36], 9: [15, [18,27], 34], 10: [13, [16,24], 32], 12: [11, [13,20], 26] } }
+      },
+      "Reedin": {
+        "SuperModel HTF": { type: "3-Strut All-Round Freeride", material: "Hybrid Torsion Frame", sizes: { 7: [18, [21,30], 37], 8: [16, [19,28], 35], 9: [14, [17,26], 33], 10: [12, [15,24], 31], 12: [10, [12,19], 26] } }
+      },
+      "Naish": {
+        "Pivot": { type: "3-Strut Freeride / Wave", material: "Quad-Tex", sizes: { 7: [18, [21,29], 36], 8: [16, [19,27], 34], 9: [14, [17,25], 32], 10: [12, [15,23], 30], 12: [10, [12,19], 25] } }
+      },
+      "Slingshot": {
+        "Machine V2": { type: "5-Strut Big Air", material: "Rigid Frame", sizes: { 7: [19, [22,31], 38], 8: [17, [20,29], 36], 9: [15, [18,27], 34], 10: [13, [16,24], 32], 12: [11, [13,20], 26] } }
+      },
+      "Harlem": {
+        "Force": { type: "3-Strut Big Air / Gamechanger", material: "Brainchild Eco Fabric", sizes: { 7: [18, [21,30], 37], 8: [16, [19,28], 35], 9: [14, [17,26], 33], 10: [12, [15,24], 31], 12: [10, [12,19], 26] } }
+      }
+    };
+
+    // 2. STATE INITIALIZATION (LocalStorage)
+    let state = {
+      user: {
+        name: localStorage.getItem('kf_name') || 'Daniel',
+        weight: parseFloat(localStorage.getItem('kf_weight')) || 75.0,
+        board: localStorage.getItem('kf_board') || 'Twintip'
+      },
+      spot: JSON.parse(localStorage.getItem('kf_spot')) || {
+        name: "Cumbuco, Brazil",
+        lat: -3.6247,
+        lon: -38.7297,
+        timezone: "America/Fortaleza"
+      },
+      inventory: JSON.parse(localStorage.getItem('kf_inventory')) || [],
+      currentTab: 'today',
+      forecastData: null
+    };
+
+    // Fallback heuristic specs for custom kites
+    function getKiteSpecs(brand, model, size) {
+      if (KITE_CATALOG[brand] && KITE_CATALOG[brand][model]) {
+        const m = KITE_CATALOG[brand][model];
+        if (m.sizes[size]) {
+          const s = m.sizes[size];
+          return { min: s[0], sweet: s[1], max: s[2], material: m.material, type: m.type };
+        }
+        // scale closest
+        const keys = Object.keys(m.sizes).map(Number);
+        const closest = keys.reduce((prev, curr) => Math.abs(curr - size) < Math.abs(prev - size) ? curr : prev);
+        const ref = m.sizes[closest];
+        const scale = closest / size;
+        return {
+          min: Math.round(ref[0] * scale * 10) / 10,
+          sweet: [Math.round(ref[1][0] * scale * 10) / 10, Math.round(ref[1][1] * scale * 10) / 10],
+          max: Math.round(ref[2] * scale * 10) / 10,
+          material: m.material,
+          type: m.type
+        };
+      }
+      const bMin = Math.round(135.0 / (size + 1.5) * 10) / 10;
+      return {
+        min: bMin,
+        sweet: [Math.round(bMin * 1.25 * 10) / 10, Math.round(bMin * 1.75 * 10) / 10],
+        max: Math.round(bMin * 2.3 * 10) / 10,
+        material: "Standard",
+        type: "Freeride"
+      };
+    }
+
+    // 3. SIZING & RIGGING ENGINE (Runs locally in JS)
+    function evaluateKite(kite, weightKg, windKts) {
+      const specs = getKiteSpecs(kite.brand, kite.model, kite.size);
+      const wFactor = Math.sqrt(weightKg / 75.0);
+      const minK = Math.round(specs.min * wFactor * 10) / 10;
+      const sweetMin = Math.round(specs.sweet[0] * wFactor * 10) / 10;
+      const sweetMax = Math.round(specs.sweet[1] * wFactor * 10) / 10;
+      const maxK = Math.round(specs.max * wFactor * 10) / 10;
+      const midSweet = (sweetMin + sweetMax) / 2.0;
+
+      return {
+        ...kite,
+        minK,
+        sweetMin,
+        sweetMax,
+        maxK,
+        inSweet: windKts >= sweetMin && windKts <= sweetMax,
+        inRange: windKts >= minK && windKts <= maxK,
+        distToSweet: Math.abs(windKts - midSweet),
+        displayName: `${kite.brand} ${kite.model}${kite.year ? ' (' + kite.year + ')' : ''} ${kite.size}m`
+      };
+    }
+
+    function recommendRigging(windKts, gustKts) {
+      const activeKites = state.inventory.filter(k => k.active !== false);
+      if (state.inventory.length === 0) {
+        return {
+          status: 'empty',
+          text: '⚠️ No quiver entered yet! Please add your kites in the garage below.'
+        };
+      }
+      if (activeKites.length === 0) {
+        return {
+          status: 'inactive',
+          text: '⚠️ No kites packed in backpack today! Toggle "In Backpack" on your kites below.'
+        };
+      }
+
+      const evaluated = activeKites.map(k => evaluateKite(k, state.user.weight, windKts));
+      const sweets = evaluated.filter(k => k.inSweet);
+      if (sweets.length > 0) {
+        sweets.sort((a,b) => a.distToSweet - b.distToSweet);
+        return { status: 'sweet', text: `Rig ${sweets[0].displayName}` };
+      }
+
+      const inRanges = evaluated.filter(k => k.inRange);
+      if (inRanges.length > 0) {
+        inRanges.sort((a,b) => a.distToSweet - b.distToSweet);
+        const tag = windKts > inRanges[0].sweetMax ? ' (Powered up)' : ' (Light end)';
+        return { status: 'range', text: `Rig ${inRanges[0].displayName}${tag}` };
+      }
+
+      const mins = evaluated.map(k => k.minK);
+      const maxs = evaluated.map(k => k.maxK);
+      const minVal = Math.min(...mins);
+      const maxVal = Math.max(...maxs);
+
+      // Light wind handling
+      if (windKts < minVal) {
+        evaluated.sort((a,b) => b.size - a.size);
+        const biggest = evaluated[0];
+        const atHomeBigger = state.inventory.filter(k => k.active === false && k.size > biggest.size);
+        let tip = '';
+        if (atHomeBigger.length > 0) {
+          atHomeBigger.sort((a,b) => b.size - a.size);
+          tip = ` 💡 Pack your ${atHomeBigger[0].size}m from home!`;
+        }
+        return {
+          status: 'light',
+          text: `⚠️ ${Math.round(windKts)} kts (not enough for your ${biggest.displayName}, your biggest kite — min ~${Math.round(biggest.minK)} kts)${tip}`
+        };
+      }
+
+      // Strong wind handling
+      if (windKts > maxVal) {
+        evaluated.sort((a,b) => a.size - b.size);
+        const smallest = evaluated[0];
+        const atHomeSmaller = state.inventory.filter(k => k.active === false && k.size < smallest.size);
+        let tip = '';
+        if (atHomeSmaller.length > 0) {
+          atHomeSmaller.sort((a,b) => a.size - b.size);
+          tip = ` 💡 Pack your ${atHomeSmaller[0].size}m from home!`;
+        }
+        if (windKts <= smallest.maxK + 4) {
+          return { status: 'overpowered', text: `Rig ${smallest.displayName} (🚨 Overpowered — max ~${Math.round(smallest.maxK)} kts, depower fully)${tip}` };
+        } else if (windKts <= smallest.maxK + 8) {
+          return { status: 'overpowered', text: `Rig ${smallest.displayName} (🚨 Heavily Overpowered — max ~${Math.round(smallest.maxK)} kts!)${tip}` };
+        } else {
+          return { status: 'danger', text: `🚨 Wind too strong (${Math.round(windKts)} kts) for ${smallest.displayName} (max ~${Math.round(smallest.maxK)} kts).${tip}` };
+        }
+      }
+
+      evaluated.sort((a,b) => a.distToSweet - b.distToSweet);
+      return { status: 'marginal', text: `Rig ${evaluated[0].displayName} (Marginal)` };
+    }
+
+    // 4. RENDERING FUNCTIONS
+    function renderQuiver() {
+      const container = document.getElementById('quiver-list');
+      const activeCount = state.inventory.filter(k => k.active !== false).length;
+      const homeCount = state.inventory.length - activeCount;
+      document.getElementById('backpack-count-badge').innerText = `🎒 ${activeCount} in backpack · ${homeCount} at home`;
+
+      if (state.inventory.length === 0) {
+        container.innerHTML = `
+          <div class="bg-slate-950/60 rounded-2xl p-5 border border-dashed border-slate-800 text-center space-y-2">
+            <p class="text-xs font-bold text-amber-400">⚠️ No quiver existing yet!</p>
+            <p class="text-[11px] text-slate-400">Add your kites above so the assistant can give you exact sizing and depower recommendations.</p>
+            <button onclick="toggleModal('modal-add-kite')" class="px-3 py-1.5 rounded-xl bg-sky-500/20 text-sky-400 text-xs font-bold border border-sky-500/30 hover:bg-sky-500/30">
+              + Add First Kite
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = state.inventory.map((k, idx) => {
+        const ev = evaluateKite(k, state.user.weight, 18.0);
+        const isActive = k.active !== false;
+        return `
+          <div class="bg-slate-950/80 rounded-2xl p-3.5 border ${isActive ? 'border-sky-800/80 shadow-md shadow-sky-950/50' : 'border-slate-800/60 opacity-60'} transition flex flex-col space-y-2.5">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <span class="text-xs font-black ${isActive ? 'text-sky-400' : 'text-slate-500'} bg-slate-900 px-2 py-0.5 rounded-lg border border-slate-800">${k.size}m</span>
+                <div>
+                  <h4 class="text-xs font-bold text-white">${k.brand} ${k.model} <span class="text-slate-400 font-normal">(${k.year || 2024})</span></h4>
+                  <p class="text-[10px] text-slate-400">${ev.type || 'Freeride'} · ${ev.material || 'Standard'}</p>
+                </div>
+              </div>
+
+              <!-- In Backpack Toggle Button -->
+              <div class="flex items-center space-x-2">
+                <button onclick="toggleKiteBackpack(${idx})" class="px-2.5 py-1 rounded-xl text-[11px] font-bold transition flex items-center space-x-1 ${isActive ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-slate-800 text-slate-400 border border-slate-700'}">
+                  <span>${isActive ? '🎒 In Backpack' : '🏠 At Home'}</span>
+                </button>
+                <button onclick="deleteKite(${idx})" class="text-slate-500 hover:text-rose-400 p-1 transition" title="Delete kite">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Visual Wind Range Bar -->
+            <div class="space-y-1">
+              <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+                <span>Min: ${Math.round(ev.minK)} kts</span>
+                <span class="text-emerald-400 font-bold">Sweet: ${Math.round(ev.sweetMin)}-${Math.round(ev.sweetMax)} kts</span>
+                <span>Max: ${Math.round(ev.maxK)} kts</span>
+              </div>
+              <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden flex">
+                <div style="width: 20%" class="bg-slate-700"></div>
+                <div style="width: 50%" class="bg-gradient-to-r from-emerald-500 to-cyan-400"></div>
+                <div style="width: 30%" class="bg-amber-500"></div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    function renderForecast() {
+      if (!state.forecastData) return;
+      const f = state.forecastData;
+
+      // Update Live Hero Banner
+      const cur = f.current || {};
+      const liveWind = cur.wind_kts || 16;
+      const liveGust = cur.gust_kts || 20;
+      document.getElementById('live-wind-kts').innerText = Math.round(liveWind);
+      document.getElementById('live-gust-kts').innerText = `${Math.round(liveGust)} kts`;
+      document.getElementById('live-temp-str').innerText = `${cur.temp || 28}°C`;
+
+      const deg = cur.wind_direction_10m || 90;
+      const cardinal = cur.direction || 'E';
+      document.getElementById('compass-cardinal').innerText = cardinal;
+      document.getElementById('compass-degrees').innerText = `${deg}°`;
+      document.getElementById('compass-needle').style.transform = `rotate(${deg}deg)`;
+
+      // Rigging recommendation
+      const rec = recommendRigging(liveWind, liveGust);
+      const heroText = document.getElementById('hero-rec-text');
+      heroText.innerText = rec.text;
+
+      // Render Schedule Cards
+      const isTomorrow = state.currentTab === 'tomorrow';
+      const schedule = isTomorrow ? (f.schedule_tomorrow || f.schedule) : f.schedule;
+      const schedContainer = document.getElementById('schedule-cards-container');
+
+      if (!schedule || Object.keys(schedule).length === 0) {
+        schedContainer.innerHTML = '<div class="text-xs text-slate-400 text-center py-4">No schedule data available.</div>';
+        return;
+      }
+
+      schedContainer.innerHTML = Object.entries(schedule).map(([timeLabel, slot]) => {
+        const slotRec = recommendRigging(slot.wind_kts, slot.gust_kts);
+        return `
+          <div class="bg-slate-900/90 rounded-2xl p-3.5 border border-slate-800/80 shadow-md flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-xl bg-slate-950 flex flex-col items-center justify-center border border-slate-800 text-slate-200">
+                <span class="text-xs font-black font-mono">${Math.round(slot.wind_kts)}</span>
+                <span class="text-[9px] text-sky-400 font-bold -mt-0.5">kts</span>
+              </div>
+              <div>
+                <div class="flex items-center space-x-1.5">
+                  <h4 class="text-xs font-bold text-white">${timeLabel}</h4>
+                  <span class="text-[10px] text-slate-400 font-medium">Gusts ${Math.round(slot.gust_kts)} kts · ${slot.direction || 'E'}</span>
+                </div>
+                <p class="text-[11px] font-semibold mt-0.5 ${slotRec.status === 'sweet' ? 'text-emerald-400' : slotRec.status === 'overpowered' ? 'text-amber-400' : slotRec.status === 'danger' ? 'text-rose-400' : 'text-slate-300'}">
+                  ${slotRec.text}
+                </p>
+              </div>
+            </div>
+            <div class="w-2 h-2 rounded-full ${slotRec.status === 'sweet' ? 'bg-emerald-400 shadow-sm shadow-emerald-400/50' : 'bg-slate-700'}"></div>
+          </div>
+        `;
+      }).join('');
+
+      // Render SVG Wind Chart
+      renderWindChart(schedule);
+
+      // Render Tides
+      const tides = isTomorrow ? (f.tides_tomorrow || []) : (f.tides || []);
+      const tidesContainer = document.getElementById('tides-container');
+      if (tides.length === 0) {
+        tidesContainer.innerHTML = '<div class="text-slate-400 text-center py-2 col-span-2">Tide model data unavailable for spot.</div>';
+      } else {
+        tidesContainer.innerHTML = tides.map(t => `
+          <div class="bg-slate-950/80 rounded-xl p-3 border border-slate-800/80 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="text-base">${t.type === 'High' ? '⬆️' : '⬇️'}</span>
+              <div>
+                <p class="text-xs font-bold text-white">${t.type} Tide</p>
+                <p class="text-[10px] text-slate-400">${t.time}</p>
+              </div>
+            </div>
+            <span class="text-xs font-mono font-bold ${t.height >= 0 ? 'text-cyan-400' : 'text-sky-300'}">${t.height > 0 ? '+' : ''}${t.height.toFixed(2)}m</span>
+          </div>
+        `).join('');
+      }
+    }
+
+    function renderWindChart(schedule) {
+      const svg = document.getElementById('wind-chart-svg');
+      const entries = Object.entries(schedule);
+      if (entries.length === 0) return;
+
+      const maxSpeed = Math.max(...entries.map(e => e[1].gust_kts), 30);
+      const svgWidth = svg.clientWidth || 340;
+      const svgHeight = 110;
+      const barWidth = 32;
+      const spacing = svgWidth / entries.length;
+
+      svg.innerHTML = entries.map(([timeLabel, slot], idx) => {
+        const x = idx * spacing + (spacing - barWidth) / 2;
+        const windH = (slot.wind_kts / maxSpeed) * svgHeight;
+        const gustH = (slot.gust_kts / maxSpeed) * svgHeight;
+        const yWind = svgHeight - windH;
+        const yGust = svgHeight - gustH;
+
+        return `
+          <!-- Gust bar (background) -->
+          <rect x="${x}" y="${yGust}" width="${barWidth}" height="${gustH}" rx="6" fill="#f59e0b" fill-opacity="0.3" stroke="#f59e0b" stroke-width="1" />
+          <!-- Sustained wind bar (foreground) -->
+          <rect x="${x}" y="${yWind}" width="${barWidth}" height="${windH}" rx="6" fill="url(#windGrad)" />
+          <!-- Wind knot label -->
+          <text x="${x + barWidth/2}" y="${yWind - 5}" text-anchor="middle" font-size="10" font-weight="bold" fill="#38bdf8">${Math.round(slot.wind_kts)}</text>
+          <!-- Time label -->
+          <text x="${x + barWidth/2}" y="${svgHeight + 16}" text-anchor="middle" font-size="9" fill="#94a3b8">${timeLabel.split(' ')[0]}</text>
+        `;
+      }).join('') + `
+        <defs>
+          <linearGradient id="windGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#38bdf8" />
+            <stop offset="100%" stop-color="#0284c7" />
+          </linearGradient>
+        </defs>
+      `;
+    }
+
+    // 5. DATA FETCHING (API)
+    async function fetchForecast() {
+      try {
+        const spot = state.spot;
+        const url = `/api/forecast?lat=${spot.lat}&lon=${spot.lon}&name=${encodeURIComponent(spot.name)}&timezone=${encodeURIComponent(spot.timezone || 'auto')}`;
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error("API error");
+        const data = await resp.json();
+        state.forecastData = data;
+
+        // Auto-switch to tomorrow if hour >= 17
+        const now = new Date();
+        if (now.getHours() >= 17 && state.currentTab === 'today') {
+          switchDayTab('tomorrow', true);
+        } else {
+          renderForecast();
+        }
+      } catch (e) {
+        console.error("Forecast fetch failed, using fallback:", e);
+      }
+    }
+
+    // 6. EVENT HANDLERS & USER INTERACTIONS
+    function switchDayTab(tab, isAuto = false) {
+      state.currentTab = tab;
+      const tabToday = document.getElementById('tab-today');
+      const tabTmrw = document.getElementById('tab-tomorrow');
+      const autoNote = document.getElementById('schedule-auto-note');
+
+      if (tab === 'today') {
+        tabToday.className = "flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-sky-600 text-white shadow-md";
+        tabTmrw.className = "flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 text-slate-400 hover:text-white";
+        document.getElementById('schedule-title-date').innerText = "Today's Rigging Schedule";
+        autoNote.innerText = "";
+      } else {
+        tabTmrw.className = "flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-sky-600 text-white shadow-md";
+        tabToday.className = "flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 text-slate-400 hover:text-white";
+        document.getElementById('schedule-title-date').innerText = "Tomorrow's Rigging Schedule";
+        autoNote.innerText = isAuto ? "🌙 Past 17:00 auto-switch" : "";
+      }
+      renderForecast();
+    }
+
+    function toggleKiteBackpack(idx) {
+      state.inventory[idx].active = state.inventory[idx].active === false ? true : false;
+      saveInventory();
+      renderQuiver();
+      renderForecast();
+    }
+
+    function deleteKite(idx) {
+      if (confirm(`Remove ${state.inventory[idx].brand} ${state.inventory[idx].model} ${state.inventory[idx].size}m from your garage?`)) {
+        state.inventory.splice(idx, 1);
+        saveInventory();
+        renderQuiver();
+        renderForecast();
+      }
+    }
+
+    function onBrandChange(brand) {
+      const modelSelect = document.getElementById('select-model');
+      modelSelect.innerHTML = '';
+      if (KITE_CATALOG[brand]) {
+        Object.keys(KITE_CATALOG[brand]).forEach(m => {
+          const opt = document.createElement('option');
+          opt.value = m;
+          opt.innerText = m;
+          modelSelect.appendChild(opt);
+        });
+      } else {
+        const opt = document.createElement('option');
+        opt.value = "Custom Freeride";
+        opt.innerText = "Custom Freeride";
+        modelSelect.appendChild(opt);
+      }
+    }
+
+    function onAddKiteFormSubmit(e) {
+      e.preventDefault();
+      const brand = document.getElementById('select-brand').value;
+      const model = document.getElementById('select-model').value || "All-Round";
+      const size = parseFloat(document.getElementById('select-size').value) || 10;
+      const year = parseInt(document.getElementById('select-year').value) || 2024;
+      const active = document.getElementById('check-in-bag').checked;
+
+      state.inventory.push({ brand, model, size, year, active });
+      saveInventory();
+      toggleModal('modal-add-kite');
+      renderQuiver();
+      renderForecast();
+    }
+
+    function onWeightSlider(val) {
+      state.user.weight = parseFloat(val);
+      localStorage.setItem('kf_weight', state.user.weight);
+      document.getElementById('profile-weight-display').innerText = `${state.user.weight.toFixed(1)} kg`;
+      renderQuiver();
+      renderForecast();
+    }
+
+    function adjustWeight(delta) {
+      const nw = Math.max(45, Math.min(125, state.user.weight + delta));
+      document.getElementById('slider-weight').value = nw;
+      onWeightSlider(nw);
+    }
+
+    function updateRiderName(val) {
+      state.user.name = val.trim() || 'Rider';
+      localStorage.setItem('kf_name', state.user.name);
+    }
+
+    function setSpot(name, lat, lon, tz = "auto") {
+      state.spot = { name, lat, lon, timezone: tz };
+      localStorage.setItem('kf_spot', JSON.stringify(state.spot));
+      document.getElementById('header-spot-name').innerText = name.split(',')[0];
+      toggleModal('modal-spot');
+      fetchForecast();
+    }
+
+    function useGpsLocation() {
+      if (!navigator.geolocation) {
+        alert("Geolocation not supported by your browser.");
+        return;
+      }
+      const btn = document.getElementById('btn-gps');
+      btn.classList.add('animate-spin');
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          btn.classList.remove('animate-spin');
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+          try {
+            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
+            const data = await res.json();
+            const beachName = data.address?.beach || data.address?.suburb || data.address?.village || data.address?.city || "My Location";
+            setSpot(beachName, lat, lon, "auto");
+          } catch {
+            setSpot("My Beach Location", lat, lon, "auto");
+          }
+        },
+        (err) => {
+          btn.classList.remove('animate-spin');
+          alert("Could not access GPS. Please ensure location permissions are enabled.");
+        }
+      );
+    }
+
+    async function onSearchSpotSubmit() {
+      const q = document.getElementById('input-spot-search').value.trim();
+      if (!q) return;
+      try {
+        const resp = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1`);
+        const data = await resp.json();
+        if (data && data.length > 0) {
+          setSpot(data[0].display_name.split(',')[0], parseFloat(data[0].lat), parseFloat(data[0].lon), "auto");
+        } else {
+          alert("Could not find spot. Try another beach name!");
+        }
+      } catch (e) {
+        alert("Search request failed.");
+      }
+    }
+
+    function toggleModal(id) {
+      const el = document.getElementById(id);
+      el.classList.toggle('hidden');
+    }
+
+    function saveInventory() {
+      localStorage.setItem('kf_inventory', JSON.stringify(state.inventory));
+    }
+
+    function resetProfileAll() {
+      if (confirm("Reset everything? This will clear all kites and personal settings to start fresh.")) {
+        localStorage.clear();
+        state.inventory = [];
+        state.user.weight = 75.0;
+        state.user.name = "Daniel";
+        document.getElementById('rider-name-input').value = "Daniel";
+        document.getElementById('slider-weight').value = 75;
+        document.getElementById('profile-weight-display').innerText = "75.0 kg";
+        toggleModal('modal-profile');
+        renderQuiver();
+        renderForecast();
+      }
+    }
+
+    // 7. INITIAL STARTUP
+    window.addEventListener('DOMContentLoaded', () => {
+      onBrandChange('Duotone');
+      document.getElementById('rider-name-input').value = state.user.name;
+      document.getElementById('profile-weight-display').innerText = `${state.user.weight.toFixed(1)} kg`;
+      document.getElementById('slider-weight').value = state.user.weight;
+      document.getElementById('header-spot-name').innerText = state.spot.name.split(',')[0];
+
+      renderQuiver();
+      fetchForecast();
+
+      // Register PWA Service Worker
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW register failed:', err));
+      }
+    });
+  </script>
+</body>
+</html>

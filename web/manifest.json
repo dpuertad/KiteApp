@@ -1,0 +1,24 @@
+{
+  "name": "KiteForecast - Smart Rigging Assistant",
+  "short_name": "KiteForecast",
+  "description": "Smart, personalized kitesurf forecasts & quiver rigging decisions tailored to your exact gear and weight.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#0284c7",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

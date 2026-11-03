@@ -38,7 +38,8 @@ SSL_CTX = ssl._create_unverified_context()
 REPLY_KEYBOARD = {
     "keyboard": [
         [{"text": "📍 Send Current Location & Report", "request_location": True}],
-        [{"text": "/report"}, {"text": "/report tomorrow"}, {"text": "/kites"}]
+        [{"text": "/report"}, {"text": "/report tomorrow"}, {"text": "/kites"}],
+        [{"text": "📱 Open Interactive Web App"}]
     ],
     "resize_keyboard": True,
     "persistent": True
@@ -992,6 +993,20 @@ def handle_telegram_command(text: str, message_obj: dict, config: dict) -> str:
         send_photo_telegram(qr_url, caption, config["telegram_token"], chat_id)
         return None
 
+    elif cmd.startswith("/app") or cmd.startswith("/web") or "interactive web app" in cmd.lower():
+        return (
+            "📱 *KiteForecast Interactive Web App:* 🏄‍♂️\n\n"
+            "👉 https://kiteapp.onrender.com\n\n"
+            "✨ *What you can do in the App:*\n"
+            "• Interactive gear garage with brand & model dropdowns\n"
+            "• 'In My Backpack' toggle switches for your kites\n"
+            "• Real-time rider weight slider (instantly scales wind ranges!)\n"
+            "• Live interactive wind & gust bar charts\n"
+            "• Tide height wave curves\n"
+            "• Instant GPS spot locator\n\n"
+            "💡 _Tip: Tap 'Add to Home Screen' in Safari (iOS) or Chrome (Android) to use it just like a native app!_"
+        )
+
     elif cmd.startswith("/setup") or cmd.startswith("/help"):
         return get_user_kites_list_text(user_profile)
 
@@ -1206,21 +1221,170 @@ def handle_telegram_command(text: str, message_obj: dict, config: dict) -> str:
 
 
 def start_embedded_http_server(port: int = 8080):
-    """Embeds a zero-dependency health check endpoint for free cloud hosts (Render, Koyeb, etc.)."""
-    class HealthHandler(BaseHTTPRequestHandler):
-        def do_GET(self):
+    """Embeds an HTTP server serving the interactive PWA web app, REST API endpoints, and cloud health checks."""
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    web_dir = os.path.join(base_dir, "web")
+
+    class AppServerHandler(BaseHTTPRequestHandler):
+        def _send_cors_headers(self):
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+            self.send_header("Access-Control-Allow-Headers", "Content-Type")
+
+        def do_OPTIONS(self):
             self.send_response(200)
-            self.send_header("Content-Type", "application/json")
+            self._send_cors_headers()
             self.end_headers()
-            self.wfile.write(b'{"status": "ok", "service": "KiteForecastBot", "multi_user": true}\n')
+
+        def do_GET(self):
+            parsed = urllib.parse.urlparse(self.path)
+            path = parsed.path
+            params = urllib.parse.parse_qs(parsed.query)
+
+            # 1. Health check (for Render & uptime monitors)
+            if path in ["/api/health", "/health"]:
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self._send_cors_headers()
+                self.end_headers()
+                self.wfile.write(b'{"status": "ok", "service": "KiteForecastApp", "multi_user": true}\n')
+                return
+
+            # 2. API: Kite Catalog
+            if path == "/api/catalog":
+                from kite_catalog import KITE_CATALOG
+                data = json.dumps(KITE_CATALOG).encode("utf-8")
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self._send_cors_headers()
+                self.end_headers()
+                self.wfile.write(data)
+                return
+
+            # 3. API: Weather & Tides Forecast
+            if path == "/api/forecast":
+                try:
+                    lat = float(params.get("lat", [-3.6247])[0])
+                    lon = float(params.get("lon", [-38.7297])[0])
+                    name = params.get("name", ["Spot"])[0]
+                    tz = params.get("timezone", ["auto"])[0]
+                    f_data = fetch_live_forecast({"lat": lat, "lon": lon, "name": name, "timezone": tz})
+                    out = json.dumps(f_data).encode("utf-8")
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(out)
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # 4. API: Geocoding
+            if path == "/api/geocode":
+                q = params.get("q", [""])[0]
+                lat, lon, res_name = geocode_place_name(q)
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self._send_cors_headers()
+                self.end_headers()
+                self.wfile.write(json.dumps({"lat": lat, "lon": lon, "name": res_name}).encode("utf-8"))
+                return
+
+            # 5. Static Files: PWA Web App
+            if path in ["/", "/index.html"]:
+                index_path = os.path.join(web_dir, "index.html")
+                if os.path.exists(index_path):
+                    with open(index_path, "rb") as f:
+                        content = f.read()
+                    self.send_response(200)
+                    self.send_header("Content-Type", "text/html; charset=utf-8")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(content)
+                    return
+
+            if path == "/manifest.json":
+                m_path = os.path.join(web_dir, "manifest.json")
+                if os.path.exists(m_path):
+                    with open(m_path, "rb") as f:
+                        content = f.read()
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/manifest+json; charset=utf-8")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(content)
+                    return
+
+            if path == "/sw.js":
+                sw_path = os.path.join(web_dir, "sw.js")
+                if os.path.exists(sw_path):
+                    with open(sw_path, "rb") as f:
+                        content = f.read()
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/javascript; charset=utf-8")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(content)
+                    return
+
+            if path in ["/icon.png", "/kiteforecast_bot_qr.png"]:
+                qr_path = os.path.join(base_dir, "kiteforecast_bot_qr.png")
+                if os.path.exists(qr_path):
+                    with open(qr_path, "rb") as f:
+                        content = f.read()
+                    self.send_response(200)
+                    self.send_header("Content-Type", "image/png")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(content)
+                    return
+
+            # Fallback
+            self.send_response(404)
+            self.send_header("Content-Type", "text/plain")
+            self.end_headers()
+            self.wfile.write(b"Not Found\n")
+
+        def do_POST(self):
+            parsed = urllib.parse.urlparse(self.path)
+            if parsed.path == "/api/recommend":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    data = json.loads(body)
+                    w = float(data.get("weight_kg", 75.0))
+                    inv = data.get("active_inventory", [])
+                    w_kts = float(data.get("wind_kts", 16.0))
+                    g_kts = float(data.get("gust_kts", 20.0))
+                    all_inv = data.get("all_inventory")
+                    rec = recommend_from_available_quiver(w, inv, w_kts, g_kts, all_inventory=all_inv)
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"recommendation": rec}).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(400)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            self.send_response(404)
+            self.end_headers()
 
         def log_message(self, *args):
             pass
 
     try:
-        server = HTTPServer(("0.0.0.0", port), HealthHandler)
+        server = HTTPServer(("0.0.0.0", port), AppServerHandler)
         threading.Thread(target=server.serve_forever, daemon=True).start()
-        print(f"🌐 Cloud Health Server listening on 0.0.0.0:{port}...")
+        print(f"🌐 Cloud App & Health Server listening on 0.0.0.0:{port} (PWA + API Enabled)...")
     except Exception as e:
         print(f"Cloud health server note: {e}")
 
