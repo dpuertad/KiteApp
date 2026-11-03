@@ -102,8 +102,8 @@
           </div>
           <div>
             <div class="flex items-center space-x-2">
-              <input id="rider-name-input" type="text" value="Daniel" onchange="updateRiderName(this.value)" class="bg-transparent font-bold text-sm text-white focus:outline-none border-b border-transparent focus:border-sky-500 transition px-0.5">
-              <span class="text-[11px] px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 font-semibold border border-sky-500/30">Rider</span>
+              <input id="rider-name-input" type="text" value="" placeholder="Your Name" onchange="updateRiderName(this.value)" class="bg-transparent font-bold text-sm text-white focus:outline-none border-b border-transparent focus:border-sky-500 transition px-0.5 placeholder:text-slate-500">
+              <span id="rider-badge-title" class="text-[11px] px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 font-semibold border border-sky-500/30">Rider</span>
             </div>
             <p id="backpack-count-badge" class="text-[11px] text-slate-400">🎒 0 in backpack · 0 at home</p>
           </div>
@@ -119,8 +119,21 @@
         </div>
         <div class="flex items-center space-x-1.5">
           <button onclick="adjustWeight(-2.5)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 text-xs font-bold border border-slate-700 flex items-center justify-center">-</button>
-          <input id="slider-weight" type="range" min="45" max="120" step="1" value="75" oninput="onWeightSlider(this.value)" class="w-24 accent-sky-500 cursor-pointer">
+          <input id="slider-weight" type="range" min="45" max="125" step="1" value="75" oninput="onWeightSlider(this.value)" class="w-24 accent-sky-500 cursor-pointer">
           <button onclick="adjustWeight(2.5)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 text-xs font-bold border border-slate-700 flex items-center justify-center">+</button>
+        </div>
+      </div>
+
+      <!-- Skill Level Selector (Beginner / Medium / Advanced) -->
+      <div class="mt-2.5 pt-2.5 border-t border-slate-800/80 flex items-center justify-between text-xs">
+        <span class="text-slate-400 font-medium flex items-center space-x-1.5">
+          <i data-lucide="gauge" class="w-3.5 h-3.5 text-sky-400"></i>
+          <span>Rider Level:</span>
+        </span>
+        <div class="flex items-center bg-slate-950/90 p-0.5 rounded-xl border border-slate-800">
+          <button type="button" id="btn-level-beginner" onclick="setRiderLevel('beginner')" class="px-2.5 py-1 rounded-lg font-semibold transition text-[11px] text-slate-400 hover:text-white">Beginner</button>
+          <button type="button" id="btn-level-intermediate" onclick="setRiderLevel('intermediate')" class="px-2.5 py-1 rounded-lg font-semibold transition text-[11px] bg-sky-600 text-white shadow-sm">Medium</button>
+          <button type="button" id="btn-level-advanced" onclick="setRiderLevel('advanced')" class="px-2.5 py-1 rounded-lg font-semibold transition text-[11px] text-slate-400 hover:text-white">Advanced</button>
         </div>
       </div>
     </section>
@@ -303,6 +316,7 @@
             <option value="Naish">Naish</option>
             <option value="Slingshot">Slingshot</option>
             <option value="Harlem">Harlem</option>
+            <option value="Eleveight">Eleveight</option>
             <option value="Other">Other / Custom</option>
           </select>
         </div>
@@ -444,53 +458,79 @@
     // 1. KITE CATALOG DATABASE
     const KITE_CATALOG = {
       "Duotone": {
-        "Rebel SLS": { type: "5-Strut Big Air", material: "Penta TX SLS", sizes: { 7: [19, [22,32], 38], 8: [17, [20,29], 36], 9: [15, [18,27], 34], 10: [13, [16,24], 32], 11: [12, [14,22], 29], 12: [11, [13,20], 26] } },
-        "Rebel D/LAB": { type: "5-Strut Extreme Big Air", material: "Aluula D/LAB", sizes: { 7: [17, [20,31], 38], 8: [15, [18,28], 36], 9: [13.5, [16,26], 34], 10: [11.5, [14,23], 32], 11: [10.5, [13,21], 29], 12: [9.5, [12,19], 26] } },
-        "Evo SLS": { type: "3-Strut All-Round", material: "Penta TX SLS", sizes: { 7: [18, [21,30], 38], 8: [16, [19,28], 36], 9: [14, [17,26], 34], 10: [12, [15,24], 32], 11: [11, [13,21], 29], 12: [10, [12,19], 27] } },
-        "Dice SLS": { type: "3-Strut Freestyle", material: "Penta TX SLS", sizes: { 7: [19, [22,31], 37], 8: [17, [20,29], 35], 9: [15, [18,27], 33], 10: [13, [16,24], 31], 11: [12, [14,21], 28], 12: [11, [13,19], 25] } }
-      },
-      "North": {
-        "Orbit": { type: "5-Strut Big Air", material: "N-Force Dacron", sizes: { 7: [19, [22,31], 38], 8: [17, [20,29], 36], 9: [15, [18,27], 34], 10: [13, [16,24], 32], 11: [12, [14,22], 29], 12: [11, [13,20], 26] } },
-        "Orbit Pro": { type: "5-Strut Competition Big Air", material: "N-X2 Light Carbon", sizes: { 7: [18, [21,32], 39], 8: [16, [19,30], 37], 9: [14, [17,28], 35], 10: [12, [15,25], 33], 11: [11, [13,23], 30] } },
-        "Reach": { type: "3-Strut All-Round Freeride", material: "Dacron", sizes: { 7: [18, [21,29], 36], 8: [16, [19,27], 34], 9: [14, [17,25], 32], 10: [12, [15,23], 30], 12: [10, [12,19], 25] } }
-      },
-      "Core": {
-        "XR8": { type: "5-Strut High Performance Freeride", material: "ExoTex 2", sizes: { 7: [19, [22,31], 38], 8: [17, [20,29], 36], 9: [15, [18,27], 34], 10: [13, [16,24], 32], 11: [12, [14,22], 29], 12: [11, [13,20], 26] } },
-        "XR Pro": { type: "5-Strut Big Air Booster", material: "Aluula Airframe", sizes: { 7: [17, [20,32], 40], 8: [15, [18,30], 38], 9: [13.5, [16,28], 36], 10: [11.5, [14,25], 34], 12: [9.5, [12,21], 28] } },
-        "Nexus 3": { type: "3-Strut Universal Wave/Freestyle", material: "ExoTex Light", sizes: { 7: [18, [21,30], 36], 8: [16, [19,28], 34], 9: [14, [17,26], 32], 10: [12, [15,24], 30], 12: [10, [12,19], 25] } }
-      },
-      "Cabrinha": {
-        "Switchblade": { type: "5-Strut Freeride/Grunt", material: "HTD Plus Dacron", sizes: { 7: [18, [21,28], 32], 8: [16, [19,26], 30], 9: [13, [16,23], 27], 10: [11, [14,21], 25], 11: [10, [13,19], 23], 12: [9, [12,18], 21] } },
-        "Nitro Apex": { type: "5-Strut Big Air", material: "Apex Series Light", sizes: { 7: [18, [21,31], 38], 8: [16, [19,29], 36], 9: [14, [17,27], 34], 10: [12, [15,25], 32], 12: [10, [12,20], 26] } }
-      },
-      "Ozone": {
-        "Edge V11/V12": { type: "5-Strut High Aspect Booster", material: "Teijin TechnoForce", sizes: { 7: [18, [21,30], 36], 8: [16, [19,28], 34], 9: [14, [17,26], 32], 10: [12, [15,24], 30], 11: [11, [13,21], 28], 12: [10, [12,19], 26] } },
-        "Vortex": { type: "3-Strut High-Tension Big Air", material: "Aluula Airframe", sizes: { 7: [17, [20,31], 38], 8: [15, [18,29], 36], 9: [13, [16,27], 34], 10: [11.5, [14,25], 32], 11: [10.5, [13,22], 29] } }
-      },
-      "F-One": {
-        "Bandit (XVI/XVII)": { type: "3-Strut Delta C-Shape", material: "Teijin 130g", sizes: { 7: [18, [21,30], 36], 8: [16, [19,28], 34], 9: [14, [17,26], 32], 10: [12, [15,24], 30], 11: [11, [13,21], 28], 12: [10, [12,19], 26] } },
-        "Trigger": { type: "5-Strut Big Air", material: "High Tenacity Dacron", sizes: { 7: [19, [22,31], 38], 8: [17, [20,29], 36], 9: [15, [18,27], 34], 10: [13, [16,24], 32], 12: [11, [13,20], 26] } }
-      },
-      "Reedin": {
-        "SuperModel HTF": { type: "3-Strut All-Round Freeride", material: "Hybrid Torsion Frame", sizes: { 7: [18, [21,30], 37], 8: [16, [19,28], 35], 9: [14, [17,26], 33], 10: [12, [15,24], 31], 12: [10, [12,19], 26] } }
-      },
-      "Naish": {
-        "Pivot": { type: "3-Strut Freeride / Wave", material: "Quad-Tex", sizes: { 7: [18, [21,29], 36], 8: [16, [19,27], 34], 9: [14, [17,25], 32], 10: [12, [15,23], 30], 12: [10, [12,19], 25] } }
-      },
-      "Slingshot": {
-        "Machine V2": { type: "5-Strut Big Air", material: "Rigid Frame", sizes: { 7: [19, [22,31], 38], 8: [17, [20,29], 36], 9: [15, [18,27], 34], 10: [13, [16,24], 32], 12: [11, [13,20], 26] } }
+        "Rebel SLS": { type: "5-Strut Big Air", material: "Penta TX SLS", sizes: { 7: [20, [23,33], 40], 8: [18, [21,30], 37], 9: [16, [19,27], 34], 10: [14, [17,25], 32], 11: [13, [15,23], 30], 12: [12, [14,21], 27] } },
+        "Rebel D/LAB": { type: "5-Strut Extreme Big Air", material: "Aluula D/LAB", sizes: { 7: [18, [22,33], 40], 8: [16, [20,31], 38], 9: [14.5, [18,28], 35], 10: [13, [16,25], 33], 11: [12, [14,23], 30], 12: [11, [13,21], 28] } },
+        "Evo": { type: "3-Strut All-Round Freeride", material: "Standard Dacron", sizes: { 7: [20, [23,31], 38], 8: [18, [21,29], 36], 9: [16, [19,27], 34], 10: [14, [17,25], 32], 11: [13, [15,23], 29], 12: [12, [14,21], 27] } },
+        "Evo SLS": { type: "3-Strut All-Round Performance", material: "Penta TX SLS", sizes: { 7: [19, [22,31], 39], 8: [17, [20,29], 37], 9: [15, [18,27], 35], 10: [13.5, [16,25], 33], 11: [12, [14,23], 30], 12: [11, [13,21], 28] } },
+        "Evo D/LAB": { type: "3-Strut Ultimate Aluula", material: "Aluula D/LAB", sizes: { 7: [17, [21,31], 39], 8: [15, [19,29], 37], 9: [13.5, [17,27], 35], 10: [12, [15,25], 33], 11: [11, [13,22], 30], 12: [10, [12,20], 28] } },
+        "Dice SLS": { type: "3-Strut Freestyle", material: "Penta TX SLS", sizes: { 7: [20, [23,32], 38], 8: [18, [21,30], 36], 9: [16, [19,28], 34], 10: [14, [17,25], 32], 11: [13, [15,22], 29], 12: [12, [14,20], 26] } },
+        "Neo SLS": { type: "3-Strut Wave / Drift", material: "Penta TX SLS", sizes: { 7: [19, [22,31], 36], 8: [17, [20,28], 34], 9: [15, [18,26], 32], 10: [13, [16,24], 30], 11: [12, [14,21], 27], 12: [11, [13,19], 24] } },
+        "Juice D/LAB": { type: "3-Strut Lightwind", material: "Aluula D/LAB", sizes: { 13: [9, [11,17], 21], 14: [8.5, [10,16], 20], 15: [8, [9.5,15], 19], 17: [7.5, [9,14], 18] } }
       },
       "Harlem": {
-        "Force": { type: "3-Strut Big Air / Gamechanger", material: "Brainchild Eco Fabric", sizes: { 7: [18, [21,30], 37], 8: [16, [19,28], 35], 9: [14, [17,26], 33], 10: [12, [15,24], 31], 12: [10, [12,19], 26] } }
+        "Thrive V1": { type: "3-Strut All-Round / Wave / Progression", material: "Brainchild PRO Weld", sizes: { 6: [21, [25,35], 40], 7: [19, [22,32], 38], 8: [17, [20,30], 36], 9: [15, [18,27], 34], 10: [13.5, [16,25], 32], 11: [12.5, [15,23], 29], 12: [11.5, [13.5,21], 27], 13: [10.5, [12.5,19], 24], 15: [9.5, [11,17], 22] } },
+        "Thrive": { type: "3-Strut All-Round / Wave", material: "Brainchild PRO Weld", sizes: { 7: [19, [22,32], 38], 8: [17, [20,30], 36], 9: [15, [18,27], 34], 10: [13.5, [16,25], 32], 12: [11.5, [13.5,21], 27] } },
+        "Force": { type: "3-Strut Big Air Booster", material: "Titanium / Brainchild", sizes: { 7: [18, [22,34], 40], 8: [16, [20,32], 38], 9: [14, [18,29], 35], 10: [12.5, [16,26], 32], 11: [11.5, [14.5,24], 29], 12: [10.5, [13,22], 27] } },
+        "Pace": { type: "3-Strut Freeride / Progression", material: "Brainchild Weld Tech", sizes: { 7: [19, [22,30], 36], 8: [17, [20,28], 34], 9: [15, [18,26], 32], 10: [13.5, [16,24], 30], 12: [11.5, [13.5,20], 26], 14: [10, [12,17], 22] } },
+        "Light": { type: "Lightwind Freeride / Foil", material: "Ultra-Light Fabric", sizes: { 13: [9.5, [11.5,17], 22], 15: [8.5, [10.5,16], 20], 17: [8, [9.5,14.5], 18] } }
+      },
+      "Core": {
+        "XR8": { type: "5-Strut Big Air / High Aspect", material: "ExoTex 2", sizes: { 7: [19, [23,33], 39], 8: [17, [20,30], 36], 9: [15, [18,27], 33], 10: [13.5, [16,25], 31], 11: [12.5, [15,23], 29], 12: [11.5, [13.5,21], 27] } },
+        "XR Pro": { type: "5-Strut Big Air Aluula", material: "Aluula Airframe", sizes: { 7: [18, [22,34], 40], 8: [16, [19,31], 38], 9: [14, [17,28], 35], 10: [12.5, [15,26], 33], 12: [10.5, [13,22], 28] } },
+        "Nexus 3": { type: "3-Strut Universal Freeride/Wave", material: "ExoTex 2", sizes: { 7: [19, [22,31], 37], 8: [17, [20,29], 35], 9: [15, [18,26], 32], 10: [13.5, [16,24], 30], 12: [11, [13,20], 26] } },
+        "Pace Pro": { type: "3-Strut High-Performance Big Air", material: "Aluula 3-Strut", sizes: { 7: [18.5, [22,34], 40], 8: [16.5, [20,31], 38], 9: [14.5, [17.5,28], 35], 10: [13, [15.5,25], 32], 12: [11, [13,22], 28] } }
+      },
+      "North": {
+        "Orbit": { type: "5-Strut Big Air", material: "N-Force Dacron", sizes: { 7: [20, [23,34], 40], 8: [18, [21,32], 38], 9: [16, [19,29], 35], 10: [14, [17,26], 32], 11: [13, [15,24], 29], 12: [12, [14,22], 27] } },
+        "Orbit Pro": { type: "5-Strut Competition Big Air", material: "N-Max / Aluula", sizes: { 7: [18.5, [22,34], 41], 8: [16.5, [20,32], 39], 9: [14.5, [18,29], 36], 10: [13, [16,26], 33], 11: [12, [14.5,24], 30] } },
+        "Reach": { type: "3-Strut All-Round Freeride", material: "N-HTYR Dacron", sizes: { 7: [19, [22,29], 34], 8: [17, [20,27], 32], 9: [15, [18,25], 30], 10: [13.5, [16,23], 28], 11: [12, [14.5,21], 26], 12: [11, [13,19], 24] } },
+        "Carve": { type: "3-Strut Wave / Strapless", material: "Performance Dacron", sizes: { 7: [19, [22,31], 37], 8: [17, [20,29], 35], 9: [15, [18,26], 32], 10: [13, [16,24], 29], 12: [11, [13,20], 25] } }
+      },
+      "Cabrinha": {
+        "Switchblade": { type: "5-Strut Freeride / Grunt & Lift", material: "HTD Plus Dacron", sizes: { 7: [20, [23,31], 36], 8: [18, [21,29], 34], 9: [16, [18.5,26], 31], 10: [14, [16.5,24], 29], 11: [13, [15,22], 27], 12: [12, [14,20], 25], 14: [10, [12,17], 22] } },
+        "Nitro Apex": { type: "5-Strut Extreme Big Air", material: "Ultra HT Material", sizes: { 7: [19, [23,34], 40], 8: [17, [21,32], 38], 9: [15, [19,29], 35], 10: [13.5, [17,26], 32], 12: [11.5, [14,22], 28] } },
+        "Moto X": { type: "3-Strut All-Round Freeride", material: "HTD Plus", sizes: { 7: [19, [22,30], 36], 8: [17, [20,28], 34], 9: [15, [18,26], 31], 10: [13.5, [16,24], 29], 12: [11.5, [13.5,21], 26] } },
+        "Drifter": { type: "3-Strut Surf / Wave Drift", material: "HTD Dacron", sizes: { 7: [19, [22,31], 37], 8: [17, [20,28], 34], 9: [15, [18,26], 31], 10: [13, [16,23], 28] } }
+      },
+      "Ozone": {
+        "Edge V11/V12": { type: "5-Strut High Aspect Booster", material: "Teijin Dacron", sizes: { 7: [19, [22,30], 35], 8: [17, [20,28], 33], 9: [15, [18,26], 30], 10: [13.5, [16,23], 28], 11: [12.5, [15,21], 26], 13: [10.5, [13,18], 22] } },
+        "Vortex": { type: "3-Strut Big Air / Aluula", material: "Aluula Airframe", sizes: { 7: [18, [22,34], 40], 8: [16, [20,32], 38], 9: [14, [18,29], 35], 10: [12.5, [16,26], 32], 11: [11.5, [14,23], 29] } },
+        "Enduro V4": { type: "3-Strut Multi-Discipline", material: "Teijin Dacron", sizes: { 7: [19, [22,30], 36], 8: [17, [20,28], 34], 9: [15, [18,26], 31], 10: [13.5, [16,24], 29], 12: [11, [13,20], 25] } }
+      },
+      "F-One": {
+        "Bandit (XVI/XVII)": { type: "3-Strut Delta C-Shape", material: "Teijin 130g", sizes: { 7: [20, [24,34], 40], 8: [18, [21,31], 37], 9: [16, [19,28], 34], 10: [14, [17,25], 31], 11: [12.5, [15,23], 28], 12: [11.5, [13.5,21], 26], 14: [10, [12,17], 22] } },
+        "Trigger": { type: "5-Strut Big Air", material: "High Tenacity Dacron", sizes: { 7: [19, [23,34], 40], 8: [17, [21,32], 38], 9: [15, [19,29], 35], 10: [13.5, [17,26], 32], 12: [11, [13.5,22], 27] } }
+      },
+      "Reedin": {
+        "SuperModel HTF": { type: "3-Strut All-Round Freeride", material: "Hybrid Torsion Frame", sizes: { 7: [20, [23,33], 39], 8: [18, [21,30], 36], 9: [16, [19,27], 33], 10: [14, [17,25], 31], 12: [11.5, [13.5,21], 26], 14: [10, [12,17], 22] } }
+      },
+      "Naish": {
+        "Pivot": { type: "3-Strut Freeride / Big Air", material: "Quad-Tex Ripstop", sizes: { 7: [20, [23,33], 38], 8: [18, [21,30], 36], 9: [16, [19,27], 33], 10: [14, [17,25], 31], 11: [13, [15,23], 28], 12: [12, [14,21], 26], 14: [10.5, [12.5,18], 23] } },
+        "Pivot Nvision": { type: "3-Strut Aluula Frame", material: "Aluula Airframe", sizes: { 7: [18, [22,34], 40], 8: [16, [20,32], 38], 9: [14, [18,29], 35], 10: [13, [16,26], 32], 12: [11, [13.5,22], 28] } }
+      },
+      "Slingshot": {
+        "Machine V2": { type: "5-Strut Big Air", material: "Dacron 4x4", sizes: { 7: [20, [24,34], 40], 8: [18, [21,32], 37], 9: [16, [19,29], 34], 10: [14, [17,26], 32], 11: [12.5, [15,23], 29], 12: [11.5, [13.5,21], 26] } },
+        "Code V1": { type: "3-Strut Freeride", material: "FrameL Lightweight", sizes: { 7: [19, [22,30], 36], 8: [17, [20,28], 34], 9: [15, [18,26], 31], 10: [13.5, [16,24], 29], 12: [11.5, [13.5,21], 26] } }
+      },
+      "Eleveight": {
+        "XS": { type: "5-Strut Big Air", material: "Teijin X4", sizes: { 7: [19, [23,34], 40], 8: [17, [21,32], 38], 9: [15, [19,29], 35], 10: [13.5, [17,26], 32], 12: [11.5, [14,22], 27] } },
+        "RS": { type: "3-Strut All-Round Freeride", material: "High Tenacity Dacron", sizes: { 7: [19, [22,30], 36], 8: [17, [20,28], 34], 9: [15, [18,26], 31], 10: [13.5, [16,24], 29], 12: [11.5, [13.5,21], 26], 14: [10, [12,17], 22] } }
       }
     };
 
     // 2. STATE INITIALIZATION (LocalStorage)
+    // Preserves existing saved profile data while keeping clean defaults for fresh riders
+    const savedName = localStorage.getItem('kf_name');
+    const savedWeight = localStorage.getItem('kf_weight');
+    const savedLevel = localStorage.getItem('kf_level');
+    const savedBoard = localStorage.getItem('kf_board');
+
     let state = {
       user: {
-        name: localStorage.getItem('kf_name') || 'Daniel',
-        weight: parseFloat(localStorage.getItem('kf_weight')) || 75.0,
-        board: localStorage.getItem('kf_board') || 'Twintip'
+        name: savedName !== null ? savedName : '',
+        weight: savedWeight !== null ? parseFloat(savedWeight) : 75.0,
+        level: savedLevel || 'intermediate',
+        board: savedBoard || 'Twintip'
       },
       spot: JSON.parse(localStorage.getItem('kf_spot')) || {
         name: "Cumbuco, Brazil",
@@ -502,6 +542,27 @@
       currentTab: 'today',
       forecastData: null
     };
+
+    function setRiderLevel(lvl) {
+      state.user.level = lvl;
+      localStorage.setItem('kf_level', lvl);
+      updateLevelButtonsUI();
+      renderQuiver();
+      renderForecast();
+    }
+
+    function updateLevelButtonsUI() {
+      const lvl = state.user.level || 'intermediate';
+      ['beginner', 'intermediate', 'advanced'].forEach(l => {
+        const btn = document.getElementById(`btn-level-${l}`);
+        if (!btn) return;
+        if (l === lvl) {
+          btn.className = "px-2.5 py-1 rounded-lg font-semibold transition text-[11px] bg-sky-600 text-white shadow-sm";
+        } else {
+          btn.className = "px-2.5 py-1 rounded-lg font-semibold transition text-[11px] text-slate-400 hover:text-white";
+        }
+      });
+    }
 
     // Fallback heuristic specs for custom kites
     function getKiteSpecs(brand, model, size) {
@@ -524,24 +585,56 @@
           type: m.type
         };
       }
-      const bMin = Math.round(135.0 / (size + 1.5) * 10) / 10;
+      const bMin = Math.round(145.0 / (size + 1.2) * 10) / 10;
       return {
         min: bMin,
         sweet: [Math.round(bMin * 1.25 * 10) / 10, Math.round(bMin * 1.75 * 10) / 10],
-        max: Math.round(bMin * 2.3 * 10) / 10,
+        max: Math.round(bMin * 2.2 * 10) / 10,
         material: "Standard",
         type: "Freeride"
       };
     }
 
-    // 3. SIZING & RIGGING ENGINE (Runs locally in JS)
-    function evaluateKite(kite, weightKg, windKts) {
+    // 3. SIZING & RIGGING ENGINE (Runs locally in JS with full hydrodynamic & aerodynamic physics)
+    function evaluateKite(kite, weightKg, windKts, level, board) {
       const specs = getKiteSpecs(kite.brand, kite.model, kite.size);
-      const wFactor = Math.sqrt(weightKg / 75.0);
-      const minK = Math.round(specs.min * wFactor * 10) / 10;
-      const sweetMin = Math.round(specs.sweet[0] * wFactor * 10) / 10;
-      const sweetMax = Math.round(specs.sweet[1] * wFactor * 10) / 10;
-      const maxK = Math.round(specs.max * wFactor * 10) / 10;
+      
+      // 60% aerodynamic lift scaling + 40% hydrodynamic displacement & planing friction:
+      const wFactor = (Math.sqrt(weightKg / 75.0) * 0.6) + ((weightKg / 75.0) * 0.4);
+      
+      let minK = specs.min * wFactor;
+      let sweetMin = specs.sweet[0] * wFactor;
+      let sweetMax = specs.sweet[1] * wFactor;
+      let maxK = specs.max * wFactor;
+
+      // Rider Skill Level tuning
+      const lvl = (level || state.user.level || 'intermediate').toLowerCase();
+      if (lvl === 'beginner') {
+        minK *= 1.15;       // needs +2-3 kts to plane and ride upwind safely
+        sweetMin *= 1.10;
+        maxK *= 0.88;       // lower overpower threshold for safety
+      } else if (lvl === 'advanced') {
+        minK *= 0.92;       // active kite flying in lighter breeze
+        sweetMax *= 1.08;   // higher sweet spot ceiling for boosting
+        maxK *= 1.12;       // handles more power
+      }
+
+      // Board discipline tuning
+      const brd = (board || state.user.board || 'Twintip').toLowerCase();
+      if (brd.includes('surf') || brd.includes('strapless')) {
+        minK *= 0.85;
+        sweetMin *= 0.85;
+        maxK *= 0.88;
+      } else if (brd.includes('foil')) {
+        minK *= 0.60;
+        sweetMin *= 0.65;
+        maxK *= 0.75;
+      }
+
+      minK = Math.round(minK * 10) / 10;
+      sweetMin = Math.round(sweetMin * 10) / 10;
+      sweetMax = Math.round(sweetMax * 10) / 10;
+      maxK = Math.round(maxK * 10) / 10;
       const midSweet = (sweetMin + sweetMax) / 2.0;
 
       return {
@@ -572,7 +665,7 @@
         };
       }
 
-      const evaluated = activeKites.map(k => evaluateKite(k, state.user.weight, windKts));
+      const evaluated = activeKites.map(k => evaluateKite(k, state.user.weight, windKts, state.user.level, state.user.board));
       const sweets = evaluated.filter(k => k.inSweet);
       if (sweets.length > 0) {
         sweets.sort((a,b) => a.distToSweet - b.distToSweet);
@@ -651,7 +744,7 @@
       }
 
       container.innerHTML = state.inventory.map((k, idx) => {
-        const ev = evaluateKite(k, state.user.weight, 18.0);
+        const ev = evaluateKite(k, state.user.weight, 18.0, state.user.level, state.user.board);
         const isActive = k.active !== false;
         return `
           <div class="bg-slate-950/80 rounded-2xl p-3.5 border ${isActive ? 'border-sky-800/80 shadow-md shadow-sky-950/50' : 'border-slate-800/60 opacity-60'} transition flex flex-col space-y-2.5">
@@ -975,8 +1068,16 @@
     }
 
     function updateRiderName(val) {
-      state.user.name = val.trim() || 'Rider';
-      localStorage.setItem('kf_name', state.user.name);
+      state.user.name = val.trim();
+      if (state.user.name) {
+        localStorage.setItem('kf_name', state.user.name);
+        const titleBadge = document.getElementById('rider-badge-title');
+        if (titleBadge) titleBadge.innerText = 'Rider';
+      } else {
+        localStorage.removeItem('kf_name');
+        const titleBadge = document.getElementById('rider-badge-title');
+        if (titleBadge) titleBadge.innerText = 'New Rider';
+      }
     }
 
     function setSpot(name, lat, lon, tz = "auto") {
@@ -1045,11 +1146,12 @@
         localStorage.clear();
         state.inventory = [];
         state.user.weight = 75.0;
-        state.user.name = "Daniel";
-        document.getElementById('rider-name-input').value = "Daniel";
+        state.user.level = 'intermediate';
+        state.user.name = '';
+        document.getElementById('rider-name-input').value = '';
         document.getElementById('slider-weight').value = 75;
-        document.getElementById('profile-weight-display').innerText = "75.0 kg";
-        toggleModal('modal-profile');
+        document.getElementById('profile-weight-display').innerText = '75.0 kg';
+        updateLevelButtonsUI();
         renderQuiver();
         renderForecast();
       }
@@ -1058,10 +1160,22 @@
     // 7. INITIAL STARTUP
     window.addEventListener('DOMContentLoaded', () => {
       onBrandChange('Duotone');
-      document.getElementById('rider-name-input').value = state.user.name;
+      
+      const rInput = document.getElementById('rider-name-input');
+      const titleBadge = document.getElementById('rider-badge-title');
+      if (state.user.name) {
+        rInput.value = state.user.name;
+        if (titleBadge) titleBadge.innerText = 'Rider';
+      } else {
+        rInput.value = '';
+        rInput.placeholder = 'Your Name';
+        if (titleBadge) titleBadge.innerText = 'New Rider';
+      }
+
       document.getElementById('profile-weight-display').innerText = `${state.user.weight.toFixed(1)} kg`;
       document.getElementById('slider-weight').value = state.user.weight;
       document.getElementById('header-spot-name').innerText = state.spot.name.split(',')[0];
+      updateLevelButtonsUI();
 
       // Instant local spot clock initialization & tick every 5 seconds
       updateLiveSpotClock();

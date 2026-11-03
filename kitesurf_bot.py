@@ -407,14 +407,44 @@ def fetch_live_forecast(spot: dict) -> dict:
     return forecast
 
 
-def evaluate_active_kite(kite_entry: dict, weight_kg: float, wind_kts: float, gust_kts: float) -> dict:
+def evaluate_active_kite(
+    kite_entry: dict,
+    weight_kg: float,
+    wind_kts: float,
+    gust_kts: float,
+    level: str = "intermediate",
+    board: str = "twintip"
+) -> dict:
     specs = lookup_kite_specs(kite_entry["brand"], kite_entry["model"], kite_entry["size"])
-    w_factor = math.sqrt(weight_kg / 75.0)
+    # 60% aerodynamic lift scaling + 40% hydrodynamic displacement/planing scaling
+    w_factor = (math.sqrt(weight_kg / 75.0) * 0.6) + ((weight_kg / 75.0) * 0.4)
 
     min_k = specs["min"] * w_factor
     sweet_min = specs["sweet"][0] * w_factor
     sweet_max = specs["sweet"][1] * w_factor
     max_k = specs["max"] * w_factor
+
+    # Rider Skill Level adjustments
+    lvl = (level or "intermediate").lower()
+    if lvl == "beginner":
+        min_k *= 1.15
+        sweet_min *= 1.10
+        max_k *= 0.88
+    elif lvl == "advanced":
+        min_k *= 0.92
+        sweet_max *= 1.08
+        max_k *= 1.12
+
+    # Board Discipline adjustments
+    brd = (board or "twintip").lower()
+    if "surf" in brd or "strapless" in brd:
+        min_k *= 0.85
+        sweet_min *= 0.85
+        max_k *= 0.88
+    elif "foil" in brd:
+        min_k *= 0.60
+        sweet_min *= 0.65
+        max_k *= 0.75
 
     in_range = min_k <= wind_kts <= max_k
     in_sweet = sweet_min <= wind_kts <= sweet_max
@@ -444,14 +474,16 @@ def recommend_from_available_quiver(
     active_inventory: list,
     wind_kts: float,
     gust_kts: float,
-    all_inventory: list = None
+    all_inventory: list = None,
+    level: str = "intermediate",
+    board: str = "twintip"
 ) -> str:
     if not active_inventory:
         if all_inventory:
             return "⚠️ No active kites in bag (type `/take all`)"
         return "⚠️ No quiver existing (type `/kite 1 <Brand> <Model> <Size>`)"
 
-    evaluated = [evaluate_active_kite(k, weight_kg, wind_kts, gust_kts) for k in active_inventory]
+    evaluated = [evaluate_active_kite(k, weight_kg, wind_kts, gust_kts, level=level, board=board) for k in active_inventory]
 
     # 1. Exact sweet spot match
     sweet_matches = [k for k in evaluated if k["in_sweet"]]
@@ -559,6 +591,7 @@ def format_briefing(forecast: dict, user_profile: dict) -> str:
     rider_name = user_profile.get("rider_name", "Kiter")
     weight = user_profile.get("rider_weight_kg", 75.0)
     board = user_profile.get("board_type", "Twintip")
+    level = user_profile.get("level", "intermediate").capitalize()
 
     inventory = user_profile.get("inventory", [])
     active_kites = [k for k in inventory if k.get("active", True)]
@@ -568,7 +601,7 @@ def format_briefing(forecast: dict, user_profile: dict) -> str:
     lines = [
         f"🏄‍♂️ *Kitesurf Morning Briefing: {forecast['spot']}*",
         f"📅 *Date:* {date_str} (Local Time: {time_str})",
-        f"👤 *Rider:* {rider_name} · {weight} kg ({board})",
+        f"👤 *Rider:* {rider_name} · {weight}kg ({board} · {level})",
         f"🎒 *Available Quiver:*",
         quiver_str,
         f"\n🌡 *Temp:* {forecast['temp_min']}°C – {forecast['temp_max']}°C\n",
@@ -578,7 +611,7 @@ def format_briefing(forecast: dict, user_profile: dict) -> str:
     ]
 
     for slot_name, slot in forecast["schedule"].items():
-        rec = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"], all_inventory=inventory)
+        rec = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"], all_inventory=inventory, level=level, board=board)
         w_kts = round_knots(slot['wind_kts'])
         g_kts = round_knots(slot['gust_kts'])
         lines.append(
@@ -607,6 +640,7 @@ def format_tomorrow_report(forecast: dict, user_profile: dict, is_evening_auto: 
     rider_name = user_profile.get("rider_name", "Kiter")
     weight = user_profile.get("rider_weight_kg", 75.0)
     board = user_profile.get("board_type", "Twintip")
+    level = user_profile.get("level", "intermediate").capitalize()
 
     inventory = user_profile.get("inventory", [])
     active_kites = [k for k in inventory if k.get("active", True)]
@@ -621,7 +655,7 @@ def format_tomorrow_report(forecast: dict, user_profile: dict, is_evening_auto: 
         f"🌅 *Tomorrow's Kitesurf Forecast: {forecast['spot']}*",
         f"📅 *Date:* {tomorrow_date_str} (Day After)",
         f"📍 *Spot Local Time:* {local_time_str}",
-        f"👤 *Rider:* {rider_name} · {weight}kg ({board})",
+        f"👤 *Rider:* {rider_name} · {weight}kg ({board} · {level})",
         f"🎒 *Available Quiver:*",
         quiver_str,
         f"\n🌡 *Temp:* {t_min}°C – {t_max}°C · 💨 *Max Gusts:* {max_gust} kts"
@@ -635,7 +669,7 @@ def format_tomorrow_report(forecast: dict, user_profile: dict, is_evening_auto: 
     lines.append(f"\n🌬 *Tomorrow's Rigging Schedule:*")
     schedule = forecast.get("schedule_tomorrow") or forecast.get("schedule", {})
     for slot_name, slot in schedule.items():
-        rec = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"], all_inventory=inventory)
+        rec = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"], all_inventory=inventory, level=level, board=board)
         w_kts = round_knots(slot['wind_kts'])
         g_kts = round_knots(slot['gust_kts'])
         lines.append(f"• *{slot_name}:* {w_kts} kts (gusts {g_kts} kts, {slot.get('direction', 'E')}) → {rec}")
@@ -663,6 +697,7 @@ def format_realtime_report(forecast: dict, user_profile: dict) -> str:
     rider_name = user_profile.get("rider_name", "Kiter")
     weight = user_profile.get("rider_weight_kg", 75.0)
     board = user_profile.get("board_type", "Twintip")
+    level = user_profile.get("level", "intermediate").capitalize()
 
     inventory = user_profile.get("inventory", [])
     active_kites = [k for k in inventory if k.get("active", True)]
@@ -673,14 +708,14 @@ def format_realtime_report(forecast: dict, user_profile: dict) -> str:
     direct = cur.get("direction", "E")
     temp = cur.get("temp", 28.0)
 
-    rec = recommend_from_available_quiver(weight, active_kites, wind_kts, gust_kts, all_inventory=inventory)
+    rec = recommend_from_available_quiver(weight, active_kites, wind_kts, gust_kts, all_inventory=inventory, level=level, board=board)
     quiver_str = build_quiver_header_text(inventory, active_kites)
 
     lines = [
         f"🏄‍♂️ *Live Spot Report: {forecast['spot']}*",
         f"📍 *Spot Local Time:* {local_time_str} · {local_date_str}",
         f"🌡 *Temp:* {temp}°C",
-        f"👤 *Rider:* {rider_name} · {weight}kg ({board})",
+        f"👤 *Rider:* {rider_name} · {weight}kg ({board} · {level})",
         f"🎒 *Available Quiver:*",
         quiver_str,
         f"\n🌬 *Wind Right Now:*",
@@ -692,7 +727,7 @@ def format_realtime_report(forecast: dict, user_profile: dict) -> str:
     ]
 
     for slot_name, slot in forecast.get("schedule", {}).items():
-        r = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"], all_inventory=inventory)
+        r = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"], all_inventory=inventory, level=level, board=board)
         w_kts = round_knots(slot['wind_kts'])
         g_kts = round_knots(slot['gust_kts'])
         lines.append(f"• *{slot_name}:* {w_kts} kts (gusts {g_kts} kts) → {r}")
@@ -1169,6 +1204,21 @@ def handle_telegram_command(text: str, message_obj: dict, config: dict) -> str:
                 return "❌ Please enter a valid number (e.g. `/weight 75`)."
         return f"⚖️ *Current weight:* {user_profile.get('rider_weight_kg', 75)} kg\nTo change: `/weight 75`"
 
+    elif cmd.startswith("/level") or cmd.startswith("/skill"):
+        parts = cmd.split()
+        if len(parts) >= 2:
+            new_lvl = parts[1].lower()
+            if new_lvl in ["beginner", "beg", "novice"]:
+                user_profile["level"] = "beginner"
+            elif new_lvl in ["advanced", "adv", "pro", "expert"]:
+                user_profile["level"] = "advanced"
+            else:
+                user_profile["level"] = "intermediate"
+            save_config(config)
+            return f"🎯 *Rider Level updated to:* {user_profile['level'].capitalize()} for {user_profile['rider_name']}.\nWind ranges and overpower limits recalibrated."
+        cur_lvl = user_profile.get("level", "intermediate").capitalize()
+        return f"🎯 *Current Rider Level:* {cur_lvl}\nTo change: `/level beginner`, `/level medium`, or `/level advanced`."
+
     elif cmd.startswith("/year"):
         parts = cmd.split()
         if len(parts) >= 3:
@@ -1383,7 +1433,9 @@ def start_embedded_http_server(port: int = 8080):
                     w_kts = float(data.get("wind_kts", 16.0))
                     g_kts = float(data.get("gust_kts", 20.0))
                     all_inv = data.get("all_inventory")
-                    rec = recommend_from_available_quiver(w, inv, w_kts, g_kts, all_inventory=all_inv)
+                    lvl = data.get("level", "intermediate")
+                    brd = data.get("board", "twintip")
+                    rec = recommend_from_available_quiver(w, inv, w_kts, g_kts, all_inventory=all_inv, level=lvl, board=brd)
                     self.send_response(200)
                     self.send_header("Content-Type", "application/json")
                     self._send_cors_headers()
