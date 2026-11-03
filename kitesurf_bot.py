@@ -1729,18 +1729,42 @@ def start_embedded_http_server(port: int = 8080):
             self._send_cors_headers()
             self.end_headers()
 
+        def do_HEAD(self):
+            parsed = urllib.parse.urlparse(self.path)
+            path = parsed.path
+            self.send_response(200)
+            if path in ["/api/health", "/health", "/ping"]:
+                self.send_header("Content-Type", "application/json")
+            elif path in ["/", "/index.html"]:
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+            else:
+                self.send_header("Content-Type", "text/plain")
+            self._send_cors_headers()
+            self.end_headers()
+
         def do_GET(self):
             parsed = urllib.parse.urlparse(self.path)
             path = parsed.path
             params = urllib.parse.parse_qs(parsed.query)
+            user_agent = (self.headers.get("User-Agent") or "").lower()
 
-            # 1. Health check (for Render & uptime monitors)
-            if path in ["/api/health", "/health"]:
+            # 1. Health check & uptime monitors (Render, cron-job.org, UptimeRobot, etc.)
+            if path in ["/api/health", "/health", "/ping"]:
                 self.send_response(200)
                 self.send_header("Content-Type", "application/json")
                 self._send_cors_headers()
                 self.end_headers()
                 self.wfile.write(b'{"status": "ok", "service": "KiteForecastApp", "multi_user": true}\n')
+                return
+
+            # Intercept uptime monitoring bots hitting root URL to prevent "Response data too big" errors
+            # (e.g. cron-job.org free accounts enforce a small response size buffer)
+            if path in ["/", "/index.html"] and any(bot in user_agent for bot in ["cron-job", "uptimerobot", "betteruptime", "pingdom", "statuscake"]):
+                self.send_response(200)
+                self.send_header("Content-Type", "text/plain; charset=utf-8")
+                self._send_cors_headers()
+                self.end_headers()
+                self.wfile.write(b"OK\n")
                 return
 
             # 2. API: Kite Catalog
