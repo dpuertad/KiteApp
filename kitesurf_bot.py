@@ -32,8 +32,55 @@ if hasattr(sys.stdout, "reconfigure"):
 
 CONFIG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
 CACHE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "forecast_cache.json")
+USERS_DB_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "users_web_db.json")
 GUST_WARNING_THRESHOLD_KTS = 30
 SSL_CTX = ssl._create_unverified_context()
+
+def load_users_db() -> dict:
+    if os.path.exists(USERS_DB_FILE):
+        try:
+            with open(USERS_DB_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {"users": {}, "feedback": []}
+
+def save_users_db(db: dict):
+    try:
+        with open(USERS_DB_FILE, "w", encoding="utf-8") as f:
+            json.dump(db, f, indent=2, ensure_ascii=False)
+    except Exception as e:
+        print(f"Error saving users_web_db: {e}")
+
+def hash_password(password: str, salt: str = None) -> tuple:
+    import hashlib, secrets
+    if not salt:
+        salt = secrets.token_hex(8)
+    h = hashlib.sha256((salt + password).encode("utf-8")).hexdigest()
+    return h, salt
+
+def send_admin_telegram(text: str) -> bool:
+    try:
+        config = load_config()
+        token = config.get("telegram_token") or os.getenv("TELEGRAM_BOT_TOKEN")
+        admin_id = str(config.get("admin_id", os.getenv("CHAT_ID", "7424865438")))
+        if not token or not admin_id:
+            return False
+        url = f"https://api.telegram.org/bot{token}/sendMessage"
+        payload = {
+            "chat_id": admin_id,
+            "text": text
+        }
+        data = json.dumps(payload).encode("utf-8")
+        req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, context=SSL_CTX, timeout=10) as resp:
+            return resp.status == 200
+    except Exception as e:
+        print(f"send_admin_telegram error: {e}")
+        return False
+
+def notify_admin_telegram(text: str):
+    send_admin_telegram(text)
 
 REPLY_KEYBOARD = {
     "keyboard": [
@@ -1117,7 +1164,7 @@ def recommend_from_available_quiver(
     if not active_inventory:
         if all_inventory:
             return "🎒 No kites packed in backpack today! Type `/take all` or enjoy a Caipirinha 🍹"
-        return "⚠️ No quiver existing yet! (type `/kite 1 <Brand> <Model> <Size>`)"
+        return "⚠️ No kites registered yet! (type `/kite 1 <Brand> <Model> <Size>`)"
 
     evaluated = [evaluate_active_kite(k, weight_kg, wind_kts, gust_kts, level=level, board=board) for k in active_inventory]
 
@@ -1192,9 +1239,9 @@ def recommend_from_available_quiver(
 
 def build_quiver_header_text(inventory: list, active_kites: list) -> str:
     if not inventory:
-        return "  ⚠️ *No quiver existing yet!* Enter your gear:\n  👉 `/kite 1 <Brand> <Model> <Size> (<Year>)`"
+        return "  ⚠️ *No kites registered yet!* Enter your gear:\n  👉 `/kite 1 <Brand> <Model> <Size> (<Year>)`"
     if not active_kites:
-        return "  ⚠️ *No active kites in bag today!* Type `/take all` to activate your quiver."
+        return "  ⚠️ *No active kites in bag today!* Type `/take all` to activate your gear."
     lines = []
     for k in active_kites:
         yr = f" ({k['year']})" if k.get("year") else ""
@@ -1245,7 +1292,7 @@ def format_briefing(forecast: dict, user_profile: dict) -> str:
         f"🏄‍♂️ *Kitesurf Morning Briefing: {forecast['spot']}*",
         f"📅 *Date:* {date_str} (Local Time: {time_str})",
         f"👤 *Rider:* {rider_name} · {weight}kg ({board} · {level})",
-        f"🎒 *Available Quiver:*",
+        f"🎒 *Available Gear:*",
         quiver_str,
         f"\n🌡 *Temp:* {forecast['temp_min']}°C – {forecast['temp_max']}°C · {wet.get('tag', '🩳 Boardshorts')}",
         f"🛡 *Conditions Overview:*",
@@ -1281,7 +1328,7 @@ def format_briefing(forecast: dict, user_profile: dict) -> str:
         lines.append(f"\n⚠️ *Gust Alert:* Max gusts reaching *{round_knots(forecast['max_gust'])} knots* today.")
 
     if not inventory:
-        lines.append("\n⚠️ *Action Required:* No quiver existing yet! Please enter your kites:\n👉 `/kite 1 <Brand> <Model> <Size> (<Year>)`")
+        lines.append("\n⚠️ *Action Required:* No kites registered yet! Please enter your gear:\n👉 `/kite 1 <Brand> <Model> <Size> (<Year>)`")
 
     lines.append("\n_Need live conditions? Tap below for /report_")
     return "\n".join(lines)
@@ -1319,7 +1366,7 @@ def format_tomorrow_report(forecast: dict, user_profile: dict, is_evening_auto: 
         f"📅 *Date:* {tomorrow_date_str} (Day After)",
         f"📍 *Spot Local Time:* {local_time_str}",
         f"👤 *Rider:* {rider_name} · {weight}kg ({board} · {level})",
-        f"🎒 *Available Quiver:*",
+        f"🎒 *Available Gear:*",
         quiver_str,
         f"\n🌡 *Temp:* {t_min}°C – {t_max}°C · 💨 *Max Gusts:* {max_gust} kts",
         f"🩳 *Thermal Guide:* {tmrw_wet.get('tag', '🩳 Boardshorts')} ({tmrw_wet.get('advice', '')})",
@@ -1353,7 +1400,7 @@ def format_tomorrow_report(forecast: dict, user_profile: dict, is_evening_auto: 
         lines.append(f"\n⚠️ *Gust Alert:* Max gusts reaching *{max_gust} knots* tomorrow.")
 
     if not inventory:
-        lines.append("\n⚠️ *Action Required:* No quiver existing yet! Please enter your kites:\n👉 `/kite 1 <Brand> <Model> <Size> (<Year>)`")
+        lines.append("\n⚠️ *Action Required:* No kites registered yet! Please enter your gear:\n👉 `/kite 1 <Brand> <Model> <Size> (<Year>)`")
 
     lines.append("\n_Tip: For live conditions right now, type `/report today`._")
     lines.append("_On a new spot? Tap the button below to update via phone GPS!_")
@@ -1396,7 +1443,7 @@ def format_realtime_report(forecast: dict, user_profile: dict) -> str:
         f"📍 *Spot Local Time:* {local_time_str} · {local_date_str}",
         f"🌡 *Temp:* {temp}°C (Sea: {wet.get('water_temp', temp)}°C)",
         f"👤 *Rider:* {rider_name} · {weight}kg ({board} · {level})",
-        f"🎒 *Available Quiver:*",
+        f"🎒 *Available Gear:*",
         quiver_str,
         f"\n🌬 *Wind Right Now:*",
         f"• *Speed:* *{wind_kts} knots* (Gusts: *{gust_kts} knots*, {direct})",
@@ -1427,7 +1474,7 @@ def format_realtime_report(forecast: dict, user_profile: dict) -> str:
         lines.append(f"• *{slot_name}:* {w_kts} kts (gusts {g_kts} kts){slot_tag} → {r}")
 
     if not inventory:
-        lines.append("\n⚠️ *Action Required:* No quiver existing yet! Please enter your kites:\n👉 `/kite 1 <Brand> <Model> <Size> (<Year>)`")
+        lines.append("\n⚠️ *Action Required:* No kites registered yet! Please enter your gear:\n👉 `/kite 1 <Brand> <Model> <Size> (<Year>)`")
 
     lines.append("\n_Tip: Type `/report tomorrow` anytime to see tomorrow's forecast!_")
     lines.append("_On a new spot? Tap the button below to update via phone GPS!_")
@@ -1668,9 +1715,9 @@ def handle_telegram_command(text: str, message_obj: dict, config: dict) -> str:
         save_config(config)
         has_kites = bool(user_profile.get("inventory"))
         quiver_alert = (
-            "⚠️ *No quiver existing yet!* To calculate your personalized wind ranges and kite choices, you need to enter your kites first."
+            "⚠️ *No kites registered yet!* To calculate your personalized wind ranges and kite choices, you need to enter your gear first."
             if not has_kites
-            else f"🎒 *Your quiver has {len(user_profile.get('inventory', []))} kite(s) registered.* (Type `/kites` to inspect)"
+            else f"🎒 *Your gear has {len(user_profile.get('inventory', []))} kite(s) registered.* (Type `/kites` to inspect)"
         )
         welcome_intro = (
             f"👋 *Welcome to KiteForecast, {first_name}!* 🏄‍♂️\n\n"
@@ -1688,11 +1735,11 @@ def handle_telegram_command(text: str, message_obj: dict, config: dict) -> str:
             "   • Or type `/spot Tarifa` or `/spot Cumbuco`\n"
             "   • Tap `[ /report ]` (Live conditions, auto-switches to tomorrow after 17:00)\n"
             "   • Tap `[ /report tomorrow ]` anytime for tomorrow's forecast\n\n"
-            "🎒 *Quiver Management:*\n"
-            "• `/kites` → View your quiver and bag status\n"
+            "🎒 *Gear Management:*\n"
+            "• `/kites` → View your kites and bag status\n"
             "• `/take 1, 2` → Pick which kites you brought to the beach today\n"
             "• `/take all` → Mark all your kites active in your bag\n"
-            "• `/reset profile` → Wipe your quiver and start over\n\n"
+            "• `/reset profile` → Wipe your gear and start over\n\n"
             "_All calculations and wind ranges will be tuned specifically to YOU and YOUR bag!_"
         )
         return welcome_intro
@@ -2024,7 +2071,34 @@ def start_embedded_http_server(port: int = 8080):
                 self.wfile.write(b"OK\n")
                 return
 
-            # 2. API: Kite Catalog
+            # 2. API: Stats & User Count
+            if path == "/api/stats":
+                db = load_users_db()
+                users_list = [
+                    {
+                        "email": u.get("email"),
+                        "name": u.get("name"),
+                        "registered_at": u.get("registered_at"),
+                        "gear_count": len(u.get("gear", [])),
+                        "weight_kg": u.get("weight_kg"),
+                        "level": u.get("level")
+                    }
+                    for u in db.get("users", {}).values()
+                ]
+                stats = {
+                    "total_users": len(db.get("users", {})),
+                    "total_feedback": len(db.get("feedback", [])),
+                    "users": users_list
+                }
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Cache-Control", "no-cache")
+                self._send_cors_headers()
+                self.end_headers()
+                self.wfile.write(json.dumps(stats).encode("utf-8"))
+                return
+
+            # 3. API: Kite Catalog
             if path == "/api/catalog":
                 from kite_catalog import KITE_CATALOG
                 data = json.dumps(KITE_CATALOG).encode("utf-8")
@@ -2193,6 +2267,241 @@ def start_embedded_http_server(port: int = 8080):
                     self.wfile.write(json.dumps({"recommendation": rec}).encode("utf-8"))
                 except Exception as e:
                     self.send_response(400)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # AUTH: User Registration
+            if parsed.path == "/api/auth/register":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    data = json.loads(body)
+                    email = (data.get("email") or "").strip().lower()
+                    password = data.get("password") or ""
+                    name = (data.get("name") or "").strip()
+                    gear = data.get("gear") or []
+                    weight_kg = float(data.get("weight_kg", 75.0))
+                    level = data.get("level", "intermediate")
+                    board = data.get("board", "Twintip")
+                    spot = data.get("spot") or {}
+
+                    if not email or "@" not in email:
+                        self.send_response(400)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": "Please enter a valid email address."}).encode("utf-8"))
+                        return
+
+                    if len(password) < 4:
+                        self.send_response(400)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": "Password must be at least 4 characters."}).encode("utf-8"))
+                        return
+
+                    db = load_users_db()
+                    if email in db["users"]:
+                        self.send_response(400)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": "An account with this email already exists. Try signing in!"}).encode("utf-8"))
+                        return
+
+                    p_hash, p_salt = hash_password(password)
+                    from datetime import datetime
+                    now_str = datetime.utcnow().isoformat() + "Z"
+                    new_user = {
+                        "email": email,
+                        "name": name or email.split("@")[0],
+                        "password_hash": p_hash,
+                        "password_salt": p_salt,
+                        "registered_at": now_str,
+                        "last_login": now_str,
+                        "gear": gear,
+                        "weight_kg": weight_kg,
+                        "level": level,
+                        "board": board,
+                        "spot": spot
+                    }
+                    db["users"][email] = new_user
+                    save_users_db(db)
+
+                    # Notify Daniel on Telegram!
+                    total_count = len(db["users"])
+                    gear_count = len(gear)
+                    notify_text = (
+                        f"🎉 New KiteApp User Registered!\n\n"
+                        f"👤 Name: {new_user['name']}\n"
+                        f"📧 Email: {email}\n"
+                        f"⚖️ Weight: {weight_kg} kg ({level} · {board})\n"
+                        f"🎒 Gear: {gear_count} kite(s) registered\n"
+                        f"📍 Spot: {spot.get('name', 'Cumbuco')}\n\n"
+                        f"📊 Total Registered Web Users: {total_count}"
+                    )
+                    send_admin_telegram(notify_text)
+
+                    safe_user = {k: v for k, v in new_user.items() if not k.startswith("password_")}
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"success": True, "user": safe_user}).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # AUTH: User Login
+            if parsed.path == "/api/auth/login":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    data = json.loads(body)
+                    email = (data.get("email") or "").strip().lower()
+                    password = data.get("password") or ""
+
+                    db = load_users_db()
+                    user = db["users"].get(email)
+                    if not user:
+                        self.send_response(401)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": "No account found with this email."}).encode("utf-8"))
+                        return
+
+                    calc_hash, _ = hash_password(password, user.get("password_salt", ""))
+                    if calc_hash != user.get("password_hash"):
+                        self.send_response(401)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": "Incorrect password. Please try again."}).encode("utf-8"))
+                        return
+
+                    from datetime import datetime
+                    user["last_login"] = datetime.utcnow().isoformat() + "Z"
+                    save_users_db(db)
+
+                    safe_user = {k: v for k, v in user.items() if not k.startswith("password_")}
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"success": True, "user": safe_user}).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # AUTH: User Cloud Data Sync
+            if parsed.path == "/api/auth/sync":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    data = json.loads(body)
+                    email = (data.get("email") or "").strip().lower()
+
+                    db = load_users_db()
+                    if email and email in db["users"]:
+                        user = db["users"][email]
+                        if "name" in data and data["name"]:
+                            user["name"] = data["name"]
+                        if "gear" in data and isinstance(data["gear"], list):
+                            user["gear"] = data["gear"]
+                        if "weight_kg" in data:
+                            user["weight_kg"] = float(data["weight_kg"])
+                        if "level" in data:
+                            user["level"] = data["level"]
+                        if "board" in data:
+                            user["board"] = data["board"]
+                        if "spot" in data and isinstance(data["spot"], dict):
+                            user["spot"] = data["spot"]
+                        from datetime import datetime
+                        user["last_sync"] = datetime.utcnow().isoformat() + "Z"
+                        save_users_db(db)
+                        self.send_response(200)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"success": True, "synced": True}).encode("utf-8"))
+                    else:
+                        self.send_response(404)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": "User profile not found for cloud sync."}).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # FEEDBACK & SUGGESTIONS
+            if parsed.path == "/api/feedback":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    data = json.loads(body)
+                    msg = (data.get("message") or data.get("feedback") or "").strip()
+                    name = (data.get("name") or "Anonymous").strip()
+                    email = (data.get("email") or "Not provided").strip()
+                    spot = (data.get("spot") or "General").strip()
+
+                    if not msg:
+                        self.send_response(400)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": "Please write a suggestion or message."}).encode("utf-8"))
+                        return
+
+                    from datetime import datetime
+                    now_str = datetime.utcnow().isoformat() + "Z"
+                    entry = {
+                        "name": name,
+                        "email": email,
+                        "spot": spot,
+                        "message": msg,
+                        "created_at": now_str
+                    }
+                    db = load_users_db()
+                    if "feedback" not in db:
+                        db["feedback"] = []
+                    db["feedback"].append(entry)
+                    save_users_db(db)
+
+                    # Send Instant Alert to Daniel on Telegram!
+                    tele_text = (
+                        f"💡 New KiteApp Feedback / Suggestion!\n\n"
+                        f"👤 From: {name} ({email})\n"
+                        f"📍 Spot: {spot}\n\n"
+                        f"💬 Message:\n\"{msg}\"\n\n"
+                        f"📊 Total Feedback Received: {len(db['feedback'])}"
+                    )
+                    send_admin_telegram(tele_text)
+
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"success": True, "message": "Thank you! Daniel has received your feedback on Telegram."}).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
                     self.send_header("Content-Type", "application/json")
                     self._send_cors_headers()
                     self.end_headers()

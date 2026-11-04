@@ -77,8 +77,11 @@
         </div>
       </div>
 
-      <!-- Quick Spot / GPS / Refresh Pill -->
+      <!-- Quick Spot / GPS / Feedback / Refresh Pill -->
       <div class="flex items-center space-x-1.5">
+        <button onclick="toggleModal('modal-feedback')" title="Send Suggestions & Feedback" class="p-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 active:scale-95 text-amber-300 border border-amber-500/30 transition flex items-center justify-center">
+          <i data-lucide="message-square-plus" class="w-4 h-4"></i>
+        </button>
         <button id="btn-refresh" onclick="fetchForecast(true)" title="Refresh Live Forecast" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 border border-slate-700 transition">
           <i id="refresh-icon" data-lucide="rotate-cw" class="w-4 h-4"></i>
         </button>
@@ -108,8 +111,19 @@
               <input id="rider-name-input" type="text" value="" placeholder="Your Name" onchange="updateRiderName(this.value)" class="bg-transparent font-bold text-sm text-white focus:outline-none border-b border-transparent focus:border-sky-500 transition px-0.5 placeholder:text-slate-500">
               <span id="rider-badge-title" class="text-[11px] px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 font-semibold border border-sky-500/30">Rider</span>
             </div>
-            <p id="backpack-count-badge" class="text-[11px] text-slate-400">🎒 0 in backpack · 0 at home</p>
+            <p id="backpack-count-badge" class="text-[11px] text-slate-400">🎒 0 packed with me · 0 at home</p>
           </div>
+        </div>
+
+        <div class="flex items-center space-x-1.5">
+          <button onclick="toggleModal('modal-feedback')" class="hidden sm:flex px-2.5 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 active:scale-95 text-amber-300 border border-amber-500/30 text-[11px] font-bold transition items-center space-x-1">
+            <i data-lucide="message-square-plus" class="w-3.5 h-3.5"></i>
+            <span>Suggestions</span>
+          </button>
+          <button id="btn-profile-account" onclick="openAuthModal()" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700 text-[11px] font-bold transition flex items-center space-x-1">
+            <i data-lucide="cloud" class="w-3.5 h-3.5 text-sky-400"></i>
+            <span id="account-status-label">Account</span>
+          </button>
         </div>
       </div>
 
@@ -353,14 +367,14 @@
       </div>
     </section>
 
-    <!-- QUIVER / GEAR GARAGE SECTION -->
+    <!-- GEAR INVENTORY SECTION -->
     <section class="bg-slate-900/80 rounded-3xl p-5 border border-slate-800 shadow-xl space-y-4">
       <div class="flex items-center justify-between">
         <div>
           <h2 class="text-sm font-bold text-white flex items-center space-x-2">
-            <span>🎒 My Quiver & Gear Garage</span>
+            <span>🎒 My Kites & Gear Inventory</span>
           </h2>
-          <p class="text-xs text-slate-400 mt-0.5">Toggle what's packed in your backpack today</p>
+          <p class="text-xs text-slate-400 mt-0.5">Toggle what's packed with you at the beach today</p>
         </div>
         <button onclick="toggleModal('modal-add-kite')" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 text-white font-bold text-xs shadow-md shadow-sky-500/20 active:scale-95 transition flex items-center space-x-1">
           <i data-lucide="plus" class="w-3.5 h-3.5"></i>
@@ -381,7 +395,7 @@
     <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
         <h3 class="font-bold text-sm text-white flex items-center space-x-2">
-          <span>🪁 Add Kite to Your Quiver</span>
+          <span>🪁 Add Kite to Your Gear Inventory</span>
         </h3>
         <button onclick="toggleModal('modal-add-kite')" class="text-slate-400 hover:text-white p-1">
           <i data-lucide="x" class="w-4 h-4"></i>
@@ -565,8 +579,125 @@
         </button>
 
         <button onclick="resetProfileAll()" class="w-full py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 font-semibold text-xs border border-rose-500/30 transition">
-          🗑️ Reset Profile & Clear Quiver
+          🗑️ Reset Profile & Clear Gear
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEEDBACK & SUGGESTIONS MODAL -->
+  <div id="modal-feedback" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-sm text-white flex items-center space-x-2">
+          <span>💡 Suggestions & Feedback</span>
+        </h3>
+        <button onclick="toggleModal('modal-feedback')" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-400">Help shape the app! Any ideas, spots to add, or bug reports go directly to Daniel on Telegram.</p>
+
+      <form onsubmit="onSubmitFeedback(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Your Name</label>
+          <input id="feedback-name" type="text" placeholder="Your Name" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Email (Optional)</label>
+          <input id="feedback-email" type="email" placeholder="friend@example.com" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Your Suggestion or Comment</label>
+          <textarea id="feedback-message" rows="3" required placeholder="Tell us what you'd like improved, spots to add, or bugs you found..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500 resize-none"></textarea>
+        </div>
+
+        <div id="feedback-status" class="hidden text-xs py-1.5 px-2.5 rounded-lg"></div>
+
+        <button id="btn-submit-feedback" type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 active:scale-95 text-slate-950 font-bold text-xs shadow-lg shadow-amber-500/20 transition flex items-center justify-center space-x-1.5">
+          <i data-lucide="send" class="w-3.5 h-3.5"></i>
+          <span>Send to Daniel</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- USER ACCOUNT & PROFILE MODAL (EMAIL & PASSWORD) -->
+  <div id="modal-auth" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-sm text-white flex items-center space-x-2">
+          <i data-lucide="user" class="w-4 h-4 text-sky-400"></i>
+          <span id="auth-modal-title">Rider Account</span>
+        </h3>
+        <button onclick="toggleModal('modal-auth')" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Logged In State View -->
+      <div id="auth-logged-in-view" class="space-y-3.5 text-xs hidden">
+        <div class="bg-slate-950/80 rounded-2xl p-4 border border-emerald-500/30 flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold text-base border border-emerald-500/40">
+            <i data-lucide="check" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h4 id="auth-current-name" class="font-bold text-white text-sm">Rider</h4>
+              <span class="text-[10px] px-2 py-0.2 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30">Synced</span>
+            </div>
+            <p id="auth-current-email" class="text-slate-400 text-[11px] font-mono mt-0.5">user@example.com</p>
+          </div>
+        </div>
+
+        <p class="text-[11px] text-slate-400">Your kites and rider preferences are backed up to the cloud. Access your setup anywhere on mobile or desktop.</p>
+
+        <div class="flex space-x-2">
+          <button onclick="syncUserDataNow()" class="flex-1 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 active:scale-95 text-white font-bold text-xs transition flex items-center justify-center space-x-1.5 shadow-md shadow-sky-600/20">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+            <span>Sync to Cloud</span>
+          </button>
+          <button onclick="logoutUser()" class="px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-rose-400 border border-slate-700 font-bold text-xs transition">
+            Log Out
+          </button>
+        </div>
+      </div>
+
+      <!-- Auth Form (Sign In / Register) View -->
+      <div id="auth-forms-view" class="space-y-3 text-xs">
+        <!-- Switch Tab -->
+        <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
+          <button id="tab-auth-register" type="button" onclick="switchAuthTab('register')" class="flex-1 py-1.5 rounded-lg font-bold text-white bg-sky-600 shadow-sm transition">
+            Create Account
+          </button>
+          <button id="tab-auth-login" type="button" onclick="switchAuthTab('login')" class="flex-1 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition">
+            Sign In
+          </button>
+        </div>
+
+        <p id="auth-tab-hint" class="text-[11px] text-slate-400">Save your kites & rider setup with an email and password so you never lose your bag data.</p>
+
+        <form id="form-auth" onsubmit="handleAuthSubmit(event)" class="space-y-2.5">
+          <div id="field-auth-name">
+            <label class="block font-semibold text-slate-300 mb-1">Your Name / Nickname</label>
+            <input id="auth-input-name" type="text" placeholder="Daniel" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">Email Address</label>
+            <input id="auth-input-email" type="email" required placeholder="rider@domain.com" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">Password</label>
+            <input id="auth-input-password" type="password" required minlength="4" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
+          </div>
+
+          <div id="auth-status-box" class="hidden text-xs py-1.5 px-2.5 rounded-lg"></div>
+
+          <button id="btn-auth-submit" type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 active:scale-95 text-white font-bold text-xs shadow-lg shadow-sky-500/25 transition">
+            Create Account & Save Kites
+          </button>
+        </form>
       </div>
     </div>
   </div>
@@ -956,13 +1087,13 @@
       if (state.inventory.length === 0) {
         return {
           status: 'empty',
-          text: '⚠️ No quiver entered yet! Please add your kites in the garage below.'
+          text: '⚠️ No kites registered yet! Please add your kites in your gear inventory below.'
         };
       }
       if (activeKites.length === 0) {
         return {
           status: 'inactive',
-          text: '⚠️ No kites packed in backpack today! Toggle "In Backpack" on your kites below.'
+          text: '⚠️ No kites packed with you today! Toggle "Packed" on your kites below.'
         };
       }
 
@@ -1025,16 +1156,19 @@
     }
 
     // 4. RENDERING FUNCTIONS
-    function renderQuiver() {
+    function renderGearInventory() {
       const container = document.getElementById('quiver-list');
       const activeCount = state.inventory.filter(k => k.active !== false).length;
       const homeCount = state.inventory.length - activeCount;
-      document.getElementById('backpack-count-badge').innerText = `🎒 ${activeCount} in backpack · ${homeCount} at home`;
+      const badgeCountEl = document.getElementById('backpack-count-badge');
+      if (badgeCountEl) {
+        badgeCountEl.innerText = `🎒 ${activeCount} packed with me · ${homeCount} at home`;
+      }
 
       if (state.inventory.length === 0) {
         container.innerHTML = `
           <div class="bg-slate-950/60 rounded-2xl p-5 border border-dashed border-slate-800 text-center space-y-2">
-            <p class="text-xs font-bold text-amber-400">⚠️ No quiver existing yet!</p>
+            <p class="text-xs font-bold text-amber-400">⚠️ No kites registered yet!</p>
             <p class="text-[11px] text-slate-400">Add your kites above so the assistant can give you exact sizing and depower recommendations.</p>
             <button onclick="toggleModal('modal-add-kite')" class="px-3 py-1.5 rounded-xl bg-sky-500/20 text-sky-400 text-xs font-bold border border-sky-500/30 hover:bg-sky-500/30">
               + Add First Kite
@@ -1048,22 +1182,41 @@
         const ev = evaluateKite(k, state.user.weight, 18.0, state.user.level, state.user.board);
         const isActive = k.active !== false;
         return `
-          <div class="bg-slate-950/80 rounded-2xl p-3.5 border ${isActive ? 'border-sky-800/80 shadow-md shadow-sky-950/50' : 'border-slate-800/60 opacity-60'} transition flex flex-col space-y-2.5">
+          <div class="rounded-2xl p-3.5 border transition-all duration-300 flex flex-col space-y-2.5 ${
+            isActive
+              ? 'bg-gradient-to-r from-slate-900 via-slate-900 to-emerald-950/30 border-emerald-500/70 shadow-lg shadow-emerald-950/40 ring-1 ring-emerald-500/30'
+              : 'bg-slate-950/60 border-slate-800/80 opacity-55 grayscale-[20%]'
+          }">
             <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2">
-                <span class="text-xs font-black ${isActive ? 'text-sky-400' : 'text-slate-500'} bg-slate-900 px-2 py-0.5 rounded-lg border border-slate-800">${k.size}m</span>
+              <div class="flex items-center space-x-2.5">
+                <span class="text-xs font-black px-2.5 py-1 rounded-xl border ${
+                  isActive
+                    ? 'text-emerald-300 bg-emerald-500/20 border-emerald-500/40 shadow-sm'
+                    : 'text-slate-400 bg-slate-900 border-slate-800'
+                }">${k.size}m</span>
                 <div>
-                  <h4 class="text-xs font-bold text-white">${k.brand} ${k.model} <span class="text-slate-400 font-normal">(${k.year || 2024})</span></h4>
-                  <p class="text-[10px] text-slate-400">${ev.type || 'Freeride'} · ${ev.material || 'Standard'}</p>
+                  <div class="flex items-center space-x-2">
+                    <h4 class="text-xs font-bold text-white">${k.brand} ${k.model} <span class="text-slate-400 font-normal">(${k.year || 2024})</span></h4>
+                    ${
+                      isActive
+                        ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center space-x-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span><span>Packed</span></span>`
+                        : `<span class="px-2 py-0.5 rounded-full text-[9px] font-medium bg-slate-800 text-slate-400 border border-slate-700">At Home</span>`
+                    }
+                  </div>
+                  <p class="text-[10px] text-slate-400 mt-0.5">${ev.type || 'Freeride'} · ${ev.material || 'Standard'}</p>
                 </div>
               </div>
 
-              <!-- In Backpack Toggle Button -->
+              <!-- Packed vs Left at Home Toggle Button -->
               <div class="flex items-center space-x-2">
-                <button onclick="toggleKiteBackpack(${idx})" class="px-2.5 py-1 rounded-xl text-[11px] font-bold transition flex items-center space-x-1 ${isActive ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-slate-800 text-slate-400 border border-slate-700'}">
-                  <span>${isActive ? '🎒 In Backpack' : '🏠 At Home'}</span>
+                <button onclick="toggleKiteBackpack(${idx})" class="px-2.5 py-1.5 rounded-xl text-[11px] font-bold transition flex items-center space-x-1.5 active:scale-95 ${
+                  isActive
+                    ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20 hover:bg-emerald-400 font-black'
+                    : 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700'
+                }">
+                  <span>${isActive ? '🎒 Packed' : '🏠 Leave'}</span>
                 </button>
-                <button onclick="deleteKite(${idx})" class="text-slate-500 hover:text-rose-400 p-1 transition" title="Delete kite">
+                <button onclick="deleteKite(${idx})" class="text-slate-500 hover:text-rose-400 p-1.5 transition" title="Delete kite">
                   <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                 </button>
               </div>
@@ -1073,13 +1226,13 @@
             <div class="space-y-1">
               <div class="flex justify-between text-[10px] text-slate-400 font-mono">
                 <span>Min: ${Math.round(ev.minK)} kts</span>
-                <span class="text-emerald-400 font-bold">Sweet: ${Math.round(ev.sweetMin)}-${Math.round(ev.sweetMax)} kts</span>
+                <span class="${isActive ? 'text-emerald-400 font-bold' : 'text-slate-400 font-medium'}">Sweet: ${Math.round(ev.sweetMin)}-${Math.round(ev.sweetMax)} kts</span>
                 <span>Max: ${Math.round(ev.maxK)} kts</span>
               </div>
-              <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden flex">
+              <div class="w-full h-1.5 bg-slate-800/80 rounded-full overflow-hidden flex">
                 <div style="width: 20%" class="bg-slate-700"></div>
-                <div style="width: 50%" class="bg-gradient-to-r from-emerald-500 to-cyan-400"></div>
-                <div style="width: 30%" class="bg-amber-500"></div>
+                <div style="width: 50%" class="${isActive ? 'bg-gradient-to-r from-emerald-500 to-cyan-400' : 'bg-slate-600'}"></div>
+                <div style="width: 30%" class="bg-amber-500/80"></div>
               </div>
             </div>
           </div>
@@ -1087,6 +1240,7 @@
       }).join('');
       lucide.createIcons();
     }
+    const renderQuiver = renderGearInventory;
 
     function updateLiveSpotClock() {
       const el = document.getElementById('live-time-str');
@@ -1702,6 +1856,232 @@
       }
     }
 
+    function escapeHtml(str) {
+      return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // AUTH & CLOUD PROFILE SYNC LOGIC
+    let authUser = null;
+    try {
+      authUser = JSON.parse(localStorage.getItem('kf_auth_user'));
+    } catch (e) {}
+
+    function updateAuthUI() {
+      const accountLabel = document.getElementById('account-status-label');
+      const loggedInView = document.getElementById('auth-logged-in-view');
+      const formsView = document.getElementById('auth-forms-view');
+      const modalTitle = document.getElementById('auth-modal-title');
+      const feedbackName = document.getElementById('feedback-name');
+      const feedbackEmail = document.getElementById('feedback-email');
+
+      if (authUser && authUser.email) {
+        if (accountLabel) accountLabel.innerHTML = `🟢 ${escapeHtml(authUser.name || 'Synced')}`;
+        if (loggedInView) loggedInView.classList.remove('hidden');
+        if (formsView) formsView.classList.add('hidden');
+        if (modalTitle) modalTitle.innerText = "Rider Profile (Cloud Synced)";
+        const cName = document.getElementById('auth-current-name');
+        const cEmail = document.getElementById('auth-current-email');
+        if (cName) cName.innerText = authUser.name || 'Rider';
+        if (cEmail) cEmail.innerText = authUser.email;
+        if (feedbackName && !feedbackName.value) feedbackName.value = authUser.name || '';
+        if (feedbackEmail && !feedbackEmail.value) feedbackEmail.value = authUser.email || '';
+      } else {
+        if (accountLabel) accountLabel.innerText = "Account";
+        if (loggedInView) loggedInView.classList.add('hidden');
+        if (formsView) formsView.classList.remove('hidden');
+        if (modalTitle) modalTitle.innerText = "Rider Account";
+        if (feedbackName && !feedbackName.value && state.user.name) feedbackName.value = state.user.name;
+      }
+    }
+
+    function openAuthModal() {
+      updateAuthUI();
+      toggleModal('modal-auth');
+    }
+
+    let activeAuthTab = 'register';
+    function switchAuthTab(tab) {
+      activeAuthTab = tab;
+      const tabReg = document.getElementById('tab-auth-register');
+      const tabLog = document.getElementById('tab-auth-login');
+      const nameField = document.getElementById('field-auth-name');
+      const submitBtn = document.getElementById('btn-auth-submit');
+      const hint = document.getElementById('auth-tab-hint');
+      const statusBox = document.getElementById('auth-status-box');
+      if (statusBox) statusBox.classList.add('hidden');
+
+      if (tab === 'register') {
+        tabReg.className = "flex-1 py-1.5 rounded-lg font-bold text-white bg-sky-600 shadow-sm transition";
+        tabLog.className = "flex-1 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition";
+        nameField.classList.remove('hidden');
+        submitBtn.innerText = "Create Account & Save Kites";
+        hint.innerText = "Save your kites & rider setup with an email and password so you never lose your bag data.";
+      } else {
+        tabLog.className = "flex-1 py-1.5 rounded-lg font-bold text-white bg-sky-600 shadow-sm transition";
+        tabReg.className = "flex-1 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition";
+        nameField.classList.add('hidden');
+        submitBtn.innerText = "Sign In & Load Kites";
+        hint.innerText = "Welcome back! Sign in to restore your registered kites and preferences.";
+      }
+    }
+
+    async function handleAuthSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('auth-input-email').value.trim();
+      const password = document.getElementById('auth-input-password').value;
+      const name = document.getElementById('auth-input-name').value.trim();
+      const statusBox = document.getElementById('auth-status-box');
+      const submitBtn = document.getElementById('btn-auth-submit');
+
+      statusBox.className = "text-xs py-1.5 px-2.5 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/30";
+      statusBox.innerText = activeAuthTab === 'register' ? "Creating account..." : "Signing in...";
+      statusBox.classList.remove('hidden');
+      submitBtn.disabled = true;
+
+      try {
+        const endpoint = activeAuthTab === 'register' ? '/api/auth/register' : '/api/auth/login';
+        const payload = activeAuthTab === 'register' ? {
+          email,
+          password,
+          name: name || state.user.name,
+          gear: state.inventory,
+          weight_kg: state.user.weight,
+          level: state.user.level,
+          board: state.user.board,
+          spot: state.spot
+        } : {
+          email,
+          password
+        };
+
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || "Authentication failed");
+        }
+
+        // Successfully registered / logged in!
+        authUser = {
+          email: data.user.email,
+          name: data.user.name
+        };
+        localStorage.setItem('kf_auth_user', JSON.stringify(authUser));
+
+        // Restore rider settings from cloud
+        if (data.user.name) {
+          state.user.name = data.user.name;
+          localStorage.setItem('kf_name', state.user.name);
+          document.getElementById('rider-name-input').value = state.user.name;
+        }
+        if (data.user.weight_kg) {
+          state.user.weight = data.user.weight_kg;
+          localStorage.setItem('kf_weight', state.user.weight);
+          document.getElementById('profile-weight-display').innerText = `${state.user.weight.toFixed(1)} kg`;
+          document.getElementById('slider-weight').value = state.user.weight;
+        }
+        if (data.user.level) {
+          setRiderLevel(data.user.level);
+        }
+        if (data.user.gear && Array.isArray(data.user.gear) && data.user.gear.length > 0) {
+          state.inventory = data.user.gear;
+          localStorage.setItem('kf_inventory', JSON.stringify(state.inventory));
+        }
+
+        renderGearInventory();
+        renderForecast();
+        updateAuthUI();
+
+        statusBox.className = "text-xs py-1.5 px-2.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+        statusBox.innerText = activeAuthTab === 'register' ? "🎉 Account created! Kites synced to cloud." : "✅ Signed in! Kites restored from cloud.";
+        setTimeout(() => {
+          toggleModal('modal-auth');
+        }, 1200);
+      } catch (err) {
+        statusBox.className = "text-xs py-1.5 px-2.5 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/30";
+        statusBox.innerText = err.message;
+      } finally {
+        submitBtn.disabled = false;
+      }
+    }
+
+    async function syncUserDataNow() {
+      if (!authUser || !authUser.email) return;
+      try {
+        const res = await fetch('/api/auth/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: authUser.email,
+            name: state.user.name,
+            gear: state.inventory,
+            weight_kg: state.user.weight,
+            level: state.user.level,
+            board: state.user.board,
+            spot: state.spot
+          })
+        });
+        if (res.ok) {
+          alert("✅ Your kites & profile are backed up to the cloud!");
+        } else {
+          alert("Sync could not complete. Please check connection.");
+        }
+      } catch (e) {
+        alert("Sync error: " + e.message);
+      }
+    }
+
+    function logoutUser() {
+      if (confirm("Log out of this account? Your current kites will remain active on this device.")) {
+        authUser = null;
+        localStorage.removeItem('kf_auth_user');
+        updateAuthUI();
+        toggleModal('modal-auth');
+      }
+    }
+
+    // FEEDBACK SUBMISSION
+    async function onSubmitFeedback(e) {
+      e.preventDefault();
+      const name = document.getElementById('feedback-name').value.trim() || state.user.name || (authUser && authUser.name) || "Anonymous";
+      const email = document.getElementById('feedback-email').value.trim() || (authUser && authUser.email) || "";
+      const msg = document.getElementById('feedback-message').value.trim();
+      const spot = state.spot.name || "Cumbuco";
+      const statusBox = document.getElementById('feedback-status');
+      const btn = document.getElementById('btn-submit-feedback');
+
+      statusBox.className = "text-xs py-1.5 px-2.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30";
+      statusBox.innerText = "Sending to Daniel...";
+      statusBox.classList.remove('hidden');
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, feedback: msg, spot })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Failed to send");
+
+        statusBox.className = "text-xs py-1.5 px-2.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+        statusBox.innerText = "✅ Sent directly to Daniel on Telegram!";
+        document.getElementById('feedback-message').value = "";
+        setTimeout(() => {
+          toggleModal('modal-feedback');
+          statusBox.classList.add('hidden');
+        }, 1800);
+      } catch (err) {
+        statusBox.className = "text-xs py-1.5 px-2.5 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/30";
+        statusBox.innerText = err.message;
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
     function toggleModal(id) {
       const el = document.getElementById(id);
       el.classList.toggle('hidden');
@@ -1709,6 +2089,22 @@
 
     function saveInventory() {
       localStorage.setItem('kf_inventory', JSON.stringify(state.inventory));
+      if (authUser && authUser.email) {
+        // Auto background cloud sync
+        fetch('/api/auth/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: authUser.email,
+            name: state.user.name,
+            gear: state.inventory,
+            weight_kg: state.user.weight,
+            level: state.user.level,
+            board: state.user.board,
+            spot: state.spot
+          })
+        }).catch(() => {});
+      }
     }
 
     function resetProfileAll() {
@@ -1730,6 +2126,7 @@
     // 7. INITIAL STARTUP
     window.addEventListener('DOMContentLoaded', () => {
       onBrandChange('Duotone');
+      updateAuthUI();
       
       const rInput = document.getElementById('rider-name-input');
       const titleBadge = document.getElementById('rider-badge-title');
