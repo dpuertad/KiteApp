@@ -333,7 +333,7 @@ def calculate_stability_score(wind_kts: float, gust_kts: float) -> dict:
             "label": "Punchy / Gusty",
             "pill": "5/10 Punchy",
             "badge_color": "amber",
-            "description": "Punchy gusts: rig conservatively and keep depowered"
+            "description": "Punchy gusts: ride conservatively and keep depowered"
         }
     elif ratio <= 1.80:
         return {
@@ -1125,14 +1125,14 @@ def recommend_from_available_quiver(
     sweet_matches = [k for k in evaluated if k["in_sweet"]]
     if sweet_matches:
         best = min(sweet_matches, key=lambda k: k["dist_to_sweet"])
-        return f"Rig {best['display_name']}"
+        return f"{best['display_name']}"
 
     # 2. Inside rideable wind range
     range_matches = [k for k in evaluated if k["in_range"]]
     if range_matches:
         best = min(range_matches, key=lambda k: k["dist_to_sweet"])
         tag = " (Powered up)" if wind_kts > best["sweet_max"] else " (Light end)"
-        return f"Rig {best['display_name']}{tag}"
+        return f"{best['display_name']}{tag}"
 
     mins = [k["min_k"] for k in evaluated]
     maxs = [k["max_k"] for k in evaluated]
@@ -1178,16 +1178,16 @@ def recommend_from_available_quiver(
     if wind_kts > max(maxs):
         max_k_rounded = round_knots(smallest["max_k"])
         if wind_kts <= smallest["max_k"] + 4:
-            return f"Rig {smallest['display_name']} (🚨 Overpowered — max ~{max_k_rounded} kts, depower fully){home_tip}"
+            return f"{smallest['display_name']} (🚨 Overpowered — max ~{max_k_rounded} kts, depower fully){home_tip}"
         elif wind_kts <= smallest["max_k"] + 8:
-            return f"Rig {smallest['display_name']} (🚨 Heavily Overpowered — max ~{max_k_rounded} kts!){home_tip}"
+            return f"{smallest['display_name']} (🚨 Heavily Overpowered — max ~{max_k_rounded} kts!){home_tip}"
         else:
             if home_tip:
                 return f"🍹 Double Caipirinha Time! Nuking at {round_knots(wind_kts)} kts — too wild for your {smallest['display_name']} (max ~{max_k_rounded} kts). Watch from the beach bar! 🍹🔥{home_tip}"
             return f"🍹 Double Caipirinha Time! Nuking at {round_knots(wind_kts)} kts — too wild for your {smallest['display_name']} (max ~{max_k_rounded} kts). Enjoy a cocktail and watch the big air show! 🍹🔥"
 
     nearest = min(evaluated, key=lambda k: k["dist_to_sweet"])
-    return f"Rig {nearest['display_name']} (Marginal)"
+    return f"{nearest['display_name']} (Marginal)"
 
 
 def build_quiver_header_text(inventory: list, active_kites: list) -> str:
@@ -1262,7 +1262,7 @@ def format_briefing(forecast: dict, user_profile: dict) -> str:
     lines.extend([
         f"\n🌊 *Tides Today:*",
         format_tides_text(forecast.get("tides", [])),
-        f"\n🎯 *Daylight Rigging Schedule (07:00 – 19:00):*"
+        f"\n🎯 *Daylight Schedule (07:00 – 19:00):*"
     ])
 
     for slot_name, slot in forecast["schedule"].items():
@@ -1335,7 +1335,7 @@ def format_tomorrow_report(forecast: dict, user_profile: dict, is_evening_auto: 
     else:
         lines.append(f"\n_📋 Showing requested tomorrow's forecast:_")
 
-    lines.append(f"\n🌬 *Tomorrow's Daylight Rigging Schedule (07:00 – 19:00):*")
+    lines.append(f"\n🌬 *Tomorrow's Daylight Schedule (07:00 – 19:00):*")
     schedule = forecast.get("schedule_tomorrow") or forecast.get("schedule", {})
     for slot_name, slot in schedule.items():
         rec = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"], all_inventory=inventory, level=level, board=board)
@@ -1668,7 +1668,7 @@ def handle_telegram_command(text: str, message_obj: dict, config: dict) -> str:
         save_config(config)
         has_kites = bool(user_profile.get("inventory"))
         quiver_alert = (
-            "⚠️ *No quiver existing yet!* To calculate your personalized wind ranges and rigging choices, you need to enter your kites first."
+            "⚠️ *No quiver existing yet!* To calculate your personalized wind ranges and kite choices, you need to enter your kites first."
             if not has_kites
             else f"🎒 *Your quiver has {len(user_profile.get('inventory', []))} kite(s) registered.* (Type `/kites` to inspect)"
         )
@@ -2053,15 +2053,24 @@ def start_embedded_http_server(port: int = 8080):
                     out = json.dumps(f_data).encode("utf-8")
                     self.send_response(200)
                     self.send_header("Content-Type", "application/json")
+                    self.send_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
+                    self.send_header("Pragma", "no-cache")
+                    self.send_header("Expires", "0")
                     self._send_cors_headers()
                     self.end_headers()
                     self.wfile.write(out)
+                except (ConnectionResetError, BrokenPipeError, ConnectionAbortedError):
+                    return
                 except Exception as e:
-                    self.send_response(500)
-                    self.send_header("Content-Type", "application/json")
-                    self._send_cors_headers()
-                    self.end_headers()
-                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                    try:
+                        self.send_response(500)
+                        self.send_header("Content-Type", "application/json")
+                        self.send_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                    except Exception:
+                        pass
                 return
 
             # 4. API: Geocoding
@@ -2070,6 +2079,7 @@ def start_embedded_http_server(port: int = 8080):
                 lat, lon, res_name = geocode_place_name(q)
                 self.send_response(200)
                 self.send_header("Content-Type", "application/json")
+                self.send_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
                 self._send_cors_headers()
                 self.end_headers()
                 self.wfile.write(json.dumps({"lat": lat, "lon": lon, "name": res_name}).encode("utf-8"))
@@ -2083,6 +2093,7 @@ def start_embedded_http_server(port: int = 8080):
                         content = f.read()
                     self.send_response(200)
                     self.send_header("Content-Type", "text/html; charset=utf-8")
+                    self.send_header("Cache-Control", "no-cache, must-revalidate")
                     self._send_cors_headers()
                     self.end_headers()
                     self.wfile.write(content)

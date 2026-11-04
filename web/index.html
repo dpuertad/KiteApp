@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>KiteForecast - Smart Rigging & Weather</title>
+  <title>KiteForecast - Smart Kite & Weather Assistant</title>
   
   <!-- PWA Meta Tags -->
   <link rel="manifest" href="/manifest.json">
@@ -73,12 +73,15 @@
         </div>
         <div>
           <h1 class="text-base font-bold tracking-tight bg-gradient-to-r from-white via-slate-100 to-sky-300 bg-clip-text text-transparent">KiteForecast</h1>
-          <p class="text-[11px] text-sky-400 font-medium">Smart Rigging Assistant</p>
+          <p class="text-[11px] text-sky-400 font-medium">Smart Kite Assistant</p>
         </div>
       </div>
 
-      <!-- Quick Spot / GPS Pill -->
-      <div class="flex items-center space-x-2">
+      <!-- Quick Spot / GPS / Refresh Pill -->
+      <div class="flex items-center space-x-1.5">
+        <button id="btn-refresh" onclick="fetchForecast(true)" title="Refresh Live Forecast" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 border border-slate-700 transition">
+          <i id="refresh-icon" data-lucide="rotate-cw" class="w-4 h-4"></i>
+        </button>
         <button id="btn-gps" onclick="useGpsLocation()" title="Use Current GPS" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 border border-slate-700 transition">
           <i data-lucide="crosshair" class="w-4 h-4"></i>
         </button>
@@ -138,14 +141,14 @@
       </div>
     </section>
 
-    <!-- LIVE CONDITIONS & RIG DECISION HERO BANNER -->
+    <!-- LIVE CONDITIONS & KITE DECISION HERO BANNER -->
     <section class="bg-gradient-to-b from-slate-900 to-ocean-900 rounded-3xl p-5 border border-sky-900/40 shadow-2xl relative overflow-hidden">
       <!-- Glow background accent -->
       <div class="absolute -top-12 -right-12 w-40 h-40 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
       <!-- Top info bar -->
       <div class="flex items-center justify-between text-xs text-slate-400 mb-4">
-        <span class="flex items-center space-x-1.5 font-medium">
+        <span id="hero-status-pill" class="flex items-center space-x-1.5 font-medium">
           <span class="relative flex h-2 w-2">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -269,7 +272,7 @@
       <div id="hero-rec-banner" class="bg-gradient-to-r from-sky-950/90 via-slate-900/90 to-sky-950/90 rounded-2xl p-4 border border-sky-500/40 shadow-lg">
         <div class="flex items-center space-x-2 text-xs font-semibold text-sky-400 uppercase tracking-wider mb-1">
           <i data-lucide="target" class="w-4 h-4 text-sky-400"></i>
-          <span>RIG RIGHT NOW RECOMMENDATION</span>
+          <span id="hero-rec-label">RECOMMENDED RIGHT NOW</span>
         </div>
         <p id="hero-rec-text" class="text-base font-bold text-white tracking-wide">Loading recommendations...</p>
 
@@ -301,7 +304,7 @@
       <div class="flex items-center justify-between text-xs text-slate-400 px-1">
         <span class="font-bold uppercase tracking-wider flex items-center space-x-1">
           <i data-lucide="calendar" class="w-3.5 h-3.5 text-sky-400"></i>
-          <span id="schedule-title-date">Rigging Schedule (07:00 – 19:00)</span>
+          <span id="schedule-title-date">Schedule (07:00 – 19:00)</span>
         </span>
         <!-- Schedule View Toggle: 2h vs 1h -->
         <div class="flex items-center bg-slate-950 p-0.5 rounded-xl border border-slate-800 text-[10px]">
@@ -728,7 +731,7 @@
       } else if (ratio <= 1.45) {
         return { score: 6, rating: "6/10", label: "Moderate Gusts", badgeColor: "amber", description: "Noticeable gusts, standard bar sheeting adjustments" };
       } else if (ratio <= 1.60) {
-        return { score: 5, rating: "5/10", label: "Punchy / Gusty", badgeColor: "amber", description: "Punchy gusts: rig conservatively and keep depowered" };
+        return { score: 5, rating: "5/10", label: "Punchy / Gusty", badgeColor: "amber", description: "Punchy gusts: ride conservatively and keep depowered" };
       } else if (ratio <= 1.80) {
         return { score: 3, rating: "3/10", label: "Turbulent & Shifty", badgeColor: "orange", description: "Heavy turbulence and gust spikes, hold edge firmly" };
       } else {
@@ -893,7 +896,7 @@
       };
     }
 
-    // 3. SIZING & RIGGING ENGINE (Runs locally in JS with full hydrodynamic & aerodynamic physics)
+    // 3. SIZING & KITE RECOMMENDATION ENGINE (Runs locally in JS with full hydrodynamic & aerodynamic physics)
     function evaluateKite(kite, weightKg, windKts, level, board) {
       const specs = getKiteSpecs(kite.brand, kite.model, kite.size);
       
@@ -967,14 +970,14 @@
       const sweets = evaluated.filter(k => k.inSweet);
       if (sweets.length > 0) {
         sweets.sort((a,b) => a.distToSweet - b.distToSweet);
-        return { status: 'sweet', text: `Rig ${sweets[0].displayName}` };
+        return { status: 'sweet', text: `${sweets[0].displayName}` };
       }
 
       const inRanges = evaluated.filter(k => k.inRange);
       if (inRanges.length > 0) {
         inRanges.sort((a,b) => a.distToSweet - b.distToSweet);
         const tag = windKts > inRanges[0].sweetMax ? ' (Powered up)' : ' (Light end)';
-        return { status: 'range', text: `Rig ${inRanges[0].displayName}${tag}` };
+        return { status: 'range', text: `${inRanges[0].displayName}${tag}` };
       }
 
       const mins = evaluated.map(k => k.minK);
@@ -1009,16 +1012,16 @@
           tip = ` 💡 Pack your ${atHomeSmaller[0].size}m from home!`;
         }
         if (windKts <= smallest.maxK + 4) {
-          return { status: 'overpowered', text: `Rig ${smallest.displayName} (🚨 Overpowered — max ~${Math.round(smallest.maxK)} kts, depower fully)${tip}` };
+          return { status: 'overpowered', text: `${smallest.displayName} (🚨 Overpowered — max ~${Math.round(smallest.maxK)} kts, depower fully)${tip}` };
         } else if (windKts <= smallest.maxK + 8) {
-          return { status: 'overpowered', text: `Rig ${smallest.displayName} (🚨 Heavily Overpowered — max ~${Math.round(smallest.maxK)} kts!)${tip}` };
+          return { status: 'overpowered', text: `${smallest.displayName} (🚨 Heavily Overpowered — max ~${Math.round(smallest.maxK)} kts!)${tip}` };
         } else {
           return { status: 'danger', text: `🍹 Double Caipirinha Time! Nuking at ${Math.round(windKts)} kts — too wild for your ${smallest.displayName} (max ~${Math.round(smallest.maxK)} kts). Watch the show from the beach bar! 🍹🔥${tip}` };
         }
       }
 
       evaluated.sort((a,b) => a.distToSweet - b.distToSweet);
-      return { status: 'marginal', text: `Rig ${evaluated[0].displayName} (Marginal)` };
+      return { status: 'marginal', text: `${evaluated[0].displayName} (Marginal)` };
     }
 
     // 4. RENDERING FUNCTIONS
@@ -1124,39 +1127,102 @@
     function renderForecast() {
       if (!state.forecastData) return;
       const f = state.forecastData;
+      const isTomorrow = state.currentTab === 'tomorrow';
 
       // Update Live Spot Clock
       updateLiveSpotClock();
 
-      // Update Live Hero Banner
-      const cur = f.current || {};
-      const liveWind = cur.wind_kts || 16;
-      const liveGust = cur.gust_kts || 20;
-      document.getElementById('live-wind-kts').innerText = Math.round(liveWind);
-      document.getElementById('live-gust-kts').innerText = `${Math.round(liveGust)} kts`;
-      document.getElementById('live-temp-str').innerText = `${cur.temp || 28}°C`;
-
-      const deg = typeof cur.degrees === 'number' ? cur.degrees : (cur.wind_direction_10m || 90);
-      const cardinal = cur.direction || 'E';
-      document.getElementById('compass-cardinal').innerText = cardinal;
-      document.getElementById('compass-degrees').innerText = `${deg}° (From ${cardinal})`;
-      document.getElementById('compass-needle').style.transform = `rotate(${deg}deg)`;
-
       // Beach Orientation
       const beachAngle = state.spot.beach_angle !== undefined ? state.spot.beach_angle : resolveBeachAngle(state.spot.name);
 
+      // Determine Hero Display Slot: Today Live vs Tomorrow Peak
+      const cur = f.current || {};
+      let heroWind = cur.wind_kts || 16;
+      let heroGust = cur.gust_kts || 20;
+      let heroTemp = cur.temp || 28;
+      let heroDeg = typeof cur.degrees === 'number' ? cur.degrees : (cur.wind_direction_10m || 90);
+      let heroCard = cur.direction || 'E';
+      let heroShore = f.shoreline || calculateShorelineStatus(heroDeg, beachAngle);
+      let heroStab = f.stability || calculateStabilityScore(heroWind, heroGust);
+      let heroCons = f.consensus || calculateModelConsensus(heroWind, heroWind + 1, heroWind);
+
+      const heroStatusPill = document.getElementById('hero-status-pill');
+      const heroTimeStr = document.getElementById('live-time-str');
+      const heroRecLabel = document.getElementById('hero-rec-label');
+
+      if (isTomorrow) {
+        // Select Tomorrow's Peak Session Slot
+        const tmrwSchedule = f.schedule_tomorrow || f.schedule || {};
+        const tmrwHourly = f.schedule_tomorrow_hourly || f.schedule_hourly || {};
+        const tmrwSlots = Object.values(tmrwSchedule);
+        const bestHr = (f.tomorrow_peak_session && f.tomorrow_peak_session.best_hour) || 13;
+
+        let peakSlot = null;
+        if (tmrwHourly[`${String(bestHr).padStart(2, '0')}:00`]) {
+          peakSlot = tmrwHourly[`${String(bestHr).padStart(2, '0')}:00`];
+        } else if (tmrwSlots.length > 0) {
+          peakSlot = tmrwSlots.find(s => s.hour === bestHr) || tmrwSlots.reduce((a, b) => (b.wind_kts > a.wind_kts ? b : a), tmrwSlots[0]);
+        }
+
+        if (peakSlot) {
+          heroWind = peakSlot.wind_kts;
+          heroGust = peakSlot.gust_kts;
+          heroTemp = peakSlot.temp || f.tomorrow_temp_max || 29;
+          heroDeg = peakSlot.degrees || 90;
+          heroCard = peakSlot.direction || 'E';
+          heroShore = peakSlot.shoreline || calculateShorelineStatus(heroDeg, beachAngle);
+          heroStab = peakSlot.stability || calculateStabilityScore(heroWind, heroGust);
+          heroCons = peakSlot.consensus || calculateModelConsensus(heroWind, heroWind + 1, heroWind);
+        }
+
+        if (heroStatusPill) {
+          heroStatusPill.innerHTML = `
+            <span class="relative flex h-2 w-2">
+              <span class="inline-flex rounded-full h-2 w-2 bg-amber-400"></span>
+            </span>
+            <span class="text-amber-300 font-bold">TOMORROW'S FORECAST</span>
+          `;
+        }
+        if (heroTimeStr) {
+          heroTimeStr.innerText = "Peak Session (Midday)";
+        }
+        if (heroRecLabel) {
+          heroRecLabel.innerText = "TOMORROW'S RECOMMENDED KITE";
+        }
+      } else {
+        if (heroStatusPill) {
+          heroStatusPill.innerHTML = `
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span>LIVE CONDITIONS</span>
+          `;
+        }
+        if (heroRecLabel) {
+          heroRecLabel.innerText = "RECOMMENDED RIGHT NOW";
+        }
+      }
+
+      // Update Wind, Gust, Temp & Compass displays
+      document.getElementById('live-wind-kts').innerText = Math.round(heroWind);
+      document.getElementById('live-gust-kts').innerText = `${Math.round(heroGust)} kts`;
+      document.getElementById('live-temp-str').innerText = `${Math.round(heroTemp)}°C`;
+      document.getElementById('compass-cardinal').innerText = heroCard;
+      document.getElementById('compass-degrees').innerText = `${heroDeg}° (From ${heroCard})`;
+      document.getElementById('compass-needle').style.transform = `rotate(${heroDeg}deg)`;
+
       // 1. Shoreline Safety Metric
-      const shore = f.shoreline || calculateShorelineStatus(deg, beachAngle);
       const shoreBox = document.getElementById('badge-shoreline-box');
       const shoreText = document.getElementById('badge-shoreline-text');
       const shoreRel = document.getElementById('badge-shoreline-rel');
       const shoreSub = document.getElementById('badge-shoreline-sub');
       if (shoreBox && shoreText) {
-        shoreRel.innerText = `Δ ${shore.relative_angle || 0}°`;
-        shoreText.innerText = shore.tag || shore.type;
-        shoreSub.innerText = shore.description || '';
-        shoreSub.title = shore.description || '';
-        const col = shore.badge_color || shore.badgeColor || 'emerald';
+        shoreRel.innerText = `Δ ${heroShore.relative_angle || 0}°`;
+        shoreText.innerText = heroShore.tag || heroShore.type;
+        shoreSub.innerText = heroShore.description || '';
+        shoreSub.title = heroShore.description || '';
+        const col = heroShore.badge_color || heroShore.badgeColor || 'emerald';
         if (col === 'rose') {
           shoreBox.className = "bg-rose-950/40 border border-rose-500/60 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
           shoreText.className = "text-xs font-bold text-rose-400 flex items-center space-x-1";
@@ -1173,20 +1239,19 @@
       }
 
       // 2. Wind Stability Metric
-      const stab = f.stability || calculateStabilityScore(liveWind, liveGust);
       const stabBox = document.getElementById('badge-stability-box');
       const stabScore = document.getElementById('badge-stability-score');
       const stabText = document.getElementById('badge-stability-text');
       const stabSub = document.getElementById('badge-stability-sub');
       if (stabBox && stabText) {
-        stabScore.innerText = stab.rating || `${stab.score}/10`;
-        stabText.innerText = stab.label || '';
-        stabSub.innerText = stab.description || '';
-        stabSub.title = stab.description || '';
-        if (stab.score >= 8) {
+        stabScore.innerText = heroStab.rating || `${heroStab.score}/10`;
+        stabText.innerText = heroStab.label || '';
+        stabSub.innerText = heroStab.description || '';
+        stabSub.title = heroStab.description || '';
+        if (heroStab.score >= 8) {
           stabBox.className = "bg-emerald-950/40 border border-emerald-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
           stabScore.className = "text-[10px] font-bold text-emerald-400 font-mono";
-        } else if (stab.score >= 5) {
+        } else if (heroStab.score >= 5) {
           stabBox.className = "bg-amber-950/40 border border-amber-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
           stabScore.className = "text-[10px] font-bold text-amber-400 font-mono";
         } else {
@@ -1196,14 +1261,13 @@
       }
 
       // 3. Thermal Guide / Wetsuit Metric
-      const isTomorrow = state.currentTab === 'tomorrow';
-      const wet = (isTomorrow ? f.tomorrow_wetsuit : f.wetsuit) || calculateWetsuitGuide(isTomorrow ? f.tomorrow_sea_temp : f.sea_temp, cur.temp);
+      const wet = (isTomorrow ? f.tomorrow_wetsuit : f.wetsuit) || calculateWetsuitGuide(isTomorrow ? f.tomorrow_sea_temp : f.sea_temp, heroTemp);
       const wetBox = document.getElementById('badge-wetsuit-box');
       const wetTemp = document.getElementById('badge-wetsuit-temp');
       const wetText = document.getElementById('badge-wetsuit-text');
       const wetSub = document.getElementById('badge-wetsuit-sub');
       if (wetBox && wetText) {
-        const sTemp = wet.water_temp || wet.waterTemp || Math.round(cur.temp);
+        const sTemp = wet.water_temp || wet.waterTemp || Math.round(heroTemp);
         wetTemp.innerText = `${sTemp}°C Sea`;
         wetText.innerText = wet.tag || wet.wetsuit || '';
         wetSub.innerText = wet.advice || '';
@@ -1212,25 +1276,24 @@
       }
 
       // 4. Forecast Consensus / Reliability Metric
-      const cons = f.consensus || calculateModelConsensus(liveWind, liveWind + 1, liveWind);
       const consBox = document.getElementById('badge-consensus-box');
       const consPct = document.getElementById('badge-consensus-pct');
       const consText = document.getElementById('badge-consensus-text');
       const consSub = document.getElementById('badge-consensus-sub');
       if (consBox && consText) {
-        consPct.innerText = cons.rating || `${cons.confidence_pct}%`;
-        consText.innerText = cons.label || '';
-        const m = cons.models;
+        consPct.innerText = heroCons.rating || `${heroCons.confidence_pct}%`;
+        consText.innerText = heroCons.label || '';
+        const m = heroCons.models;
         if (m && m.ecmwf !== undefined && m.ecmwf !== null) {
           consSub.innerText = `ECMWF ${m.ecmwf} · GFS ${m.gfs} · ICON ${m.icon} kts`;
         } else {
-          consSub.innerText = cons.description || 'ECMWF · GFS · ICON';
+          consSub.innerText = heroCons.description || 'ECMWF · GFS · ICON';
         }
-        consSub.title = cons.description || '';
-        if (cons.confidence_pct >= 85) {
+        consSub.title = heroCons.description || '';
+        if (heroCons.confidence_pct >= 85) {
           consBox.className = "bg-emerald-950/40 border border-emerald-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
           consPct.className = "text-[10px] font-bold text-emerald-400 font-mono";
-        } else if (cons.confidence_pct >= 70) {
+        } else if (heroCons.confidence_pct >= 70) {
           consBox.className = "bg-amber-950/40 border border-amber-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
           consPct.className = "text-[10px] font-bold text-amber-400 font-mono";
         } else {
@@ -1239,8 +1302,8 @@
         }
       }
 
-      // Rigging recommendation
-      const rec = recommendRigging(liveWind, liveGust);
+      // Kite recommendation for Hero Banner
+      const rec = recommendRigging(heroWind, heroGust);
       const heroText = document.getElementById('hero-rec-text');
       heroText.innerText = rec.text;
       if (rec.text.includes('Caipirinha')) {
@@ -1375,7 +1438,7 @@
       const entries = Object.entries(schedule);
       if (entries.length === 0) return;
 
-      const maxSpeed = Math.max(...entries.map(e => e[1].gust_kts), 30);
+      const maxSpeed = Math.max(...entries.map(e => e[1].gust_kts), 25) + 6;
       const svgWidth = svg.clientWidth || 340;
       const svgHeight = 110;
       const spacing = svgWidth / entries.length;
@@ -1389,13 +1452,25 @@
         const yGust = svgHeight - gustH;
         const shortLabel = timeLabel.split(' ')[0];
 
+        // Max gust label in amber directly above gust bar
+        const gustTextY = Math.max(12, yGust - 3);
+        const gustLabel = `<text x="${x + barWidth/2}" y="${gustTextY}" text-anchor="middle" font-size="${barWidth < 18 ? 8 : 10}" font-weight="bold" fill="#fbbf24">${Math.round(slot.gust_kts)}</text>`;
+
+        // Sustained wind label in blue (or white inside if close)
+        const windCloseToGust = (yWind - yGust) < 14;
+        const windTextY = windCloseToGust ? (yWind + 11) : (yWind - 3);
+        const windFill = windCloseToGust ? "#ffffff" : "#38bdf8";
+        const windLabel = `<text x="${x + barWidth/2}" y="${windTextY}" text-anchor="middle" font-size="${barWidth < 18 ? 8 : 10}" font-weight="bold" fill="${windFill}">${Math.round(slot.wind_kts)}</text>`;
+
         return `
           <!-- Gust bar (background) -->
           <rect x="${x}" y="${yGust}" width="${barWidth}" height="${gustH}" rx="4" fill="#f59e0b" fill-opacity="0.25" stroke="#f59e0b" stroke-width="0.8" />
           <!-- Sustained wind bar (foreground) -->
           <rect x="${x}" y="${yWind}" width="${barWidth}" height="${windH}" rx="4" fill="url(#windGrad)" />
-          <!-- Wind knot label -->
-          <text x="${x + barWidth/2}" y="${yWind - 4}" text-anchor="middle" font-size="${barWidth < 18 ? 8 : 10}" font-weight="bold" fill="#38bdf8">${Math.round(slot.wind_kts)}</text>
+          <!-- Max Gust knot label (amber) -->
+          ${gustLabel}
+          <!-- Sustained wind knot label (blue) -->
+          ${windLabel}
           <!-- Time label -->
           <text x="${x + barWidth/2}" y="${svgHeight + 15}" text-anchor="middle" font-size="${barWidth < 18 ? 7 : 9}" fill="#94a3b8">${shortLabel}</text>
         `;
@@ -1410,40 +1485,53 @@
     }
 
     // 5. DATA FETCHING (API)
-    async function fetchForecast() {
+    async function fetchForecast(isManual = false) {
+      const refreshIcon = document.getElementById('refresh-icon');
+      if (refreshIcon) refreshIcon.classList.add('animate-spin');
+
       try {
         const spot = state.spot;
         const bAngle = spot.beach_angle !== undefined ? spot.beach_angle : resolveBeachAngle(spot.name);
-        const url = `/api/forecast?lat=${spot.lat}&lon=${spot.lon}&name=${encodeURIComponent(spot.name)}&timezone=${encodeURIComponent(spot.timezone || 'auto')}&beach_angle=${bAngle}`;
+        const url = `/api/forecast?lat=${spot.lat}&lon=${spot.lon}&name=${encodeURIComponent(spot.name)}&timezone=${encodeURIComponent(spot.timezone || 'auto')}&beach_angle=${bAngle}&_t=${Date.now()}`;
         const resp = await fetch(url);
         if (!resp.ok) throw new Error("API error " + resp.status);
         const data = await resp.json();
         state.forecastData = data;
         try {
           localStorage.setItem('kf_last_forecast', JSON.stringify(data));
+          localStorage.setItem('kf_last_forecast_time', Date.now().toString());
         } catch (e) {}
 
         updateLiveSpotClock();
 
-        // Auto-switch to tomorrow if spot local hour >= 17
-        let spotHour = new Date().getHours();
-        if (typeof data.utc_offset_seconds === 'number') {
-          const now = new Date();
-          const utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
-          const spotDate = new Date(utcMs + (data.utc_offset_seconds * 1000));
-          spotHour = spotDate.getHours();
+        // Auto-switch to tomorrow if spot local hour >= 17 (only on non-manual initial fetch)
+        if (!isManual) {
+          let spotHour = new Date().getHours();
+          if (typeof data.utc_offset_seconds === 'number') {
+            const now = new Date();
+            const utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
+            const spotDate = new Date(utcMs + (data.utc_offset_seconds * 1000));
+            spotHour = spotDate.getHours();
+          }
+
+          if (spotHour >= 17 && state.currentTab === 'today') {
+            switchDayTab('tomorrow', true);
+            return;
+          }
         }
 
-        if (spotHour >= 17 && state.currentTab === 'today') {
-          switchDayTab('tomorrow', true);
-        } else {
-          renderForecast();
-        }
+        renderForecast();
       } catch (e) {
         console.error("Forecast fetch failed:", e);
         if (!state.forecastData) {
           const hero = document.getElementById('hero-rec-text');
-          if (hero) hero.innerHTML = '<span class="text-amber-400">Weather server waking up... <button onclick="fetchForecast()" class="underline text-sky-400 font-bold ml-1">Tap to Retry</button></span>';
+          if (hero) hero.innerHTML = '<span class="text-amber-400">Weather server waking up... <button onclick="fetchForecast(true)" class="underline text-sky-400 font-bold ml-1">Tap to Retry</button></span>';
+        }
+      } finally {
+        if (refreshIcon) {
+          setTimeout(() => {
+            refreshIcon.classList.remove('animate-spin');
+          }, 400);
         }
       }
     }
@@ -1458,13 +1546,13 @@
       if (tab === 'today') {
         tabToday.className = "flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-sky-600 text-white shadow-md";
         tabTmrw.className = "flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 text-slate-400 hover:text-white";
-        document.getElementById('schedule-title-date').innerText = "Today's Rigging Schedule";
-        autoNote.innerText = "";
+        document.getElementById('schedule-title-date').innerText = "Today's Schedule (07:00 – 19:00)";
+        if (autoNote) autoNote.innerText = "";
       } else {
         tabTmrw.className = "flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-sky-600 text-white shadow-md";
         tabToday.className = "flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 text-slate-400 hover:text-white";
-        document.getElementById('schedule-title-date').innerText = "Tomorrow's Rigging Schedule";
-        autoNote.innerText = isAuto ? "🌙 Past 17:00 auto-switch" : "";
+        document.getElementById('schedule-title-date').innerText = "Tomorrow's Schedule (07:00 – 19:00)";
+        if (autoNote) autoNote.innerText = isAuto ? "🌙 Past 17:00 auto-switch" : "";
       }
       renderForecast();
     }
@@ -1672,9 +1760,10 @@
       updateLiveSpotClock();
       setInterval(updateLiveSpotClock, 5000);
 
-      // Instant cached forecast render if available
+      // Instant cached forecast render if available (< 30 minutes old)
       const cached = localStorage.getItem('kf_last_forecast');
-      if (cached) {
+      const cachedTime = localStorage.getItem('kf_last_forecast_time');
+      if (cached && cachedTime && (Date.now() - parseInt(cachedTime, 10)) < 1800000) {
         try {
           state.forecastData = JSON.parse(cached);
         } catch (e) {}
