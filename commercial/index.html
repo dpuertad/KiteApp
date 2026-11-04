@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>KiteForecast Pro — Smart Kite & Weather Assistant</title>
+  
+  <!-- PWA & Mobile Meta Tags -->
+  <meta name="theme-color" content="#030712">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="KiteForecast Pro">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+  <link rel="apple-touch-icon" href="/icon.png">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            ocean: {
+              950: '#020617',
+              900: '#08172e',
+              800: '#0c2445',
+              700: '#0f3868',
+              500: '#0284c7',
+              400: '#38bdf8',
+              300: '#7dd3fc',
+            },
+            gold: {
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      -webkit-tap-highlight-color: transparent;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .custom-scrollbar::-webkit-scrollbar { display: none; }
+    .custom-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .compass-arrow { transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-sky-500 selection:text-white pb-24">
+
+  <!-- TOP HEADER (Mobile First) -->
+  <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 px-4 py-2.5">
+    <div class="max-w-xl mx-auto flex items-center justify-between">
+      <!-- App Brand & VIP Badge -->
+      <div class="flex items-center space-x-2.5">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 via-cyan-400 to-amber-300 flex items-center justify-center shadow-lg shadow-sky-500/20 text-white font-black text-xl">
+          🪁
+        </div>
+        <div>
+          <div class="flex items-center space-x-1.5">
+            <h1 class="text-sm font-black tracking-tight text-white">KiteForecast</h1>
+            <span class="px-1.5 py-0.2 rounded text-[9px] font-black tracking-wider bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 uppercase shadow-sm">PRO</span>
+          </div>
+          <p id="header-user-status" onclick="openProfileModal()" class="text-[10px] text-amber-300/90 font-medium cursor-pointer hover:underline flex items-center space-x-1">
+            <span>★ Founding VIP (1-Yr Free)</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick Spot & Controls -->
+      <div class="flex items-center space-x-1.5">
+        <button id="btn-refresh" onclick="fetchForecast(true)" title="Refresh Forecast" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 border border-slate-700 transition">
+          <i id="refresh-icon" data-lucide="rotate-cw" class="w-4 h-4"></i>
+        </button>
+        <button id="btn-gps" onclick="useGpsLocation()" title="Use Current GPS" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 border border-slate-700 transition">
+          <i data-lucide="crosshair" class="w-4 h-4"></i>
+        </button>
+        <button onclick="toggleModal('modal-spot')" class="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl bg-sky-950/60 hover:bg-sky-900/60 active:scale-95 text-sky-300 border border-sky-800/60 text-xs font-semibold transition">
+          <i data-lucide="map-pin" class="w-3.5 h-3.5 text-sky-400"></i>
+          <span id="header-spot-name" class="truncate max-w-[95px]">Cumbuco</span>
+        </button>
+        <!-- Account Avatar Button -->
+        <button onclick="openProfileModal()" class="w-8 h-8 rounded-full bg-slate-800 border border-amber-400/50 flex items-center justify-center text-amber-300 font-bold text-xs shadow-sm hover:scale-105 transition">
+          <span id="header-avatar-initials">D</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- FOUNDING RIDER 250 PROMO BANNER (Dismissible / Actionable) -->
+  <div id="promo-banner" class="bg-gradient-to-r from-amber-950/90 via-slate-900 to-amber-950/90 border-b border-amber-500/30 px-4 py-2">
+    <div class="max-w-xl mx-auto flex items-center justify-between text-xs">
+      <div class="flex items-center space-x-2 text-amber-200">
+        <span class="text-base">🎉</span>
+        <div>
+          <span class="font-bold text-amber-300">Founding Rider Promo:</span>
+          <span class="text-slate-300 ml-1">100% Free 1-Year Pro ($36 value) activated for your email!</span>
+        </div>
+      </div>
+      <button onclick="document.getElementById('promo-banner').classList.add('hidden')" class="text-slate-400 hover:text-white p-1">
+        <i data-lucide="x" class="w-3.5 h-3.5"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN SCROLLABLE APP CONTENT -->
+  <main class="max-w-xl w-full mx-auto px-4 pt-3 space-y-4 flex-1">
+
+    <!-- TAB VIEW CONTAINER (Controlled by Bottom Nav) -->
+    <!-- VIEW 1: FORECAST & INTELLIGENCE -->
+    <div id="view-forecast" class="space-y-4">
+
+      <!-- RIDER CONTEXT PILL -->
+      <div class="bg-slate-900/80 rounded-2xl p-3 border border-slate-800 flex items-center justify-between shadow-sm">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 rounded-full bg-sky-950 flex items-center justify-center text-sky-400 font-bold border border-sky-800/80 text-xs">
+            <i data-lucide="user" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span id="rider-name-display" class="font-bold text-sm text-white">Daniel</span>
+              <span id="rider-vip-badge" class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">★ Founding VIP</span>
+            </div>
+            <p id="backpack-count-badge" class="text-[11px] text-slate-400">🎒 3 in backpack · 0 at home</p>
+          </div>
+        </div>
+        <div class="flex items-center space-x-2 bg-slate-950/80 px-2.5 py-1.5 rounded-xl border border-slate-800 text-xs">
+          <i data-lucide="scale" class="w-3.5 h-3.5 text-sky-400"></i>
+          <span id="profile-weight-display" class="font-mono font-bold text-white">75.0 kg</span>
+          <button onclick="openProfileModal()" class="text-[10px] text-sky-400 underline font-semibold ml-1">Edit</button>
+        </div>
+      </div>
+
+      <!-- LIVE CONDITIONS & KITE HERO BANNER -->
+      <section class="bg-gradient-to-b from-slate-900 to-ocean-900 rounded-3xl p-5 border border-sky-900/40 shadow-2xl relative overflow-hidden">
+        <div class="absolute -top-12 -right-12 w-40 h-40 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- Top status bar -->
+        <div class="flex items-center justify-between text-xs text-slate-400 mb-3">
+          <span id="hero-status-pill" class="flex items-center space-x-1.5 font-medium">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span>LIVE CONDITIONS</span>
+          </span>
+          <span id="live-time-str" class="font-mono font-medium text-slate-300">--:-- Local</span>
+        </div>
+
+        <!-- Wind & Compass Row -->
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <div class="flex items-baseline space-x-1.5">
+              <span id="live-wind-kts" class="text-5xl font-black tracking-tight text-white font-mono">--</span>
+              <span class="text-sm font-bold text-sky-400 uppercase tracking-wide">knots</span>
+            </div>
+            <div class="text-xs text-slate-400 mt-1 flex items-center space-x-2">
+              <span>Gusts: <strong id="live-gust-kts" class="text-slate-200 font-semibold">-- kts</strong></span>
+              <span>•</span>
+              <span id="live-temp-str">--°C</span>
+            </div>
+          </div>
+
+          <!-- Compass Visual -->
+          <div class="flex flex-col items-center">
+            <div class="relative w-16 h-16 rounded-full bg-slate-950 border border-slate-700/80 flex items-center justify-center shadow-inner select-none">
+              <span class="absolute top-1 text-[8px] font-bold text-slate-500 font-mono">N</span>
+              <span class="absolute right-1 text-[8px] font-bold text-slate-500 font-mono">E</span>
+              <span class="absolute bottom-1 text-[8px] font-bold text-slate-500 font-mono">S</span>
+              <span class="absolute left-1 text-[8px] font-bold text-slate-500 font-mono">W</span>
+              <div id="compass-needle" class="compass-arrow w-8 h-8 flex items-center justify-center" style="transform: rotate(90deg);">
+                <div class="w-1.5 h-6 bg-gradient-to-t from-transparent via-cyan-400 to-sky-400 rounded-full shadow-md shadow-sky-400/50"></div>
+              </div>
+              <div class="absolute w-2 h-2 rounded-full bg-white ring-2 ring-slate-900"></div>
+            </div>
+            <span id="compass-cardinal" class="text-xs font-bold text-slate-200 mt-1 font-mono">E</span>
+            <span id="compass-degrees" class="text-[9px] text-slate-400 font-mono">90° (From E)</span>
+          </div>
+        </div>
+
+        <!-- 4 Core Safety & Reliability Cards -->
+        <div class="grid grid-cols-2 gap-2 mb-4">
+          <!-- Shoreline -->
+          <div id="badge-shoreline-box" class="bg-emerald-950/40 border border-emerald-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm">
+            <div class="flex items-center justify-between">
+              <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400 flex items-center space-x-1">
+                <i data-lucide="shield" class="w-3 h-3 text-emerald-400"></i>
+                <span>COAST SAFETY</span>
+              </span>
+              <span id="badge-shoreline-rel" class="text-[10px] font-bold text-emerald-400 font-mono">Δ 65°</span>
+            </div>
+            <p id="badge-shoreline-text" class="text-xs font-bold text-emerald-400 mt-0.5">🟢 Side-Onshore</p>
+            <p id="badge-shoreline-sub" class="text-[10px] text-slate-400 leading-tight truncate">Safe & ideal: prime riding</p>
+          </div>
+
+          <!-- Stability -->
+          <div id="badge-stability-box" class="bg-amber-950/40 border border-amber-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm">
+            <div class="flex items-center justify-between">
+              <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400 flex items-center space-x-1">
+                <i data-lucide="zap" class="w-3 h-3 text-amber-400"></i>
+                <span>STABILITY</span>
+              </span>
+              <span id="badge-stability-score" class="text-[10px] font-bold text-amber-400 font-mono">6/10</span>
+            </div>
+            <p id="badge-stability-text" class="text-xs font-bold text-amber-400 mt-0.5">Moderate Gusts</p>
+            <p id="badge-stability-sub" class="text-[10px] text-slate-400 leading-tight truncate">Standard depower trimming</p>
+          </div>
+
+          <!-- Thermal & Wetsuit -->
+          <div id="badge-wetsuit-box" class="bg-cyan-950/40 border border-cyan-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm">
+            <div class="flex items-center justify-between">
+              <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400 flex items-center space-x-1">
+                <i data-lucide="thermometer" class="w-3 h-3 text-cyan-400"></i>
+                <span>THERMAL GUIDE</span>
+              </span>
+              <span id="badge-wetsuit-temp" class="text-[10px] font-bold text-cyan-400 font-mono">28°C Sea</span>
+            </div>
+            <p id="badge-wetsuit-text" class="text-xs font-bold text-cyan-300 mt-0.5">Boardshorts & Lycra</p>
+            <p id="badge-wetsuit-sub" class="text-[10px] text-slate-400 leading-tight truncate">Tropical warm water</p>
+          </div>
+
+          <!-- Consensus -->
+          <div id="badge-consensus-box" class="bg-emerald-950/40 border border-emerald-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm">
+            <div class="flex items-center justify-between">
+              <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400 flex items-center space-x-1">
+                <i data-lucide="check-circle" class="w-3 h-3 text-emerald-400"></i>
+                <span>RELIABILITY</span>
+              </span>
+              <span id="badge-consensus-pct" class="text-[10px] font-bold text-emerald-400 font-mono">92%</span>
+            </div>
+            <p id="badge-consensus-text" class="text-xs font-bold text-emerald-400 mt-0.5">High Consensus</p>
+            <p id="badge-consensus-sub" class="text-[10px] text-slate-400 leading-tight truncate">ECMWF · GFS · ICON agree</p>
+          </div>
+        </div>
+
+        <!-- PROMINENT RIGHT NOW RECOMMENDATION -->
+        <div id="hero-rec-banner" class="bg-gradient-to-r from-sky-950/90 via-slate-900/90 to-sky-950/90 rounded-2xl p-4 border border-sky-500/40 shadow-lg">
+          <div class="flex items-center space-x-2 text-xs font-semibold text-sky-400 uppercase tracking-wider mb-1">
+            <i data-lucide="target" class="w-4 h-4 text-sky-400"></i>
+            <span id="hero-rec-label">RECOMMENDED RIGHT NOW</span>
+          </div>
+          <p id="hero-rec-text" class="text-base font-bold text-white tracking-wide">Loading recommendations...</p>
+
+          <!-- Peak Session & Thermal Indicator Banner -->
+          <div id="hero-peak-box" class="mt-2.5 pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs">
+            <span class="text-sky-300 font-semibold flex items-center space-x-1.5">
+              <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span id="hero-peak-text">⚡ Peak Session: Calculating...</span>
+            </span>
+            <span id="hero-thermal-badge" class="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 hidden">🔥 Thermal Boost</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTEXTUAL MONETIZATION: QUIVER GAP ASSISTANT (Affiliate Gear Integration) -->
+      <section id="quiver-gap-card" class="bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 rounded-2xl p-3.5 border border-indigo-500/30 shadow-md">
+        <div class="flex items-start justify-between">
+          <div class="space-y-1">
+            <div class="flex items-center space-x-1.5">
+              <span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 uppercase tracking-wider">GEAR INTELLIGENCE</span>
+              <span class="text-[11px] font-bold text-white">Quiver Optimization</span>
+            </div>
+            <p id="quiver-gap-text" class="text-xs text-slate-300">
+              Wind is projected at 17 kts today. Your 11m Duotone Rebel SLS fits the sweet spot.
+            </p>
+          </div>
+          <a id="quiver-gap-cta" href="https://www.kitemana.com/" target="_blank" rel="noopener noreferrer" class="shrink-0 ml-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-[11px] shadow-sm flex items-center space-x-1 transition active:scale-95">
+            <span>Shop Deals</span>
+            <i data-lucide="external-link" class="w-3 h-3"></i>
+          </a>
+        </div>
+      </section>
+
+      <!-- DAY TOGGLE TABS (Today vs Tomorrow) -->
+      <div class="flex rounded-2xl bg-slate-900 p-1 border border-slate-800">
+        <button id="tab-today" onclick="switchDayTab('today')" class="flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-sky-600 text-white shadow-md">
+          <i data-lucide="sun" class="w-3.5 h-3.5"></i>
+          <span>Today's Schedule</span>
+        </button>
+        <button id="tab-tomorrow" onclick="switchDayTab('tomorrow')" class="flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 text-slate-400 hover:text-white">
+          <i data-lucide="sunrise" class="w-3.5 h-3.5"></i>
+          <span>Tomorrow's Forecast</span>
+        </button>
+      </div>
+
+      <!-- FORECAST SCHEDULE LIST -->
+      <section class="space-y-2.5">
+        <div class="flex items-center justify-between text-xs text-slate-400 px-1">
+          <span class="font-bold uppercase tracking-wider flex items-center space-x-1">
+            <i data-lucide="calendar" class="w-3.5 h-3.5 text-sky-400"></i>
+            <span id="schedule-title-date">Schedule (07:00 – 19:00)</span>
+          </span>
+          <!-- Schedule View Toggle: 2h vs 1h -->
+          <div class="flex items-center bg-slate-950 p-0.5 rounded-xl border border-slate-800 text-[10px]">
+            <button id="toggle-sched-2h" onclick="setScheduleView('2h')" class="px-2.5 py-1 rounded-lg font-bold text-slate-400 hover:text-white transition">2h Slots</button>
+            <button id="toggle-sched-1h" onclick="setScheduleView('1h')" class="px-2.5 py-1 rounded-lg font-bold bg-sky-600 text-white shadow-sm transition">Hourly (1h)</button>
+          </div>
+        </div>
+        <p id="schedule-auto-note" class="text-[10px] text-amber-400 px-1 font-medium"></p>
+
+        <!-- Dynamic Schedule Cards Container -->
+        <div id="schedule-cards-container" class="space-y-2">
+          <div class="text-xs text-slate-400 text-center py-4">Loading weather forecast...</div>
+        </div>
+      </section>
+
+      <!-- WIND & GUST TIMELINE -->
+      <section class="bg-slate-900/70 rounded-2xl p-4 border border-slate-800 shadow-md space-y-3">
+        <div class="flex items-center justify-between text-xs">
+          <h3 class="font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
+            <i data-lucide="bar-chart-2" class="w-4 h-4 text-sky-400"></i>
+            <span>Wind & Gust Timeline</span>
+          </h3>
+          <span class="text-[11px] text-slate-400 flex items-center space-x-3">
+            <span class="flex items-center space-x-1"><span class="inline-block w-2.5 h-2.5 rounded bg-sky-500"></span> <span>Wind (kts)</span></span>
+            <span class="flex items-center space-x-1"><span class="inline-block w-2.5 h-2.5 rounded bg-amber-500"></span> <span>Max Gusts</span></span>
+          </span>
+        </div>
+
+        <!-- SVG Bar Graph -->
+        <div class="w-full h-36 bg-slate-950/80 rounded-xl p-3 border border-slate-800/80 flex items-end justify-around relative">
+          <svg id="wind-chart-svg" class="w-full h-full overflow-visible"></svg>
+        </div>
+      </section>
+
+      <!-- TIDES CARD -->
+      <section class="bg-slate-900/70 rounded-2xl p-4 border border-slate-800 shadow-md space-y-2.5">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
+          <i data-lucide="waves" class="w-4 h-4 text-cyan-400"></i>
+          <span>Tide Heights & Turnarounds</span>
+        </h3>
+        <div id="tides-container" class="grid grid-cols-2 gap-2 text-xs">
+          <div class="text-slate-400 text-center py-2 col-span-2">Loading tides...</div>
+        </div>
+      </section>
+
+      <!-- LOCAL SPOT SPONSOR CARD (Native Spot Partner) -->
+      <section id="spot-sponsor-section" class="bg-gradient-to-br from-slate-900 via-slate-900 to-amber-950/40 rounded-2xl p-4 border border-amber-500/30 shadow-lg space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="text-lg">🏄‍♂️</span>
+            <div>
+              <span class="px-1.5 py-0.2 rounded text-[9px] font-black tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase">OFFICIAL BEACH PARTNER</span>
+              <h4 id="sponsor-name" class="text-sm font-bold text-white">Duro Beach Kite Club & Pousada</h4>
+            </div>
+          </div>
+          <span class="text-[10px] text-slate-400 font-mono">Cumbuco</span>
+        </div>
+        <p id="sponsor-desc" class="text-xs text-slate-300">
+          Secure gear lockers, air compressor launch, beach bar, and daily downwind buggies to Cauipe Lagoon & Taiba.
+        </p>
+        <div class="flex items-center space-x-2 pt-1">
+          <a id="sponsor-wa-btn" href="https://wa.me/558599999999?text=Hi%20Duro%20Beach!%20Found%20you%20on%20KiteForecast%20-%20inquiring%20about%20gear%20storage%20and%20downwind%20shuttles" target="_blank" rel="noopener noreferrer" class="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center space-x-1.5 shadow-md transition active:scale-95">
+            <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+            <span>WhatsApp Club</span>
+          </a>
+          <a id="sponsor-web-btn" href="https://durobeach.com/" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center space-x-1 border border-slate-700 transition">
+            <span>Website</span>
+            <i data-lucide="external-link" class="w-3 h-3 text-slate-400"></i>
+          </a>
+        </div>
+      </section>
+
+      <!-- TRAVEL RESCUE & GEAR INSURANCE UTILITY CARD -->
+      <section class="bg-slate-900/70 rounded-2xl p-4 border border-slate-800 shadow-md space-y-2">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="shield-alert" class="w-4 h-4 text-sky-400"></i>
+            <span class="text-xs font-bold text-white">Nomad Kitesurf & Rescue Insurance</span>
+          </div>
+          <span class="text-[10px] text-emerald-400 font-bold">Partner</span>
+        </div>
+        <p class="text-xs text-slate-300">
+          Standard health insurance excludes kitesurfing accidents and deep-water boat rescue. SafetyWing covers extreme watersports worldwide from $45/mo.
+        </p>
+        <a href="https://safetywing.com/nomad-insurance" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-1 text-xs font-bold text-sky-400 hover:underline pt-1">
+          <span>Get Instant Travel & Kitesurf Coverage ↗</span>
+        </a>
+      </section>
+
+    </div><!-- END VIEW 1 -->
+
+    <!-- VIEW 2: MY QUIVER & GARAGE -->
+    <div id="view-quiver" class="space-y-4 hidden">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-bold text-white flex items-center space-x-2">
+            <span>🎒 My Quiver & Gear Garage</span>
+          </h2>
+          <p class="text-xs text-slate-400">Toggle what's packed in your backpack today</p>
+        </div>
+        <button onclick="toggleModal('modal-add-kite')" class="px-3 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 active:scale-95 text-white text-xs font-bold shadow-md flex items-center space-x-1 transition">
+          <i data-lucide="plus" class="w-4 h-4"></i>
+          <span>Add Kite</span>
+        </button>
+      </div>
+
+      <!-- Quiver List Container -->
+      <div id="quiver-list" class="space-y-3">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Add Kite Suggestion from Official Partners -->
+      <div class="bg-slate-900/80 rounded-2xl p-4 border border-slate-800 space-y-2 text-xs">
+        <span class="font-bold text-sky-400 uppercase tracking-wider text-[10px]">REPLACE OR EXPAND YOUR QUIVER</span>
+        <p class="text-slate-300">Browse new 2024–2025 Harlem Thrive, Duotone Rebel SLS, and Cabrinha kites with exclusive partner delivery:</p>
+        <div class="flex items-center space-x-2 pt-1">
+          <a href="https://www.kitemana.com/" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-300 font-bold border border-slate-700 transition">Kitemana (EU) ↗</a>
+          <a href="https://www.realwatersports.com/" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-300 font-bold border border-slate-700 transition">Real Watersports (US) ↗</a>
+          <a href="https://harlemkitesurfing.com/" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-300 font-bold border border-slate-700 transition">Harlem Kitesurfing ↗</a>
+        </div>
+      </div>
+    </div><!-- END VIEW 2 -->
+
+    <!-- VIEW 3: GEAR DEALS & SHOP PARTNERS -->
+    <div id="view-gear" class="space-y-4 hidden">
+      <div>
+        <h2 class="text-base font-bold text-white flex items-center space-x-2">
+          <span>⚡ Curated Kite Deals & Hardware</span>
+        </h2>
+        <p class="text-xs text-slate-400">Verified official partners with global delivery</p>
+      </div>
+
+      <!-- Partner 1: Kitemana -->
+      <div class="bg-slate-900/90 rounded-2xl p-4 border border-slate-800 space-y-2.5 shadow-md">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="text-xl">🪁</span>
+            <div>
+              <h4 class="text-sm font-bold text-white">Kitemana Europe</h4>
+              <p class="text-[11px] text-slate-400">Largest European inventory · Next day shipping</p>
+            </div>
+          </div>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">Official Partner</span>
+        </div>
+        <p class="text-xs text-slate-300">
+          Complete range of Duotone, Core, Harlem, Cabrinha, F-One, and Reedin. Test kites and season-end clearances available.
+        </p>
+        <a href="https://www.kitemana.com/" target="_blank" rel="noopener noreferrer" class="block w-full text-center py-2 rounded-xl bg-sky-600 hover:bg-sky-500 font-bold text-xs text-white shadow transition">
+          Browse Kitemana Hardware Catalog ↗
+        </a>
+      </div>
+
+      <!-- Partner 2: Real Watersports -->
+      <div class="bg-slate-900/90 rounded-2xl p-4 border border-slate-800 space-y-2.5 shadow-md">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="text-xl">🌊</span>
+            <div>
+              <h4 class="text-sm font-bold text-white">Real Watersports (USA)</h4>
+              <p class="text-[11px] text-slate-400">Cape Hatteras premier center · Global shipping</p>
+            </div>
+          </div>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Official Partner</span>
+        </div>
+        <p class="text-xs text-slate-300">
+          World-renowned customer service, deep air & surf gear selection, and custom package deals for North & South American riders.
+        </p>
+        <a href="https://www.realwatersports.com/" target="_blank" rel="noopener noreferrer" class="block w-full text-center py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-bold text-xs text-white shadow transition">
+          Visit Real Watersports Store ↗
+        </a>
+      </div>
+
+      <!-- Partner 3: Harlem Kitesurfing -->
+      <div class="bg-slate-900/90 rounded-2xl p-4 border border-slate-800 space-y-2.5 shadow-md">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="text-xl">🔥</span>
+            <div>
+              <h4 class="text-sm font-bold text-white">Harlem Kitesurfing</h4>
+              <p class="text-[11px] text-slate-400">Game-changing Titanium boom & Game changer canopies</p>
+            </div>
+          </div>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">Innovation Partner</span>
+        </div>
+        <p class="text-xs text-slate-300">
+          Harlem Thrive V1, Harlem Force, and lightweight sustainable Pro Wave designs. Direct Dutch innovation.
+        </p>
+        <a href="https://harlemkitesurfing.com/" target="_blank" rel="noopener noreferrer" class="block w-full text-center py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-bold text-xs text-white shadow transition">
+          Explore Harlem Kitesurfing ↗
+        </a>
+      </div>
+    </div><!-- END VIEW 3 -->
+
+    <!-- VIEW 4: SPOT SPONSORS & SCHOOLS -->
+    <div id="view-partners" class="space-y-4 hidden">
+      <div>
+        <h2 class="text-base font-bold text-white flex items-center space-x-2">
+          <span>🏖️ Beach Centers & Pousada Partners</span>
+        </h2>
+        <p class="text-xs text-slate-400">Exclusive gear lockers, shuttles, and beach rescue</p>
+      </div>
+
+      <!-- Cumbuco Partner -->
+      <div class="bg-slate-900/90 rounded-2xl p-4 border border-slate-800 space-y-2.5 shadow-md">
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="text-[10px] font-black text-amber-400 uppercase tracking-wider">CUMBUCO, BRAZIL</span>
+            <h4 class="text-sm font-bold text-white">Duro Beach Kite Club</h4>
+          </div>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Active Partner</span>
+        </div>
+        <p class="text-xs text-slate-300">Beachfront compressors, 24/7 security storage, Cauipe lagoon downwind buggy transfers.</p>
+        <a href="https://durobeach.com/" target="_blank" rel="noopener noreferrer" class="block w-full text-center py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-bold text-xs text-white transition">Visit Duro Beach ↗</a>
+      </div>
+
+      <!-- Jeri Partner -->
+      <div class="bg-slate-900/90 rounded-2xl p-4 border border-slate-800 space-y-2.5 shadow-md">
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="text-[10px] font-black text-amber-400 uppercase tracking-wider">JERICOACOARA, BRAZIL</span>
+            <h4 class="text-sm font-bold text-white">ClubVentos Jeri</h4>
+          </div>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Active Partner</span>
+        </div>
+        <p class="text-xs text-slate-300">Full premium Duotone rentals, rescue boat assistance, Guriú downwind shuttles.</p>
+        <a href="https://www.clubventos.com/" target="_blank" rel="noopener noreferrer" class="block w-full text-center py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-bold text-xs text-white transition">Visit ClubVentos ↗</a>
+      </div>
+
+      <!-- Tarifa Partner -->
+      <div class="bg-slate-900/90 rounded-2xl p-4 border border-slate-800 space-y-2.5 shadow-md">
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="text-[10px] font-black text-amber-400 uppercase tracking-wider">TARIFA, SPAIN</span>
+            <h4 class="text-sm font-bold text-white">Wet Tarifa Watersports</h4>
+          </div>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Active Partner</span>
+        </div>
+        <p class="text-xs text-slate-300">Valdevaqueros & Los Lances equipment lockers, sea rescue boats, and certified IKO instruction.</p>
+        <a href="https://www.wettarifa.com/" target="_blank" rel="noopener noreferrer" class="block w-full text-center py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-bold text-xs text-white transition">Visit Wet Tarifa ↗</a>
+      </div>
+
+      <!-- B2B Lead Magnet Box for School Owners -->
+      <div class="bg-gradient-to-r from-amber-950/60 via-slate-900 to-amber-950/60 rounded-2xl p-4 border border-amber-500/40 text-center space-y-2">
+        <h4 class="text-xs font-bold text-amber-300 uppercase tracking-wider">Own a Kite School or Pousada?</h4>
+        <p class="text-xs text-slate-300 max-w-sm mx-auto">
+          Feature your school as the Official Beach Partner for your spot. Direct WhatsApp lesson bookings & downwind shuttles.
+        </p>
+        <button onclick="openSponsorModal()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-md transition active:scale-95">
+          Apply for Spot Sponsorship ($49–$99/mo)
+        </button>
+      </div>
+    </div><!-- END VIEW 4 -->
+
+  </main>
+
+  <!-- MOBILE BOTTOM STICKY NAVIGATION BAR -->
+  <nav class="fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800/80 px-2 py-2">
+    <div class="max-w-xl mx-auto flex items-center justify-around text-slate-400">
+      <button id="nav-forecast" onclick="switchNavTab('forecast')" class="flex flex-col items-center space-y-1 text-sky-400 transition">
+        <i data-lucide="wind" class="w-5 h-5"></i>
+        <span class="text-[10px] font-bold">Forecast</span>
+      </button>
+      <button id="nav-quiver" onclick="switchNavTab('quiver')" class="flex flex-col items-center space-y-1 hover:text-white transition">
+        <i data-lucide="backpack" class="w-5 h-5"></i>
+        <span class="text-[10px] font-bold">Quiver</span>
+      </button>
+      <button id="nav-gear" onclick="switchNavTab('gear')" class="flex flex-col items-center space-y-1 hover:text-white transition">
+        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+        <span class="text-[10px] font-bold">Gear Deals</span>
+      </button>
+      <button id="nav-partners" onclick="switchNavTab('partners')" class="flex flex-col items-center space-y-1 hover:text-white transition">
+        <i data-lucide="anchor" class="w-5 h-5"></i>
+        <span class="text-[10px] font-bold">Centers</span>
+      </button>
+      <button id="nav-profile" onclick="openProfileModal()" class="flex flex-col items-center space-y-1 hover:text-white transition">
+        <i data-lucide="user" class="w-5 h-5 text-amber-400"></i>
+        <span class="text-[10px] font-bold text-amber-300">Profile</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MODAL: EMAIL REGISTRATION & RIDER PROFILE -->
+  <div id="modal-profile" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 rounded-3xl p-5 border border-slate-800 max-w-sm w-full space-y-4 shadow-2xl relative">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+        <div class="flex items-center space-x-2">
+          <div class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center text-xs font-bold border border-amber-500/30">
+            ★
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white">Rider Account & VIP Status</h3>
+            <p class="text-[10px] text-amber-300 font-medium">Founding Member #42 of 250</p>
+          </div>
+        </div>
+        <button onclick="closeProfileModal()" class="p-1 rounded-lg text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Account Details Form -->
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-[11px] font-bold text-slate-400 mb-1">Email Address</label>
+          <input id="input-user-email" type="email" value="daniel@kitesurf.dev" placeholder="your.email@domain.com" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium focus:outline-none focus:border-sky-500">
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-400 mb-1">Rider Name</label>
+          <input id="input-user-name" type="text" value="Daniel" placeholder="First Name" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium focus:outline-none focus:border-sky-500">
+        </div>
+
+        <!-- Weight -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="text-[11px] font-bold text-slate-400">Rider Weight</label>
+            <span id="modal-weight-display" class="font-bold text-sky-400 font-mono">75.0 kg</span>
+          </div>
+          <div class="flex items-center space-x-3">
+            <button onclick="adjustWeight(-1)" class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold hover:bg-slate-700 active:scale-95 transition">-</button>
+            <input id="modal-slider-weight" type="range" min="40" max="130" step="0.5" value="75" oninput="onWeightChange(this.value)" class="flex-1 accent-sky-500">
+            <button onclick="adjustWeight(1)" class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold hover:bg-slate-700 active:scale-95 transition">+</button>
+          </div>
+        </div>
+
+        <!-- Skill Level -->
+        <div>
+          <label class="block text-[11px] font-bold text-slate-400 mb-1">Riding Level</label>
+          <div class="grid grid-cols-3 gap-1.5">
+            <button id="lvl-beginner" onclick="setUserLevel('beginner')" class="py-1.5 rounded-lg text-center font-bold text-[10px] border border-slate-700 text-slate-400">Beginner</button>
+            <button id="lvl-intermediate" onclick="setUserLevel('intermediate')" class="py-1.5 rounded-lg text-center font-bold text-[10px] bg-sky-600 text-white shadow-sm border border-sky-500">Intermediate</button>
+            <button id="lvl-advanced" onclick="setUserLevel('advanced')" class="py-1.5 rounded-lg text-center font-bold text-[10px] border border-slate-700 text-slate-400">Advanced</button>
+          </div>
+        </div>
+
+        <!-- Board Selection -->
+        <div>
+          <label class="block text-[11px] font-bold text-slate-400 mb-1">Primary Board</label>
+          <div class="grid grid-cols-3 gap-1.5">
+            <button id="brd-twintip" onclick="setUserBoard('twintip')" class="py-1.5 rounded-lg text-center font-bold text-[10px] bg-sky-600 text-white shadow-sm border border-sky-500">Twintip</button>
+            <button id="brd-surf" onclick="setUserBoard('surf')" class="py-1.5 rounded-lg text-center font-bold text-[10px] border border-slate-700 text-slate-400">Wave / Surf</button>
+            <button id="brd-foil" onclick="setUserBoard('foil')" class="py-1.5 rounded-lg text-center font-bold text-[10px] border border-slate-700 text-slate-400">Hydrofoil</button>
+          </div>
+        </div>
+
+        <!-- Cloud Sync Status -->
+        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800/80 flex items-center justify-between">
+          <span class="text-[10px] text-slate-400">Quiver Cloud Sync:</span>
+          <span class="text-[10px] text-emerald-400 font-bold flex items-center space-x-1">
+            <i data-lucide="check" class="w-3 h-3"></i>
+            <span>Active & Persisted</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-2 pt-2">
+        <button onclick="saveUserProfile()" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-400 hover:to-sky-500 font-bold text-xs text-white shadow-lg active:scale-95 transition">
+          Save & Sync Profile
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD KITE -->
+  <div id="modal-add-kite" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 rounded-3xl p-5 border border-slate-800 max-w-sm w-full space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+        <h3 class="text-sm font-bold text-white flex items-center space-x-1.5">
+          <i data-lucide="plus-circle" class="w-4 h-4 text-sky-400"></i>
+          <span>Add Kite to Garage</span>
+        </h3>
+        <button onclick="toggleModal('modal-add-kite')" class="p-1 rounded-lg text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1 font-semibold">Brand</label>
+          <select id="select-brand" onchange="onBrandChange(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium focus:outline-none focus:border-sky-500">
+            <!-- populated dynamically -->
+          </select>
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1 font-semibold">Model</label>
+          <select id="select-model" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium focus:outline-none focus:border-sky-500">
+            <!-- populated dynamically -->
+          </select>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-slate-400 mb-1 font-semibold">Size (m²)</label>
+            <input id="input-size" type="number" step="0.5" min="4" max="21" value="9" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono font-bold focus:outline-none focus:border-sky-500">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1 font-semibold">Year</label>
+            <input id="input-year" type="number" min="2015" max="2026" value="2024" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono font-bold focus:outline-none focus:border-sky-500">
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <button onclick="addNewKite()" class="w-full py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 active:scale-95 text-white font-bold text-xs shadow-lg transition">
+          Add Kite
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: SPOT SELECTION & SEARCH -->
+  <div id="modal-spot" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 rounded-3xl p-5 border border-slate-800 max-w-sm w-full space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+        <h3 class="text-sm font-bold text-white flex items-center space-x-1.5">
+          <i data-lucide="map-pin" class="w-4 h-4 text-sky-400"></i>
+          <span>Choose Kite Spot</span>
+        </h3>
+        <button onclick="toggleModal('modal-spot')" class="p-1 rounded-lg text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="relative">
+        <input id="input-spot-search" type="text" placeholder="Search spot (e.g. Jeri, Tarifa, Garda)..." onkeyup="handleSpotSearch(event)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 pl-9 text-xs text-white focus:outline-none focus:border-sky-500">
+        <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 top-2.5"></i>
+      </div>
+
+      <div class="space-y-1 max-h-56 overflow-y-auto custom-scrollbar text-xs">
+        <p class="text-[10px] font-bold text-slate-500 uppercase px-2 mb-1">Popular Global Destinations</p>
+        <button onclick="selectQuickSpot('Cumbuco', -3.6247, -38.7297, 65)" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-800 flex items-center justify-between transition">
+          <span class="font-bold text-white">🇧🇷 Cumbuco, Brazil</span>
+          <span class="text-[10px] text-amber-400 font-bold">Thermal Venturi</span>
+        </button>
+        <button onclick="selectQuickSpot('Taiba', -3.5042, -38.8911, 75)" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-800 flex items-center justify-between transition">
+          <span class="font-bold text-white">🇧🇷 Taiba (Secret / Lagoon), Brazil</span>
+          <span class="text-[10px] text-sky-400">Wave & Flat</span>
+        </button>
+        <button onclick="selectQuickSpot('Jericoacoara', -2.7954, -40.5133, 90)" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-800 flex items-center justify-between transition">
+          <span class="font-bold text-white">🇧🇷 Jericoacoara, Brazil</span>
+          <span class="text-[10px] text-amber-400 font-bold">25+ kts Strong</span>
+        </button>
+        <button onclick="selectQuickSpot('Tarifa', 36.0135, -5.6074, 130)" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-800 flex items-center justify-between transition">
+          <span class="font-bold text-white">🇪🇸 Tarifa, Spain</span>
+          <span class="text-[10px] text-sky-400">Poniente / Levante</span>
+        </button>
+        <button onclick="selectQuickSpot('Dakhla', 23.7185, -15.9347, 45)" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-800 flex items-center justify-between transition">
+          <span class="font-bold text-white">🇲🇦 Dakhla Lagoon, Morocco</span>
+          <span class="text-[10px] text-emerald-400">Flat Butter</span>
+        </button>
+        <button onclick="selectQuickSpot('Lake Garda', 45.8858, 10.8711, 10)" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-800 flex items-center justify-between transition">
+          <span class="font-bold text-white">🇮🇹 Lake Garda (Ora / Peler), Italy</span>
+          <span class="text-[10px] text-purple-400">Alpine Thermal</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: B2B SPONSOR INQUIRY -->
+  <div id="modal-sponsor" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 rounded-3xl p-5 border border-amber-500/40 max-w-sm w-full space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+        <h3 class="text-sm font-bold text-amber-300 flex items-center space-x-1.5">
+          <i data-lucide="award" class="w-4 h-4 text-amber-400"></i>
+          <span>Official Beach Partnership</span>
+        </h3>
+        <button onclick="toggleModal('modal-sponsor')" class="p-1 rounded-lg text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-2.5 text-xs text-slate-300">
+        <p>Feature your school, pousada, or gear storage facility directly to kiters checking wind before their sessions.</p>
+        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5">
+          <div class="flex justify-between font-bold text-white">
+            <span>Single Spot Sponsor</span>
+            <span class="text-amber-400">$49 – $99 / mo</span>
+          </div>
+          <ul class="text-[11px] text-slate-400 space-y-1">
+            <li>✓ Logo & verified badge on your spot page</li>
+            <li>✓ Direct WhatsApp booking button for downwinds & lessons</li>
+            <li>✓ Zero competing banner ads on your beach</li>
+          </ul>
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-400 mb-1">Your School / Center Name</label>
+          <input id="sponsor-input-name" type="text" placeholder="e.g. Cumbuco Wave Center" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white">
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-400 mb-1">WhatsApp / Contact</label>
+          <input id="sponsor-input-contact" type="text" placeholder="+55 ... or email" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white">
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <button onclick="submitSponsorInquiry()" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-md transition active:scale-95">
+          Submit Partnership Application
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CORE LOGIC & STATE (Vanilla JS + LocalStorage + API) -->
+  <script>
+    // 1. DATA STATE
+    const state = {
+      user: {
+        email: 'daniel@kitesurf.dev',
+        name: 'Daniel',
+        weight: 75.0,
+        level: 'intermediate',
+        board: 'twintip',
+        isVIP: true,
+        memberNumber: 42
+      },
+      spot: {
+        name: 'Cumbuco',
+        lat: -3.6247,
+        lon: -38.7297,
+        timezone: 'America/Fortaleza',
+        beach_angle: 65
+      },
+      currentTab: 'today', // 'today' | 'tomorrow'
+      currentNav: 'forecast', // 'forecast' | 'quiver' | 'gear' | 'partners'
+      scheduleView: '1h', // '2h' | '1h'
+      forecastData: null,
+      inventory: [
+        { brand: 'Duotone', model: 'Rebel SLS', size: 9, year: 2024, active: true },
+        { brand: 'Duotone', model: 'Rebel SLS', size: 11, year: 2023, active: true },
+        { brand: 'Cabrinha', model: 'Switchblade', size: 12, year: 2024, active: true }
+      ]
+    };
+
+    // Spot Partners Registry
+    const SPOT_PARTNERS = {
+      'cumbuco': {
+        name: 'Duro Beach Kite Club & Pousada',
+        spotLabel: 'Cumbuco, Brazil',
+        desc: 'Secure gear lockers, air compressor launch, beach bar, and daily downwind buggies to Cauipe Lagoon & Taiba.',
+        wa: 'https://wa.me/558599999999?text=Hi%20Duro%20Beach!%20Found%20you%20on%20KiteForecast%20-%20inquiring%20about%20gear%20storage%20and%20downwind%20shuttles',
+        web: 'https://durobeach.com/'
+      },
+      'jericoacoara': {
+        name: 'ClubVentos Jeri',
+        spotLabel: 'Jericoacoara, Brazil',
+        desc: 'Full premium Duotone rentals, rescue boat assistance, Guriú downwind shuttles.',
+        wa: 'https://wa.me/558599999999?text=Hi%20ClubVentos!%20Found%20you%20on%20KiteForecast%20-%20inquiring%20about%20kite%20rentals',
+        web: 'https://www.clubventos.com/'
+      },
+      'tarifa': {
+        name: 'Wet Tarifa Watersports',
+        spotLabel: 'Tarifa, Spain',
+        desc: 'Valdevaqueros & Los Lances equipment lockers, sea rescue boats, and certified IKO instruction.',
+        wa: 'https://wa.me/34600000000?text=Hi%20Wet%20Tarifa!%20Found%20you%20on%20KiteForecast%20-%20inquiring%20about%20storage',
+        web: 'https://www.wettarifa.com/'
+      }
+    };
+
+    // Default Catalog
+    const CATALOG = {
+      "Duotone": {
+        "Rebel SLS": { type: "5-Strut Big Air", sizes: { 7: [20, [24,34], 40], 8: [18, [22,31], 37], 9: [16, [20,29], 34], 10: [14, [18,26], 31], 11: [12, [16,23], 28], 12: [11, [14,21], 25] } },
+        "Evo D/LAB": { type: "3-Strut Allround Freeride", sizes: { 7: [19, [23,32], 38], 8: [17, [21,29], 35], 9: [15, [19,27], 32], 10: [13, [17,25], 29], 12: [10.5, [14,21], 25] } },
+        "Juice D/LAB": { type: "Lightwind Freeride", sizes: { 13: [8.5, [10,17], 20], 15: [7.5, [9,15], 18] } }
+      },
+      "Harlem": {
+        "Thrive V1": { type: "Game Changer 3-Strut Big Air", sizes: { 7: [19, [23,33], 39], 8: [17, [21,30], 36], 9: [15, [19,28], 33], 10: [13.5, [17,25], 30], 12: [11, [14,21], 26] } },
+        "Force": { type: "5-Strut High Performance Big Air", sizes: { 7: [20, [24,35], 42], 8: [18, [22,32], 38], 9: [16, [20,30], 35], 10: [14, [18,27], 32] } }
+      },
+      "Cabrinha": {
+        "Switchblade": { type: "5-Strut Freeride/Big Air", sizes: { 7: [19, [23,32], 37], 8: [17, [21,29], 34], 9: [15, [19,27], 31], 10: [13.5, [17,24], 28], 12: [11, [14,20], 24] } },
+        "Nitro Apex": { type: "Apex Big Air", sizes: { 7: [20, [24,35], 42], 8: [18, [22,32], 38], 9: [16, [20,29], 35], 10: [14, [18,27], 31] } }
+      },
+      "Core": {
+        "XR8": { type: "5-Strut High Performance", sizes: { 7: [20, [24,34], 40], 8: [18, [22,31], 37], 9: [16, [20,29], 34], 10: [14, [18,26], 31], 11: [12, [16,23], 28], 12: [11, [14,21], 25] } },
+        "Nexus 3": { type: "3-Strut Universal Freeride/Wave", sizes: { 7: [19, [23,31], 36], 8: [17, [21,28], 33], 9: [15, [19,26], 31], 10: [13, [17,24], 28], 12: [11, [14,20], 24] } }
+      },
+      "North": {
+        "Orbit Pro": { type: "5-Strut Big Air", sizes: { 7: [20, [24,35], 42], 8: [18, [22,32], 38], 9: [16, [20,29], 35], 10: [14, [18,27], 31] } }
+      }
+    };
+
+    // 2. HELPER & AERODYNAMIC FUNCTIONS
+    function degreesToCardinal(deg) {
+      const cardinals = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+      return cardinals[Math.round(deg / 22.5) % 16];
+    }
+
+    function evaluateKite(kite, weightKg, windKts, level = 'intermediate', board = 'twintip') {
+      const scale = Math.pow(weightKg / 75.0, 0.65);
+      const levelMult = level === 'beginner' ? 1.08 : level === 'advanced' ? 0.94 : 1.0;
+      const boardMult = board === 'foil' ? 0.65 : board === 'surf' ? 0.88 : 1.0;
+      const effScale = scale * levelMult * boardMult;
+
+      let baseMin = 14, baseSweet = [18, 26], baseMax = 30;
+      if (CATALOG[kite.brand] && CATALOG[kite.brand][kite.model]) {
+        const sizes = CATALOG[kite.brand][kite.model].sizes;
+        if (sizes[kite.size]) {
+          [baseMin, baseSweet, baseMax] = sizes[kite.size];
+        }
+      }
+
+      const minK = baseMin * effScale;
+      const sweetMin = baseSweet[0] * effScale;
+      const sweetMax = baseSweet[1] * effScale;
+      const maxK = baseMax * effScale;
+
+      const inSweet = windKts >= sweetMin && windKts <= sweetMax;
+      const inRange = windKts >= minK && windKts <= maxK;
+      const distToSweet = inSweet ? 0 : windKts < sweetMin ? sweetMin - windKts : windKts - sweetMax;
+
+      return {
+        kite,
+        minK,
+        sweetMin,
+        sweetMax,
+        maxK,
+        inSweet,
+        inRange,
+        distToSweet,
+        displayName: `${kite.brand} ${kite.model}${kite.year ? ' (' + kite.year + ')' : ''} ${kite.size}m`
+      };
+    }
+
+    function recommendKiteChoice(windKts, gustKts) {
+      const activeKites = state.inventory.filter(k => k.active !== false);
+      if (state.inventory.length === 0) {
+        return { status: 'empty', text: '⚠️ No quiver entered yet! Please add your kites in the garage below.' };
+      }
+      if (activeKites.length === 0) {
+        return { status: 'inactive', text: '⚠️ No kites packed in backpack today! Toggle "In Backpack" on your kites below.' };
+      }
+
+      const evaluated = activeKites.map(k => evaluateKite(k, state.user.weight, windKts, state.user.level, state.user.board));
+      const sweets = evaluated.filter(k => k.inSweet);
+      if (sweets.length > 0) {
+        sweets.sort((a,b) => a.distToSweet - b.distToSweet);
+        return { status: 'sweet', text: `${sweets[0].displayName}` };
+      }
+
+      const inRanges = evaluated.filter(k => k.inRange);
+      if (inRanges.length > 0) {
+        inRanges.sort((a,b) => a.distToSweet - b.distToSweet);
+        const tag = windKts > inRanges[0].sweetMax ? ' (Powered up)' : ' (Light end)';
+        return { status: 'range', text: `${inRanges[0].displayName}${tag}` };
+      }
+
+      const mins = evaluated.map(k => k.minK);
+      const maxs = evaluated.map(k => k.maxK);
+      const minVal = Math.min(...mins);
+      const maxVal = Math.max(...maxs);
+
+      // Light wind: Caipirinha Time
+      if (windKts < minVal) {
+        evaluated.sort((a,b) => b.kite.size - a.kite.size);
+        const biggest = evaluated[0];
+        return {
+          status: 'light',
+          text: `🍹 Caipirinha Time! Wind (${Math.round(windKts)} kts) is too light for your ${biggest.displayName} (min ~${Math.round(biggest.minK)} kts) — time to chill! 🏖️🍹`
+        };
+      }
+
+      // Overpowered: Double Caipirinha
+      if (windKts > maxVal) {
+        evaluated.sort((a,b) => a.kite.size - b.kite.size);
+        const smallest = evaluated[0];
+        if (windKts <= smallest.maxK + 4) {
+          return { status: 'overpowered', text: `${smallest.displayName} (🚨 Overpowered — max ~${Math.round(smallest.maxK)} kts, depower fully)` };
+        } else {
+          return { status: 'danger', text: `🍹 Double Caipirinha Time! Nuking at ${Math.round(windKts)} kts — too wild for your ${smallest.displayName} (max ~${Math.round(smallest.maxK)} kts). Watch from the beach bar! 🍹🔥` };
+        }
+      }
+
+      evaluated.sort((a,b) => a.distToSweet - b.distToSweet);
+      return { status: 'marginal', text: `${evaluated[0].displayName} (Marginal)` };
+    }
+
+    // 3. API FETCH & WEATHER RENDERING
+    async function fetchForecast(isManual = false) {
+      const refreshIcon = document.getElementById('refresh-icon');
+      if (refreshIcon) refreshIcon.classList.add('animate-spin');
+
+      try {
+        const spot = state.spot;
+        const url = `/api/forecast?lat=${spot.lat}&lon=${spot.lon}&name=${encodeURIComponent(spot.name)}&timezone=${encodeURIComponent(spot.timezone || 'auto')}&beach_angle=${spot.beach_angle}&_t=${Date.now()}`;
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error("API error " + resp.status);
+        const data = await resp.json();
+        state.forecastData = data;
+        try {
+          localStorage.setItem('kfp_last_forecast', JSON.stringify(data));
+          localStorage.setItem('kfp_last_forecast_time', Date.now().toString());
+        } catch (e) {}
+
+        updateSpotPartnerCard();
+        renderForecast();
+      } catch (e) {
+        console.error("Forecast fetch failed:", e);
+      } finally {
+        if (refreshIcon) {
+          setTimeout(() => refreshIcon.classList.remove('animate-spin'), 400);
+        }
+      }
+    }
+
+    function renderForecast() {
+      if (!state.forecastData) return;
+      const f = state.forecastData;
+      const isTomorrow = state.currentTab === 'tomorrow';
+
+      const cur = f.current || {};
+      let heroWind = cur.wind_kts || 16;
+      let heroGust = cur.gust_kts || 20;
+      let heroTemp = cur.temp || 28;
+      let heroDeg = typeof cur.degrees === 'number' ? cur.degrees : (cur.wind_direction_10m || 90);
+      let heroCard = cur.direction || 'E';
+      let heroShore = f.shoreline;
+      let heroStab = f.stability;
+      let heroCons = f.consensus;
+
+      const heroStatusPill = document.getElementById('hero-status-pill');
+      const heroTimeStr = document.getElementById('live-time-str');
+      const heroRecLabel = document.getElementById('hero-rec-label');
+
+      if (isTomorrow) {
+        const tmrwSchedule = f.schedule_tomorrow || f.schedule || {};
+        const tmrwHourly = f.schedule_tomorrow_hourly || f.schedule_hourly || {};
+        const tmrwSlots = Object.values(tmrwSchedule);
+        const bestHr = (f.tomorrow_peak_session && f.tomorrow_peak_session.best_hour) || 13;
+
+        let peakSlot = tmrwHourly[`${String(bestHr).padStart(2, '0')}:00`];
+        if (!peakSlot && tmrwSlots.length > 0) {
+          peakSlot = tmrwSlots.find(s => s.hour === bestHr) || tmrwSlots.reduce((a, b) => (b.wind_kts > a.wind_kts ? b : a), tmrwSlots[0]);
+        }
+
+        if (peakSlot) {
+          heroWind = peakSlot.wind_kts;
+          heroGust = peakSlot.gust_kts;
+          heroTemp = peakSlot.temp || f.tomorrow_temp_max || 29;
+          heroDeg = peakSlot.degrees || 90;
+          heroCard = peakSlot.direction || 'E';
+          heroShore = peakSlot.shoreline;
+          heroStab = peakSlot.stability;
+          heroCons = peakSlot.consensus;
+        }
+
+        if (heroStatusPill) {
+          heroStatusPill.innerHTML = `
+            <span class="relative flex h-2 w-2"><span class="inline-flex rounded-full h-2 w-2 bg-amber-400"></span></span>
+            <span class="text-amber-300 font-bold">TOMORROW'S FORECAST</span>
+          `;
+        }
+        if (heroTimeStr) heroTimeStr.innerText = "Peak Session (Midday)";
+        if (heroRecLabel) heroRecLabel.innerText = "TOMORROW'S RECOMMENDED KITE";
+      } else {
+        if (heroStatusPill) {
+          heroStatusPill.innerHTML = `
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span>LIVE CONDITIONS</span>
+          `;
+        }
+        if (heroTimeStr) {
+          const now = new Date();
+          const h = String(now.getHours()).padStart(2, '0');
+          const m = String(now.getMinutes()).padStart(2, '0');
+          heroTimeStr.innerText = `${h}:${m} Local`;
+        }
+        if (heroRecLabel) heroRecLabel.innerText = "RECOMMENDED RIGHT NOW";
+      }
+
+      // Wind & Compass
+      document.getElementById('live-wind-kts').innerText = Math.round(heroWind);
+      document.getElementById('live-gust-kts').innerText = `${Math.round(heroGust)} kts`;
+      document.getElementById('live-temp-str').innerText = `${Math.round(heroTemp)}°C`;
+      document.getElementById('compass-cardinal').innerText = heroCard;
+      document.getElementById('compass-degrees').innerText = `${heroDeg}° (From ${heroCard})`;
+      document.getElementById('compass-needle').style.transform = `rotate(${heroDeg}deg)`;
+
+      // Safety Cards
+      if (heroShore) {
+        document.getElementById('badge-shoreline-rel').innerText = `Δ ${heroShore.relative_angle || 0}°`;
+        document.getElementById('badge-shoreline-text').innerText = heroShore.tag || heroShore.type;
+        document.getElementById('badge-shoreline-sub').innerText = heroShore.description || '';
+      }
+      if (heroStab) {
+        document.getElementById('badge-stability-score').innerText = heroStab.rating || `${heroStab.score}/10`;
+        document.getElementById('badge-stability-text').innerText = heroStab.label || '';
+        document.getElementById('badge-stability-sub').innerText = heroStab.description || '';
+      }
+      const wet = isTomorrow ? (f.tomorrow_wetsuit || f.wetsuit) : f.wetsuit;
+      if (wet) {
+        document.getElementById('badge-wetsuit-temp').innerText = `${wet.water_temp || 28}°C Sea`;
+        document.getElementById('badge-wetsuit-text').innerText = wet.tag || wet.wetsuit || '';
+        document.getElementById('badge-wetsuit-sub').innerText = wet.advice || '';
+      }
+      if (heroCons) {
+        document.getElementById('badge-consensus-pct').innerText = heroCons.rating || `${heroCons.confidence_pct}%`;
+        document.getElementById('badge-consensus-text').innerText = heroCons.label || '';
+        const m = heroCons.models;
+        if (m) document.getElementById('badge-consensus-sub').innerText = `ECMWF ${m.ecmwf} · GFS ${m.gfs} · ICON ${m.icon} kts`;
+      }
+
+      // Recommendation
+      const rec = recommendKiteChoice(heroWind, heroGust);
+      const heroText = document.getElementById('hero-rec-text');
+      heroText.innerText = rec.text;
+      heroText.className = rec.text.includes('Caipirinha') ? "text-base font-bold text-amber-300 tracking-wide"
+        : rec.status === 'sweet' ? "text-base font-bold text-emerald-400 tracking-wide"
+        : "text-base font-bold text-white tracking-wide";
+
+      // Peak Session & Thermal
+      const peak = isTomorrow ? (f.tomorrow_peak_session || f.peak_session) : f.peak_session;
+      if (peak && peak.tag) document.getElementById('hero-peak-text').innerText = peak.tag;
+      const th = f.thermal;
+      const thBadge = document.getElementById('hero-thermal-badge');
+      if (th && thBadge) {
+        if (th.is_active) {
+          thBadge.classList.remove('hidden');
+          thBadge.innerText = `🔥 Thermal Active (+${th.boost_kts || 2.5} kts)`;
+        } else if (th.spot_profile) {
+          thBadge.classList.remove('hidden');
+          thBadge.innerText = `☀️ Thermal Spot (${th.spot_profile.peak_start || 11}:30–${th.spot_profile.peak_end || 16}:00)`;
+        } else {
+          thBadge.classList.add('hidden');
+        }
+      }
+
+      // Update Quiver Gap Card (Contextual Affiliate Opportunity)
+      updateQuiverGapCard(heroWind);
+
+      // Render Schedule
+      const is1h = state.scheduleView === '1h';
+      let sched = is1h ? (isTomorrow ? (f.schedule_tomorrow_hourly || f.schedule_hourly) : (f.schedule_hourly || f.schedule))
+                       : (isTomorrow ? (f.schedule_tomorrow || f.schedule) : f.schedule);
+      renderScheduleList(sched || {});
+      renderWindChart(sched || {});
+
+      // Tides
+      const tides = isTomorrow ? (f.tides_tomorrow || []) : (f.tides || []);
+      const tidesContainer = document.getElementById('tides-container');
+      if (tides.length > 0) {
+        tidesContainer.innerHTML = tides.map(t => `
+          <div class="bg-slate-950/80 rounded-xl p-2.5 border border-slate-800 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span>${t.type === 'High' ? '⬆️' : '⬇️'}</span>
+              <div>
+                <p class="font-bold text-white">${t.type} Tide</p>
+                <p class="text-[10px] text-slate-400">${t.time}</p>
+              </div>
+            </div>
+            <span class="font-mono font-bold ${t.height >= 0 ? 'text-cyan-400' : 'text-sky-300'}">${t.height > 0 ? '+' : ''}${t.height.toFixed(2)}m</span>
+          </div>
+        `).join('');
+      }
+    }
+
+    function updateQuiverGapCard(windKts) {
+      const gapCard = document.getElementById('quiver-gap-card');
+      const gapText = document.getElementById('quiver-gap-text');
+      const gapCta = document.getElementById('quiver-gap-cta');
+      if (!gapCard || !gapText) return;
+
+      const activeKites = state.inventory.filter(k => k.active !== false);
+      const evaluated = activeKites.map(k => evaluateKite(k, state.user.weight, windKts, state.user.level, state.user.board));
+      const sweets = evaluated.filter(k => k.inSweet);
+
+      if (windKts >= 24) {
+        gapText.innerHTML = `🔥 <strong>Nuking conditions (${Math.round(windKts)} kts)!</strong> Maximize your boost with a dedicated 7m or 8m Big Air kite (Harlem Thrive / Duotone Rebel SLS).`;
+        gapCta.href = "https://www.kitemana.com/";
+        gapCta.innerHTML = `<span>View 7m Deals</span><i data-lucide="external-link" class="w-3 h-3"></i>`;
+      } else if (windKts <= 12) {
+        gapText.innerHTML = `🏖️ <strong>Light breeze (${Math.round(windKts)} kts).</strong> Ride while others wait with a dedicated 13m+ foil kite or lightwind wing.`;
+        gapCta.href = "https://www.realwatersports.com/";
+        gapCta.innerHTML = `<span>Lightwind Gear</span><i data-lucide="external-link" class="w-3 h-3"></i>`;
+      } else if (sweets.length > 0) {
+        gapText.innerHTML = `✓ <strong>Quiver ready!</strong> Your ${sweets[0].displayName} is in the sweet spot for ${Math.round(windKts)} kts. Inspect line wear & harness safety before launch.`;
+        gapCta.href = "https://www.kitemana.com/";
+        gapCta.innerHTML = `<span>Accessories</span><i data-lucide="external-link" class="w-3 h-3"></i>`;
+      } else {
+        gapText.innerHTML = `💡 Current wind is ${Math.round(windKts)} kts. Compare certified quiver packages and upgrade options with official partner shops.`;
+        gapCta.href = "https://www.kitemana.com/";
+        gapCta.innerHTML = `<span>Compare Deals</span><i data-lucide="external-link" class="w-3 h-3"></i>`;
+      }
+      lucide.createIcons();
+    }
+
+    function updateSpotPartnerCard() {
+      const spotKey = state.spot.name.toLowerCase();
+      let p = SPOT_PARTNERS['cumbuco'];
+      for (const k of Object.keys(SPOT_PARTNERS)) {
+        if (spotKey.includes(k)) {
+          p = SPOT_PARTNERS[k];
+          break;
+        }
+      }
+
+      document.getElementById('sponsor-name').innerText = p.name;
+      document.getElementById('sponsor-desc').innerText = p.desc;
+      document.getElementById('sponsor-wa-btn').href = p.wa;
+      document.getElementById('sponsor-web-btn').href = p.web;
+    }
+
+    function renderScheduleList(schedule) {
+      const c = document.getElementById('schedule-cards-container');
+      const entries = Object.entries(schedule);
+      if (entries.length === 0) {
+        c.innerHTML = '<div class="text-xs text-slate-400 text-center py-4">No schedule data available.</div>';
+        return;
+      }
+
+      c.innerHTML = entries.map(([timeLabel, slot]) => {
+        const rec = recommendKiteChoice(slot.wind_kts, slot.gust_kts);
+        const isCaipi = rec.text.includes('Caipirinha');
+        const recColor = rec.status === 'sweet' ? 'text-emerald-400 font-bold'
+          : isCaipi ? 'text-amber-300 font-bold'
+          : rec.status === 'overpowered' ? 'text-amber-400'
+          : 'text-slate-300';
+
+        const dotColor = rec.status === 'sweet' ? 'bg-emerald-400 shadow-sm shadow-emerald-400/50'
+          : isCaipi ? 'bg-amber-400 shadow-sm shadow-amber-400/50'
+          : 'bg-slate-700';
+
+        return `
+          <div class="bg-slate-900/90 rounded-2xl p-3 border border-slate-800 shadow-sm flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-xl bg-slate-950 flex flex-col items-center justify-center border border-slate-800 text-slate-200">
+                <span class="text-xs font-black font-mono">${Math.round(slot.wind_kts)}</span>
+                <span class="text-[9px] text-sky-400 font-bold -mt-0.5">kts</span>
+              </div>
+              <div>
+                <div class="flex items-center space-x-1.5 flex-wrap gap-y-1">
+                  <h4 class="text-xs font-bold text-white">${timeLabel}</h4>
+                  <span class="text-[10px] text-slate-400 font-medium">Gusts ${Math.round(slot.gust_kts)} kts · ${slot.direction || 'E'}</span>
+                  <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold bg-slate-800 text-slate-300 border border-slate-700">⚡ ${slot.stability ? slot.stability.score : 6}/10</span>
+                </div>
+                <p class="text-[11px] mt-1 ${recColor}">${rec.text}</p>
+              </div>
+            </div>
+            <div class="w-2.5 h-2.5 rounded-full ${dotColor}"></div>
+          </div>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    function renderWindChart(schedule) {
+      const svg = document.getElementById('wind-chart-svg');
+      const entries = Object.entries(schedule);
+      if (entries.length === 0) return;
+
+      const maxSpeed = Math.max(...entries.map(e => e[1].gust_kts), 25) + 6;
+      const svgWidth = svg.clientWidth || 340;
+      const svgHeight = 110;
+      const spacing = svgWidth / entries.length;
+      const barWidth = Math.max(12, Math.min(28, Math.floor(spacing - 6)));
+
+      svg.innerHTML = entries.map(([timeLabel, slot], idx) => {
+        const x = idx * spacing + (spacing - barWidth) / 2;
+        const windH = (slot.wind_kts / maxSpeed) * svgHeight;
+        const gustH = (slot.gust_kts / maxSpeed) * svgHeight;
+        const yWind = svgHeight - windH;
+        const yGust = svgHeight - gustH;
+        const shortLabel = timeLabel.split(' ')[0];
+
+        const gustTextY = Math.max(12, yGust - 3);
+        const gustLabel = `<text x="${x + barWidth/2}" y="${gustTextY}" text-anchor="middle" font-size="${barWidth < 18 ? 8 : 10}" font-weight="bold" fill="#fbbf24">${Math.round(slot.gust_kts)}</text>`;
+
+        const windCloseToGust = (yWind - yGust) < 14;
+        const windTextY = windCloseToGust ? (yWind + 11) : (yWind - 3);
+        const windFill = windCloseToGust ? "#ffffff" : "#38bdf8";
+        const windLabel = `<text x="${x + barWidth/2}" y="${windTextY}" text-anchor="middle" font-size="${barWidth < 18 ? 8 : 10}" font-weight="bold" fill="${windFill}">${Math.round(slot.wind_kts)}</text>`;
+
+        return `
+          <rect x="${x}" y="${yGust}" width="${barWidth}" height="${gustH}" rx="4" fill="#f59e0b" fill-opacity="0.25" stroke="#f59e0b" stroke-width="0.8" />
+          <rect x="${x}" y="${yWind}" width="${barWidth}" height="${windH}" rx="4" fill="url(#windGrad)" />
+          ${gustLabel}
+          ${windLabel}
+          <text x="${x + barWidth/2}" y="${svgHeight + 15}" text-anchor="middle" font-size="${barWidth < 18 ? 7 : 9}" fill="#94a3b8">${shortLabel}</text>
+        `;
+      }).join('') + `
+        <defs>
+          <linearGradient id="windGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#38bdf8" />
+            <stop offset="100%" stop-color="#0284c7" />
+          </linearGradient>
+        </defs>
+      `;
+    }
+
+    // 4. NAVIGATION & VIEWS
+    function switchNavTab(tab) {
+      state.currentNav = tab;
+      const views = ['forecast', 'quiver', 'gear', 'partners'];
+      views.forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        const btn = document.getElementById(`nav-${v}`);
+        if (v === tab) {
+          el.classList.remove('hidden');
+          btn.className = "flex flex-col items-center space-y-1 text-sky-400 transition";
+        } else {
+          el.classList.add('hidden');
+          btn.className = "flex flex-col items-center space-y-1 text-slate-400 hover:text-white transition";
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function switchDayTab(tab) {
+      state.currentTab = tab;
+      const tabToday = document.getElementById('tab-today');
+      const tabTmrw = document.getElementById('tab-tomorrow');
+      if (tab === 'today') {
+        tabToday.className = "flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-sky-600 text-white shadow-md";
+        tabTmrw.className = "flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 text-slate-400 hover:text-white";
+        document.getElementById('schedule-title-date').innerText = "Schedule (07:00 – 19:00)";
+      } else {
+        tabTmrw.className = "flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-sky-600 text-white shadow-md";
+        tabToday.className = "flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 text-slate-400 hover:text-white";
+        document.getElementById('schedule-title-date').innerText = "Tomorrow's Schedule (07:00 – 19:00)";
+      }
+      renderForecast();
+    }
+
+    function setScheduleView(view) {
+      state.scheduleView = view;
+      const btn2h = document.getElementById('toggle-sched-2h');
+      const btn1h = document.getElementById('toggle-sched-1h');
+      if (view === '1h') {
+        btn1h.className = "px-2.5 py-1 rounded-lg font-bold bg-sky-600 text-white shadow-sm transition";
+        btn2h.className = "px-2.5 py-1 rounded-lg font-bold text-slate-400 hover:text-white transition";
+      } else {
+        btn2h.className = "px-2.5 py-1 rounded-lg font-bold bg-sky-600 text-white shadow-sm transition";
+        btn1h.className = "px-2.5 py-1 rounded-lg font-bold text-slate-400 hover:text-white transition";
+      }
+      renderForecast();
+    }
+
+    // 5. PROFILE & EMAIL ACCOUNT
+    function openProfileModal() {
+      document.getElementById('modal-profile').classList.remove('hidden');
+      document.getElementById('input-user-email').value = state.user.email;
+      document.getElementById('input-user-name').value = state.user.name;
+      document.getElementById('modal-weight-display').innerText = `${state.user.weight.toFixed(1)} kg`;
+      document.getElementById('modal-slider-weight').value = state.user.weight;
+      updateLevelButtonsUI();
+      updateBoardButtonsUI();
+    }
+
+    function closeProfileModal() {
+      document.getElementById('modal-profile').classList.add('hidden');
+    }
+
+    function onWeightChange(val) {
+      state.user.weight = parseFloat(val);
+      document.getElementById('modal-weight-display').innerText = `${state.user.weight.toFixed(1)} kg`;
+      document.getElementById('profile-weight-display').innerText = `${state.user.weight.toFixed(1)} kg`;
+    }
+
+    function adjustWeight(delta) {
+      state.user.weight = Math.max(40, Math.min(130, state.user.weight + delta));
+      onWeightChange(state.user.weight);
+      document.getElementById('modal-slider-weight').value = state.user.weight;
+    }
+
+    function setUserLevel(lvl) {
+      state.user.level = lvl;
+      updateLevelButtonsUI();
+    }
+
+    function updateLevelButtonsUI() {
+      ['beginner', 'intermediate', 'advanced'].forEach(l => {
+        const btn = document.getElementById(`lvl-${l}`);
+        if (l === state.user.level) {
+          btn.className = "py-1.5 rounded-lg text-center font-bold text-[10px] bg-sky-600 text-white shadow-sm border border-sky-500";
+        } else {
+          btn.className = "py-1.5 rounded-lg text-center font-bold text-[10px] border border-slate-700 text-slate-400 hover:text-white";
+        }
+      });
+    }
+
+    function setUserBoard(brd) {
+      state.user.board = brd;
+      updateBoardButtonsUI();
+    }
+
+    function updateBoardButtonsUI() {
+      ['twintip', 'surf', 'foil'].forEach(b => {
+        const btn = document.getElementById(`brd-${b}`);
+        if (b === state.user.board) {
+          btn.className = "py-1.5 rounded-lg text-center font-bold text-[10px] bg-sky-600 text-white shadow-sm border border-sky-500";
+        } else {
+          btn.className = "py-1.5 rounded-lg text-center font-bold text-[10px] border border-slate-700 text-slate-400 hover:text-white";
+        }
+      });
+    }
+
+    function saveUserProfile() {
+      state.user.email = document.getElementById('input-user-email').value || 'rider@kitesurf.dev';
+      state.user.name = document.getElementById('input-user-name').value || 'Rider';
+      document.getElementById('rider-name-display').innerText = state.user.name;
+      document.getElementById('header-avatar-initials').innerText = state.user.name.charAt(0).toUpperCase();
+
+      try {
+        localStorage.setItem('kfp_user_profile', JSON.stringify(state.user));
+      } catch (e) {}
+
+      closeProfileModal();
+      renderQuiver();
+      renderForecast();
+    }
+
+    // 6. QUIVER MANAGEMENT
+    function renderQuiver() {
+      const container = document.getElementById('quiver-list');
+      const activeCount = state.inventory.filter(k => k.active !== false).length;
+      document.getElementById('backpack-count-badge').innerText = `🎒 ${activeCount} in backpack · ${state.inventory.length - activeCount} at home`;
+
+      if (state.inventory.length === 0) {
+        container.innerHTML = '<div class="text-xs text-slate-400 text-center py-4">No kites in garage. Click Add Kite to start.</div>';
+        return;
+      }
+
+      container.innerHTML = state.inventory.map((k, idx) => {
+        const evalK = evaluateKite(k, state.user.weight, 18, state.user.level, state.user.board);
+        const isActive = k.active !== false;
+        return `
+          <div class="bg-slate-900/90 rounded-2xl p-3.5 border ${isActive ? 'border-sky-500/40' : 'border-slate-800/80 opacity-75'} shadow-md space-y-2">
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="text-xs font-bold text-white flex items-center space-x-1.5">
+                  <span class="px-1.5 py-0.5 rounded bg-sky-950 text-sky-300 font-mono text-[10px] border border-sky-800">${k.size}m</span>
+                  <span>${k.brand} ${k.model}</span>
+                  <span class="text-[10px] text-slate-500">(${k.year || 2024})</span>
+                </h4>
+                <p class="text-[10px] text-slate-400">Sweet: <strong class="text-emerald-400">${Math.round(evalK.sweetMin)}–${Math.round(evalK.sweetMax)} kts</strong> · Range: ${Math.round(evalK.minK)}–${Math.round(evalK.maxK)} kts</p>
+              </div>
+              <div class="flex items-center space-x-2">
+                <button onclick="toggleBackpack(${idx})" class="px-2.5 py-1 rounded-xl text-xs font-bold ${isActive ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400'} transition">
+                  ${isActive ? '🎒 In Bag' : '🏠 At Home'}
+                </button>
+                <button onclick="deleteKite(${idx})" class="p-1 text-slate-500 hover:text-rose-400 transition">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    function toggleBackpack(idx) {
+      state.inventory[idx].active = state.inventory[idx].active === false ? true : false;
+      saveInventory();
+      renderQuiver();
+      renderForecast();
+    }
+
+    function deleteKite(idx) {
+      state.inventory.splice(idx, 1);
+      saveInventory();
+      renderQuiver();
+      renderForecast();
+    }
+
+    function saveInventory() {
+      try {
+        localStorage.setItem('kfp_inventory', JSON.stringify(state.inventory));
+      } catch (e) {}
+    }
+
+    function populateBrandDropdown() {
+      const select = document.getElementById('select-brand');
+      select.innerHTML = Object.keys(CATALOG).map(b => `<option value="${b}">${b}</option>`).join('');
+      onBrandChange(Object.keys(CATALOG)[0]);
+    }
+
+    function onBrandChange(brand) {
+      const modelSelect = document.getElementById('select-model');
+      if (CATALOG[brand]) {
+        modelSelect.innerHTML = Object.keys(CATALOG[brand]).map(m => `<option value="${m}">${m}</option>`).join('');
+      }
+    }
+
+    function addNewKite() {
+      const brand = document.getElementById('select-brand').value;
+      const model = document.getElementById('select-model').value;
+      const size = parseFloat(document.getElementById('input-size').value) || 9;
+      const year = parseInt(document.getElementById('input-year').value, 10) || 2024;
+
+      state.inventory.push({ brand, model, size, year, active: true });
+      saveInventory();
+      toggleModal('modal-add-kite');
+      renderQuiver();
+      renderForecast();
+    }
+
+    // 7. SPOTS & MODALS
+    function toggleModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('hidden');
+    }
+
+    function openSponsorModal() {
+      toggleModal('modal-sponsor');
+    }
+
+    function submitSponsorInquiry() {
+      const name = document.getElementById('sponsor-input-name').value;
+      const contact = document.getElementById('sponsor-input-contact').value;
+      if (!name || !contact) {
+        alert("Please enter your center name and WhatsApp or email contact.");
+        return;
+      }
+      alert(`🎉 Thank you, ${name}! Your Official Beach Partner application for ${state.spot.name} has been received. Our team will reach out via WhatsApp/email within 24 hours.`);
+      toggleModal('modal-sponsor');
+    }
+
+    function selectQuickSpot(name, lat, lon, angle) {
+      state.spot.name = name;
+      state.spot.lat = lat;
+      state.spot.lon = lon;
+      state.spot.beach_angle = angle;
+      document.getElementById('header-spot-name').innerText = name.split(' ')[0];
+      toggleModal('modal-spot');
+      fetchForecast(true);
+    }
+
+    function useGpsLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+          selectQuickSpot("GPS Spot", pos.coords.latitude, pos.coords.longitude, 90);
+        }, () => alert("GPS access unavailable."));
+      }
+    }
+
+    async function handleSpotSearch(e) {
+      if (e.key === 'Enter') {
+        const q = e.target.value.trim();
+        if (!q) return;
+        try {
+          const resp = await fetch(`/api/geocode?q=${encodeURIComponent(q)}`);
+          const d = await resp.json();
+          if (d.lat && d.lon) {
+            selectQuickSpot(d.name, d.lat, d.lon, 90);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+
+    // 8. INITIALIZATION
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      populateBrandDropdown();
+
+      // Load Saved User Profile
+      try {
+        const savedU = localStorage.getItem('kfp_user_profile');
+        if (savedU) state.user = Object.assign(state.user, JSON.parse(savedU));
+        const savedInv = localStorage.getItem('kfp_inventory');
+        if (savedInv) state.inventory = JSON.parse(savedInv);
+      } catch (e) {}
+
+      document.getElementById('rider-name-display').innerText = state.user.name;
+      document.getElementById('header-avatar-initials').innerText = state.user.name.charAt(0).toUpperCase();
+      document.getElementById('profile-weight-display').innerText = `${state.user.weight.toFixed(1)} kg`;
+
+      renderQuiver();
+      fetchForecast();
+      setInterval(fetchForecast, 300000); // 5 min refresh
+    });
+  </script>
+</body>
+</html>

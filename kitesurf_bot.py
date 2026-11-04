@@ -2099,6 +2099,20 @@ def start_embedded_http_server(port: int = 8080):
                     self.wfile.write(content)
                     return
 
+            # 6. Commercial / Pro Parallel Edition
+            if path in ["/pro", "/pro/", "/commercial", "/commercial/"]:
+                comm_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "commercial", "index.html")
+                if os.path.exists(comm_path):
+                    with open(comm_path, "rb") as f:
+                        content = f.read()
+                    self.send_response(200)
+                    self.send_header("Content-Type", "text/html; charset=utf-8")
+                    self.send_header("Cache-Control", "no-cache, must-revalidate")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(content)
+                    return
+
             if path == "/manifest.json":
                 m_path = os.path.join(web_dir, "manifest.json")
                 if os.path.exists(m_path):
