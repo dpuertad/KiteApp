@@ -537,7 +537,136 @@ def fetch_tides_both_days(lat: float, lon: float, timezone_str: str = "auto") ->
         return [], [], None, None
 
 
-def fetch_weather_openmeteo(spot: dict) -> dict:
+GLOBAL_THERMAL_SPOTS = {
+    # Brazil (Ceará, Piauí, Maranhão) - World-renowned trade + sand dune thermal venturi
+    "cumbuco": {"name": "Cumbuco", "boost_pct": 0.16, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Sand-dune thermal venturi"},
+    "caucaia": {"name": "Caucaia/Cumbuco", "boost_pct": 0.16, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Sand-dune thermal venturi"},
+    "taiba": {"name": "Taíba", "boost_pct": 0.18, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Lagoon & point thermal boost"},
+    "paracuru": {"name": "Paracuru", "boost_pct": 0.18, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Quebra Mar coastal thermal boost"},
+    "lagoinha": {"name": "Lagoinha", "boost_pct": 0.16, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Dune thermal acceleration"},
+    "flecheiras": {"name": "Flecheiras", "boost_pct": 0.15, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Coastal reef thermal draw"},
+    "guajiru": {"name": "Ilha do Guajirú", "boost_pct": 0.20, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Flatwater lagoon thermal chimney"},
+    "itapipoca": {"name": "Ilha do Guajirú", "boost_pct": 0.20, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Flatwater lagoon thermal chimney"},
+    "prea": {"name": "Preá", "boost_pct": 0.20, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Trade & dune venturi"},
+    "jericoacoara": {"name": "Jericoacoara", "boost_pct": 0.22, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "National park dune thermal chimney"},
+    "jeri": {"name": "Jericoacoara", "boost_pct": 0.22, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "National park dune thermal chimney"},
+    "macapa": {"name": "Macapá", "boost_pct": 0.18, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Parnaíba delta thermal boost"},
+    "barra grande": {"name": "Barra Grande", "boost_pct": 0.18, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Piauí flatwater thermal boost"},
+    "atins": {"name": "Atins", "boost_pct": 0.18, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Lençóis Maranhenses dune heating"},
+    # Europe
+    "tarifa": {"name": "Tarifa", "boost_pct": 0.20, "peak_start": 13, "peak_end": 18, "months": [4,5,6,7,8,9,10], "desc": "Strait of Gibraltar venturi + thermal Poniente"},
+    "lances": {"name": "Tarifa Los Lances", "boost_pct": 0.20, "peak_start": 13, "peak_end": 18, "months": [4,5,6,7,8,9,10], "desc": "Poniente thermal boost"},
+    "valdevaqueros": {"name": "Valdevaqueros", "boost_pct": 0.22, "peak_start": 13, "peak_end": 18, "months": [4,5,6,7,8,9,10], "desc": "Dune thermal acceleration + venturi"},
+    "garda": {"name": "Lake Garda", "boost_pct": 0.25, "peak_start": 12, "peak_end": 17, "months": [4,5,6,7,8,9,10], "desc": "Ora afternoon alpine thermal wind"},
+    "silvaplana": {"name": "Lake Silvaplana", "boost_pct": 0.30, "peak_start": 12, "peak_end": 16, "months": [5,6,7,8,9], "desc": "Maloja alpine thermal wind"},
+    "prasonisi": {"name": "Prasonisi", "boost_pct": 0.20, "peak_start": 11, "peak_end": 17, "months": [5,6,7,8,9,10], "desc": "Meltemi thermal channel acceleration"},
+    "leucate": {"name": "Leucate", "boost_pct": 0.15, "peak_start": 12, "peak_end": 17, "months": [4,5,6,7,8,9,10], "desc": "Marine thermal boost"},
+    # Americas
+    "la ventana": {"name": "La Ventana", "boost_pct": 0.25, "peak_start": 12, "peak_end": 17, "months": [11,12,1,2,3,4], "desc": "Sea of Cortez thermal + valley venturi"},
+    "barriles": {"name": "Los Barriles", "boost_pct": 0.22, "peak_start": 12, "peak_end": 17, "months": [11,12,1,2,3,4], "desc": "Baja thermal + El Norte trade boost"},
+    "hood river": {"name": "Hood River", "boost_pct": 0.30, "peak_start": 12, "peak_end": 18, "months": [5,6,7,8,9], "desc": "Columbia Gorge thermal pressure draw"},
+    "sherman": {"name": "Sherman Island", "boost_pct": 0.25, "peak_start": 13, "peak_end": 18, "months": [5,6,7,8,9], "desc": "SF Bay / Central Valley thermal chimney"},
+    "cabarete": {"name": "Cabarete", "boost_pct": 0.18, "peak_start": 12, "peak_end": 17, "months": [1,2,3,4,5,6,7,8,9,10,11,12], "desc": "Afternoon Atlantic sea breeze trade boost"},
+    # Africa / Middle East
+    "dakhla": {"name": "Dakhla", "boost_pct": 0.20, "peak_start": 12, "peak_end": 17, "months": [3,4,5,6,7,8,9,10], "desc": "Sahara desert thermal boundary draw"},
+    "el gouna": {"name": "El Gouna", "boost_pct": 0.18, "peak_start": 10, "peak_end": 16, "months": [4,5,6,7,8,9,10], "desc": "Red Sea desert thermal channel"},
+    "cape town": {"name": "Cape Town", "boost_pct": 0.22, "peak_start": 13, "peak_end": 18, "months": [10,11,12,1,2,3], "desc": "Cape Doctor thermal + Table Mountain ridge venturi"},
+    "blouberg": {"name": "Bloubergstrand", "boost_pct": 0.22, "peak_start": 13, "peak_end": 18, "months": [10,11,12,1,2,3], "desc": "Cape Doctor thermal + ridge venturi"}
+}
+
+
+def get_spot_thermal_profile(spot_name: str) -> dict:
+    clean = (spot_name or "").lower()
+    for key, profile in GLOBAL_THERMAL_SPOTS.items():
+        if key in clean:
+            return profile
+    return None
+
+
+def calculate_thermal_calibration(
+    hour: int,
+    base_wind: float,
+    base_gust: float,
+    land_temp: float,
+    sea_temp: float,
+    spot_name: str,
+    shore_diff: float = 45.0,
+    month: int = None
+) -> dict:
+    profile = get_spot_thermal_profile(spot_name)
+    if month is None:
+        month = datetime.now().month
+
+    boost_pct = 0.0
+    reason = "None"
+    is_active = False
+
+    if profile:
+        # Known thermal spot
+        in_season = month in profile.get("months", list(range(1, 13)))
+        start_hr = profile.get("peak_start", 11)
+        end_hr = profile.get("peak_end", 16)
+        
+        if in_season and (start_hr - 1) <= hour <= (end_hr + 1):
+            max_boost = profile.get("boost_pct", 0.15)
+            # Smooth bell curve centered between start and end
+            mid_hr = (start_hr + end_hr) / 2.0
+            span = max(1.0, (end_hr - start_hr + 2) / 2.0)
+            dist = abs(hour - mid_hr)
+            curve = max(0.0, 1.0 - (dist / span) ** 1.5)
+            boost_pct = max_boost * curve
+            reason = profile.get("desc", "Local thermal boost")
+            is_active = boost_pct >= 0.03
+    else:
+        # Universal thermodynamic check for any beach/spot
+        if sea_temp is not None and land_temp is not None:
+            delta_t = land_temp - sea_temp
+            # Solar peak hours and warm land
+            if 11 <= hour <= 16 and delta_t >= 2.5 and shore_diff <= 90.0:
+                boost_pct = min(0.20, max(0.05, 0.035 * (delta_t - 1.5)))
+                reason = f"Thermodynamic sea breeze (ΔT = +{round(delta_t, 1)}°C)"
+                is_active = True
+
+    boosted_wind = round_knots(base_wind * (1.0 + boost_pct))
+    boosted_gust = round_knots(max(base_gust, boosted_wind * 1.18))
+    boost_kts = round(boosted_wind - base_wind, 1)
+
+    return {
+        "boosted_wind": boosted_wind,
+        "boosted_gust": boosted_gust,
+        "boost_pct": round(boost_pct * 100),
+        "boost_kts": boost_kts,
+        "is_active": is_active,
+        "reason": reason
+    }
+
+
+def find_peak_session_window(hourly_slots: list) -> dict:
+    """Finds the best 2-4 hour riding window between 10:00 and 17:00."""
+    day_slots = [s for s in hourly_slots if 10 <= s["hour"] <= 17]
+    if not day_slots:
+        return {"tag": "⚡ Peak Session: 12:00 – 15:30", "range": "15–17 kts", "best_hour": 13, "wind_range": "15–17 kts"}
+    
+    best_slot = max(day_slots, key=lambda s: s["wind_kts"])
+    b_hr = best_slot["hour"]
+    start_hr = max(11, b_hr - 1)
+    end_hr = min(16, b_hr + 2)
+    window_slots = [s for s in day_slots if start_hr <= s["hour"] <= end_hr]
+    min_w = min(s["wind_kts"] for s in window_slots)
+    max_w = max(s["wind_kts"] for s in window_slots)
+    
+    return {
+        "start_time": f"{start_hr:02d}:00",
+        "end_time": f"{end_hr:02d}:30",
+        "wind_range": f"{round_knots(min_w)}–{round_knots(max_w)} kts",
+        "best_hour": b_hr,
+        "best_wind": round_knots(best_slot["wind_kts"]),
+        "best_gust": round_knots(best_slot["gust_kts"]),
+        "tag": f"⚡ Peak Session: {start_hr:02d}:00 – {end_hr:02d}:30 ({round_knots(min_w)}–{round_knots(max_w)} kts)"
+    }
+
+
+def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: float = None) -> dict:
     params = {
         "latitude": spot["lat"],
         "longitude": spot["lon"],
@@ -568,77 +697,127 @@ def fetch_weather_openmeteo(spot: dict) -> dict:
     icon_speeds = hourly.get("wind_speed_10m_icon_seamless", [])
 
     beach_angle = resolve_beach_angle(spot.get("name", ""), spot.get("beach_angle"))
+    cur_month = datetime.now().month
 
-    target_hours = {
-        "Morning (09:00)": 9,
-        "Midday (12:00)": 12,
-        "Afternoon (15:00)": 15,
-        "Sunset (17:00)": 17
+    # 1. 2-Hour Key Daylight Slots (07:00 to 19:00)
+    target_2h_slots = {
+        "07:00 Early Dawn": 7,
+        "09:00 Morning Breeze": 9,
+        "11:00 Thermal Building": 11,
+        "13:00 Midday Peak": 13,
+        "15:00 Afternoon Session": 15,
+        "17:00 Sunset Session": 17,
+        "19:00 Evening Wind-down": 19
     }
 
-    # Today schedule (Day 0: 0..23)
-    schedule = {}
-    for label, hr in target_hours.items():
-        if hr < len(speeds):
-            w_val = round_knots(speeds[hr])
-            g_val = round_knots(gusts[hr])
-            d_val = round(directions[hr])
-            e_val = ecmwf_speeds[hr] if hr < len(ecmwf_speeds) else w_val
-            gf_val = gfs_speeds[hr] if hr < len(gfs_speeds) else w_val
-            ic_val = icon_speeds[hr] if hr < len(icon_speeds) else w_val
-            
-            schedule[label] = {
-                "wind_kts": w_val,
-                "gust_kts": g_val,
-                "direction": degrees_to_cardinal(directions[hr]),
-                "degrees": d_val,
-                "temp": round(temps[hr], 1),
-                "stability": calculate_stability_score(w_val, g_val),
-                "shoreline": calculate_shoreline_status(d_val, beach_angle),
-                "consensus": calculate_model_consensus(e_val, gf_val, ic_val)
-            }
+    # 2. 1-Hour Full Daylight Slots (07:00 to 19:00)
+    daylight_hours = list(range(7, 20))
 
-    # Tomorrow schedule (Day 1: 24..47)
+    def build_slot_data(hr_index, solar_hr, sst_val):
+        raw_w = speeds[hr_index] if hr_index < len(speeds) else 15.0
+        raw_g = gusts[hr_index] if hr_index < len(gusts) else raw_w * 1.25
+        d_val = round(directions[hr_index]) if hr_index < len(directions) else 90
+        t_val = round(temps[hr_index], 1) if hr_index < len(temps) else 28.0
+
+        shore = calculate_shoreline_status(d_val, beach_angle)
+        calib = calculate_thermal_calibration(
+            solar_hr, raw_w, raw_g, t_val, sst_val,
+            spot.get("name", ""), shore_diff=shore.get("relative_angle", 45.0), month=cur_month
+        )
+        w_calib = calib["boosted_wind"]
+        g_calib = calib["boosted_gust"]
+
+        # Coastal Calibration for coarse 28km ECMWF Open Data
+        raw_e = ecmwf_speeds[hr_index] if hr_index < len(ecmwf_speeds) else raw_w
+        e_calib = min(w_calib + 2, max(w_calib - 3, round_knots(raw_e * 1.30)))
+        gf_val = gfs_speeds[hr_index] if hr_index < len(gfs_speeds) else raw_w
+        ic_val = icon_speeds[hr_index] if hr_index < len(icon_speeds) else raw_w
+
+        return {
+            "hour": solar_hr,
+            "wind_kts": w_calib,
+            "gust_kts": g_calib,
+            "direction": degrees_to_cardinal(d_val),
+            "degrees": d_val,
+            "temp": t_val,
+            "stability": calculate_stability_score(w_calib, g_calib),
+            "shoreline": shore,
+            "consensus": calculate_model_consensus(e_calib, gf_val, ic_val),
+            "thermal": calib
+        }
+
+    # Today schedules
+    schedule = {}
+    for label, hr in target_2h_slots.items():
+        if hr < len(speeds):
+            schedule[label] = build_slot_data(hr, hr, today_sst)
+
+    schedule_hourly = {}
+    for hr in daylight_hours:
+        if hr < len(speeds):
+            schedule_hourly[f"{hr:02d}:00"] = build_slot_data(hr, hr, today_sst)
+
+    # Tomorrow schedules (offset +24)
     schedule_tomorrow = {}
-    for label, hr in target_hours.items():
+    for label, hr in target_2h_slots.items():
         tmrw_hr = hr + 24
         if tmrw_hr < len(speeds):
-            w_val = round_knots(speeds[tmrw_hr])
-            g_val = round_knots(gusts[tmrw_hr])
-            d_val = round(directions[tmrw_hr])
-            e_val = ecmwf_speeds[tmrw_hr] if tmrw_hr < len(ecmwf_speeds) else w_val
-            gf_val = gfs_speeds[tmrw_hr] if tmrw_hr < len(gfs_speeds) else w_val
-            ic_val = icon_speeds[tmrw_hr] if tmrw_hr < len(icon_speeds) else w_val
+            schedule_tomorrow[label] = build_slot_data(tmrw_hr, hr, tomorrow_sst)
 
-            schedule_tomorrow[label] = {
-                "wind_kts": w_val,
-                "gust_kts": g_val,
-                "direction": degrees_to_cardinal(directions[tmrw_hr]),
-                "degrees": d_val,
-                "temp": round(temps[tmrw_hr], 1),
-                "stability": calculate_stability_score(w_val, g_val),
-                "shoreline": calculate_shoreline_status(d_val, beach_angle),
-                "consensus": calculate_model_consensus(e_val, gf_val, ic_val)
-            }
+    schedule_tomorrow_hourly = {}
+    for hr in daylight_hours:
+        tmrw_hr = hr + 24
+        if tmrw_hr < len(speeds):
+            schedule_tomorrow_hourly[f"{hr:02d}:00"] = build_slot_data(tmrw_hr, hr, tomorrow_sst)
 
-    cur_wind = round_knots(current.get("wind_speed_10m", speeds[12] if len(speeds) > 12 else 16.0))
-    cur_gust = round_knots(current.get("wind_gusts_10m", gusts[12] if len(gusts) > 12 else cur_wind))
-    cur_dir_deg = round(current.get("wind_direction_10m", directions[12] if len(directions) > 12 else 90))
+    # Peak Session Windows
+    peak_session = find_peak_session_window(list(schedule_hourly.values()))
+    tomorrow_peak_session = find_peak_session_window(list(schedule_tomorrow_hourly.values()))
+
+    # Current conditions with instant thermal calibration if in thermal window
+    cur_time_str = current.get("time")
+    cur_hr = 12
+    if cur_time_str and "T" in cur_time_str:
+        try:
+            cur_hr = int(cur_time_str.split("T")[1].split(":")[0])
+        except Exception:
+            cur_hr = 12
+
+    raw_cur_wind = round_knots(current.get("wind_speed_10m", speeds[cur_hr] if len(speeds) > cur_hr else 16.0))
+    raw_cur_gust = round_knots(current.get("wind_gusts_10m", gusts[cur_hr] if len(gusts) > cur_hr else raw_cur_wind))
+    cur_dir_deg = round(current.get("wind_direction_10m", directions[cur_hr] if len(directions) > cur_hr else 90))
     cur_dir = degrees_to_cardinal(cur_dir_deg)
     cur_temp = round(current.get("temperature_2m", 28.5), 1)
 
-    cur_ecmwf = ecmwf_speeds[12] if len(ecmwf_speeds) > 12 else cur_wind
-    cur_gfs = gfs_speeds[12] if len(gfs_speeds) > 12 else cur_wind
-    cur_icon = icon_speeds[12] if len(icon_speeds) > 12 else cur_wind
+    cur_shore = calculate_shoreline_status(cur_dir_deg, beach_angle)
+    cur_calib = calculate_thermal_calibration(
+        cur_hr, raw_cur_wind, raw_cur_gust, cur_temp, today_sst,
+        spot.get("name", ""), shore_diff=cur_shore.get("relative_angle", 45.0), month=cur_month
+    )
+    cur_wind = cur_calib["boosted_wind"]
+    cur_gust = cur_calib["boosted_gust"]
+
+    # Calibrate Consensus Barometer
+    raw_ecmwf = ecmwf_speeds[cur_hr] if len(ecmwf_speeds) > cur_hr else cur_wind
+    calib_ecmwf = min(cur_wind + 2, max(cur_wind - 3, round_knots(raw_ecmwf * 1.30)))
+    calib_gfs = gfs_speeds[cur_hr] if len(gfs_speeds) > cur_hr else cur_wind
+    calib_icon = icon_speeds[cur_hr] if len(icon_speeds) > cur_hr else cur_wind
 
     cur_stability = calculate_stability_score(cur_wind, cur_gust)
-    cur_shoreline = calculate_shoreline_status(cur_dir_deg, beach_angle)
-    cur_consensus = calculate_model_consensus(cur_ecmwf, cur_gfs, cur_icon)
+    cur_consensus = calculate_model_consensus(calib_ecmwf, calib_gfs, calib_icon)
 
     today_temps = temps[:24] if len(temps) >= 24 else temps
     today_gusts = gusts[:24] if len(gusts) >= 24 else gusts
     tmrw_temps = temps[24:48] if len(temps) >= 48 else temps
     tmrw_gusts = gusts[24:48] if len(gusts) >= 48 else gusts
+
+    thermal_meta = {
+        "is_active": cur_calib["is_active"],
+        "boost_pct": cur_calib["boost_pct"],
+        "boost_kts": cur_calib["boost_kts"],
+        "reason": cur_calib["reason"],
+        "spot_profile": get_spot_thermal_profile(spot.get("name", ""))
+    }
 
     return {
         "spot": spot["name"],
@@ -658,11 +837,16 @@ def fetch_weather_openmeteo(spot: dict) -> dict:
             "degrees": cur_dir_deg,
             "temp": cur_temp
         },
-        "shoreline": cur_shoreline,
+        "shoreline": cur_shore,
         "stability": cur_stability,
         "consensus": cur_consensus,
         "schedule": schedule,
-        "schedule_tomorrow": schedule_tomorrow
+        "schedule_hourly": schedule_hourly,
+        "schedule_tomorrow": schedule_tomorrow,
+        "schedule_tomorrow_hourly": schedule_tomorrow_hourly,
+        "peak_session": peak_session,
+        "tomorrow_peak_session": tomorrow_peak_session,
+        "thermal": thermal_meta
     }
 
 
@@ -688,19 +872,53 @@ def fetch_weather_metno(spot: dict) -> dict:
     cur_shoreline = calculate_shoreline_status(cur_dir_deg, beach_angle)
     cur_consensus = calculate_model_consensus(cur_wind, cur_wind + 1, cur_wind)
 
-    schedule = {
-        "Morning (09:00)": {"wind_kts": cur_wind, "gust_kts": cur_gust, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp, "stability": cur_stability, "shoreline": cur_shoreline, "consensus": cur_consensus},
-        "Midday (12:00)": {"wind_kts": cur_wind, "gust_kts": cur_gust, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp, "stability": cur_stability, "shoreline": cur_shoreline, "consensus": cur_consensus},
-        "Afternoon (15:00)": {"wind_kts": max(12, cur_wind - 1), "gust_kts": cur_gust, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp, "stability": cur_stability, "shoreline": cur_shoreline, "consensus": cur_consensus},
-        "Sunset (17:00)": {"wind_kts": max(10, cur_wind - 3), "gust_kts": max(14, cur_gust - 3), "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp - 1, "stability": cur_stability, "shoreline": cur_shoreline, "consensus": cur_consensus}
+    target_2h_slots = {
+        "07:00 Early Dawn": 7,
+        "09:00 Morning Breeze": 9,
+        "11:00 Thermal Building": 11,
+        "13:00 Midday Peak": 13,
+        "15:00 Afternoon Session": 15,
+        "17:00 Sunset Session": 17,
+        "19:00 Evening Wind-down": 19
     }
+    daylight_hours = list(range(7, 20))
 
-    schedule_tomorrow = {
-        "Morning (09:00)": {"wind_kts": cur_wind, "gust_kts": cur_gust, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp, "stability": cur_stability, "shoreline": cur_shoreline, "consensus": cur_consensus},
-        "Midday (12:00)": {"wind_kts": cur_wind + 1, "gust_kts": cur_gust + 2, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp + 1, "stability": cur_stability, "shoreline": cur_shoreline, "consensus": cur_consensus},
-        "Afternoon (15:00)": {"wind_kts": max(12, cur_wind), "gust_kts": cur_gust, "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp, "stability": cur_stability, "shoreline": cur_shoreline, "consensus": cur_consensus},
-        "Sunset (17:00)": {"wind_kts": max(10, cur_wind - 2), "gust_kts": max(14, cur_gust - 2), "direction": cur_dir, "degrees": cur_dir_deg, "temp": cur_temp - 1, "stability": cur_stability, "shoreline": cur_shoreline, "consensus": cur_consensus}
-    }
+    schedule = {}
+    for label, hr in target_2h_slots.items():
+        w_adj = cur_wind + (1 if 11 <= hr <= 15 else 0)
+        g_adj = cur_gust + (2 if 11 <= hr <= 15 else 0)
+        schedule[label] = {
+            "hour": hr,
+            "wind_kts": w_adj,
+            "gust_kts": g_adj,
+            "direction": cur_dir,
+            "degrees": cur_dir_deg,
+            "temp": cur_temp,
+            "stability": cur_stability,
+            "shoreline": cur_shoreline,
+            "consensus": cur_consensus,
+            "thermal": {"is_active": 11 <= hr <= 15, "boost_kts": 1.5, "reason": "Estimated thermal"}
+        }
+
+    schedule_hourly = {}
+    for hr in daylight_hours:
+        w_adj = cur_wind + (1 if 11 <= hr <= 15 else 0)
+        g_adj = cur_gust + (2 if 11 <= hr <= 15 else 0)
+        schedule_hourly[f"{hr:02d}:00"] = {
+            "hour": hr,
+            "wind_kts": w_adj,
+            "gust_kts": g_adj,
+            "direction": cur_dir,
+            "degrees": cur_dir_deg,
+            "temp": cur_temp,
+            "stability": cur_stability,
+            "shoreline": cur_shoreline,
+            "consensus": cur_consensus,
+            "thermal": {"is_active": 11 <= hr <= 15, "boost_kts": 1.5, "reason": "Estimated thermal"}
+        }
+
+    schedule_tomorrow = {label: dict(slot) for label, slot in schedule.items()}
+    schedule_tomorrow_hourly = {label: dict(slot) for label, slot in schedule_hourly.items()}
 
     approx_offset = round(spot.get("lon", -38.7297) / 15.0) * 3600
     return {
@@ -725,14 +943,20 @@ def fetch_weather_metno(spot: dict) -> dict:
         "stability": cur_stability,
         "consensus": cur_consensus,
         "schedule": schedule,
-        "schedule_tomorrow": schedule_tomorrow
+        "schedule_hourly": schedule_hourly,
+        "schedule_tomorrow": schedule_tomorrow,
+        "schedule_tomorrow_hourly": schedule_tomorrow_hourly,
+        "peak_session": {"tag": "⚡ Peak Session: 12:00 – 15:30", "wind_range": f"{cur_wind}–{cur_wind+2} kts", "best_hour": 13},
+        "tomorrow_peak_session": {"tag": "⚡ Peak Session: 12:00 – 15:30", "wind_range": f"{cur_wind}–{cur_wind+2} kts", "best_hour": 13},
+        "thermal": {"is_active": False, "boost_kts": 0.0, "reason": "Met.no standard"}
     }
 
 
 def fetch_live_forecast(spot: dict) -> dict:
+    today_tides, tomorrow_tides, today_sst, tomorrow_sst = fetch_tides_both_days(spot["lat"], spot["lon"], spot.get("timezone", "auto"))
     forecast = None
     try:
-        forecast = fetch_weather_openmeteo(spot)
+        forecast = fetch_weather_openmeteo(spot, today_sst=today_sst, tomorrow_sst=tomorrow_sst)
     except Exception as e:
         print(f"Open-Meteo ({e}), switching to Met.no...")
         try:
@@ -749,6 +973,19 @@ def fetch_live_forecast(spot: dict) -> dict:
         shore_default = calculate_shoreline_status(90, beach_angle)
         cons_default = calculate_model_consensus(16.0, 17.0, 15.5)
 
+        target_2h_slots = {
+            "07:00 Early Dawn": 7,
+            "09:00 Morning Breeze": 9,
+            "11:00 Thermal Building": 11,
+            "13:00 Midday Peak": 13,
+            "15:00 Afternoon Session": 15,
+            "17:00 Sunset Session": 17,
+            "19:00 Evening Wind-down": 19
+        }
+        sched_default = {}
+        for l, h in target_2h_slots.items():
+            sched_default[l] = {"hour": h, "wind_kts": 16.0, "gust_kts": 24.0, "direction": "E", "degrees": 90, "temp": 29.0, "stability": stab_default, "shoreline": shore_default, "consensus": cons_default}
+
         forecast = {
             "spot": spot["name"],
             "beach_angle": beach_angle,
@@ -764,21 +1001,15 @@ def fetch_live_forecast(spot: dict) -> dict:
             "shoreline": shore_default,
             "stability": stab_default,
             "consensus": cons_default,
-            "schedule": {
-                "Morning (09:00)": {"wind_kts": 15.0, "gust_kts": 24.0, "direction": "ESE", "degrees": 112, "temp": 27.5, "stability": stab_default, "shoreline": shore_default, "consensus": cons_default},
-                "Midday (12:00)": {"wind_kts": 18.0, "gust_kts": 28.0, "direction": "E", "degrees": 90, "temp": 30.0, "stability": stab_default, "shoreline": shore_default, "consensus": cons_default},
-                "Afternoon (15:00)": {"wind_kts": 16.5, "gust_kts": 26.0, "direction": "E", "degrees": 90, "temp": 29.5, "stability": stab_default, "shoreline": shore_default, "consensus": cons_default},
-                "Sunset (17:00)": {"wind_kts": 13.0, "gust_kts": 22.0, "direction": "E", "degrees": 90, "temp": 28.0, "stability": stab_default, "shoreline": shore_default, "consensus": cons_default}
-            },
-            "schedule_tomorrow": {
-                "Morning (09:00)": {"wind_kts": 14.5, "gust_kts": 23.0, "direction": "ESE", "degrees": 112, "temp": 27.0, "stability": stab_default, "shoreline": shore_default, "consensus": cons_default},
-                "Midday (12:00)": {"wind_kts": 17.5, "gust_kts": 27.0, "direction": "E", "degrees": 90, "temp": 29.5, "stability": stab_default, "shoreline": shore_default, "consensus": cons_default},
-                "Afternoon (15:00)": {"wind_kts": 16.0, "gust_kts": 25.0, "direction": "E", "degrees": 90, "temp": 29.0, "stability": stab_default, "shoreline": shore_default, "consensus": cons_default},
-                "Sunset (17:00)": {"wind_kts": 12.5, "gust_kts": 21.0, "direction": "E", "degrees": 90, "temp": 27.5, "stability": stab_default, "shoreline": shore_default, "consensus": cons_default}
-            }
+            "schedule": sched_default,
+            "schedule_hourly": {f"{h:02d}:00": {"hour": h, "wind_kts": 16.0, "gust_kts": 24.0, "direction": "E", "degrees": 90, "temp": 29.0, "stability": stab_default, "shoreline": shore_default, "consensus": cons_default} for h in range(7, 20)},
+            "schedule_tomorrow": sched_default,
+            "schedule_tomorrow_hourly": {f"{h:02d}:00": {"hour": h, "wind_kts": 16.0, "gust_kts": 24.0, "direction": "E", "degrees": 90, "temp": 29.0, "stability": stab_default, "shoreline": shore_default, "consensus": cons_default} for h in range(7, 20)},
+            "peak_session": {"tag": "⚡ Peak Session: 12:00 – 15:30 (16–17 kts)", "wind_range": "16–17 kts"},
+            "tomorrow_peak_session": {"tag": "⚡ Peak Session: 12:00 – 15:30 (16–17 kts)", "wind_range": "16–17 kts"},
+            "thermal": {"is_active": True, "boost_kts": 2.5, "reason": "Sand-dune thermal venturi"}
         }
 
-    today_tides, tomorrow_tides, today_sst, tomorrow_sst = fetch_tides_both_days(spot["lat"], spot["lon"], spot.get("timezone", "auto"))
     forecast["tides"] = today_tides
     forecast["tides_tomorrow"] = tomorrow_tides
     forecast["sea_temp"] = today_sst
@@ -885,8 +1116,8 @@ def recommend_from_available_quiver(
 ) -> str:
     if not active_inventory:
         if all_inventory:
-            return "⚠️ No active kites in bag (type `/take all`)"
-        return "⚠️ No quiver existing (type `/kite 1 <Brand> <Model> <Size>`)"
+            return "🎒 No kites packed in backpack today! Type `/take all` or enjoy a Caipirinha 🍹"
+        return "⚠️ No quiver existing yet! (type `/kite 1 <Brand> <Model> <Size>`)"
 
     evaluated = [evaluate_active_kite(k, weight_kg, wind_kts, gust_kts, level=level, board=board) for k in active_inventory]
 
@@ -920,7 +1151,7 @@ def recommend_from_available_quiver(
         yr_str = f" ({home_kite['year']})" if home_kite.get("year") else ""
         home_tip = f" 💡 Pack your {home_kite['brand']} {home_kite['model']}{yr_str} {home_kite['size']}m: `/take all`"
 
-    # 3. Wind too light (< min of active quiver): DO NOT recommend rigging the biggest kite!
+    # 3. Wind too light (< min of active quiver): Caipirinha Time!
     if wind_kts < min(mins):
         biggest = max(evaluated, key=lambda k: k["size"])
         min_k_rounded = round_knots(biggest["min_k"])
@@ -941,10 +1172,7 @@ def recommend_from_available_quiver(
             b_yr = f" ({b_home['year']})" if b_home.get("year") else ""
             bigger_home_tip = f" 💡 Pack your {b_home['brand']} {b_home['model']}{b_yr} {b_home['size']}m from home: `/take all`"
 
-        if len(evaluated) > 1:
-            return f"⚠️ {w_kts_rounded} kts (not enough for your {kite_desc} kite, as the biggest one you have — needs min ~{min_k_rounded} kts){bigger_home_tip}"
-        else:
-            return f"⚠️ {w_kts_rounded} kts (not enough for your {kite_desc} kite — needs min ~{min_k_rounded} kts){bigger_home_tip}"
+        return f"🍹 Caipirinha Time! {w_kts_rounded} kts is below your {kite_desc} min (~{min_k_rounded} kts). None of your packed gear fits — chill with a drink! 🏖️🍹{bigger_home_tip}"
 
     # 4. Wind above max of active quiver
     if wind_kts > max(maxs):
@@ -955,8 +1183,8 @@ def recommend_from_available_quiver(
             return f"Rig {smallest['display_name']} (🚨 Heavily Overpowered — max ~{max_k_rounded} kts!){home_tip}"
         else:
             if home_tip:
-                return f"🚨 Wind too strong ({round_knots(wind_kts)} kts) for {smallest['display_name']} (max ~{max_k_rounded} kts).{home_tip}"
-            return f"🚨 Wind too strong ({round_knots(wind_kts)} kts) for {smallest['display_name']} (max ~{max_k_rounded} kts) — hold off or rig smaller!"
+                return f"🍹 Double Caipirinha Time! Nuking at {round_knots(wind_kts)} kts — too wild for your {smallest['display_name']} (max ~{max_k_rounded} kts). Watch from the beach bar! 🍹🔥{home_tip}"
+            return f"🍹 Double Caipirinha Time! Nuking at {round_knots(wind_kts)} kts — too wild for your {smallest['display_name']} (max ~{max_k_rounded} kts). Enjoy a cocktail and watch the big air show! 🍹🔥"
 
     nearest = min(evaluated, key=lambda k: k["dist_to_sweet"])
     return f"Rig {nearest['display_name']} (Marginal)"
@@ -1008,6 +1236,11 @@ def format_briefing(forecast: dict, user_profile: dict) -> str:
     wet = forecast.get("wetsuit", {})
     cons = forecast.get("consensus", {})
 
+    peak = forecast.get("peak_session", {})
+    thermal = forecast.get("thermal", {})
+    peak_line = f"• *Peak Session Window:* {peak.get('tag', '12:00 – 15:30')}" if peak else ""
+    thermal_line = f"• *Thermal Effect:* Active (+{thermal.get('boost_kts', 2.5)} kts · {thermal.get('reason', '')})" if thermal.get("is_active") else ""
+
     lines = [
         f"🏄‍♂️ *Kitesurf Morning Briefing: {forecast['spot']}*",
         f"📅 *Date:* {date_str} (Local Time: {time_str})",
@@ -1019,11 +1252,18 @@ def format_briefing(forecast: dict, user_profile: dict) -> str:
         f"• *Coast Safety:* {shore.get('tag', '🟢 Safe')} ({shore.get('description', '')})",
         f"• *Wind Stability:* ⚡ *{stab.get('rating', '9/10')}* ({stab.get('label', '')})",
         f"• *Thermal Guide:* {wet.get('advice', '')}",
-        f"• *Model Consensus:* {cons.get('tag', '🎯 90% Consensus')}",
+        f"• *Model Consensus:* {cons.get('tag', '🎯 90% Consensus')}"
+    ]
+    if peak_line:
+        lines.append(peak_line)
+    if thermal_line:
+        lines.append(thermal_line)
+
+    lines.extend([
         f"\n🌊 *Tides Today:*",
         format_tides_text(forecast.get("tides", [])),
-        f"\n🎯 *Rigging Schedule:*"
-    ]
+        f"\n🎯 *Daylight Rigging Schedule (07:00 – 19:00):*"
+    ])
 
     for slot_name, slot in forecast["schedule"].items():
         rec = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"], all_inventory=inventory, level=level, board=board)
@@ -1071,6 +1311,9 @@ def format_tomorrow_report(forecast: dict, user_profile: dict, is_evening_auto: 
     cons = forecast.get("consensus", {})
     quiver_str = build_quiver_header_text(inventory, active_kites)
 
+    tmrw_peak = forecast.get("tomorrow_peak_session") or forecast.get("peak_session", {})
+    tmrw_thermal = forecast.get("thermal", {})
+
     lines = [
         f"🌅 *Tomorrow's Kitesurf Forecast: {forecast['spot']}*",
         f"📅 *Date:* {tomorrow_date_str} (Day After)",
@@ -1082,13 +1325,17 @@ def format_tomorrow_report(forecast: dict, user_profile: dict, is_evening_auto: 
         f"🩳 *Thermal Guide:* {tmrw_wet.get('tag', '🩳 Boardshorts')} ({tmrw_wet.get('advice', '')})",
         f"🎯 *Forecast Reliability:* {cons.get('tag', '🎯 90% Consensus')}"
     ]
+    if tmrw_peak and tmrw_peak.get("tag"):
+        lines.append(f"• *Peak Session Window:* {tmrw_peak['tag']}")
+    if tmrw_thermal and tmrw_thermal.get("is_active"):
+        lines.append(f"• *Thermal Effect:* Active (+{tmrw_thermal.get('boost_kts', 2.5)} kts · {tmrw_thermal.get('reason', '')})")
 
     if is_evening_auto:
         lines.append(f"\n_🌙 Past 17:00 local time — showing tomorrow's forecast so you can pack your gear tonight!_")
     else:
         lines.append(f"\n_📋 Showing requested tomorrow's forecast:_")
 
-    lines.append(f"\n🌬 *Tomorrow's Rigging Schedule:*")
+    lines.append(f"\n🌬 *Tomorrow's Daylight Rigging Schedule (07:00 – 19:00):*")
     schedule = forecast.get("schedule_tomorrow") or forecast.get("schedule", {})
     for slot_name, slot in schedule.items():
         rec = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"], all_inventory=inventory, level=level, board=board)
@@ -1141,6 +1388,9 @@ def format_realtime_report(forecast: dict, user_profile: dict) -> str:
     rec = recommend_from_available_quiver(weight, active_kites, wind_kts, gust_kts, all_inventory=inventory, level=level, board=board)
     quiver_str = build_quiver_header_text(inventory, active_kites)
 
+    peak = forecast.get("peak_session", {})
+    thermal = forecast.get("thermal", {})
+
     lines = [
         f"🏄‍♂️ *Live Spot Report: {forecast['spot']}*",
         f"📍 *Spot Local Time:* {local_time_str} · {local_date_str}",
@@ -1154,11 +1404,18 @@ def format_realtime_report(forecast: dict, user_profile: dict) -> str:
         f"• *Wind Stability:* ⚡ *{stab.get('rating', '9/10')}* ({stab.get('label', '')})",
         f"• *Thermal Guide:* {wet.get('tag', '🩳 Boardshorts')} ({wet.get('advice', '')})",
         f"• *Forecast Reliability:* {cons.get('tag', '🎯 90% Consensus')} ({cons.get('description', '')})",
-        f"• *Right Now Recommendation:* → {rec}\n",
-        f"🌊 *Tides Today:*",
-        format_tides_text(forecast.get("tides", [])),
-        f"\n📅 *Upcoming Today:*"
+        f"• *Right Now Recommendation:* → {rec}\n"
     ]
+    if peak and peak.get("tag"):
+        lines.append(f"• *Today's Peak Window:* {peak['tag']}")
+    if thermal and thermal.get("is_active"):
+        lines.append(f"• *Thermal Effect:* Active (+{thermal.get('boost_kts', 2.5)} kts · {thermal.get('reason', '')})")
+
+    lines.extend([
+        f"\n🌊 *Tides Today:*",
+        format_tides_text(forecast.get("tides", [])),
+        f"\n📅 *Upcoming Today (07:00 – 19:00):*"
+    ])
 
     for slot_name, slot in forecast.get("schedule", {}).items():
         r = recommend_from_available_quiver(weight, active_kites, slot["wind_kts"], slot["gust_kts"], all_inventory=inventory, level=level, board=board)

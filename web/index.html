@@ -272,6 +272,15 @@
           <span>RIG RIGHT NOW RECOMMENDATION</span>
         </div>
         <p id="hero-rec-text" class="text-base font-bold text-white tracking-wide">Loading recommendations...</p>
+
+        <!-- Peak Session & Thermal Indicator Banner -->
+        <div id="hero-peak-box" class="mt-2.5 pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs">
+          <span class="text-sky-300 font-semibold flex items-center space-x-1.5">
+            <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span id="hero-peak-text">⚡ Peak Session: Calculating...</span>
+          </span>
+          <span id="hero-thermal-badge" class="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 hidden">🔥 Thermal Boost</span>
+        </div>
       </div>
     </section>
 
@@ -292,9 +301,13 @@
       <div class="flex items-center justify-between text-xs text-slate-400 px-1">
         <span class="font-bold uppercase tracking-wider flex items-center space-x-1">
           <i data-lucide="calendar" class="w-3.5 h-3.5 text-sky-400"></i>
-          <span id="schedule-title-date">Today's Rigging Schedule</span>
+          <span id="schedule-title-date">Rigging Schedule (07:00 – 19:00)</span>
         </span>
-        <span id="schedule-auto-note" class="text-[11px] text-sky-400 italic"></span>
+        <!-- Schedule View Toggle: 2h vs 1h -->
+        <div class="flex items-center bg-slate-950 p-0.5 rounded-xl border border-slate-800 text-[10px]">
+          <button id="btn-view-2h" onclick="setScheduleView('2h')" class="px-2.5 py-0.5 rounded-lg font-bold bg-sky-600 text-white transition">2h Slots</button>
+          <button id="btn-view-1h" onclick="setScheduleView('1h')" class="px-2.5 py-0.5 rounded-lg font-medium text-slate-400 hover:text-white transition">Hourly (1h)</button>
+        </div>
       </div>
 
       <div id="schedule-cards-container" class="space-y-2">
@@ -790,6 +803,8 @@
       savedSpot.beach_angle = resolveBeachAngle(savedSpot.name);
     }
 
+    const savedScheduleView = localStorage.getItem('kf_schedule_view') || '2h';
+
     let state = {
       user: {
         name: savedName !== null ? savedName : '',
@@ -800,8 +815,31 @@
       spot: savedSpot,
       inventory: JSON.parse(localStorage.getItem('kf_inventory')) || [],
       currentTab: 'today',
+      scheduleView: savedScheduleView,
       forecastData: null
     };
+
+    function setScheduleView(view) {
+      state.scheduleView = view;
+      localStorage.setItem('kf_schedule_view', view);
+      updateScheduleViewUI();
+      renderForecast();
+    }
+
+    function updateScheduleViewUI() {
+      const v = state.scheduleView || '2h';
+      const b2 = document.getElementById('btn-view-2h');
+      const b1 = document.getElementById('btn-view-1h');
+      if (b2 && b1) {
+        if (v === '1h') {
+          b1.className = "px-2.5 py-0.5 rounded-lg font-bold bg-sky-600 text-white transition";
+          b2.className = "px-2.5 py-0.5 rounded-lg font-medium text-slate-400 hover:text-white transition";
+        } else {
+          b2.className = "px-2.5 py-0.5 rounded-lg font-bold bg-sky-600 text-white transition";
+          b1.className = "px-2.5 py-0.5 rounded-lg font-medium text-slate-400 hover:text-white transition";
+        }
+      }
+    }
 
     function setRiderLevel(lvl) {
       state.user.level = lvl;
@@ -944,7 +982,7 @@
       const minVal = Math.min(...mins);
       const maxVal = Math.max(...maxs);
 
-      // Light wind handling
+      // Light wind handling: Caipirinha Time!
       if (windKts < minVal) {
         evaluated.sort((a,b) => b.size - a.size);
         const biggest = evaluated[0];
@@ -956,11 +994,11 @@
         }
         return {
           status: 'light',
-          text: `⚠️ ${Math.round(windKts)} kts (not enough for your ${biggest.displayName}, your biggest kite — min ~${Math.round(biggest.minK)} kts)${tip}`
+          text: `🍹 Caipirinha Time! Wind (${Math.round(windKts)} kts) is too light for your ${biggest.displayName} (min ~${Math.round(biggest.minK)} kts) — none of your gear fits, time to chill! 🏖️🍹${tip}`
         };
       }
 
-      // Strong wind handling
+      // Strong wind handling: Double Caipirinha if howling danger
       if (windKts > maxVal) {
         evaluated.sort((a,b) => a.size - b.size);
         const smallest = evaluated[0];
@@ -975,7 +1013,7 @@
         } else if (windKts <= smallest.maxK + 8) {
           return { status: 'overpowered', text: `Rig ${smallest.displayName} (🚨 Heavily Overpowered — max ~${Math.round(smallest.maxK)} kts!)${tip}` };
         } else {
-          return { status: 'danger', text: `🚨 Wind too strong (${Math.round(windKts)} kts) for ${smallest.displayName} (max ~${Math.round(smallest.maxK)} kts).${tip}` };
+          return { status: 'danger', text: `🍹 Double Caipirinha Time! Nuking at ${Math.round(windKts)} kts — too wild for your ${smallest.displayName} (max ~${Math.round(smallest.maxK)} kts). Watch the show from the beach bar! 🍹🔥${tip}` };
         }
       }
 
@@ -1205,9 +1243,46 @@
       const rec = recommendRigging(liveWind, liveGust);
       const heroText = document.getElementById('hero-rec-text');
       heroText.innerText = rec.text;
+      if (rec.text.includes('Caipirinha')) {
+        heroText.className = "text-base font-bold text-amber-300 tracking-wide flex items-center";
+      } else if (rec.status === 'sweet') {
+        heroText.className = "text-base font-bold text-emerald-400 tracking-wide";
+      } else {
+        heroText.className = "text-base font-bold text-white tracking-wide";
+      }
 
-      // Render Schedule Cards
-      const schedule = isTomorrow ? (f.schedule_tomorrow || f.schedule) : f.schedule;
+      // Peak Session & Thermal Update
+      const peakText = document.getElementById('hero-peak-text');
+      const thermalBadge = document.getElementById('hero-thermal-badge');
+      const peak = isTomorrow ? (f.tomorrow_peak_session || f.peak_session) : f.peak_session;
+      if (peak && peak.tag && peakText) {
+        peakText.innerText = peak.tag;
+      }
+      const thermal = f.thermal;
+      if (thermal && thermalBadge) {
+        if (thermal.is_active) {
+          thermalBadge.classList.remove('hidden');
+          thermalBadge.innerText = `🔥 Thermal Active (+${thermal.boost_kts || 2.5} kts)`;
+          thermalBadge.title = thermal.reason || 'Thermal sea breeze';
+        } else if (thermal.spot_profile) {
+          thermalBadge.classList.remove('hidden');
+          thermalBadge.innerText = `☀️ Thermal Spot (${thermal.spot_profile.peak_start || 11}:30–${thermal.spot_profile.peak_end || 16}:00)`;
+          thermalBadge.title = thermal.spot_profile.desc || 'Coastal thermal spot';
+        } else {
+          thermalBadge.classList.add('hidden');
+        }
+      }
+
+      // Render Schedule Cards (2h vs 1h toggle support)
+      updateScheduleViewUI();
+      const is1h = state.scheduleView === '1h';
+      let schedule = null;
+      if (is1h) {
+        schedule = isTomorrow ? (f.schedule_tomorrow_hourly || f.schedule_hourly || f.schedule_tomorrow) : (f.schedule_hourly || f.schedule);
+      } else {
+        schedule = isTomorrow ? (f.schedule_tomorrow || f.schedule) : f.schedule;
+      }
+
       const schedContainer = document.getElementById('schedule-cards-container');
 
       if (!schedule || Object.keys(schedule).length === 0) {
@@ -1220,12 +1295,29 @@
         const slotShore = slot.shoreline || calculateShorelineStatus(slot.degrees || 90, beachAngle);
         const slotStab = slot.stability || calculateStabilityScore(slot.wind_kts, slot.gust_kts);
         const slotCons = slot.consensus || calculateModelConsensus(slot.wind_kts, slot.wind_kts, slot.wind_kts);
+        const slotThermal = slot.thermal;
 
         const shoreBadgeClass = (slotShore.type || '').includes('Side-On') || (slotShore.type || '').includes('Sideshore')
           ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
           : (slotShore.type || '').includes('Offshore')
             ? 'bg-rose-500/20 text-rose-300 border-rose-500/30'
             : 'bg-amber-500/20 text-amber-300 border-amber-500/30';
+
+        const thermalTag = (slotThermal && slotThermal.is_active)
+          ? `<span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">🔥 +${slotThermal.boost_kts || 2} kts</span>`
+          : '';
+
+        const isCaipi = slotRec.text.includes('Caipirinha');
+        const recColor = slotRec.status === 'sweet' ? 'text-emerald-400 font-bold'
+          : isCaipi ? 'text-amber-300 font-bold'
+          : slotRec.status === 'overpowered' ? 'text-amber-400'
+          : slotRec.status === 'danger' ? 'text-rose-400 font-bold'
+          : 'text-slate-300';
+
+        const dotColor = slotRec.status === 'sweet' ? 'bg-emerald-400 shadow-sm shadow-emerald-400/50'
+          : isCaipi ? 'bg-amber-400 shadow-sm shadow-amber-400/50'
+          : slotRec.status === 'overpowered' ? 'bg-amber-400'
+          : 'bg-slate-700';
 
         return `
           <div class="bg-slate-900/90 rounded-2xl p-3.5 border border-slate-800/80 shadow-md flex items-center justify-between">
@@ -1240,14 +1332,15 @@
                   <span class="text-[10px] text-slate-400 font-medium">Gusts ${Math.round(slot.gust_kts)} kts · ${slot.direction || 'E'}</span>
                   <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold border ${shoreBadgeClass}">${slotShore.type}</span>
                   <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold bg-slate-800 text-slate-300 border border-slate-700">⚡ ${slotStab.score}/10</span>
+                  ${thermalTag}
                   <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/30">🎯 ${slotCons.confidence_pct}%</span>
                 </div>
-                <p class="text-[11px] font-semibold mt-1 ${slotRec.status === 'sweet' ? 'text-emerald-400' : slotRec.status === 'overpowered' ? 'text-amber-400' : slotRec.status === 'danger' ? 'text-rose-400' : 'text-slate-300'}">
+                <p class="text-[11px] mt-1 ${recColor}">
                   ${slotRec.text}
                 </p>
               </div>
             </div>
-            <div class="w-2 h-2 rounded-full ${slotRec.status === 'sweet' ? 'bg-emerald-400 shadow-sm shadow-emerald-400/50' : 'bg-slate-700'}"></div>
+            <div class="w-2.5 h-2.5 rounded-full ${dotColor}"></div>
           </div>
         `;
       }).join('');
@@ -1285,8 +1378,8 @@
       const maxSpeed = Math.max(...entries.map(e => e[1].gust_kts), 30);
       const svgWidth = svg.clientWidth || 340;
       const svgHeight = 110;
-      const barWidth = 32;
       const spacing = svgWidth / entries.length;
+      const barWidth = Math.max(12, Math.min(28, Math.floor(spacing - 6)));
 
       svg.innerHTML = entries.map(([timeLabel, slot], idx) => {
         const x = idx * spacing + (spacing - barWidth) / 2;
@@ -1294,16 +1387,17 @@
         const gustH = (slot.gust_kts / maxSpeed) * svgHeight;
         const yWind = svgHeight - windH;
         const yGust = svgHeight - gustH;
+        const shortLabel = timeLabel.split(' ')[0];
 
         return `
           <!-- Gust bar (background) -->
-          <rect x="${x}" y="${yGust}" width="${barWidth}" height="${gustH}" rx="6" fill="#f59e0b" fill-opacity="0.3" stroke="#f59e0b" stroke-width="1" />
+          <rect x="${x}" y="${yGust}" width="${barWidth}" height="${gustH}" rx="4" fill="#f59e0b" fill-opacity="0.25" stroke="#f59e0b" stroke-width="0.8" />
           <!-- Sustained wind bar (foreground) -->
-          <rect x="${x}" y="${yWind}" width="${barWidth}" height="${windH}" rx="6" fill="url(#windGrad)" />
+          <rect x="${x}" y="${yWind}" width="${barWidth}" height="${windH}" rx="4" fill="url(#windGrad)" />
           <!-- Wind knot label -->
-          <text x="${x + barWidth/2}" y="${yWind - 5}" text-anchor="middle" font-size="10" font-weight="bold" fill="#38bdf8">${Math.round(slot.wind_kts)}</text>
+          <text x="${x + barWidth/2}" y="${yWind - 4}" text-anchor="middle" font-size="${barWidth < 18 ? 8 : 10}" font-weight="bold" fill="#38bdf8">${Math.round(slot.wind_kts)}</text>
           <!-- Time label -->
-          <text x="${x + barWidth/2}" y="${svgHeight + 16}" text-anchor="middle" font-size="9" fill="#94a3b8">${timeLabel.split(' ')[0]}</text>
+          <text x="${x + barWidth/2}" y="${svgHeight + 15}" text-anchor="middle" font-size="${barWidth < 18 ? 7 : 9}" fill="#94a3b8">${shortLabel}</text>
         `;
       }).join('') + `
         <defs>
@@ -1564,6 +1658,7 @@
       document.getElementById('slider-weight').value = state.user.weight;
       document.getElementById('header-spot-name').innerText = state.spot.name.split(',')[0];
       updateLevelButtonsUI();
+      updateScheduleViewUI();
 
       // Initialize Beach Orientation controls
       const bAngle = state.spot.beach_angle !== undefined ? state.spot.beach_angle : resolveBeachAngle(state.spot.name);
