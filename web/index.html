@@ -2134,40 +2134,37 @@
           }
 
           return `
-            <div class="rounded-2xl p-3.5 border transition-all duration-300 flex flex-col space-y-2.5 ${
+            <div class="rounded-2xl p-3 sm:p-3.5 border transition-all duration-300 flex flex-col space-y-2 relative overflow-hidden ${
               isActive
                 ? `bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950/80 ${ringColor} shadow-lg ring-1`
                 : 'bg-slate-950/60 border-slate-800/80 opacity-55 grayscale-[20%]'
             }">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-2.5">
-                  <span class="text-xs font-black px-2.5 py-1 rounded-xl border ${
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center space-x-2.5 min-w-0 flex-1">
+                  <span class="text-xs font-black px-2 py-1 rounded-xl border flex-shrink-0 ${
                     isActive
                       ? (isWing ? 'text-amber-300 bg-amber-500/20 border-amber-500/40 shadow-sm' : (isSoft ? 'text-cyan-300 bg-cyan-500/20 border-cyan-500/40 shadow-sm' : 'text-sky-300 bg-sky-500/20 border-sky-500/40 shadow-sm'))
                       : 'text-slate-400 bg-slate-900 border-slate-800'
                   }">${k.size}m</span>
-                  <div>
-                    <div class="flex items-center space-x-2">
-                      <h4 class="text-xs font-bold text-white flex items-center">${iconSvg}<span>${k.brand} ${k.model}</span> <span class="text-slate-400 font-normal ml-1">(${k.year || 2024})</span></h4>
-                      ${
-                        isActive
-                          ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${isWing ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : (isSoft ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'bg-sky-500/20 text-sky-300 border border-sky-500/30')} flex items-center space-x-1"><span class="w-1.5 h-1.5 rounded-full ${isWing ? 'bg-amber-400' : (isSoft ? 'bg-cyan-400' : 'bg-sky-400')} animate-pulse"></span><span>Packed</span></span>`
-                          : `<span class="px-2 py-0.5 rounded-full text-[9px] font-medium bg-slate-800 text-slate-400 border border-slate-700">At Home</span>`
-                      }
-                    </div>
-                    <p class="text-[10px] text-slate-400 mt-0.5">${catLabel} · ${ev.material || 'Performance'}</p>
+                  <div class="min-w-0 flex-1">
+                    <h4 class="text-xs font-bold text-white truncate flex items-center">
+                      ${iconSvg}
+                      <span class="truncate ml-1">${k.brand} ${k.model}</span>
+                      <span class="text-slate-400 font-normal ml-1 flex-shrink-0 text-[11px]">(${k.year || 2024})</span>
+                    </h4>
+                    <p class="text-[10px] text-slate-400 mt-0.5 truncate">${catLabel} · ${ev.material || 'Performance'}</p>
                   </div>
                 </div>
 
-                <div class="flex items-center space-x-2">
-                  <button onclick="toggleKiteBackpack(${idx})" class="px-2.5 py-1.5 rounded-xl text-[11px] font-bold transition flex items-center space-x-1.5 active:scale-95 ${
+                <div class="flex items-center space-x-1.5 flex-shrink-0">
+                  <button onclick="toggleKiteBackpack(${idx})" class="px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center space-x-1 active:scale-95 ${
                     isActive
                       ? (isWing ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20 hover:bg-amber-400' : (isSoft ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20 hover:bg-cyan-400 font-black' : 'bg-sky-500 text-white shadow-md shadow-sky-500/20 hover:bg-sky-400 font-bold'))
-                      : 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700'
+                      : 'bg-slate-800/90 text-slate-400 border border-slate-700/80 hover:bg-slate-700 hover:text-slate-200'
                   }">
-                    <span>${isActive ? '🎒 Packed' : '🏠 Leave'}</span>
+                    <span>${isActive ? '🎒 Packed' : '🏠 At Home'}</span>
                   </button>
-                  <button onclick="deleteKite(${idx})" class="text-slate-500 hover:text-rose-400 p-1.5 transition" title="Delete gear">
+                  <button onclick="deleteKite(${idx})" class="text-slate-500 hover:text-rose-400 p-1.5 rounded-lg transition" title="Delete gear">
                     <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                   </button>
                 </div>
@@ -2234,40 +2231,36 @@
             }
 
             return `
-              <div class="rounded-2xl p-3.5 border transition-all duration-300 flex flex-col space-y-2 ${
+              <div class="rounded-2xl p-3 sm:p-3.5 border transition-all duration-300 flex flex-col space-y-2 relative overflow-hidden ${
                 isActive
                   ? 'bg-gradient-to-r from-slate-900 via-slate-900 to-violet-950/30 border-violet-500/70 shadow-lg shadow-violet-950/40 ring-1 ring-violet-500/30'
                   : 'bg-slate-950/60 border-slate-800/80 opacity-55 grayscale-[20%]'
               }">
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center space-x-2.5">
-                    <span class="text-xs font-black px-2.5 py-1 rounded-xl border ${
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center space-x-2.5 min-w-0 flex-1">
+                    <span class="text-xs font-black px-2 py-1 rounded-xl border flex-shrink-0 ${
                       isActive
                         ? 'text-violet-300 bg-violet-500/20 border-violet-500/40 shadow-sm'
                         : 'text-slate-400 bg-slate-900 border-slate-800'
                     }">${sizeBadge}</span>
-                    <div>
-                      <div class="flex items-center space-x-2">
-                        <h4 class="text-xs font-bold text-white flex items-center">${boardIcon}<span>${b.brand || ''} ${b.model || b.type}</span></h4>
-                        ${
-                          isActive
-                            ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-violet-500/20 text-violet-300 border border-violet-500/30 flex items-center space-x-1"><span class="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse"></span><span>Packed</span></span>`
-                            : `<span class="px-2 py-0.5 rounded-full text-[9px] font-medium bg-slate-800 text-slate-400 border border-slate-700">At Home</span>`
-                        }
-                      </div>
-                      <p class="text-[10px] text-slate-400 mt-0.5">${subSpecs}${b.carbon && !isWingfoil ? '' : (b.carbon ? ' · ⚡ Carbon' : '')}</p>
+                    <div class="min-w-0 flex-1">
+                      <h4 class="text-xs font-bold text-white truncate flex items-center">
+                        ${boardIcon}
+                        <span class="truncate ml-1">${b.brand || ''} ${b.model || b.type}</span>
+                      </h4>
+                      <p class="text-[10px] text-slate-400 mt-0.5 truncate">${subSpecs}${b.carbon && !isWingfoil ? '' : (b.carbon ? ' · ⚡ Carbon' : '')}</p>
                     </div>
                   </div>
 
-                  <div class="flex items-center space-x-2">
-                    <button onclick="toggleBoardBackpack(${idx})" class="px-2.5 py-1.5 rounded-xl text-[11px] font-bold transition flex items-center space-x-1.5 active:scale-95 ${
+                  <div class="flex items-center space-x-1.5 flex-shrink-0">
+                    <button onclick="toggleBoardBackpack(${idx})" class="px-2.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center space-x-1 active:scale-95 ${
                       isActive
-                        ? 'bg-violet-500 text-white shadow-md shadow-violet-500/20 hover:bg-violet-400 font-black'
-                        : 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700'
+                        ? 'bg-violet-500 text-white shadow-md shadow-violet-500/20 hover:bg-violet-400 font-bold'
+                        : 'bg-slate-800/90 text-slate-400 border border-slate-700/80 hover:bg-slate-700 hover:text-slate-200'
                     }">
-                      <span>${isActive ? '🎒 Packed' : '🏠 Leave'}</span>
+                      <span>${isActive ? '🎒 Packed' : '🏠 At Home'}</span>
                     </button>
-                    <button onclick="deleteBoard(${idx})" class="text-slate-500 hover:text-rose-400 p-1.5 transition" title="Delete board">
+                    <button onclick="deleteBoard(${idx})" class="text-slate-500 hover:text-rose-400 p-1.5 rounded-lg transition" title="Delete board">
                       <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                     </button>
                   </div>
