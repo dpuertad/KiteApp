@@ -199,14 +199,15 @@
         </div>
       </div>
 
-      <!-- 4 SAFETY & CONDITIONS METRICS -->
+      <!-- 4 SAFETY & CONDITIONS METRICS (Fully Readable + Tap to Inspect) -->
       <div class="grid grid-cols-2 gap-2 mb-4">
         <!-- Metric 1: Shoreline Safety -->
-        <div id="badge-shoreline-box" class="bg-slate-950/80 border border-slate-800/90 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition">
+        <div id="badge-shoreline-box" onclick="openMetricModal('safety')" class="bg-slate-950/80 border border-slate-800/90 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm cursor-pointer active:scale-[0.98] hover:border-sky-400/50 transition group">
           <div class="flex items-center justify-between text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
             <span class="flex items-center space-x-1">
               <i data-lucide="shield" class="w-3 h-3 text-emerald-400"></i>
               <span>Coast Safety</span>
+              <i data-lucide="info" class="w-2.5 h-2.5 text-slate-500 opacity-60 group-hover:opacity-100 group-hover:text-sky-400 transition"></i>
             </span>
             <span id="badge-shoreline-rel" class="text-[9px] font-mono text-slate-500">--°</span>
           </div>
@@ -214,16 +215,17 @@
             <div id="badge-shoreline-text" class="text-xs font-bold text-emerald-400 flex items-center space-x-1">
               <span>Loading...</span>
             </div>
-            <p id="badge-shoreline-sub" class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">--</p>
+            <p id="badge-shoreline-sub" class="text-[10px] text-slate-300 leading-snug mt-1 break-words font-normal">--</p>
           </div>
         </div>
 
         <!-- Metric 2: Wind Stability -->
-        <div id="badge-stability-box" class="bg-slate-950/80 border border-slate-800/90 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition">
+        <div id="badge-stability-box" onclick="openMetricModal('stability')" class="bg-slate-950/80 border border-slate-800/90 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm cursor-pointer active:scale-[0.98] hover:border-sky-400/50 transition group">
           <div class="flex items-center justify-between text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
             <span class="flex items-center space-x-1">
               <i data-lucide="zap" class="w-3 h-3 text-amber-400"></i>
               <span>Stability</span>
+              <i data-lucide="info" class="w-2.5 h-2.5 text-slate-500 opacity-60 group-hover:opacity-100 group-hover:text-sky-400 transition"></i>
             </span>
             <span id="badge-stability-score" class="text-[10px] font-bold text-amber-400 font-mono">--/10</span>
           </div>
@@ -231,16 +233,17 @@
             <div id="badge-stability-text" class="text-xs font-bold text-slate-200">
               <span>Loading...</span>
             </div>
-            <p id="badge-stability-sub" class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">--</p>
+            <p id="badge-stability-sub" class="text-[10px] text-slate-300 leading-snug mt-1 break-words font-normal">--</p>
           </div>
         </div>
 
         <!-- Metric 3: Wetsuit Guide -->
-        <div id="badge-wetsuit-box" class="bg-slate-950/80 border border-slate-800/90 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition">
+        <div id="badge-wetsuit-box" onclick="openMetricModal('thermal')" class="bg-slate-950/80 border border-slate-800/90 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm cursor-pointer active:scale-[0.98] hover:border-sky-400/50 transition group">
           <div class="flex items-center justify-between text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
             <span class="flex items-center space-x-1">
               <i data-lucide="thermometer" class="w-3 h-3 text-cyan-400"></i>
               <span>Thermal Guide</span>
+              <i data-lucide="info" class="w-2.5 h-2.5 text-slate-500 opacity-60 group-hover:opacity-100 group-hover:text-sky-400 transition"></i>
             </span>
             <span id="badge-wetsuit-temp" class="text-[10px] font-bold text-cyan-400 font-mono">--°C</span>
           </div>
@@ -248,16 +251,17 @@
             <div id="badge-wetsuit-text" class="text-xs font-bold text-sky-300 flex items-center space-x-1">
               <span>Loading...</span>
             </div>
-            <p id="badge-wetsuit-sub" class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">--</p>
+            <p id="badge-wetsuit-sub" class="text-[10px] text-slate-300 leading-snug mt-1 break-words font-normal">--</p>
           </div>
         </div>
 
         <!-- Metric 4: Forecast Consensus -->
-        <div id="badge-consensus-box" class="bg-slate-950/80 border border-slate-800/90 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition">
+        <div id="badge-consensus-box" onclick="openMetricModal('reliability')" class="bg-slate-950/80 border border-slate-800/90 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm cursor-pointer active:scale-[0.98] hover:border-sky-400/50 transition group">
           <div class="flex items-center justify-between text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
             <span class="flex items-center space-x-1">
               <i data-lucide="check-check" class="w-3 h-3 text-emerald-400"></i>
               <span>Reliability</span>
+              <i data-lucide="info" class="w-2.5 h-2.5 text-slate-500 opacity-60 group-hover:opacity-100 group-hover:text-sky-400 transition"></i>
             </span>
             <span id="badge-consensus-pct" class="text-[10px] font-bold text-emerald-400 font-mono">--%</span>
           </div>
@@ -265,7 +269,7 @@
             <div id="badge-consensus-text" class="text-xs font-bold text-slate-200">
               <span>Loading...</span>
             </div>
-            <p id="badge-consensus-sub" class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">ECMWF · GFS · ICON</p>
+            <p id="badge-consensus-sub" class="text-[10px] text-slate-300 leading-snug mt-1 break-words font-normal">ECMWF · GFS · ICON</p>
           </div>
         </div>
       </div>
@@ -724,6 +728,49 @@
           <span>Save Board to My Gear</span>
         </button>
       </form>
+    </div>
+  </div>
+
+  <!-- METRIC DETAIL POPUP / EXPLANATION MODAL -->
+  <div id="modal-metric-detail" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-5 shadow-2xl flex flex-col max-h-[90vh] space-y-3.5">
+      <!-- Header -->
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center space-x-2.5">
+          <div id="metric-modal-icon-wrap" class="w-8 h-8 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400">
+            <i id="metric-modal-icon" data-lucide="info" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 id="metric-modal-title" class="font-bold text-sm text-white">Metric Details</h3>
+            <p id="metric-modal-badge" class="text-[11px] font-mono text-sky-400 font-semibold">Status</p>
+          </div>
+        </div>
+        <button onclick="toggleModal('modal-metric-detail')" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Content -->
+      <div class="space-y-3 text-xs">
+        <div class="bg-slate-950/70 border border-slate-800/80 rounded-2xl p-3.5 space-y-1">
+          <span class="text-[10px] uppercase tracking-wider font-semibold text-slate-400">Live Reading & Observation</span>
+          <p id="metric-modal-reading" class="text-white font-medium text-xs leading-relaxed">--</p>
+        </div>
+
+        <div class="bg-slate-950/70 border border-slate-800/80 rounded-2xl p-3.5 space-y-1">
+          <span class="text-[10px] uppercase tracking-wider font-semibold text-slate-400">Rider Insight & Safety Advice</span>
+          <p id="metric-modal-advice" class="text-slate-300 text-xs leading-relaxed">--</p>
+        </div>
+
+        <div id="metric-modal-extra" class="bg-sky-950/30 border border-sky-500/20 rounded-2xl p-3 text-[11px] text-sky-300 leading-relaxed">
+          --
+        </div>
+      </div>
+
+      <!-- Action -->
+      <button onclick="toggleModal('modal-metric-detail')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white font-bold text-xs transition">
+        Got it, thanks!
+      </button>
     </div>
   </div>
 
@@ -2184,17 +2231,18 @@
         shoreSub.innerText = heroShore.description || '';
         shoreSub.title = heroShore.description || '';
         const col = heroShore.badge_color || heroShore.badgeColor || 'emerald';
+        if (shoreSub) shoreSub.className = "text-[10px] text-slate-300 leading-snug mt-1 break-words font-normal";
         if (col === 'rose') {
-          shoreBox.className = "bg-rose-950/40 border border-rose-500/60 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
+          shoreBox.className = "bg-rose-950/40 border border-rose-500/60 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm cursor-pointer active:scale-[0.98] hover:border-sky-400/80 transition-all group";
           shoreText.className = "text-xs font-bold text-rose-400 flex items-center space-x-1";
         } else if (col === 'orange') {
-          shoreBox.className = "bg-orange-950/40 border border-orange-500/60 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
+          shoreBox.className = "bg-orange-950/40 border border-orange-500/60 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm cursor-pointer active:scale-[0.98] hover:border-sky-400/80 transition-all group";
           shoreText.className = "text-xs font-bold text-orange-400 flex items-center space-x-1";
         } else if (col === 'amber') {
-          shoreBox.className = "bg-amber-950/40 border border-amber-500/60 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
+          shoreBox.className = "bg-amber-950/40 border border-amber-500/60 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm cursor-pointer active:scale-[0.98] hover:border-sky-400/80 transition-all group";
           shoreText.className = "text-xs font-bold text-amber-400 flex items-center space-x-1";
         } else {
-          shoreBox.className = "bg-emerald-950/40 border border-emerald-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
+          shoreBox.className = "bg-emerald-950/40 border border-emerald-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm cursor-pointer active:scale-[0.98] hover:border-sky-400/80 transition-all group";
           shoreText.className = "text-xs font-bold text-emerald-400 flex items-center space-x-1";
         }
       }
@@ -2209,14 +2257,15 @@
         stabText.innerText = heroStab.label || '';
         stabSub.innerText = heroStab.description || '';
         stabSub.title = heroStab.description || '';
+        if (stabSub) stabSub.className = "text-[10px] text-slate-300 leading-snug mt-1 break-words font-normal";
         if (heroStab.score >= 8) {
-          stabBox.className = "bg-emerald-950/40 border border-emerald-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
+          stabBox.className = "bg-emerald-950/40 border border-emerald-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm cursor-pointer active:scale-[0.98] hover:border-sky-400/80 transition-all group";
           stabScore.className = "text-[10px] font-bold text-emerald-400 font-mono";
         } else if (heroStab.score >= 5) {
-          stabBox.className = "bg-amber-950/40 border border-amber-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
+          stabBox.className = "bg-amber-950/40 border border-amber-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm cursor-pointer active:scale-[0.98] hover:border-sky-400/80 transition-all group";
           stabScore.className = "text-[10px] font-bold text-amber-400 font-mono";
         } else {
-          stabBox.className = "bg-rose-950/40 border border-rose-500/60 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
+          stabBox.className = "bg-rose-950/40 border border-rose-500/60 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm cursor-pointer active:scale-[0.98] hover:border-sky-400/80 transition-all group";
           stabScore.className = "text-[10px] font-bold text-rose-400 font-mono";
         }
       }
@@ -2233,7 +2282,8 @@
         wetText.innerText = wet.tag || wet.wetsuit || '';
         wetSub.innerText = wet.advice || '';
         wetSub.title = wet.advice || '';
-        wetBox.className = "bg-cyan-950/40 border border-cyan-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
+        if (wetSub) wetSub.className = "text-[10px] text-slate-300 leading-snug mt-1 break-words font-normal";
+        wetBox.className = "bg-cyan-950/40 border border-cyan-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm cursor-pointer active:scale-[0.98] hover:border-sky-400/80 transition-all group";
       }
 
       // 4. Forecast Consensus / Reliability Metric
@@ -2257,14 +2307,15 @@
           }
         }
         consSub.title = heroCons.description || '';
+        if (consSub) consSub.className = "text-[10px] text-slate-300 leading-snug mt-1 break-words font-normal";
         if (heroCons.confidence_pct >= 85) {
-          consBox.className = "bg-emerald-950/40 border border-emerald-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
+          consBox.className = "bg-emerald-950/40 border border-emerald-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm cursor-pointer active:scale-[0.98] hover:border-sky-400/80 transition-all group";
           consPct.className = "text-[10px] font-bold text-emerald-400 font-mono";
         } else if (heroCons.confidence_pct >= 70) {
-          consBox.className = "bg-amber-950/40 border border-amber-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
+          consBox.className = "bg-amber-950/40 border border-amber-500/50 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm cursor-pointer active:scale-[0.98] hover:border-sky-400/80 transition-all group";
           consPct.className = "text-[10px] font-bold text-amber-400 font-mono";
         } else {
-          consBox.className = "bg-rose-950/40 border border-rose-500/60 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm transition";
+          consBox.className = "bg-rose-950/40 border border-rose-500/60 rounded-2xl p-2.5 flex flex-col justify-between shadow-sm cursor-pointer active:scale-[0.98] hover:border-sky-400/80 transition-all group";
           consPct.className = "text-[10px] font-bold text-rose-400 font-mono";
         }
       }
@@ -3418,6 +3469,68 @@
       } finally {
         btn.disabled = false;
       }
+    }
+
+    function openMetricModal(metricKey) {
+      const modal = document.getElementById('modal-metric-detail');
+      if (!modal) return;
+
+      const f = state.forecastData || {};
+      const isTomorrow = state.activeTab === 'tomorrow';
+      const heroShore = isTomorrow ? (f.shoreline_tomorrow || f.shoreline || {}) : (f.shoreline || {});
+      const heroStab = isTomorrow ? (f.stability_tomorrow || f.stability || {}) : (f.stability || {});
+      const heroCons = isTomorrow ? (f.consensus_tomorrow || f.consensus || {}) : (f.consensus || {});
+      const heroCurrent = f.current || {};
+      const heroTemp = isTomorrow ? (f.tomorrow_temp_max || 28) : (heroCurrent.temp || 28);
+      const wet = (isTomorrow ? f.tomorrow_wetsuit : f.wetsuit) || calculateWetsuitGuide(isTomorrow ? f.tomorrow_sea_temp : f.sea_temp, heroTemp);
+
+      const titleEl = document.getElementById('metric-modal-title');
+      const badgeEl = document.getElementById('metric-modal-badge');
+      const readingEl = document.getElementById('metric-modal-reading');
+      const adviceEl = document.getElementById('metric-modal-advice');
+      const extraEl = document.getElementById('metric-modal-extra');
+      const iconWrapEl = document.getElementById('metric-modal-icon-wrap');
+
+      if (metricKey === 'safety') {
+        titleEl.innerText = "Coast Safety & Shoreline Angle";
+        badgeEl.innerText = `${heroShore.tag || heroShore.type || 'Safe'} (Δ ${heroShore.relative_angle || 0}°)`;
+        badgeEl.className = "text-[11px] font-mono text-emerald-400 font-semibold";
+        readingEl.innerText = heroShore.description || "Safe shoreline angle with safe onshore return.";
+        adviceEl.innerText = "Coast safety evaluates the angle between the beach shoreline and the real-time wind vector. Side-onshore is the gold standard for kitesurfing and wingfoiling because any gear breakdown drifts you safely back onto the sand. Cross-offshore or offshore carries high hazard of drifting out to open sea without rescue boat support.";
+        extraEl.innerHTML = `📍 <strong>Beach Baseline:</strong> Shoreline orientation is oriented at <strong>${f.beach_angle || 0}°</strong>. Current wind is arriving from <strong>${heroCurrent.degrees || 0}° (${heroCurrent.direction || 'E'})</strong>.`;
+        if (iconWrapEl) iconWrapEl.innerHTML = '<i data-lucide="shield" class="w-4 h-4 text-emerald-400"></i>';
+      } else if (metricKey === 'stability') {
+        titleEl.innerText = "Wind Stability & Gust Factor";
+        const score = heroStab.score !== undefined ? heroStab.score : 8;
+        const gRatio = heroCurrent.wind_kts ? (heroCurrent.gust_kts / Math.max(heroCurrent.wind_kts, 1)).toFixed(1) : '1.0';
+        badgeEl.innerText = `${heroStab.label || 'Stable'} · ${score}/10 (Gust Ratio ${gRatio}x)`;
+        badgeEl.className = "text-[11px] font-mono text-amber-400 font-semibold";
+        readingEl.innerText = heroStab.description || `Live wind is ${heroCurrent.wind_kts || 0} kts with peak gusts of ${heroCurrent.gust_kts || 0} kts.`;
+        adviceEl.innerText = "Laminar wind (scores 8-10) provides consistent bar feedback, predictable depower, and smooth pop for jumps. Gusty wind (scores below 6) has sudden spikes and lulls where you must actively fly the kite and trim your depower strap to absorb punches.";
+        extraEl.innerHTML = `⚡ <strong>Live Reading:</strong> Base wind: <strong>${heroCurrent.wind_kts || 0} kts</strong> · Peak Gusts: <strong>${heroCurrent.gust_kts || 0} kts</strong> · Turbulence Factor: <strong>${gRatio}x</strong>.`;
+        if (iconWrapEl) iconWrapEl.innerHTML = '<i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>';
+      } else if (metricKey === 'thermal') {
+        titleEl.innerText = "Thermal Guide & Neoprene Advice";
+        const sTemp = wet.water_temp || wet.waterTemp || (f.sea_temp ? Math.round(f.sea_temp) : 28);
+        badgeEl.innerText = `${sTemp}°C Water · ${Math.round(heroTemp)}°C Air · ${wet.tag || wet.wetsuit || 'Warm'}`;
+        badgeEl.className = "text-[11px] font-mono text-cyan-400 font-semibold";
+        readingEl.innerText = `${wet.wetsuit || wet.tag || 'Boardshorts'}: ${wet.advice || 'Tropical warm water.'}`;
+        adviceEl.innerText = "Water temperature dictates how fast your core body loses heat while submerged or resting in the water. In tropical water (>24°C), lycra rashguards prevent intense sunburn and harness chaffing. In cold water (<18°C), sealed neoprene steamers are mandatory to prevent hypothermia.";
+        extraEl.innerHTML = `🌊 <strong>Conditions:</strong> Ocean water temp: <strong>${sTemp}°C</strong> · Ambient air: <strong>${Math.round(heroTemp)}°C</strong> · Recommendation: <strong>${wet.wetsuit || 'Boardshorts & Lycra'}</strong>.`;
+        if (iconWrapEl) iconWrapEl.innerHTML = '<i data-lucide="thermometer" class="w-4 h-4 text-cyan-400"></i>';
+      } else if (metricKey === 'reliability') {
+        titleEl.innerText = "Forecast Confidence & Model Consensus";
+        badgeEl.innerText = `${heroCons.rating || heroCons.confidence_pct + '%'} Agreement · ${heroCons.label || 'High Consensus'}`;
+        badgeEl.className = "text-[11px] font-mono text-sky-400 font-semibold";
+        const modelLabel = f.model_info || (state.spot ? state.spot.model_label : null) || 'ECMWF (9km) High-Resolution';
+        readingEl.innerText = `Active Model: ${modelLabel}. ${heroCons.description || 'Multi-model agreement across primary meteorological centers.'}`;
+        adviceEl.innerText = "Forecast consensus evaluates the spread between the world's leading numerical weather prediction models: ECMWF (European Centre, 9km resolution), ICON (German Weather Service, 7km/2km), and GFS (NOAA, 13km). When models agree closely (>85%), confidence in wind timing and strength is extremely high.";
+        extraEl.innerHTML = `🛰️ <strong>Atmospheric Setup:</strong> Primary driver is <strong>${modelLabel}</strong>. Local thermal venturi boost is actively computed for this coastline.`;
+        if (iconWrapEl) iconWrapEl.innerHTML = '<i data-lucide="check-check" class="w-4 h-4 text-emerald-400"></i>';
+      }
+
+      if (window.lucide) lucide.createIcons();
+      toggleModal('modal-metric-detail');
     }
 
     function toggleModal(id) {
