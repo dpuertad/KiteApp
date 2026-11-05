@@ -2372,29 +2372,6 @@ def start_embedded_http_server(port: int = 8080):
                         self.wfile.write(json.dumps({"verified": False, "error": f"Could not locate '{q}'. Try entering nearby coastal town or GPS coordinates."}).encode("utf-8"))
                         return
 
-                    # 2. Verify with Open-Meteo Weather API
-                    om_url = f"https://api.open-meteo.com/v1/forecast?latitude={target_lat}&longitude={target_lon}&current=temperature_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,wind_gusts_10m&wind_speed_unit=kn&timezone=auto"
-                    om_req = urllib.request.Request(om_url, headers={"User-Agent": "KiteForecastBot/1.0"})
-                    with urllib.request.urlopen(om_req, context=SSL_CTX, timeout=8) as resp:
-                        om_data = json.loads(resp.read().decode("utf-8"))
-
-                    cur = om_data.get("current", {})
-                    if "wind_speed_10m" not in cur:
-                        self.send_response(400)
-                        self.send_header("Content-Type", "application/json")
-                        self._send_cors_headers()
-                        self.end_headers()
-                        self.wfile.write(json.dumps({"verified": False, "error": "No meteorological wind coverage at these coordinates."}).encode("utf-8"))
-                        return
-
-                    # 3. Build verified spot payload
-                    cur_w = round_knots(cur.get("wind_speed_10m", 0))
-                    cur_g = round_knots(cur.get("wind_gusts_10m", cur_w))
-                    cur_d = round(cur.get("wind_direction_10m", 0))
-                    cur_t = round(cur.get("temperature_2m", 25.0), 1)
-                    cur_app = round(cur.get("apparent_temperature", cur_t), 1)
-                    tz = om_data.get("timezone", "auto")
-
                     # Beach angle resolution
                     b_angle = None
                     if angle_str not in (None, ""):
@@ -2404,6 +2381,31 @@ def start_embedded_http_server(port: int = 8080):
                             pass
                     if b_angle is None:
                         b_angle = resolve_beach_angle(resolved_name or q)
+
+                    # 2. Verify with resilient forecast engine (Open-Meteo + Met.no fallback)
+                    f_data = fetch_live_forecast({
+                        "lat": target_lat,
+                        "lon": target_lon,
+                        "name": resolved_name or q,
+                        "beach_angle": b_angle
+                    })
+
+                    if not f_data or "current" not in f_data:
+                        self.send_response(400)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"verified": False, "error": "No meteorological wind coverage at these coordinates."}).encode("utf-8"))
+                        return
+
+                    cur = f_data.get("current", {})
+                    cur_w = round_knots(cur.get("wind_kts", 0))
+                    cur_g = round_knots(cur.get("gust_kts", cur_w))
+                    cur_d = cur.get("degrees", 0)
+                    cur_t = round(cur.get("temp", 25.0), 1)
+                    cur_app = round(cur.get("apparent_temp", cur_t), 1)
+                    tz = f_data.get("timezone", "auto")
+                    active_model = f_data.get("model_info") or "ECMWF (9km) + Open-Meteo Verified"
 
                     slug_id = re.sub(r'[^a-z0-9]+', '_', (resolved_name or q).lower()).strip('_')[:25]
                     spot_obj = {
@@ -2417,11 +2419,11 @@ def start_embedded_http_server(port: int = 8080):
                         "lon": round(target_lon, 4),
                         "timezone": tz,
                         "beach_angle": b_angle,
-                        "model_label": "ECMWF (9km) + Open-Meteo Verified",
+                        "model_label": active_model,
                         "is_custom": True,
                         "live_wind_kts": cur_w,
                         "live_gust_kts": cur_g,
-                        "live_direction": degrees_to_cardinal(cur_d),
+                        "live_direction": cur.get("direction") or degrees_to_cardinal(cur_d),
                         "live_temp_c": cur_t,
                         "live_apparent_c": cur_app
                     }
