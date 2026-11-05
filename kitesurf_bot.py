@@ -2431,7 +2431,13 @@ def start_embedded_http_server(port: int = 8080):
                     gear_lines = []
                     for k in gear:
                         cat = k.get("category", "kite")
-                        icon = "🪽" if cat == "wing" else "🪁"
+                        k_type = k.get("kite_type", "tube")
+                        if cat == "wing":
+                            icon = "🪽 [Wing]"
+                        elif k_type == "soft":
+                            icon = "🪁 [Soft Kite / Mat]"
+                        else:
+                            icon = "🪁 [Tube Kite]"
                         b = k.get("brand", "Kite")
                         m = k.get("model", "")
                         sz = k.get("size", "")
@@ -2461,9 +2467,9 @@ def start_embedded_http_server(port: int = 8080):
                         f"📧 Email: {email}\n"
                         f"⚖️ Setup: {weight_kg} kg · {level.capitalize()}\n"
                         f"📍 Home Beach: {spot.get('name', 'Cumbuco')}\n\n"
-                        f"🎒 Stored Cloud Kites ({gear_count} kites):\n"
+                        f"🎒 Stored Cloud Gear ({gear_count} items):\n"
                         f"{gear_summary}\n\n"
-                        f"🛹 Stored Cloud Boards ({len(boards)} boards):\n"
+                        f"🏄 Stored Cloud Boards ({len(boards)} boards):\n"
                         f"{boards_summary}\n\n"
                         f"📊 Total HolyGust Riders: {total_count}"
                     )

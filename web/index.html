@@ -79,9 +79,6 @@
 
       <!-- Quick Spot / GPS / Feedback / Refresh Pill -->
       <div class="flex items-center space-x-1.5">
-        <button onclick="toggleModal('modal-feedback')" title="Send Suggestions & Feedback" class="p-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 active:scale-95 text-amber-300 border border-amber-500/30 transition flex items-center justify-center">
-          <i data-lucide="message-square-plus" class="w-4 h-4"></i>
-        </button>
         <button id="btn-refresh" onclick="fetchForecast(true)" title="Refresh Live Forecast" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 border border-slate-700 transition">
           <i id="refresh-icon" data-lucide="rotate-cw" class="w-4 h-4"></i>
         </button>
@@ -115,12 +112,7 @@
           </div>
         </div>
 
-        <div class="flex items-center space-x-1.5">
-          <button id="btn-profile-account" onclick="openAuthModal()" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700 text-[11px] font-bold transition flex items-center space-x-1">
-            <i data-lucide="cloud" class="w-3.5 h-3.5 text-sky-400"></i>
-            <span id="account-status-label">Account</span>
-          </button>
-        </div>
+        
       </div>
 
       <!-- Quick Weight Control -->
@@ -372,18 +364,23 @@
           </h2>
           <p class="text-xs text-slate-400 mt-0.5">Toggle what's packed with you at the beach today</p>
         </div>
-        <div class="flex items-center space-x-1 sm:space-x-1.5">
-          <button onclick="openTractionModal('kite')" class="px-2 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 text-white font-bold text-[11px] sm:text-xs shadow-md shadow-sky-500/20 active:scale-95 transition flex items-center space-x-1">
-            <i data-lucide="plus" class="w-3 h-3"></i>
-            <span>+ Kite</span>
+        <div class="flex items-center space-x-1.5 sm:space-x-2">
+          <!-- Add Kite Button -->
+          <button onclick="openAddKiteModal()" title="Add Kite (Tube or Soft)" class="flex flex-col items-center justify-center w-14 sm:w-16 py-1.5 rounded-xl bg-gradient-to-b from-sky-500 to-cyan-600 hover:from-sky-400 hover:to-cyan-500 text-white shadow-md shadow-sky-500/20 active:scale-95 transition group">
+            <i data-lucide="plus" class="w-3.5 h-3.5 mb-0.5 group-hover:scale-110 transition"></i>
+            <span class="text-[10px] sm:text-[11px] font-bold tracking-tight">Kite</span>
           </button>
-          <button onclick="openTractionModal('wing')" class="px-2 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-[11px] sm:text-xs shadow-md shadow-amber-500/20 active:scale-95 transition flex items-center space-x-1">
-            <i data-lucide="plus" class="w-3 h-3"></i>
-            <span>+ Wing</span>
+
+          <!-- Add Wing Button -->
+          <button onclick="openAddWingModal()" title="Add Handheld Wing" class="flex flex-col items-center justify-center w-14 sm:w-16 py-1.5 rounded-xl bg-gradient-to-b from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 shadow-md shadow-amber-500/20 active:scale-95 transition group">
+            <i data-lucide="plus" class="w-3.5 h-3.5 mb-0.5 group-hover:scale-110 transition"></i>
+            <span class="text-[10px] sm:text-[11px] font-black tracking-tight">Wing</span>
           </button>
-          <button onclick="toggleModal('modal-add-board')" class="px-2 py-1.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-400 hover:to-purple-400 text-white font-bold text-[11px] sm:text-xs shadow-md shadow-violet-500/20 active:scale-95 transition flex items-center space-x-1">
-            <i data-lucide="plus" class="w-3 h-3"></i>
-            <span>+ Board</span>
+
+          <!-- Add Board Button -->
+          <button onclick="openAddBoardModal()" title="Add Board (Twintip, Wingfoil, Foil, Surf)" class="flex flex-col items-center justify-center w-14 sm:w-16 py-1.5 rounded-xl bg-gradient-to-b from-violet-500 to-purple-600 hover:from-violet-400 hover:to-purple-500 text-white shadow-md shadow-violet-500/20 active:scale-95 transition group">
+            <i data-lucide="plus" class="w-3.5 h-3.5 mb-0.5 group-hover:scale-110 transition"></i>
+            <span class="text-[10px] sm:text-[11px] font-bold tracking-tight">Board</span>
           </button>
         </div>
       </div>
@@ -392,7 +389,7 @@
       <div class="space-y-2">
         <div class="flex items-center justify-between text-xs font-bold text-slate-300">
           <span class="flex items-center space-x-1.5">
-            <span>🪁 / 🪽</span>
+            <span id="hdr-kites-wings-icon" class="inline-flex items-center space-x-1.5"></span>
             <span>Kites & Wings</span>
           </span>
           <span id="kites-sub-badge" class="text-[10px] text-slate-400 font-normal">--</span>
@@ -406,7 +403,7 @@
       <div class="space-y-2 pt-2 border-t border-slate-800/80">
         <div class="flex items-center justify-between text-xs font-bold text-slate-300">
           <span class="flex items-center space-x-1.5">
-            <span>🛹</span>
+            <span id="hdr-boards-icon" class="inline-flex items-center"></span>
             <span>Boards & Hydrofoils</span>
           </span>
           <span id="boards-sub-badge" class="text-[10px] text-slate-400 font-normal">--</span>
@@ -435,12 +432,13 @@
 
   </main>
 
-  <!-- ADD KITE OR WING MODAL -->
+  <!-- ADD KITE MODAL (TUBE OR SOFT KITE) -->
   <div id="modal-add-kite" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
         <h3 class="font-bold text-sm text-white flex items-center space-x-2">
-          <span id="modal-traction-title">🪁 Add Kite to Your Gear</span>
+          <span id="modal-kite-title-icon"></span>
+          <span id="modal-kite-title">Add Kite to Your Gear</span>
         </h3>
         <button onclick="toggleModal('modal-add-kite')" class="text-slate-400 hover:text-white p-1">
           <i data-lucide="x" class="w-4 h-4"></i>
@@ -448,33 +446,35 @@
       </div>
 
       <form onsubmit="onAddKiteFormSubmit(event)" class="space-y-3.5 text-xs">
-        <!-- Traction Category Selector (Kite vs Wing) -->
+        <!-- Kite Type Selector: Tube vs Soft Kite -->
         <div>
-          <label class="block font-semibold text-slate-300 mb-1">Gear Category</label>
+          <label class="block font-semibold text-slate-300 mb-1">Kite Type</label>
           <div class="grid grid-cols-2 gap-2 p-1 bg-slate-950 rounded-xl border border-slate-800">
-            <button type="button" id="btn-cat-kite" onclick="setTractionCategory('kite')" class="py-1.5 rounded-lg font-bold text-center transition bg-sky-600 text-white shadow-sm flex items-center justify-center space-x-1">
-              <span>🪁 Kite</span>
+            <button type="button" id="btn-ktype-tube" onclick="setKiteType('tube')" class="py-2 rounded-lg font-bold text-center transition bg-sky-600 text-white shadow-sm flex items-center justify-center space-x-1.5">
+              <span id="icon-tab-tube"></span>
+              <span>Tube Kite (LEI)</span>
             </button>
-            <button type="button" id="btn-cat-wing" onclick="setTractionCategory('wing')" class="py-1.5 rounded-lg font-bold text-center transition text-slate-400 hover:text-white flex items-center justify-center space-x-1">
-              <span>🪽 Handheld Wing</span>
+            <button type="button" id="btn-ktype-soft" onclick="setKiteType('soft')" class="py-2 rounded-lg font-bold text-center transition text-slate-400 hover:text-white flex items-center justify-center space-x-1.5">
+              <span id="icon-tab-soft"></span>
+              <span>Soft Kite (Mat)</span>
             </button>
           </div>
-          <input type="hidden" id="input-traction-cat" value="kite">
+          <input type="hidden" id="input-kite-type" value="tube">
         </div>
 
         <!-- Brand Selector -->
         <div>
           <label class="block font-semibold text-slate-300 mb-1">Brand</label>
-          <select id="select-brand" onchange="onBrandChange(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
-            <!-- Dynamically populated based on category -->
+          <select id="kite-select-brand" onchange="onKiteBrandChange(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
+            <!-- Dynamically populated based on kite type -->
           </select>
         </div>
 
-        <!-- Model Selector (Cascading dynamic) -->
+        <!-- Model Selector -->
         <div>
           <label class="block font-semibold text-slate-300 mb-1">Model</label>
-          <select id="select-model" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
-            <!-- Populated via JS based on brand -->
+          <select id="kite-select-model" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
+            <!-- Populated via JS -->
           </select>
         </div>
 
@@ -482,24 +482,14 @@
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block font-semibold text-slate-300 mb-1">Size (m²)</label>
-            <select id="select-size" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
-              <option value="6">6m</option>
-              <option value="7">7m</option>
-              <option value="8">8m</option>
-              <option value="9">9m</option>
-              <option value="10" selected>10m</option>
-              <option value="11">11m</option>
-              <option value="12">12m</option>
-              <option value="13">13m</option>
-              <option value="14">14m</option>
-              <option value="15">15m</option>
-              <option value="17">17m</option>
+            <select id="kite-select-size" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
+              <!-- Populated via JS based on tube vs soft -->
             </select>
           </div>
 
           <div>
             <label class="block font-semibold text-slate-300 mb-1">Year</label>
-            <select id="select-year" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
+            <select id="kite-select-year" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
               <option value="2026">2026</option>
               <option value="2025">2025</option>
               <option value="2024" selected>2024</option>
@@ -513,23 +503,111 @@
 
         <!-- Initial Status Checkbox -->
         <div class="flex items-center space-x-2 pt-1">
-          <input type="checkbox" id="check-in-bag" checked class="w-4 h-4 rounded text-sky-500 bg-slate-950 border-slate-700 focus:ring-0">
-          <label for="check-in-bag" class="text-xs text-slate-300 font-medium cursor-pointer">Pack in backpack now (Active)</label>
+          <input type="checkbox" id="kite-check-in-bag" checked class="w-4 h-4 rounded text-sky-500 bg-slate-950 border-slate-700 focus:ring-0">
+          <label for="kite-check-in-bag" class="text-xs text-slate-300 font-medium cursor-pointer">Pack in backpack now (Active)</label>
         </div>
 
-        <button type="submit" class="w-full mt-2 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-95 text-white font-bold text-xs shadow-lg shadow-sky-500/25 transition">
-          Save Kite to My Gear
+        <button type="submit" class="w-full mt-2 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-600 hover:from-sky-400 hover:to-cyan-500 active:scale-95 text-white font-bold text-xs shadow-lg shadow-sky-500/25 transition flex items-center justify-center space-x-1.5">
+          <span id="btn-save-kite-icon"></span>
+          <span>Save Kite to My Gear</span>
         </button>
       </form>
     </div>
   </div>
 
-  <!-- ADD BOARD MODAL -->
+  <!-- ADD WING MODAL (HANDHELD WINGFOIL WING) -->
+  <div id="modal-add-wing" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-sm text-white flex items-center space-x-2">
+          <span id="modal-wing-title-icon"></span>
+          <span>Add Handheld Wing to Your Gear</span>
+        </h3>
+        <button onclick="toggleModal('modal-add-wing')" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <form onsubmit="onAddWingFormSubmit(event)" class="space-y-3.5 text-xs">
+        <!-- Discipline Indicator -->
+        <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-between">
+          <span class="text-amber-300 font-bold flex items-center space-x-2">
+            <span id="wing-indicator-icon"></span>
+            <span>Handheld Wingfoiling Wing</span>
+          </span>
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-200 border border-amber-500/30 font-semibold">Boom / Handles</span>
+        </div>
+
+        <!-- Brand Selector -->
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Brand</label>
+          <select id="wing-select-brand" onchange="onWingBrandChange(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500 text-xs">
+            <!-- Populated via JS -->
+          </select>
+        </div>
+
+        <!-- Model Selector -->
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Model</label>
+          <select id="wing-select-model" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500 text-xs">
+            <!-- Populated via JS -->
+          </select>
+        </div>
+
+        <!-- Size & Year Grid -->
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">Size (m²)</label>
+            <select id="wing-select-size" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500 text-xs">
+              <option value="2.5">2.5m (Storm / High Wind)</option>
+              <option value="3.0">3.0m</option>
+              <option value="3.5">3.5m</option>
+              <option value="4.0">4.0m</option>
+              <option value="4.5">4.5m</option>
+              <option value="5.0" selected>5.0m (Standard All-Round)</option>
+              <option value="5.5">5.5m</option>
+              <option value="6.0">6.0m (Lightwind)</option>
+              <option value="6.5">6.5m</option>
+              <option value="7.0">7.0m (Ultra-Lightwind)</option>
+              <option value="8.0">8.0m (Giant / CWC)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">Year</label>
+            <select id="wing-select-year" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500 text-xs">
+              <option value="2026">2026</option>
+              <option value="2025">2025</option>
+              <option value="2024" selected>2024</option>
+              <option value="2023">2023</option>
+              <option value="2022">2022</option>
+              <option value="2021">2021</option>
+              <option value="2020">2020</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Initial Status Checkbox -->
+        <div class="flex items-center space-x-2 pt-1">
+          <input type="checkbox" id="wing-check-in-bag" checked class="w-4 h-4 rounded text-amber-500 bg-slate-950 border-slate-700 focus:ring-0">
+          <label for="wing-check-in-bag" class="text-xs text-slate-300 font-medium cursor-pointer">Pack in backpack now (Active)</label>
+        </div>
+
+        <button type="submit" class="w-full mt-2 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 active:scale-95 text-slate-950 font-black text-xs shadow-lg shadow-amber-500/25 transition flex items-center justify-center space-x-1.5">
+          <span id="btn-save-wing-icon"></span>
+          <span>Save Wing to My Gear</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADD BOARD MODAL (TWINTIP, WINGFOIL, HYDROFOIL, STRAPLESS) -->
   <div id="modal-add-board" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
         <h3 class="font-bold text-sm text-white flex items-center space-x-2">
-          <span>🛹 Add Board to Your Gear Inventory</span>
+          <span id="modal-board-title-icon"></span>
+          <span>Add Board to Your Gear Inventory</span>
         </h3>
         <button onclick="toggleModal('modal-add-board')" class="text-slate-400 hover:text-white p-1">
           <i data-lucide="x" class="w-4 h-4"></i>
@@ -540,7 +618,7 @@
         <!-- Discipline Selector -->
         <div>
           <label class="block font-semibold text-slate-300 mb-1">Board Discipline</label>
-          <select id="board-select-type" onchange="onBoardTypeSelectChange(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
+          <select id="board-select-type" onchange="onBoardTypeSelectChange(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-violet-500 text-xs">
             <option value="Twintip" selected>Twintip (Freeride / Big Air / Freestyle)</option>
             <option value="Wingfoil">Wingfoil Board (Liters Volume + Hydrofoil)</option>
             <option value="Hydrofoil">Kite Hydrofoil (Low-Wind Glide & Speed)</option>
@@ -551,7 +629,7 @@
         <!-- Brand Selector -->
         <div>
           <label class="block font-semibold text-slate-300 mb-1">Brand</label>
-          <select id="board-select-brand" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
+          <select id="board-select-brand" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-violet-500 text-xs">
             <option value="Duotone" selected>Duotone</option>
             <option value="Gong">GONG</option>
             <option value="F-One">F-One</option>
@@ -572,7 +650,7 @@
         <!-- Model Input -->
         <div>
           <label class="block font-semibold text-slate-300 mb-1">Model Name</label>
-          <input id="board-input-model" type="text" placeholder="e.g. Cruzader, Sky Wing, Jaime SLS, Rocket Wing..." required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs placeholder:text-slate-500">
+          <input id="board-input-model" type="text" placeholder="e.g. Jaime, Cruzader, Sky Wing, Rocket..." required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-violet-500 text-xs placeholder:text-slate-500">
         </div>
 
         <!-- Wingfoil Board Volume (Liters) Container -->
@@ -581,7 +659,7 @@
             <label class="block font-semibold text-slate-300">Board Volume (Liters)</label>
             <span id="board-volume-ratio-tag" class="text-[10px] font-bold text-amber-400 font-mono">Floater (+10L)</span>
           </div>
-          <select id="board-select-volume" onchange="updateVolumeDynamicTag(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
+          <select id="board-select-volume" onchange="updateVolumeDynamicTag(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-violet-500 text-xs">
             <option value="45">45 L (Extreme Sinker · High Wind / Freestyle)</option>
             <option value="55">55 L (Sinker · Bodyweight -20L)</option>
             <option value="65">65 L (Sinker · Bodyweight -10L)</option>
@@ -597,7 +675,7 @@
         <!-- Dynamic Size / Front Wing Area Selector -->
         <div id="board-size-container">
           <label id="board-size-label" class="block font-semibold text-slate-300 mb-1">Length (cm)</label>
-          <select id="board-select-size" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
+          <select id="board-select-size" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-violet-500 text-xs">
             <option value="132">132 cm</option>
             <option value="134">134 cm</option>
             <option value="136" selected>136 cm (Standard)</option>
@@ -615,7 +693,7 @@
             <label class="block font-semibold text-slate-300">Hydrofoil Mast Length (cm)</label>
             <span id="board-mast-desc-tag" class="text-[10px] text-sky-400 font-mono">Chop Clearance & Carving</span>
           </div>
-          <select id="board-select-mast" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
+          <select id="board-select-mast" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-violet-500 text-xs">
             <option value="65">65 cm (Shallow Reefs, Sandbars & Beginners)</option>
             <option value="75">75 cm (Freeride & Moderate Chop)</option>
             <option value="82">82 cm (All-Round Waves & Chop Clearance)</option>
@@ -628,7 +706,7 @@
 
         <!-- Carbon Construction Checkbox -->
         <div class="flex items-start space-x-2 pt-1">
-          <input type="checkbox" id="board-check-carbon" checked class="w-4 h-4 mt-0.5 rounded text-sky-500 bg-slate-950 border-slate-700 focus:ring-0">
+          <input type="checkbox" id="board-check-carbon" checked class="w-4 h-4 mt-0.5 rounded text-violet-500 bg-slate-950 border-slate-700 focus:ring-0">
           <div>
             <label for="board-check-carbon" class="text-xs text-slate-200 font-semibold cursor-pointer">Carbon / SLS / D/LAB Construction</label>
             <p class="text-[10px] text-slate-400">Ultra-light weight & stiffer flex for earlier planing and pop</p>
@@ -637,12 +715,13 @@
 
         <!-- Initial Status Checkbox -->
         <div class="flex items-center space-x-2 pt-1">
-          <input type="checkbox" id="board-check-in-bag" checked class="w-4 h-4 rounded text-sky-500 bg-slate-950 border-slate-700 focus:ring-0">
+          <input type="checkbox" id="board-check-in-bag" checked class="w-4 h-4 rounded text-violet-500 bg-slate-950 border-slate-700 focus:ring-0">
           <label for="board-check-in-bag" class="text-xs text-slate-300 font-medium cursor-pointer">Packed in car / at beach today (Active)</label>
         </div>
 
-        <button type="submit" class="w-full mt-2 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-400 hover:to-purple-500 active:scale-95 text-white font-bold text-xs shadow-lg shadow-violet-500/25 transition">
-          Save Board to My Gear
+        <button type="submit" class="w-full mt-2 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-400 hover:to-purple-500 active:scale-95 text-white font-bold text-xs shadow-lg shadow-violet-500/25 transition flex items-center justify-center space-x-1.5">
+          <span id="btn-save-board-icon"></span>
+          <span>Save Board to My Gear</span>
         </button>
       </form>
     </div>
@@ -892,6 +971,85 @@
 
   <!-- JAVASCRIPT APP LOGIC -->
   <script>
+    // REAL VECTOR GEAR ICONS (NO TOY EMOJIS)
+    const GEAR_ICONS = {
+      kiteTube: (cls="w-4 h-4 text-sky-400 inline-block") => `
+        <svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2.5 12C3 6.5 7.5 3 12 3s9 3.5 9.5 9c.1 1.2-.8 2-1.8 1.8-2.5-.5-5-1.3-7.7-1.3s-5.2.8-7.7 1.3C3.3 14 2.4 13.2 2.5 12z" fill="currentColor" fill-opacity="0.22"/>
+          <path d="M12 3v9.5M7 5.5l1.5 6.5M17 5.5l-1.5 6.5"/>
+          <path d="M3.5 13L10.5 21M20.5 13L13.5 21" stroke-dasharray="1.5 1.5" stroke-width="1.1" opacity="0.75"/>
+          <line x1="9.5" y1="21" x2="14.5" y2="21" stroke-width="2"/>
+        </svg>`,
+      kiteSoft: (cls="w-4 h-4 text-cyan-400 inline-block") => `
+        <svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 11C4 5.5 8 4 12 4s8 1.5 9 7c-2.5.5-5.5 1-9 1s-6.5-.5-9-1z" fill="currentColor" fill-opacity="0.22"/>
+          <line x1="6" y1="7" x2="6" y2="11.5"/><line x1="9" y1="5.2" x2="9" y2="12"/><line x1="12" y1="4" x2="12" y2="12"/><line x1="15" y1="5.2" x2="15" y2="12"/><line x1="18" y1="7" x2="18" y2="11.5"/>
+          <path d="M4 11.5L10 20M8 12l3 8M16 12l-3 8M20 11.5L14 20" stroke-width="1.1" stroke-dasharray="1.5 1.5" opacity="0.75"/>
+          <line x1="9.5" y1="20.5" x2="14.5" y2="20.5" stroke-width="2"/>
+        </svg>`,
+      wing: (cls="w-4 h-4 text-amber-400 inline-block") => `
+        <svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 4C8.5 6 3 9.5 2 13.5c1.8-.3 5-1.2 10-1.2s8.2.9 10 1.2c-1-4-6.5-7.5-10-9.5z" fill="currentColor" fill-opacity="0.22"/>
+          <line x1="12" y1="4" x2="12" y2="19" stroke-width="2.2"/>
+          <line x1="10" y1="9" x2="14" y2="9" stroke-width="2"/><line x1="10" y1="14" x2="14" y2="14" stroke-width="2"/>
+          <path d="M7 7.5L8.5 12.5M17 7.5L15.5 12.5" opacity="0.7"/>
+        </svg>`,
+      boardTwintip: (cls="w-4 h-4 text-violet-400 inline-block") => `
+        <svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4.5 8.5C4.5 5.5 6.5 4 12 4s7.5 1.5 7.5 4.5v7c0 3-2 4.5-7.5 4.5s-7.5-1.5-7.5-4.5v-7z" fill="currentColor" fill-opacity="0.18"/>
+          <line x1="12" y1="4" x2="12" y2="20" stroke-width="1" stroke-dasharray="2 1.5" opacity="0.4"/>
+          <rect x="8" y="7.5" width="8" height="2.5" rx="1.2" fill="currentColor" stroke="none" fill-opacity="0.85"/>
+          <rect x="8" y="14" width="8" height="2.5" rx="1.2" fill="currentColor" stroke="none" fill-opacity="0.85"/>
+        </svg>`,
+      boardWingfoil: (cls="w-4 h-4 text-amber-400 inline-block") => `
+        <svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5.5 8c0-2.2 2.2-4 6.5-4s6.5 1.8 6.5 4v4c0 2.5-2.2 4-6.5 4s-6.5-1.5-6.5-4V8z" fill="currentColor" fill-opacity="0.2"/>
+          <line x1="12" y1="15" x2="12" y2="21" stroke-width="2"/>
+          <path d="M7 21c2.5-1 7.5-1 10 0" stroke-width="2.2" stroke-linecap="round"/>
+          <line x1="9.5" y1="18.5" x2="14.5" y2="18.5" stroke-width="1.5" opacity="0.8"/>
+        </svg>`,
+      boardHydrofoil: (cls="w-4 h-4 text-cyan-400 inline-block") => `
+        <svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4.5 6.5c0-1.5 2.5-2.5 7.5-2.5s7.5 1 7.5 2.5-2.5 2-7.5 2-7.5-.5-7.5-2z" fill="currentColor" fill-opacity="0.25"/>
+          <line x1="12" y1="8" x2="12" y2="19" stroke-width="2"/>
+          <path d="M6 19c3-1.5 9-1.5 12 0" stroke-width="2.2" stroke-linecap="round"/>
+          <line x1="14" y1="16" x2="18" y2="16" stroke-width="1.8"/>
+        </svg>`,
+      boardStrapless: (cls="w-4 h-4 text-emerald-400 inline-block") => `
+        <svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2.5C9.5 6 6 11 6 16.5c0 3 2.5 5 6 5s6-2 6-5c0-5.5-3.5-10.5-6-14z" fill="currentColor" fill-opacity="0.2"/>
+          <line x1="12" y1="3" x2="12" y2="21" stroke-width="1" opacity="0.4"/>
+        </svg>`
+    };
+
+    // TUBE KITE BRANDS & MODELS
+    const KITE_TUBE_CATALOG = {
+      "Duotone": ["Rebel SLS", "Rebel", "Dice", "Dice SLS", "Evo", "Evo SLS", "Evo D/LAB", "Neo", "Neo SLS", "Neo D/LAB", "Juice", "Juice D/LAB", "Vegas"],
+      "Gong": ["Draw", "Ayto", "Strutless", "Vertigo"],
+      "Core": ["XR8", "XR7", "Nexus 3", "Section 4", "GTS6", "Pace Pro", "XR Pro"],
+      "North": ["Orbit", "Orbit Pro", "Reach", "Pulse", "Carve"],
+      "Cabrinha": ["Switchblade", "Moto X", "Drifter", "Contra", "Nitro Apex"],
+      "Harlem": ["Force", "Pace", "Light", "Strike"],
+      "F-One": ["Bandit XVI", "Bandit", "Trigger", "Breeze V4", "Bullit"],
+      "Ozone": ["Edge V12", "Enduro V4", "Catalyst V4", "Reo V7", "Zephyr V8"],
+      "Reedin": ["SuperModel HTF", "SuperModel", "SuperEvo"],
+      "Naish": ["Pivot", "Triad", "Boxer", "Slash"],
+      "Slingshot": ["RPM", "Code V1", "SST V7", "Machine V2", "Ghost V2"],
+      "Eleveight": ["FS", "RS", "WS", "XS", "OS"],
+      "Other": ["Custom Tube Kite"]
+    };
+
+    // SOFT KITE / FOIL KITE (MATTRESS) BRANDS & MODELS
+    const KITE_SOFT_CATALOG = {
+      "Flysurfer": ["Soul 2", "Sonic 4", "Sonic 3", "VMG 2", "Peak 5", "Era", "Speed 5"],
+      "Ozone": ["Chrono V5", "Chrono V4", "Hyperlink V3", "Hyperlink V2", "R1 V4", "Subzero V2"],
+      "Duotone": ["Capistrano"],
+      "F-One": ["Diablo V5", "Halo"],
+      "PLKB": ["Aero V2", "Nova", "Lynx", "Mastiff"],
+      "Gong": ["Strutless V4 Foil", "Mat Foil"],
+      "Other": ["Custom Foil Kite / Mat"]
+    };
+
     // 1. KITE CATALOG DATABASE
     const KITE_CATALOG = {
       "Gong": {
@@ -1198,10 +1356,13 @@
     if (savedBoards) {
       try { initialBoards = JSON.parse(savedBoards); } catch(e){}
     }
-    if (!initialBoards || initialBoards.length === 0) {
-      initialBoards = [
-        { id: 'b_default', type: 'Twintip', brand: 'Duotone', model: 'Jaime SLS', size: '136', carbon: true, active: true }
-      ];
+    // Clean up legacy dummy board if present
+    if (initialBoards && initialBoards.length === 1 && initialBoards[0].id === 'b_default') {
+      initialBoards = [];
+      localStorage.removeItem('kf_boards');
+    }
+    if (!initialBoards) {
+      initialBoards = [];
     }
 
     let state = {
@@ -1328,106 +1489,113 @@
       return getKiteSpecs(brand, model, size);
     }
 
-    function evaluateTractionWithBoard(item, board, weightKg, level, windKts) {
-      const isWing = (item.category === 'wing');
-      const specs = getTractionSpecs(isWing ? 'wing' : 'kite', item.brand, item.model, item.size);
+    function calculateWingfoilWindRange(wing, board, weightKg, level) {
+      const base = getTractionSpecs('wing', wing.brand, wing.model, wing.size);
+      const weightFactor = Math.sqrt((weightKg || 75.0) / 75.0);
+      const levelFactor = (level === 'beginner') ? 1.20 : (level === 'advanced' ? 0.90 : 1.0);
 
-      // Body weight scaling factor
-      const wFactor = (Math.sqrt(weightKg / 75.0) * 0.6) + ((weightKg / 75.0) * 0.4);
+      let minK = base.min * weightFactor * levelFactor;
+      let sweetMin = base.sweet[0] * weightFactor;
+      let sweetMax = base.sweet[1] * weightFactor;
+      let maxK = base.max * weightFactor;
 
-      let minK = specs.min * wFactor;
-      let sweetMin = specs.sweet[0] * wFactor;
-      let sweetMax = specs.sweet[1] * wFactor;
-      let maxK = specs.max * wFactor;
+      // Board Volume Factor (Float vs Sinker)
+      let volFactor = 1.0;
+      let mastAdvisory = '';
+      if (board && board.type === 'Wingfoil') {
+        const vol = parseFloat(board.volume || 85);
+        const delta = vol - weightKg;
+        if (delta >= 15) {
+          volFactor = 0.92; // Floater takes off earlier
+        } else if (delta < -10) {
+          volFactor = 1.15; // Sinker requires more wind or active pumping
+        }
 
-      // Rider Skill Level tuning
-      const lvl = (level || state.user.level || 'intermediate').toLowerCase();
-      if (lvl === 'beginner') {
-        minK *= 1.15;
-        sweetMin *= 1.10;
-        maxK *= 0.88;
-      } else if (lvl === 'advanced') {
-        minK *= 0.92;
-        sweetMax *= 1.08;
-        maxK *= 1.12;
+        const mast = parseFloat(board.mast || 85);
+        if (mast >= 85) {
+          volFactor *= 0.97; // Clean chop clearance & high upwind bank
+        } else if (mast <= 72) {
+          volFactor *= 1.04; // Watch chop touchdowns
+        }
       }
 
-      // Board Discipline & Hydrodynamics
-      const brd = board || { type: isWing ? 'Wingfoil' : 'Twintip', size: '136', carbon: false };
-      const bType = brd.type || (isWing ? 'Wingfoil' : 'Twintip');
+      minK *= volFactor;
+      sweetMin *= volFactor;
+
+      return {
+        minK: Math.round(minK * 10) / 10,
+        sweetMin: Math.round(sweetMin * 10) / 10,
+        sweetMax: Math.round(sweetMax * 10) / 10,
+        maxK: Math.round(maxK * 10) / 10,
+        mastAdvisory
+      };
+    }
+
+    function evaluateTractionWithBoard(item, board, weightKg, level, windKts) {
+      const isWing = (item.category === 'wing');
+      const isSoftKite = (item.kite_type === 'soft');
+      const brd = board || { type: 'Twintip', size: '136', carbon: false };
+      const bType = brd.type || 'Twintip';
       const isCarbon = !!brd.carbon;
-      const carbonMultiplier = isCarbon ? 0.96 : 1.0;
+
+      let minK, sweetMin, sweetMax, maxK;
       let mastAdvisory = '';
 
-      if (bType === 'Wingfoil') {
-        // 1. Board Volume (Liters) vs Rider Weight (Sinker vs Neutral vs Floater)
-        const vol = parseFloat(brd.volume || 85);
-        const delta = vol - weightKg;
-        let fVol = 1.0;
-        if (delta >= 15) {
-          fVol = 0.92; // Floater: positive buoyancy gives ~1.5-2 kts earlier lift-off
-        } else if (delta < -10) {
-          fVol = 1.15; // Sinker: requires sub-surface start + ~2.5 kts more breeze to plane
-        }
-
-        // 2. Front Wing Area (cm²)
-        const wingArea = parseFloat(brd.size || 1250);
-        const fWing = Math.min(1.35, Math.max(0.70, Math.sqrt(1250.0 / wingArea)));
-
-        // 3. Mast Length (cm) — Chop clearance & Banking angle
-        const mast = parseFloat(brd.mast || 85);
-        let fMast = 1.0;
-        if (mast >= 85) {
-          fMast = 0.97; // High banking angle and efficient apparent wind pumping
-          if (mast >= 90) mastAdvisory = ` (🌊 ${mast}cm mast: ocean chop clearance)`;
-        } else if (mast <= 72) {
-          fMast = 1.04; // Low clearance in wave chop
-          if (windKts >= 17) mastAdvisory = ` (⚠️ ${mast}cm mast: breach risk in chop)`;
-        }
-
-        const bFactor = 1.0 * fVol * fWing * carbonMultiplier * fMast;
-        minK *= bFactor;
-        sweetMin *= (bFactor * 1.05);
-        sweetMax *= (fWing * (isCarbon ? 1.03 : 1.0));
-        maxK *= (fWing * 0.88);
-      } else if (bType === 'Hydrofoil') {
-        // Kite Hydrofoil
-        const wingArea = parseFloat(brd.size) || 1050; // cm²
-        const wingFactor = Math.min(1.35, Math.max(0.70, Math.sqrt(1000.0 / wingArea)));
-        const mast = parseFloat(brd.mast || 85);
-        if (mast <= 70 && windKts >= 18) mastAdvisory = ` (⚠️ ${mast}cm mast: breach risk in chop)`;
-        else if (mast >= 90) mastAdvisory = ` (🌊 ${mast}cm mast: deep chop clearance)`;
-
-        const bFactor = 0.58 * wingFactor * carbonMultiplier;
-        minK *= bFactor;
-        sweetMin *= (bFactor * 1.06);
-        sweetMax *= (bFactor * 1.14);
-        maxK *= 0.74;
-      } else if (bType === 'Strapless') {
-        let inches = 68.0;
-        if (typeof brd.size === 'string' && brd.size.includes("'")) {
-          const parts = brd.size.split("'");
-          const ft = parseFloat(parts[0]) || 5;
-          const inc = parseFloat(parts[1]) || 8;
-          inches = ft * 12 + inc;
-        } else if (parseFloat(brd.size) > 0) {
-          inches = parseFloat(brd.size);
-        }
-        const surfFactor = Math.min(1.15, Math.max(0.85, Math.sqrt(68.0 / inches)));
-        const bFactor = 0.84 * surfFactor * carbonMultiplier;
-        minK *= bFactor;
-        sweetMin *= bFactor;
-        sweetMax *= (bFactor * 1.02);
-        maxK *= 0.88;
+      if (isWing) {
+        const wingSizing = calculateWingfoilWindRange(item, brd, weightKg, level);
+        minK = wingSizing.minK;
+        sweetMin = wingSizing.sweetMin;
+        sweetMax = wingSizing.sweetMax;
+        maxK = wingSizing.maxK;
+        mastAdvisory = wingSizing.mastAdvisory || '';
       } else {
-        // Twintip
-        const lengthCm = parseFloat(brd.size) || 136;
-        const ttFactor = Math.min(1.15, Math.max(0.88, Math.sqrt(136.0 / lengthCm)));
-        const bFactor = 1.0 * ttFactor * carbonMultiplier;
-        minK *= bFactor;
-        sweetMin *= bFactor;
-        sweetMax *= (isCarbon ? 1.03 : 1.0);
-        maxK *= (isCarbon ? 1.04 : 1.0);
+        // Standard or Soft Kite calculation
+        const base = getTractionSpecs(item.category, item.brand, item.model, item.size);
+        const weightFactor = Math.sqrt(weightKg / 75.0);
+        const levelFactor = (level === 'beginner') ? 1.15 : (level === 'advanced' ? 0.92 : 1.0);
+        minK = base.min * weightFactor * levelFactor;
+        sweetMin = base.sweet[0] * weightFactor;
+        sweetMax = base.sweet[1] * weightFactor;
+        maxK = base.max * weightFactor;
+
+        // SOFT KITE / RAM-AIR FOIL KITE (MATTRESS) AERODYNAMICS:
+        // Foil kites have significantly higher L/D ratio and ultra-lightweight canopy.
+        // They generate 12-15% earlier planning in light wind without stalling.
+        if (isSoftKite) {
+          minK *= 0.88;
+          sweetMin *= 0.88;
+          sweetMax *= 0.94;
+          maxK *= 0.96;
+        }
+
+        // Apply Board Hydrodynamic Multipliers for Kites
+        if (bType === 'Hydrofoil') {
+          minK *= 0.65;
+          sweetMin *= 0.70;
+          sweetMax *= 0.75;
+          maxK *= 0.78;
+        } else if (bType === 'Strapless') {
+          minK *= 0.92;
+          sweetMin *= 0.93;
+          sweetMax *= 0.95;
+          maxK *= 0.96;
+        } else {
+          // Twintip size factor
+          const ttLen = parseFloat(brd.size) || 136;
+          if (ttLen >= 144) {
+            minK *= 0.90; sweetMin *= 0.92; sweetMax *= 0.95; maxK *= 0.94;
+          } else if (ttLen >= 140) {
+            minK *= 0.94; sweetMin *= 0.96; sweetMax *= 0.98; maxK *= 0.97;
+          } else if (ttLen <= 134) {
+            minK *= 1.05; sweetMin *= 1.04; sweetMax *= 1.02; maxK *= 1.03;
+          }
+        }
+
+        if (isCarbon) {
+          minK *= 0.97;
+          sweetMin *= 0.98;
+          maxK *= 1.04;
+        }
       }
 
       minK = Math.round(minK * 10) / 10;
@@ -1436,7 +1604,6 @@
       maxK = Math.round(maxK * 10) / 10;
       const midSweet = (sweetMin + sweetMax) / 2.0;
 
-      const typeIcon = bType === 'Wingfoil' ? '🪽' : (bType === 'Hydrofoil' ? '🦅' : (bType === 'Strapless' ? '🏄‍♂️' : '🛹'));
       let boardSpec = '';
       if (bType === 'Wingfoil') {
         boardSpec = `${brd.volume || 85}L (${brd.size || 1250}cm² / ${brd.mast || 85}cm mast)`;
@@ -1449,14 +1616,15 @@
       }
 
       const boardShort = `${brd.brand ? brd.brand + ' ' : ''}${brd.model || bType} ${boardSpec}${isCarbon ? ' ⚡' : ''}`.trim();
-      const tracIcon = isWing ? '🪽' : '🪁';
-      const tracShort = `${tracIcon} ${item.brand} ${item.model}${item.year ? ' (' + item.year + ')' : ''} ${item.size}m`;
+      const tracTypeLabel = isWing ? 'Wing' : (isSoftKite ? 'Soft Kite' : 'Tube Kite');
+      const tracShort = `${item.brand} ${item.model}${item.year ? ' (' + item.year + ')' : ''} ${item.size}m`;
 
       return {
         item,
         board: brd,
         bType,
         isWing,
+        isSoftKite,
         minK,
         sweetMin,
         sweetMax,
@@ -1466,7 +1634,8 @@
         distToSweet: Math.abs(windKts - midSweet),
         tracShort,
         boardShort,
-        displayName: `${tracShort} + ${typeIcon} ${boardShort}${mastAdvisory}`
+        displayName: `${tracShort} + ${boardShort}${mastAdvisory}`,
+        typeLabel: tracTypeLabel
       };
     }
 
@@ -1499,7 +1668,7 @@
         if (state.boards && state.boards.length > 0) {
           activeBoards = [state.boards[0]];
         } else {
-          activeBoards = [{ type: 'Twintip', brand: 'Duotone', model: 'Jaime', size: '136', carbon: true, active: true }];
+          activeBoards = [{ type: 'Twintip', brand: '', model: 'Twintip', size: '136', carbon: false, active: true }];
         }
       }
 
@@ -1507,10 +1676,9 @@
       const combos = [];
       activeTraction.forEach(t => {
         const isWing = (t.category === 'wing');
-        // Match compatibility: Wings pair with Wingfoil boards; Kites pair with Twintip, Kitefoil, Strapless
         let matchingBoards = activeBoards.filter(b => isWing ? (b.type === 'Wingfoil') : (b.type !== 'Wingfoil'));
         if (matchingBoards.length === 0) {
-          matchingBoards = activeBoards; // fallback if only 1 board registered
+          matchingBoards = activeBoards;
         }
 
         matchingBoards.forEach(b => {
@@ -1527,7 +1695,6 @@
       // 1. SWEET SPOT MATCHES:
       const sweets = combos.filter(c => c.inSweet);
       if (sweets.length > 0) {
-        // Preference: In light wind (< 14 kts), favor Wingfoil or Hydrofoil; in moderate/strong wind (>= 15 kts), favor Twintip
         sweets.sort((a, b) => {
           if (windKts < 14) {
             if ((a.bType === 'Wingfoil' || a.bType === 'Hydrofoil') && b.bType === 'Twintip') return -1;
@@ -1538,7 +1705,12 @@
           }
           return a.distToSweet - b.distToSweet;
         });
-        return { status: 'sweet', text: `${sweets[0].displayName}` };
+        const best = sweets[0];
+        return {
+          status: 'sweet',
+          text: best.displayName,
+          combo: best
+        };
       }
 
       // 2. IN RANGE MATCHES:
@@ -1556,7 +1728,11 @@
         });
         const best = inRanges[0];
         const tag = windKts > best.sweetMax ? ' (Overpowered)' : ' (Underpowered)';
-        return { status: 'range', text: `${best.displayName}${tag}` };
+        return {
+          status: 'range',
+          text: `${best.displayName}${tag}`,
+          combo: best
+        };
       }
 
       // Resolve Hour of day for Time-Aware Caipirinha vs Morning Coffee
@@ -1594,12 +1770,14 @@
         if (hour < 12) {
           return {
             status: 'coffee',
-            text: `☕ Too early for Caipi time, enjoy a beach coffee :) Wind (${Math.round(windKts)} kts) is too light for your ${bestLightCombo.displayName} (min ~${Math.round(bestLightCombo.minK)} kts) — enjoy the morning ocean view! ☕🥐${tip}`
+            text: `☕ Too early for Caipi time, enjoy a beach coffee :) Wind (${Math.round(windKts)} kts) is too light for your ${bestLightCombo.displayName} (min ~${Math.round(bestLightCombo.minK)} kts) — enjoy the morning ocean view! ☕🥐${tip}`,
+            combo: bestLightCombo
           };
         } else {
           return {
             status: 'light',
-            text: `🍹 Caipirinha Time! Wind (${Math.round(windKts)} kts) is too light for your ${bestLightCombo.displayName} (min ~${Math.round(bestLightCombo.minK)} kts) — none of your gear fits, time to chill at the beach bar! 🏖️🍹${tip}`
+            text: `🍹 Caipirinha Time! Wind (${Math.round(windKts)} kts) is too light for your ${bestLightCombo.displayName} (min ~${Math.round(bestLightCombo.minK)} kts) — none of your gear fits, time to chill at the beach bar! 🏖️🍹${tip}`,
+            combo: bestLightCombo
           };
         }
       }
@@ -1616,32 +1794,43 @@
         }
 
         if (windKts <= bestHighCombo.maxK + 4) {
-          return { status: 'overpowered', text: `${bestHighCombo.displayName} (🚨 Overpowered — max ~${Math.round(bestHighCombo.maxK)} kts, depower fully)${tip}` };
+          return { status: 'overpowered', text: `${bestHighCombo.displayName} (🚨 Overpowered — max ~${Math.round(bestHighCombo.maxK)} kts, depower fully)${tip}`, combo: bestHighCombo };
         } else if (windKts <= bestHighCombo.maxK + 8) {
-          return { status: 'overpowered', text: `${bestHighCombo.displayName} (🚨 Heavily Overpowered — max ~${Math.round(bestHighCombo.maxK)} kts!)${tip}` };
+          return { status: 'overpowered', text: `${bestHighCombo.displayName} (🚨 Heavily Overpowered — max ~${Math.round(bestHighCombo.maxK)} kts!)${tip}`, combo: bestHighCombo };
         } else {
           if (hour < 12) {
             return {
               status: 'coffee-storm',
-              text: `☕ Holy Storm Coffee Time! Nuking at ${Math.round(windKts)} kts — too wild for your ${bestHighCombo.displayName} (max ~${Math.round(bestHighCombo.maxK)} kts). Grab a hot brew and watch the show safely from the beach cafe! ☕⚡${tip}`
+              text: `☕ Holy Storm Coffee Time! Nuking at ${Math.round(windKts)} kts — too wild for your ${bestHighCombo.displayName} (max ~${Math.round(bestHighCombo.maxK)} kts). Grab a hot brew and watch the show safely from the beach cafe! ☕⚡${tip}`,
+              combo: bestHighCombo
             };
           } else {
             return {
               status: 'danger',
-              text: `🍹 Double Caipirinha Time! Nuking at ${Math.round(windKts)} kts — too wild for your ${bestHighCombo.displayName} (max ~${Math.round(bestHighCombo.maxK)} kts). Watch the show from the beach bar! 🍹🔥${tip}`
+              text: `🍹 Double Caipirinha Time! Nuking at ${Math.round(windKts)} kts — too wild for your ${bestHighCombo.displayName} (max ~${Math.round(bestHighCombo.maxK)} kts). Watch the show from the beach bar! 🍹🔥${tip}`,
+              combo: bestHighCombo
             };
           }
         }
       }
 
       combos.sort((a, b) => a.distToSweet - b.distToSweet);
-      return { status: 'marginal', text: `${combos[0].displayName} (Marginal)` };
+      return { status: 'marginal', text: `${combos[0].displayName} (Marginal)`, combo: combos[0] };
     }
 
-    // 4. RENDERING FUNCTIONS
     function renderGearInventory() {
       const tractionContainer = document.getElementById('quiver-list');
       const boardContainer = document.getElementById('boards-list');
+
+      // Update Subheaders with Real SVGs
+      const hdrKW = document.getElementById('hdr-kites-wings-icon');
+      if (hdrKW) {
+        hdrKW.innerHTML = `${GEAR_ICONS.kiteTube("w-4 h-4 text-sky-400 inline-block align-middle")} <span class="text-slate-500 font-normal">/</span> ${GEAR_ICONS.wing("w-4 h-4 text-amber-400 inline-block align-middle")}`;
+      }
+      const hdrB = document.getElementById('hdr-boards-icon');
+      if (hdrB) {
+        hdrB.innerHTML = `${GEAR_ICONS.boardTwintip("w-4 h-4 text-violet-400 inline-block align-middle")}`;
+      }
 
       const activeTraction = state.inventory.filter(k => k.active !== false).length;
       const homeTraction = state.inventory.length - activeTraction;
@@ -1651,7 +1840,7 @@
 
       const badgeCountEl = document.getElementById('backpack-count-badge');
       if (badgeCountEl) {
-        badgeCountEl.innerText = `🎒 ${activeTraction} gear packed · ${homeTraction + homeBoards} at home`;
+        badgeCountEl.innerText = `🎒 ${activeTraction + activeBoards} gear packed · ${homeTraction + homeBoards} at home`;
       }
 
       const kitesSubBadge = document.getElementById('kites-sub-badge');
@@ -1671,11 +1860,13 @@
             <p class="text-xs font-bold text-amber-400">⚠️ No kites or wings registered yet!</p>
             <p class="text-[11px] text-slate-400">Add your kites and handheld wings above to unlock smart multi-discipline sizing.</p>
             <div class="flex items-center justify-center space-x-2 pt-1">
-              <button onclick="openTractionModal('kite')" class="px-3 py-1.5 rounded-xl bg-sky-500/20 text-sky-400 text-xs font-bold border border-sky-500/30 hover:bg-sky-500/30">
-                + Add Kite
+              <button onclick="openAddKiteModal()" class="px-3 py-1.5 rounded-xl bg-sky-500/20 text-sky-400 text-xs font-bold border border-sky-500/30 hover:bg-sky-500/30 flex items-center space-x-1.5 active:scale-95 transition">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Add Kite</span>
               </button>
-              <button onclick="openTractionModal('wing')" class="px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-500/30 hover:bg-amber-500/30">
-                + Add Wing
+              <button onclick="openAddWingModal()" class="px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-500/30 hover:bg-amber-500/30 flex items-center space-x-1.5 active:scale-95 transition">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Add Wing</span>
               </button>
             </div>
           </div>
@@ -1683,34 +1874,46 @@
       } else {
         tractionContainer.innerHTML = state.inventory.map((k, idx) => {
           const isWing = (k.category === 'wing');
+          const isSoft = (k.kite_type === 'soft');
           const matchingBoard = (state.boards && state.boards.length > 0)
             ? (state.boards.find(b => isWing ? b.type === 'Wingfoil' : b.type !== 'Wingfoil') || state.boards[0])
             : null;
           const ev = evaluateTractionWithBoard(k, matchingBoard, state.user.weight, state.user.level, 18.0);
           const isActive = k.active !== false;
-          const icon = isWing ? '🪽' : '🪁';
-          const catLabel = isWing ? 'Wing' : 'Kite';
-          const ringColor = isWing ? 'border-amber-500/70 shadow-amber-950/40' : 'border-emerald-500/70 shadow-emerald-950/40';
+          
+          let iconSvg = GEAR_ICONS.kiteTube("w-4 h-4 text-sky-400 inline-block align-middle mr-1");
+          let catLabel = "Tube Kite (LEI)";
+          let ringColor = 'border-sky-500/70 shadow-sky-950/40 ring-sky-500/30';
+
+          if (isWing) {
+            iconSvg = GEAR_ICONS.wing("w-4 h-4 text-amber-400 inline-block align-middle mr-1");
+            catLabel = "Handheld Wing";
+            ringColor = 'border-amber-500/70 shadow-amber-950/40 ring-amber-500/30';
+          } else if (isSoft) {
+            iconSvg = GEAR_ICONS.kiteSoft("w-4 h-4 text-cyan-400 inline-block align-middle mr-1");
+            catLabel = "Soft Kite (Mat)";
+            ringColor = 'border-cyan-500/70 shadow-cyan-950/40 ring-cyan-500/30';
+          }
 
           return `
             <div class="rounded-2xl p-3.5 border transition-all duration-300 flex flex-col space-y-2.5 ${
               isActive
-                ? `bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950/80 ${ringColor} shadow-lg ring-1 ${isWing ? 'ring-amber-500/30' : 'ring-emerald-500/30'}`
+                ? `bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950/80 ${ringColor} shadow-lg ring-1`
                 : 'bg-slate-950/60 border-slate-800/80 opacity-55 grayscale-[20%]'
             }">
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2.5">
                   <span class="text-xs font-black px-2.5 py-1 rounded-xl border ${
                     isActive
-                      ? (isWing ? 'text-amber-300 bg-amber-500/20 border-amber-500/40 shadow-sm' : 'text-emerald-300 bg-emerald-500/20 border-emerald-500/40 shadow-sm')
+                      ? (isWing ? 'text-amber-300 bg-amber-500/20 border-amber-500/40 shadow-sm' : (isSoft ? 'text-cyan-300 bg-cyan-500/20 border-cyan-500/40 shadow-sm' : 'text-sky-300 bg-sky-500/20 border-sky-500/40 shadow-sm'))
                       : 'text-slate-400 bg-slate-900 border-slate-800'
                   }">${k.size}m</span>
                   <div>
                     <div class="flex items-center space-x-2">
-                      <h4 class="text-xs font-bold text-white">${icon} ${k.brand} ${k.model} <span class="text-slate-400 font-normal">(${k.year || 2024})</span></h4>
+                      <h4 class="text-xs font-bold text-white flex items-center">${iconSvg}<span>${k.brand} ${k.model}</span> <span class="text-slate-400 font-normal ml-1">(${k.year || 2024})</span></h4>
                       ${
                         isActive
-                          ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${isWing ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'} flex items-center space-x-1"><span class="w-1.5 h-1.5 rounded-full ${isWing ? 'bg-amber-400' : 'bg-emerald-400'} animate-pulse"></span><span>Packed</span></span>`
+                          ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${isWing ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : (isSoft ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'bg-sky-500/20 text-sky-300 border border-sky-500/30')} flex items-center space-x-1"><span class="w-1.5 h-1.5 rounded-full ${isWing ? 'bg-amber-400' : (isSoft ? 'bg-cyan-400' : 'bg-sky-400')} animate-pulse"></span><span>Packed</span></span>`
                           : `<span class="px-2 py-0.5 rounded-full text-[9px] font-medium bg-slate-800 text-slate-400 border border-slate-700">At Home</span>`
                       }
                     </div>
@@ -1721,7 +1924,7 @@
                 <div class="flex items-center space-x-2">
                   <button onclick="toggleKiteBackpack(${idx})" class="px-2.5 py-1.5 rounded-xl text-[11px] font-bold transition flex items-center space-x-1.5 active:scale-95 ${
                     isActive
-                      ? (isWing ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20 hover:bg-amber-400' : 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20 hover:bg-emerald-400 font-black')
+                      ? (isWing ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20 hover:bg-amber-400' : (isSoft ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20 hover:bg-cyan-400 font-black' : 'bg-sky-500 text-white shadow-md shadow-sky-500/20 hover:bg-sky-400 font-bold'))
                       : 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700'
                   }">
                     <span>${isActive ? '🎒 Packed' : '🏠 Leave'}</span>
@@ -1736,12 +1939,12 @@
               <div class="space-y-1">
                 <div class="flex justify-between text-[10px] text-slate-400 font-mono">
                   <span>Min: ${Math.round(ev.minK)} kts</span>
-                  <span class="${isActive ? (isWing ? 'text-amber-400 font-bold' : 'text-emerald-400 font-bold') : 'text-slate-400 font-medium'}">Sweet: ${Math.round(ev.sweetMin)}-${Math.round(ev.sweetMax)} kts</span>
+                  <span class="${isActive ? (isWing ? 'text-amber-400 font-bold' : (isSoft ? 'text-cyan-400 font-bold' : 'text-sky-400 font-bold')) : 'text-slate-400 font-medium'}">Sweet: ${Math.round(ev.sweetMin)}-${Math.round(ev.sweetMax)} kts</span>
                   <span>Max: ${Math.round(ev.maxK)} kts</span>
                 </div>
                 <div class="w-full h-1.5 bg-slate-800/80 rounded-full overflow-hidden flex">
                   <div style="width: 20%" class="bg-slate-700"></div>
-                  <div style="width: 50%" class="${isActive ? (isWing ? 'bg-gradient-to-r from-amber-500 to-orange-400' : 'bg-gradient-to-r from-emerald-500 to-cyan-400') : 'bg-slate-600'}"></div>
+                  <div style="width: 50%" class="${isActive ? (isWing ? 'bg-gradient-to-r from-amber-500 to-orange-400' : (isSoft ? 'bg-gradient-to-r from-cyan-500 to-teal-400' : 'bg-gradient-to-r from-sky-500 to-cyan-400')) : 'bg-slate-600'}"></div>
                   <div style="width: 30%" class="bg-rose-500/80"></div>
                 </div>
               </div>
@@ -1757,8 +1960,9 @@
             <div class="bg-slate-950/60 rounded-2xl p-4 border border-dashed border-slate-800 text-center space-y-2">
               <p class="text-xs font-bold text-amber-400">⚠️ No boards registered yet!</p>
               <p class="text-[11px] text-slate-400">Add your boards (Twintip, Wingfoil, Hydrofoil, Strapless) to enable smart pairing.</p>
-              <button onclick="toggleModal('modal-add-board')" class="px-3 py-1.5 rounded-xl bg-violet-500/20 text-violet-300 text-xs font-bold border border-violet-500/30 hover:bg-violet-500/30">
-                + Add First Board
+              <button onclick="openAddBoardModal()" class="px-3.5 py-1.5 rounded-xl bg-violet-500/20 text-violet-300 text-xs font-bold border border-violet-500/30 hover:bg-violet-500/30 flex items-center space-x-1.5 mx-auto active:scale-95 transition">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Add Board</span>
               </button>
             </div>
           `;
@@ -1766,9 +1970,12 @@
           boardContainer.innerHTML = state.boards.map((b, idx) => {
             const isActive = b.active !== false;
             const isWingfoil = (b.type === 'Wingfoil');
-            const typeIcon = isWingfoil ? '🪽' : (b.type === 'Hydrofoil' ? '🦅' : (b.type === 'Strapless' ? '🏄‍♂️' : '🛹'));
             
-            // Primary size badge
+            let boardIcon = GEAR_ICONS.boardTwintip("w-4 h-4 text-violet-400 inline-block align-middle mr-1");
+            if (isWingfoil) boardIcon = GEAR_ICONS.boardWingfoil("w-4 h-4 text-amber-400 inline-block align-middle mr-1");
+            else if (b.type === 'Hydrofoil') boardIcon = GEAR_ICONS.boardHydrofoil("w-4 h-4 text-cyan-400 inline-block align-middle mr-1");
+            else if (b.type === 'Strapless') boardIcon = GEAR_ICONS.boardStrapless("w-4 h-4 text-emerald-400 inline-block align-middle mr-1");
+
             let sizeBadge = '';
             let subSpecs = '';
             if (isWingfoil) {
@@ -1803,7 +2010,7 @@
                     }">${sizeBadge}</span>
                     <div>
                       <div class="flex items-center space-x-2">
-                        <h4 class="text-xs font-bold text-white">${typeIcon} ${b.brand || ''} ${b.model || b.type}</h4>
+                        <h4 class="text-xs font-bold text-white flex items-center">${boardIcon}<span>${b.brand || ''} ${b.model || b.type}</span></h4>
                         ${
                           isActive
                             ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-violet-500/20 text-violet-300 border border-violet-500/30 flex items-center space-x-1"><span class="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse"></span><span>Packed</span></span>`
@@ -1833,7 +2040,9 @@
         }
       }
 
-      lucide.createIcons();
+      if (window.lucide) {
+        lucide.createIcons();
+      }
     }
     const renderQuiver = renderGearInventory;
 
@@ -2332,7 +2541,9 @@
     }
 
     function deleteKite(idx) {
-      if (confirm(`Remove ${state.inventory[idx].brand} ${state.inventory[idx].model} ${state.inventory[idx].size}m from your gear inventory?`)) {
+      const k = state.inventory[idx];
+      const label = k.category === 'wing' ? 'Wing' : 'Kite';
+      if (confirm(`Remove ${k.brand} ${k.model} (${k.size}m) from your gear inventory?`)) {
         state.inventory.splice(idx, 1);
         saveInventory();
         renderQuiver();
@@ -2340,122 +2551,196 @@
       }
     }
 
-    function onBrandChange(brand) {
-      const modelSelect = document.getElementById('select-model');
-      if (!modelSelect) return;
-      modelSelect.innerHTML = '';
-      const cat = document.getElementById('input-traction-cat') ? document.getElementById('input-traction-cat').value : 'kite';
-      
-      const catalog = (cat === 'wing') ? WING_CATALOG : KITE_CATALOG;
-      if (catalog[brand]) {
-        Object.keys(catalog[brand]).forEach(m => {
-          const opt = document.createElement('option');
-          opt.value = m;
-          opt.innerText = m;
-          modelSelect.appendChild(opt);
-        });
+    // --- KITE MODAL (TUBE OR SOFT KITE) ---
+    function openAddKiteModal() {
+      const iconSpan = document.getElementById('modal-kite-title-icon');
+      if (iconSpan) iconSpan.innerHTML = GEAR_ICONS.kiteTube("w-5 h-5 text-sky-400 inline-block align-middle");
+      const tabTube = document.getElementById('icon-tab-tube');
+      if (tabTube) tabTube.innerHTML = GEAR_ICONS.kiteTube("w-3.5 h-3.5 text-sky-400 inline-block align-middle");
+      const tabSoft = document.getElementById('icon-tab-soft');
+      if (tabSoft) tabSoft.innerHTML = GEAR_ICONS.kiteSoft("w-3.5 h-3.5 text-cyan-400 inline-block align-middle");
+      const saveIcon = document.getElementById('btn-save-kite-icon');
+      if (saveIcon) saveIcon.innerHTML = GEAR_ICONS.kiteTube("w-4 h-4 text-white inline-block align-middle");
+
+      setKiteType('tube');
+      toggleModal('modal-add-kite');
+    }
+
+    function setKiteType(type) {
+      const inputType = document.getElementById('input-kite-type');
+      if (inputType) inputType.value = type;
+      const btnTube = document.getElementById('btn-ktype-tube');
+      const btnSoft = document.getElementById('btn-ktype-soft');
+      const title = document.getElementById('modal-kite-title');
+      const iconSpan = document.getElementById('modal-kite-title-icon');
+      const saveIcon = document.getElementById('btn-save-kite-icon');
+
+      if (type === 'soft') {
+        if (btnSoft) btnSoft.className = "py-2 rounded-lg font-bold text-center transition bg-cyan-600 text-white shadow-sm flex items-center justify-center space-x-1.5";
+        if (btnTube) btnTube.className = "py-2 rounded-lg font-bold text-center transition text-slate-400 hover:text-white flex items-center justify-center space-x-1.5";
+        if (title) title.innerText = "Add Soft Kite / Mat to Your Gear";
+        if (iconSpan) iconSpan.innerHTML = GEAR_ICONS.kiteSoft("w-5 h-5 text-cyan-400 inline-block align-middle");
+        if (saveIcon) saveIcon.innerHTML = GEAR_ICONS.kiteSoft("w-4 h-4 text-white inline-block align-middle");
+        populateKiteBrands('soft');
+        populateKiteSizes('soft');
       } else {
-        const opt = document.createElement('option');
-        opt.value = cat === 'wing' ? "All-Round Wing" : "Custom Freeride";
-        opt.innerText = cat === 'wing' ? "All-Round Wing" : "Custom Freeride";
-        modelSelect.appendChild(opt);
+        if (btnTube) btnTube.className = "py-2 rounded-lg font-bold text-center transition bg-sky-600 text-white shadow-sm flex items-center justify-center space-x-1.5";
+        if (btnSoft) btnSoft.className = "py-2 rounded-lg font-bold text-center transition text-slate-400 hover:text-white flex items-center justify-center space-x-1.5";
+        if (title) title.innerText = "Add Tube Kite (LEI) to Your Gear";
+        if (iconSpan) iconSpan.innerHTML = GEAR_ICONS.kiteTube("w-5 h-5 text-sky-400 inline-block align-middle");
+        if (saveIcon) saveIcon.innerHTML = GEAR_ICONS.kiteTube("w-4 h-4 text-white inline-block align-middle");
+        populateKiteBrands('tube');
+        populateKiteSizes('tube');
       }
+    }
+
+    function populateKiteBrands(type) {
+      const brandSel = document.getElementById('kite-select-brand');
+      if (!brandSel) return;
+      brandSel.innerHTML = '';
+      const catalog = (type === 'soft') ? KITE_SOFT_CATALOG : KITE_TUBE_CATALOG;
+      Object.keys(catalog).forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b;
+        opt.innerText = b === 'Gong' ? 'GONG' : (b === 'PLKB' ? 'PLKB (Peter Lynn)' : b);
+        brandSel.appendChild(opt);
+      });
+      onKiteBrandChange(brandSel.value);
+    }
+
+    function onKiteBrandChange(brand) {
+      const modelSel = document.getElementById('kite-select-model');
+      if (!modelSel) return;
+      modelSel.innerHTML = '';
+      const type = document.getElementById('input-kite-type') ? document.getElementById('input-kite-type').value : 'tube';
+      const catalog = (type === 'soft') ? KITE_SOFT_CATALOG : KITE_TUBE_CATALOG;
+      const models = catalog[brand] || ["Standard Model"];
+      models.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m;
+        opt.innerText = m;
+        modelSel.appendChild(opt);
+      });
+    }
+
+    function populateKiteSizes(type) {
+      const sizeSel = document.getElementById('kite-select-size');
+      if (!sizeSel) return;
+      sizeSel.innerHTML = '';
+      const sizes = (type === 'soft')
+        ? ['6', '8', '9', '10', '11', '12', '13', '15', '18', '21']
+        : ['5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '17'];
+      sizes.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s;
+        opt.innerText = `${s}m`;
+        if (s === (type === 'soft' ? '12' : '10')) opt.selected = true;
+        sizeSel.appendChild(opt);
+      });
     }
 
     function onAddKiteFormSubmit(e) {
       e.preventDefault();
-      const cat = document.getElementById('input-traction-cat') ? document.getElementById('input-traction-cat').value : 'kite';
-      const brand = document.getElementById('select-brand').value;
-      const model = document.getElementById('select-model').value || (cat === 'wing' ? "All-Round Wing" : "All-Round");
-      const size = parseFloat(document.getElementById('select-size').value) || (cat === 'wing' ? 5 : 10);
-      const year = parseInt(document.getElementById('select-year').value) || 2024;
-      const active = document.getElementById('check-in-bag').checked;
+      const type = document.getElementById('input-kite-type') ? document.getElementById('input-kite-type').value : 'tube';
+      const brand = document.getElementById('kite-select-brand').value;
+      const model = document.getElementById('kite-select-model').value || 'All-Round';
+      const size = parseFloat(document.getElementById('kite-select-size').value) || (type === 'soft' ? 12 : 10);
+      const year = parseInt(document.getElementById('kite-select-year').value) || 2024;
+      const active = document.getElementById('kite-check-in-bag').checked;
 
-      state.inventory.push({ category: cat, brand, model, size, year, active });
+      state.inventory.push({
+        category: 'kite',
+        kite_type: type,
+        brand,
+        model,
+        size,
+        year,
+        active
+      });
       saveInventory();
       toggleModal('modal-add-kite');
       renderQuiver();
       renderForecast();
     }
 
-    function openTractionModal(cat) {
-      setTractionCategory(cat || 'kite');
-      toggleModal('modal-add-kite');
+    // --- WING MODAL (HANDHELD WINGFOIL WING) ---
+    function openAddWingModal() {
+      const iconSpan = document.getElementById('modal-wing-title-icon');
+      if (iconSpan) iconSpan.innerHTML = GEAR_ICONS.wing("w-5 h-5 text-amber-400 inline-block align-middle");
+      const indSpan = document.getElementById('wing-indicator-icon');
+      if (indSpan) indSpan.innerHTML = GEAR_ICONS.wing("w-4 h-4 text-amber-400 inline-block align-middle");
+      const saveIcon = document.getElementById('btn-save-wing-icon');
+      if (saveIcon) saveIcon.innerHTML = GEAR_ICONS.wing("w-4 h-4 text-slate-950 inline-block align-middle");
+
+      populateWingBrands();
+      toggleModal('modal-add-wing');
     }
 
-    function setTractionCategory(cat) {
-      const inputCat = document.getElementById('input-traction-cat');
-      if (inputCat) inputCat.value = cat;
-      const btnK = document.getElementById('btn-cat-kite');
-      const btnW = document.getElementById('btn-cat-wing');
-      const title = document.getElementById('modal-traction-title');
-
-      if (cat === 'wing') {
-        if (btnW) btnW.className = "py-1.5 rounded-lg font-bold text-center transition bg-amber-500 text-slate-950 shadow-sm flex items-center justify-center space-x-1";
-        if (btnK) btnK.className = "py-1.5 rounded-lg font-bold text-center transition text-slate-400 hover:text-white flex items-center justify-center space-x-1";
-        if (title) title.innerHTML = "🪽 Add Wing to Your Gear";
-        populateBrandOptions('wing');
-        populateSizeOptions('wing');
-      } else {
-        if (btnK) btnK.className = "py-1.5 rounded-lg font-bold text-center transition bg-sky-600 text-white shadow-sm flex items-center justify-center space-x-1";
-        if (btnW) btnW.className = "py-1.5 rounded-lg font-bold text-center transition text-slate-400 hover:text-white flex items-center justify-center space-x-1";
-        if (title) title.innerHTML = "🪁 Add Kite to Your Gear";
-        populateBrandOptions('kite');
-        populateSizeOptions('kite');
-      }
-    }
-
-    function populateBrandOptions(cat) {
-      const brandSel = document.getElementById('select-brand');
+    function populateWingBrands() {
+      const brandSel = document.getElementById('wing-select-brand');
       if (!brandSel) return;
       brandSel.innerHTML = '';
-      const brands = (cat === 'wing')
-        ? ["Duotone", "Gong", "F-One", "North", "Cabrinha", "Core", "Reedin", "Ozone", "Armstrong", "Ensis", "Slingshot", "Naish", "Other"]
-        : ["Duotone", "Gong", "Core", "North", "Cabrinha", "Harlem", "Ozone", "F-One", "Reedin", "Naish", "Slingshot", "Eleveight", "Other"];
+      const brands = Object.keys(WING_CATALOG);
       brands.forEach(b => {
         const opt = document.createElement('option');
         opt.value = b;
         opt.innerText = b === 'Gong' ? 'GONG' : b;
         brandSel.appendChild(opt);
       });
-      onBrandChange(brandSel.value);
+      onWingBrandChange(brandSel.value);
     }
 
-    function populateSizeOptions(cat) {
-      const sizeSel = document.getElementById('select-size');
-      if (!sizeSel) return;
-      sizeSel.innerHTML = '';
-      if (cat === 'wing') {
-        const wingSizes = [
-          { val: '2.5', label: '2.5m (Storm / High Wind)' },
-          { val: '3.0', label: '3.0m' },
-          { val: '3.5', label: '3.5m' },
-          { val: '4.0', label: '4.0m' },
-          { val: '4.5', label: '4.5m' },
-          { val: '5.0', label: '5.0m (Standard All-Round)', sel: true },
-          { val: '5.5', label: '5.5m' },
-          { val: '6.0', label: '6.0m (Lightwind)' },
-          { val: '6.5', label: '6.5m' },
-          { val: '7.0', label: '7.0m (Ultra-Lightwind)' },
-          { val: '8.0', label: '8.0m (Giant / CWC)' }
-        ];
-        wingSizes.forEach(s => {
-          const opt = document.createElement('option');
-          opt.value = s.val;
-          opt.innerText = s.label;
-          if (s.sel) opt.selected = true;
-          sizeSel.appendChild(opt);
-        });
-      } else {
-        const kiteSizes = ['6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '17'];
-        kiteSizes.forEach(s => {
-          const opt = document.createElement('option');
-          opt.value = s;
-          opt.innerText = `${s}m`;
-          if (s === '10') opt.selected = true;
-          sizeSel.appendChild(opt);
-        });
-      }
+    function onWingBrandChange(brand) {
+      const modelSel = document.getElementById('wing-select-model');
+      if (!modelSel) return;
+      modelSel.innerHTML = '';
+      const models = WING_CATALOG[brand] ? Object.keys(WING_CATALOG[brand]) : ["All-Round Wing"];
+      models.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m;
+        opt.innerText = m;
+        modelSel.appendChild(opt);
+      });
+    }
+
+    function onAddWingFormSubmit(e) {
+      e.preventDefault();
+      const brand = document.getElementById('wing-select-brand').value;
+      const model = document.getElementById('wing-select-model').value || 'All-Round Wing';
+      const size = parseFloat(document.getElementById('wing-select-size').value) || 5.0;
+      const year = parseInt(document.getElementById('wing-select-year').value) || 2024;
+      const active = document.getElementById('wing-check-in-bag').checked;
+
+      state.inventory.push({
+        category: 'wing',
+        brand,
+        model,
+        size,
+        year,
+        active
+      });
+      saveInventory();
+      toggleModal('modal-add-wing');
+      renderQuiver();
+      renderForecast();
+    }
+
+    // Generic wrapper
+    function openTractionModal(cat) {
+      if (cat === 'wing') openAddWingModal();
+      else openAddKiteModal();
+    }
+
+    // --- BOARD MODAL (TWINTIP, WINGFOIL, HYDROFOIL, STRAPLESS) ---
+    function openAddBoardModal() {
+      const iconSpan = document.getElementById('modal-board-title-icon');
+      if (iconSpan) iconSpan.innerHTML = GEAR_ICONS.boardTwintip("w-5 h-5 text-violet-400 inline-block align-middle");
+      const saveIcon = document.getElementById('btn-save-board-icon');
+      if (saveIcon) saveIcon.innerHTML = GEAR_ICONS.boardTwintip("w-4 h-4 text-white inline-block align-middle");
+
+      const typeSel = document.getElementById('board-select-type');
+      if (typeSel) onBoardTypeSelectChange(typeSel.value);
+      toggleModal('modal-add-board');
     }
 
     function updateVolumeDynamicTag(volStr) {
@@ -2500,8 +2785,10 @@
       const mastContainer = document.getElementById('board-mast-container');
       const label = document.getElementById('board-size-label');
       const sizeSelect = document.getElementById('board-select-size');
+      const iconSpan = document.getElementById('modal-board-title-icon');
 
       if (type === 'Wingfoil') {
+        if (iconSpan) iconSpan.innerHTML = GEAR_ICONS.boardWingfoil("w-5 h-5 text-amber-400 inline-block align-middle");
         if (volContainer) volContainer.classList.remove('hidden');
         if (mastContainer) mastContainer.classList.remove('hidden');
         if (label) label.innerText = 'Foil Front Wing Area (cm²)';
@@ -2527,6 +2814,7 @@
           });
         }
       } else if (type === 'Hydrofoil') {
+        if (iconSpan) iconSpan.innerHTML = GEAR_ICONS.boardHydrofoil("w-5 h-5 text-cyan-400 inline-block align-middle");
         if (volContainer) volContainer.classList.add('hidden');
         if (mastContainer) mastContainer.classList.remove('hidden');
         if (label) label.innerText = 'Foil Front Wing Area (cm²)';
@@ -2549,6 +2837,7 @@
           });
         }
       } else if (type === 'Strapless') {
+        if (iconSpan) iconSpan.innerHTML = GEAR_ICONS.boardStrapless("w-5 h-5 text-emerald-400 inline-block align-middle");
         if (volContainer) volContainer.classList.add('hidden');
         if (mastContainer) mastContainer.classList.add('hidden');
         if (label) label.innerText = 'Surfboard Length (ft / in)';
@@ -2572,6 +2861,7 @@
         }
       } else {
         // Twintip
+        if (iconSpan) iconSpan.innerHTML = GEAR_ICONS.boardTwintip("w-5 h-5 text-violet-400 inline-block align-middle");
         if (volContainer) volContainer.classList.add('hidden');
         if (mastContainer) mastContainer.classList.add('hidden');
         if (label) label.innerText = 'Length (cm)';
@@ -3156,10 +3446,8 @@
       if (confirm("Reset everything? This will clear all kites and personal settings to start fresh.")) {
         localStorage.clear();
         state.inventory = [];
-        state.boards = [
-          { id: 'b_default', type: 'Twintip', brand: 'Duotone', model: 'Jaime SLS', size: '136', carbon: true, active: true }
-        ];
-        localStorage.setItem('kf_boards', JSON.stringify(state.boards));
+        state.boards = [];
+        localStorage.removeItem('kf_boards');
         state.user.weight = 75.0;
         state.user.level = 'intermediate';
         state.user.name = '';
@@ -3174,7 +3462,7 @@
 
     // 7. INITIAL STARTUP
     window.addEventListener('DOMContentLoaded', () => {
-      setTractionCategory('kite');
+      setKiteType('tube');
       updateAuthUI();
       
       const rInput = document.getElementById('rider-name-input');
