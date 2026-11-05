@@ -257,6 +257,13 @@ def resolve_beach_angle(spot_name: str, custom_angle=None) -> float:
     for key, angle in DEFAULT_BEACH_ORIENTATIONS.items():
         if key in clean_name:
             return float(angle)
+    try:
+        from kite_spots import GLOBAL_KITE_SPOTS
+        for s in GLOBAL_KITE_SPOTS:
+            if s["id"] in clean_name or s["name"].lower() in clean_name or any(a in clean_name for a in s.get("aliases", [])):
+                return float(s.get("beach_angle", 45.0))
+    except Exception:
+        pass
     return 45.0  # default generic NE coast
 
 
@@ -402,12 +409,47 @@ def calculate_stability_score(wind_kts: float, gust_kts: float) -> dict:
         }
 
 
-def calculate_wetsuit_guide(water_temp, air_temp) -> dict:
-    """Thermal comfort and wetsuit recommendation based on water & air temps."""
-    effective_temp = water_temp if water_temp is not None else (air_temp - 1.5 if air_temp is not None else 26.0)
-    w_display = round(effective_temp, 1)
+def calculate_wetsuit_guide(water_temp, air_temp, wind_kts=15.0, apparent_temp=None) -> dict:
+    """
+    Thermal comfort and wetsuit recommendation based on:
+    1. Water temperature (conductive heat loss during immersion)
+    2. Air temperature & wind speed (convective wind chill)
+    3. Latent heat of evaporation on wet neoprene/skin
+    """
+    w_temp = float(water_temp) if water_temp is not None else (float(air_temp) - 1.5 if air_temp is not None else 26.0)
+    a_temp = float(air_temp) if air_temp is not None else w_temp
+    w_speed = max(0.0, float(wind_kts or 14.0))
 
-    if effective_temp >= 24.0 and (air_temp is None or air_temp >= 23.0):
+    v_kmh = w_speed * 1.852
+    if apparent_temp is not None:
+        dry_apparent = float(apparent_temp)
+    elif v_kmh > 5.0 and a_temp < 28.0:
+        dry_apparent = 13.12 + 0.6215 * a_temp - 11.37 * (v_kmh ** 0.16) + 0.3965 * a_temp * (v_kmh ** 0.16)
+    else:
+        dry_apparent = a_temp
+
+    # Evaporative cooling penalty on wet skin/neoprene:
+    if w_speed > 8.0 and a_temp < 28.0:
+        evap_penalty = min(4.5, (w_speed / 25.0) * 2.8)
+    else:
+        evap_penalty = 0.0
+
+    feels_like_wet = round(dry_apparent - evap_penalty, 1)
+
+    # Limiting factor: cold wind chill freezes exposed skin/extremities,
+    # while cold water drains core heat during immersion.
+    limiting_cold = min(w_temp, feels_like_wet)
+    milder = max(w_temp, feels_like_wet)
+    
+    # 65% weight on primary heat sink (colder medium) + 35% on milder
+    rider_index = round((limiting_cold * 0.65) + (milder * 0.35), 1)
+
+    w_display = round(w_temp, 1)
+    chill_display = round(feels_like_wet, 1)
+    a_display = round(a_temp, 1)
+
+    # Thresholds:
+    if rider_index >= 24.5 and feels_like_wet >= 22.0 and w_temp >= 23.5:
         return {
             "wetsuit": "Boardshorts & Lycra",
             "gear": "Boardshorts / Bikini & UV Lycra",
@@ -416,9 +458,13 @@ def calculate_wetsuit_guide(water_temp, air_temp) -> dict:
             "pill": "Boardshorts & Lycra",
             "badge_color": "emerald",
             "water_temp": w_display,
-            "advice": f"Tropical warm water ({w_display}°C) — No neoprene needed, wear rashguard & sunscreen"
+            "air_temp": a_display,
+            "wind_chill": chill_display,
+            "rider_index": rider_index,
+            "limiting_factor": "warm",
+            "advice": f"Tropical warm water ({w_display}°C) & air ({a_display}°C) — No neoprene needed, wear rashguard & sunscreen"
         }
-    elif effective_temp >= 19.5:
+    elif rider_index >= 20.5 and feels_like_wet >= 19.0:
         return {
             "wetsuit": "2mm Shorty",
             "gear": "2mm Shorty / Neoprene Top",
@@ -427,20 +473,30 @@ def calculate_wetsuit_guide(water_temp, air_temp) -> dict:
             "pill": "2mm Shorty",
             "badge_color": "teal",
             "water_temp": w_display,
-            "advice": f"Pleasant water ({w_display}°C) — 2mm shorty or top protects from windchill"
+            "air_temp": a_display,
+            "wind_chill": chill_display,
+            "rider_index": rider_index,
+            "limiting_factor": "mild",
+            "advice": f"Pleasant water ({w_display}°C) & mild air ({a_display}°C) — 2mm shorty or top protects from mild breeze"
         }
-    elif effective_temp >= 15.5:
+    elif w_temp > 15.5 and rider_index >= 15.5:
+        # e.g. Tarifa in Nov: water 19.8C, chill 14.8C -> 3/2mm full steamer protects from wind chill
         return {
             "wetsuit": "3/2mm Fullsuit",
             "gear": "3/2mm Full Wetsuit (Steamer)",
             "icon": "🧥",
-            "tag": "🧥 3/2mm Fullsuit",
+            "tag": "🏄 3/2mm Fullsuit",
             "pill": "3/2mm Fullsuit",
             "badge_color": "sky",
             "water_temp": w_display,
-            "advice": f"Cool water ({w_display}°C) — 3/2mm full steamer recommended"
+            "air_temp": a_display,
+            "wind_chill": chill_display,
+            "rider_index": rider_index,
+            "limiting_factor": "wind_chill" if feels_like_wet < w_temp else "water",
+            "advice": f"Cool wind chill (feels {chill_display}°C) & {w_display}°C sea — 3/2mm full steamer required to prevent evaporative wind cooling"
         }
-    elif effective_temp >= 11.5:
+    elif rider_index >= 11.5 or w_temp >= 13.5:
+        # e.g. Cape Town: water 15C
         return {
             "wetsuit": "4/3mm Steamer",
             "gear": "4/3mm Sealed Steamer",
@@ -449,7 +505,11 @@ def calculate_wetsuit_guide(water_temp, air_temp) -> dict:
             "pill": "4/3mm Steamer",
             "badge_color": "indigo",
             "water_temp": w_display,
-            "advice": f"Cold water ({w_display}°C) — 4/3mm sealed wetsuit recommended"
+            "air_temp": a_display,
+            "wind_chill": chill_display,
+            "rider_index": rider_index,
+            "limiting_factor": "cold_water" if w_temp < feels_like_wet else "cold_wind",
+            "advice": f"Cold session (water {w_display}°C, chill {chill_display}°C) — 4/3mm sealed wetsuit recommended"
         }
     else:
         return {
@@ -460,7 +520,11 @@ def calculate_wetsuit_guide(water_temp, air_temp) -> dict:
             "pill": "5/4mm + Booties",
             "badge_color": "purple",
             "water_temp": w_display,
-            "advice": f"Frigid water ({w_display}°C) — 5/4mm hooded suit and booties mandatory"
+            "air_temp": a_display,
+            "wind_chill": chill_display,
+            "rider_index": rider_index,
+            "limiting_factor": "frigid",
+            "advice": f"Frigid conditions (water {w_display}°C, chill {chill_display}°C) — 5/4mm hooded suit and booties mandatory"
         }
 
 
@@ -717,8 +781,8 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
     params = {
         "latitude": spot["lat"],
         "longitude": spot["lon"],
-        "current": "temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m",
-        "hourly": "temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m",
+        "current": "temperature_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,wind_gusts_10m",
+        "hourly": "temperature_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,wind_gusts_10m",
         "models": "best_match,ecmwf_ifs025,gfs_seamless,icon_seamless",
         "wind_speed_unit": "kn",
         "timezone": spot.get("timezone", "auto"),
@@ -835,6 +899,7 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
     cur_dir_deg = round(current.get("wind_direction_10m", directions[cur_hr] if len(directions) > cur_hr else 90))
     cur_dir = degrees_to_cardinal(cur_dir_deg)
     cur_temp = round(current.get("temperature_2m", 28.5), 1)
+    cur_apparent = round(current.get("apparent_temperature", cur_temp), 1)
 
     cur_shore = calculate_shoreline_status(cur_dir_deg, beach_angle)
     cur_calib = calculate_thermal_calibration(
@@ -1077,10 +1142,12 @@ def fetch_live_forecast(spot: dict) -> dict:
     if "consensus" not in forecast:
         forecast["consensus"] = calculate_model_consensus(cur_wind, cur_wind + 1, cur_wind - 1)
 
-    # Attach Wetsuit & Thermal Comfort Guide
-    forecast["wetsuit"] = calculate_wetsuit_guide(today_sst, cur_temp)
+    # Attach Wetsuit & Thermal Comfort Guide (accounting for wind chill & evaporative heat loss)
+    cur_apparent = forecast.get("current", {}).get("apparent_temp")
+    forecast["wetsuit"] = calculate_wetsuit_guide(today_sst, cur_temp, wind_kts=cur_wind, apparent_temp=cur_apparent)
     tmrw_temp = forecast.get("tomorrow_temp_max", cur_temp)
-    forecast["tomorrow_wetsuit"] = calculate_wetsuit_guide(tomorrow_sst, tmrw_temp)
+    tmrw_wind = forecast.get("tomorrow_max_wind", 15.0)
+    forecast["tomorrow_wetsuit"] = calculate_wetsuit_guide(tomorrow_sst, tmrw_temp, wind_kts=tmrw_wind)
 
     # Attach Regional Meteorological Wind Model Label
     try:
@@ -2269,6 +2336,110 @@ def start_embedded_http_server(port: int = 8080):
                 self.wfile.write(json.dumps({"lat": lat, "lon": lon, "name": res_name}).encode("utf-8"))
                 return
 
+            # 4b. API: Spot Verification & Live Forecast Testing
+            if path == "/api/spots/verify":
+                try:
+                    q = params.get("q", [""])[0].strip()
+                    lat_str = params.get("lat", [None])[0]
+                    lon_str = params.get("lon", [None])[0]
+                    angle_str = params.get("beach_angle", [None])[0]
+                    ref_lat = params.get("ref_lat", [None])[0]
+                    ref_lon = params.get("ref_lon", [None])[0]
+
+                    target_lat = float(lat_str) if lat_str not in (None, "") else None
+                    target_lon = float(lon_str) if lon_str not in (None, "") else None
+                    resolved_name = q
+
+                    # 1. Geocode if coordinates not explicitly passed
+                    if target_lat is None or target_lon is None:
+                        if not q:
+                            self.send_response(400)
+                            self.send_header("Content-Type", "application/json")
+                            self._send_cors_headers()
+                            self.end_headers()
+                            self.wfile.write(json.dumps({"verified": False, "error": "Spot name or coordinates required"}).encode("utf-8"))
+                            return
+
+                        r_lat = float(ref_lat) if ref_lat not in (None, "") else None
+                        r_lon = float(ref_lon) if ref_lon not in (None, "") else None
+                        target_lat, target_lon, resolved_name = geocode_place_name(q, ref_lat=r_lat, ref_lon=r_lon)
+
+                    if target_lat is None or target_lon is None:
+                        self.send_response(404)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"verified": False, "error": f"Could not locate '{q}'. Try entering nearby coastal town or GPS coordinates."}).encode("utf-8"))
+                        return
+
+                    # 2. Verify with Open-Meteo Weather API
+                    om_url = f"https://api.open-meteo.com/v1/forecast?latitude={target_lat}&longitude={target_lon}&current=temperature_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,wind_gusts_10m&wind_speed_unit=kn&timezone=auto"
+                    om_req = urllib.request.Request(om_url, headers={"User-Agent": "KiteForecastBot/1.0"})
+                    with urllib.request.urlopen(om_req, context=SSL_CTX, timeout=8) as resp:
+                        om_data = json.loads(resp.read().decode("utf-8"))
+
+                    cur = om_data.get("current", {})
+                    if "wind_speed_10m" not in cur:
+                        self.send_response(400)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"verified": False, "error": "No meteorological wind coverage at these coordinates."}).encode("utf-8"))
+                        return
+
+                    # 3. Build verified spot payload
+                    cur_w = round_knots(cur.get("wind_speed_10m", 0))
+                    cur_g = round_knots(cur.get("wind_gusts_10m", cur_w))
+                    cur_d = round(cur.get("wind_direction_10m", 0))
+                    cur_t = round(cur.get("temperature_2m", 25.0), 1)
+                    cur_app = round(cur.get("apparent_temperature", cur_t), 1)
+                    tz = om_data.get("timezone", "auto")
+
+                    # Beach angle resolution
+                    b_angle = None
+                    if angle_str not in (None, ""):
+                        try:
+                            b_angle = float(angle_str)
+                        except Exception:
+                            pass
+                    if b_angle is None:
+                        b_angle = resolve_beach_angle(resolved_name or q)
+
+                    slug_id = re.sub(r'[^a-z0-9]+', '_', (resolved_name or q).lower()).strip('_')[:25]
+                    spot_obj = {
+                        "id": f"custom_{slug_id}",
+                        "name": resolved_name or q,
+                        "short_name": (resolved_name or q).split(",")[0].strip(),
+                        "country": (resolved_name or "").split(",")[-1].strip() if "," in (resolved_name or "") else "Custom",
+                        "region": "Custom Verified",
+                        "flag": "📍",
+                        "lat": round(target_lat, 4),
+                        "lon": round(target_lon, 4),
+                        "timezone": tz,
+                        "beach_angle": b_angle,
+                        "model_label": "ECMWF (9km) + Open-Meteo Verified",
+                        "is_custom": True,
+                        "live_wind_kts": cur_w,
+                        "live_gust_kts": cur_g,
+                        "live_direction": degrees_to_cardinal(cur_d),
+                        "live_temp_c": cur_t,
+                        "live_apparent_c": cur_app
+                    }
+
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"verified": True, "spot": spot_obj}).encode("utf-8"))
+                    return
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"verified": False, "error": str(e)}).encode("utf-8"))
+                    return
+
             # 5. API: Global Kite Spots & GPS Discovery
             if path == "/api/spots":
                 try:
@@ -2779,6 +2950,16 @@ def main():
     config = load_config()
     if len(sys.argv) > 1 and sys.argv[1] in ["--poll", "--listen", "-l"]:
         run_poll_listener()
+        return
+    elif len(sys.argv) > 1 and sys.argv[1] in ["--web", "-w", "--server"]:
+        cloud_port = int(os.getenv("PORT", "8080"))
+        start_embedded_http_server(cloud_port)
+        print(f"HolyGust web server running on http://localhost:{cloud_port}")
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            pass
         return
     elif len(sys.argv) > 1 and sys.argv[1] in ["--briefing-all", "--all"]:
         send_morning_briefing_to_all()
