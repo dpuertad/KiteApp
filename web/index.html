@@ -116,10 +116,6 @@
         </div>
 
         <div class="flex items-center space-x-1.5">
-          <button onclick="toggleModal('modal-feedback')" class="flex px-2.5 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 active:scale-95 text-amber-300 border border-amber-500/30 text-[11px] font-bold transition items-center space-x-1 shadow-sm">
-            <span>💡</span>
-            <span>Suggestions</span>
-          </button>
           <button id="btn-profile-account" onclick="openAuthModal()" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700 text-[11px] font-bold transition flex items-center space-x-1">
             <i data-lucide="cloud" class="w-3.5 h-3.5 text-sky-400"></i>
             <span id="account-status-label">Account</span>
@@ -372,19 +368,48 @@
       <div class="flex items-center justify-between">
         <div>
           <h2 class="text-sm font-bold text-white flex items-center space-x-2">
-            <span>🎒 My Kites & Gear Inventory</span>
+            <span>🎒 My Gear Inventory</span>
           </h2>
           <p class="text-xs text-slate-400 mt-0.5">Toggle what's packed with you at the beach today</p>
         </div>
-        <button onclick="toggleModal('modal-add-kite')" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 text-white font-bold text-xs shadow-md shadow-sky-500/20 active:scale-95 transition flex items-center space-x-1">
-          <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-          <span>Add Kite</span>
-        </button>
+        <div class="flex items-center space-x-1.5">
+          <button onclick="toggleModal('modal-add-kite')" class="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 text-white font-bold text-xs shadow-md shadow-sky-500/20 active:scale-95 transition flex items-center space-x-1">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            <span>+ Kite</span>
+          </button>
+          <button onclick="toggleModal('modal-add-board')" class="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-400 hover:to-purple-400 text-white font-bold text-xs shadow-md shadow-violet-500/20 active:scale-95 transition flex items-center space-x-1">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            <span>+ Board</span>
+          </button>
+        </div>
       </div>
 
-      <!-- Kite Cards List -->
-      <div id="quiver-list" class="space-y-2.5">
-        <!-- Rendered dynamically -->
+      <!-- Kites Sub-Section -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-xs font-bold text-slate-300">
+          <span class="flex items-center space-x-1.5">
+            <span>🪁</span>
+            <span>Kites</span>
+          </span>
+          <span id="kites-sub-badge" class="text-[10px] text-slate-400 font-normal">--</span>
+        </div>
+        <div id="quiver-list" class="space-y-2.5">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Boards Sub-Section -->
+      <div class="space-y-2 pt-2 border-t border-slate-800/80">
+        <div class="flex items-center justify-between text-xs font-bold text-slate-300">
+          <span class="flex items-center space-x-1.5">
+            <span>🛹</span>
+            <span>Boards & Hydrofoils</span>
+          </span>
+          <span id="boards-sub-badge" class="text-[10px] text-slate-400 font-normal">--</span>
+        </div>
+        <div id="boards-list" class="space-y-2.5">
+          <!-- Rendered dynamically -->
+        </div>
       </div>
     </section>
 
@@ -488,6 +513,91 @@
 
         <button type="submit" class="w-full mt-2 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-95 text-white font-bold text-xs shadow-lg shadow-sky-500/25 transition">
           Save Kite to My Gear
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADD BOARD MODAL -->
+  <div id="modal-add-board" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-sm text-white flex items-center space-x-2">
+          <span>🛹 Add Board to Your Gear Inventory</span>
+        </h3>
+        <button onclick="toggleModal('modal-add-board')" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <form onsubmit="onAddBoardFormSubmit(event)" class="space-y-3.5 text-xs">
+        <!-- Discipline Selector -->
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Discipline</label>
+          <select id="board-select-type" onchange="onBoardTypeSelectChange(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
+            <option value="Twintip" selected>Twintip (Freeride / Big Air / Freestyle)</option>
+            <option value="Hydrofoil">Hydrofoil (Low-Wind Glide & Lightwind)</option>
+            <option value="Strapless">Strapless / Surfboard (Wave & Chop)</option>
+          </select>
+        </div>
+
+        <!-- Brand Selector -->
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Brand</label>
+          <select id="board-select-brand" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
+            <option value="Duotone" selected>Duotone</option>
+            <option value="Gong">GONG</option>
+            <option value="Core">Core</option>
+            <option value="North">North</option>
+            <option value="Cabrinha">Cabrinha</option>
+            <option value="F-One">F-One</option>
+            <option value="Reedin">Reedin</option>
+            <option value="Appletree">Appletree</option>
+            <option value="Sabfoil">Sabfoil</option>
+            <option value="Slingshot">Slingshot</option>
+            <option value="Eleveight">Eleveight</option>
+            <option value="Other">Other / Custom</option>
+          </select>
+        </div>
+
+        <!-- Model Input -->
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Model Name</label>
+          <input id="board-input-model" type="text" placeholder="e.g. Jaime SLS, Select, Curve Foil, Mitu..." required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs placeholder:text-slate-500">
+        </div>
+
+        <!-- Dynamic Size Selector -->
+        <div id="board-size-container">
+          <label id="board-size-label" class="block font-semibold text-slate-300 mb-1">Length (cm)</label>
+          <select id="board-select-size" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
+            <option value="132">132 cm</option>
+            <option value="134">134 cm</option>
+            <option value="136" selected>136 cm (Standard)</option>
+            <option value="138">138 cm</option>
+            <option value="140">140 cm</option>
+            <option value="142">142 cm</option>
+            <option value="144">144 cm (Lightwind)</option>
+            <option value="150">150 cm (Door)</option>
+          </select>
+        </div>
+
+        <!-- Carbon Construction Checkbox -->
+        <div class="flex items-start space-x-2 pt-1">
+          <input type="checkbox" id="board-check-carbon" checked class="w-4 h-4 mt-0.5 rounded text-sky-500 bg-slate-950 border-slate-700 focus:ring-0">
+          <div>
+            <label for="board-check-carbon" class="text-xs text-slate-200 font-semibold cursor-pointer">Carbon / SLS / D/LAB Construction</label>
+            <p class="text-[10px] text-slate-400">Ultra-light weight & stiffer flex for earlier planing and pop</p>
+          </div>
+        </div>
+
+        <!-- Initial Status Checkbox -->
+        <div class="flex items-center space-x-2 pt-1">
+          <input type="checkbox" id="board-check-in-bag" checked class="w-4 h-4 rounded text-sky-500 bg-slate-950 border-slate-700 focus:ring-0">
+          <label for="board-check-in-bag" class="text-xs text-slate-300 font-medium cursor-pointer">Packed in car / at beach today (Active)</label>
+        </div>
+
+        <button type="submit" class="w-full mt-2 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-400 hover:to-purple-500 active:scale-95 text-white font-bold text-xs shadow-lg shadow-violet-500/25 transition">
+          Save Board to My Gear
         </button>
       </form>
     </div>
@@ -982,6 +1092,17 @@
 
     const savedScheduleView = localStorage.getItem('kf_schedule_view') || '2h';
 
+    const savedBoards = localStorage.getItem('kf_boards');
+    let initialBoards = [];
+    if (savedBoards) {
+      try { initialBoards = JSON.parse(savedBoards); } catch(e){}
+    }
+    if (!initialBoards || initialBoards.length === 0) {
+      initialBoards = [
+        { id: 'b_default', type: 'Twintip', brand: 'Duotone', model: 'Jaime SLS', size: '136', carbon: true, active: true }
+      ];
+    }
+
     let state = {
       user: {
         name: savedName !== null ? savedName : '',
@@ -991,6 +1112,7 @@
       },
       spot: savedSpot,
       inventory: JSON.parse(localStorage.getItem('kf_inventory')) || [],
+      boards: initialBoards,
       currentTab: 'today',
       scheduleView: savedScheduleView,
       forecastData: null
@@ -1070,13 +1192,13 @@
       };
     }
 
-    // 3. SIZING & KITE RECOMMENDATION ENGINE (Runs locally in JS with full hydrodynamic & aerodynamic physics)
-    function evaluateKite(kite, weightKg, windKts, level, board) {
+    // 3. SIZING & COMBO RECOMMENDATION ENGINE (Option A: Smart Multi-Discipline Board & Kite Match)
+    function evaluateKiteWithBoard(kite, board, weightKg, level, windKts) {
       const specs = getKiteSpecs(kite.brand, kite.model, kite.size);
-      
-      // 60% aerodynamic lift scaling + 40% hydrodynamic displacement & planing friction:
+
+      // Aerodynamic lift & body weight scaling:
       const wFactor = (Math.sqrt(weightKg / 75.0) * 0.6) + ((weightKg / 75.0) * 0.4);
-      
+
       let minK = specs.min * wFactor;
       let sweetMin = specs.sweet[0] * wFactor;
       let sweetMax = specs.sweet[1] * wFactor;
@@ -1085,25 +1207,55 @@
       // Rider Skill Level tuning
       const lvl = (level || state.user.level || 'intermediate').toLowerCase();
       if (lvl === 'beginner') {
-        minK *= 1.15;       // needs +2-3 kts to plane and ride upwind safely
+        minK *= 1.15;
         sweetMin *= 1.10;
-        maxK *= 0.88;       // lower overpower threshold for safety
+        maxK *= 0.88;
       } else if (lvl === 'advanced') {
-        minK *= 0.92;       // active kite flying in lighter breeze
-        sweetMax *= 1.08;   // higher sweet spot ceiling for boosting
-        maxK *= 1.12;       // handles more power
+        minK *= 0.92;
+        sweetMax *= 1.08;
+        maxK *= 1.12;
       }
 
-      // Board discipline tuning
-      const brd = (board || state.user.board || 'Twintip').toLowerCase();
-      if (brd.includes('surf') || brd.includes('strapless')) {
-        minK *= 0.85;
-        sweetMin *= 0.85;
+      // Board Discipline & Hydrodynamics Physics Scaling
+      const brd = board || { type: 'Twintip', size: '136', carbon: false };
+      const bType = brd.type || 'Twintip';
+      const isCarbon = !!brd.carbon;
+      const carbonMultiplier = isCarbon ? 0.96 : 1.0; // Carbon is stiffer & lighter: planes ~4% earlier
+
+      let bFactor = 1.0;
+      if (bType === 'Hydrofoil') {
+        const wingArea = parseFloat(brd.size) || 1050; // cm²
+        const wingFactor = Math.min(1.35, Math.max(0.70, Math.sqrt(1000.0 / wingArea)));
+        bFactor = 0.58 * wingFactor * carbonMultiplier; // Foils plane with ~42% less pull
+        minK *= bFactor;
+        sweetMin *= (bFactor * 1.06);
+        sweetMax *= (bFactor * 1.14);
+        maxK *= 0.74; // High speed foil overpower ceiling is lower than twintip
+      } else if (bType === 'Strapless') {
+        let inches = 68.0; // baseline 5'8"
+        if (typeof brd.size === 'string' && brd.size.includes("'")) {
+          const parts = brd.size.split("'");
+          const ft = parseFloat(parts[0]) || 5;
+          const inc = parseFloat(parts[1]) || 8;
+          inches = ft * 12 + inc;
+        } else if (parseFloat(brd.size) > 0) {
+          inches = parseFloat(brd.size);
+        }
+        const surfFactor = Math.min(1.15, Math.max(0.85, Math.sqrt(68.0 / inches)));
+        bFactor = 0.84 * surfFactor * carbonMultiplier; // High volume surf directional planes ~16% earlier
+        minK *= bFactor;
+        sweetMin *= bFactor;
+        sweetMax *= (bFactor * 1.02);
         maxK *= 0.88;
-      } else if (brd.includes('foil')) {
-        minK *= 0.60;
-        sweetMin *= 0.65;
-        maxK *= 0.75;
+      } else {
+        // Twintip
+        const lengthCm = parseFloat(brd.size) || 136;
+        const ttFactor = Math.min(1.15, Math.max(0.88, Math.sqrt(136.0 / lengthCm)));
+        bFactor = 1.0 * ttFactor * carbonMultiplier;
+        minK *= bFactor;
+        sweetMin *= bFactor;
+        sweetMax *= (isCarbon ? 1.03 : 1.0); // Stiff carbon edge control allows more top end
+        maxK *= (isCarbon ? 1.04 : 1.0);
       }
 
       minK = Math.round(minK * 10) / 10;
@@ -1112,8 +1264,15 @@
       maxK = Math.round(maxK * 10) / 10;
       const midSweet = (sweetMin + sweetMax) / 2.0;
 
+      const typeIcon = bType === 'Hydrofoil' ? '🦅' : (bType === 'Strapless' ? '🏄‍♂️' : '🛹');
+      const unit = bType === 'Twintip' ? 'cm' : (bType === 'Hydrofoil' ? 'cm²' : '');
+      const boardShort = `${brd.brand ? brd.brand + ' ' : ''}${brd.model || bType} ${brd.size ? brd.size + unit : ''}${isCarbon ? ' ⚡' : ''}`.trim();
+      const kiteShort = `${kite.brand} ${kite.model}${kite.year ? ' (' + kite.year + ')' : ''} ${kite.size}m`;
+
       return {
-        ...kite,
+        kite,
+        board: brd,
+        bType,
         minK,
         sweetMin,
         sweetMax,
@@ -1121,11 +1280,20 @@
         inSweet: windKts >= sweetMin && windKts <= sweetMax,
         inRange: windKts >= minK && windKts <= maxK,
         distToSweet: Math.abs(windKts - midSweet),
-        displayName: `${kite.brand} ${kite.model}${kite.year ? ' (' + kite.year + ')' : ''} ${kite.size}m`
+        kiteShort,
+        boardShort,
+        displayName: `${kiteShort} + ${typeIcon} ${boardShort}`
       };
     }
 
-    function recommendRigging(windKts, gustKts) {
+    function evaluateKite(kite, weightKg, windKts, level, board) {
+      const activeBoard = (state.boards && state.boards.length > 0)
+        ? (state.boards.find(b => b.active !== false) || state.boards[0])
+        : { type: 'Twintip', size: '136', carbon: false };
+      return evaluateKiteWithBoard(kite, activeBoard, weightKg, level, windKts);
+    }
+
+    function recommendRigging(windKts, gustKts, slotHour) {
       const activeKites = state.inventory.filter(k => k.active !== false);
       if (state.inventory.length === 0) {
         return {
@@ -1140,77 +1308,168 @@
         };
       }
 
-      const evaluated = activeKites.map(k => evaluateKite(k, state.user.weight, windKts, state.user.level, state.user.board));
-      const sweets = evaluated.filter(k => k.inSweet);
+      let activeBoards = (state.boards || []).filter(b => b.active !== false);
+      if (activeBoards.length === 0) {
+        if (state.boards && state.boards.length > 0) {
+          activeBoards = [state.boards[0]];
+        } else {
+          activeBoards = [{ type: 'Twintip', brand: 'Duotone', model: 'Jaime', size: '136', carbon: true, active: true }];
+        }
+      }
+
+      // Generate all combination pairs of (Packed Kite, Packed Board)
+      const combos = [];
+      activeKites.forEach(k => {
+        activeBoards.forEach(b => {
+          combos.push(evaluateKiteWithBoard(k, b, state.user.weight, state.user.level, windKts));
+        });
+      });
+
+      // 1. SWEET SPOT MATCHES:
+      const sweets = combos.filter(c => c.inSweet);
       if (sweets.length > 0) {
-        sweets.sort((a,b) => a.distToSweet - b.distToSweet);
+        // Preference: In light wind (< 14 kts), favor Hydrofoil if in sweet spot; in moderate/strong wind (>= 14 kts), favor Twintip
+        sweets.sort((a, b) => {
+          if (windKts < 14) {
+            if (a.bType === 'Hydrofoil' && b.bType !== 'Hydrofoil') return -1;
+            if (b.bType === 'Hydrofoil' && a.bType !== 'Hydrofoil') return 1;
+          } else {
+            if (a.bType === 'Twintip' && b.bType === 'Hydrofoil') return -1;
+            if (b.bType === 'Twintip' && a.bType === 'Hydrofoil') return 1;
+          }
+          return a.distToSweet - b.distToSweet;
+        });
         return { status: 'sweet', text: `${sweets[0].displayName}` };
       }
 
-      const inRanges = evaluated.filter(k => k.inRange);
+      // 2. IN RANGE MATCHES:
+      const inRanges = combos.filter(c => c.inRange);
       if (inRanges.length > 0) {
-        inRanges.sort((a,b) => a.distToSweet - b.distToSweet);
-        const tag = windKts > inRanges[0].sweetMax ? ' (Powered up)' : ' (Light end)';
-        return { status: 'range', text: `${inRanges[0].displayName}${tag}` };
+        inRanges.sort((a, b) => {
+          if (windKts < 14) {
+            if (a.bType === 'Hydrofoil' && b.bType !== 'Hydrofoil') return -1;
+            if (b.bType === 'Hydrofoil' && a.bType !== 'Hydrofoil') return 1;
+          } else {
+            if (a.bType === 'Twintip' && b.bType === 'Hydrofoil') return -1;
+            if (b.bType === 'Twintip' && a.bType === 'Hydrofoil') return 1;
+          }
+          return a.distToSweet - b.distToSweet;
+        });
+        const best = inRanges[0];
+        // User rule: Never use "Light end"; use "(Underpowered)" and "(Overpowered)"
+        const tag = windKts > best.sweetMax ? ' (Overpowered)' : ' (Underpowered)';
+        return { status: 'range', text: `${best.displayName}${tag}` };
       }
 
-      const mins = evaluated.map(k => k.minK);
-      const maxs = evaluated.map(k => k.maxK);
+      // Resolve Hour of day for Time-Aware Caipirinha vs Morning Coffee
+      let hour = slotHour;
+      if (hour === undefined || hour === null) {
+        hour = new Date().getHours();
+        if (state.forecastData && typeof state.forecastData.utc_offset_seconds === 'number') {
+          const now = new Date();
+          const utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
+          const spotDate = new Date(utcMs + (state.forecastData.utc_offset_seconds * 1000));
+          hour = spotDate.getHours();
+        }
+      }
+
+      const mins = combos.map(c => c.minK);
+      const maxs = combos.map(c => c.maxK);
       const minVal = Math.min(...mins);
       const maxVal = Math.max(...maxs);
 
-      // Light wind handling: Caipirinha Time!
+      // 3. WIND TOO LIGHT (< minVal): Time-Aware Coffee (before 12:00) vs Caipirinha (12:00+)
       if (windKts < minVal) {
-        evaluated.sort((a,b) => b.size - a.size);
-        const biggest = evaluated[0];
-        const atHomeBigger = state.inventory.filter(k => k.active === false && k.size > biggest.size);
+        combos.sort((a, b) => a.minK - b.minK);
+        const bestLightCombo = combos[0];
+        
+        const atHomeBiggerKites = state.inventory.filter(k => k.active === false && k.size > bestLightCombo.kite.size);
+        const atHomeFoil = (state.boards || []).filter(b => b.active === false && b.type === 'Hydrofoil');
         let tip = '';
-        if (atHomeBigger.length > 0) {
-          atHomeBigger.sort((a,b) => b.size - a.size);
-          tip = ` 💡 Pack your ${atHomeBigger[0].size}m from home!`;
+        if (atHomeFoil.length > 0) {
+          tip = ` 💡 Pack your ${atHomeFoil[0].brand || ''} Hydrofoil from home!`;
+        } else if (atHomeBiggerKites.length > 0) {
+          atHomeBiggerKites.sort((a,b) => b.size - a.size);
+          tip = ` 💡 Pack your ${atHomeBiggerKites[0].size}m from home!`;
         }
-        return {
-          status: 'light',
-          text: `🍹 Caipirinha Time! Wind (${Math.round(windKts)} kts) is too light for your ${biggest.displayName} (min ~${Math.round(biggest.minK)} kts) — none of your gear fits, time to chill! 🏖️🍹${tip}`
-        };
+
+        if (hour < 12) {
+          return {
+            status: 'coffee',
+            text: `☕ Too early for Caipi time, enjoy a beach coffee :) Wind (${Math.round(windKts)} kts) is too light for your ${bestLightCombo.displayName} (min ~${Math.round(bestLightCombo.minK)} kts) — enjoy the morning ocean view! ☕🥐${tip}`
+          };
+        } else {
+          return {
+            status: 'light',
+            text: `🍹 Caipirinha Time! Wind (${Math.round(windKts)} kts) is too light for your ${bestLightCombo.displayName} (min ~${Math.round(bestLightCombo.minK)} kts) — none of your gear fits, time to chill at the beach bar! 🏖️🍹${tip}`
+          };
+        }
       }
 
-      // Strong wind handling: Double Caipirinha if howling danger
+      // 4. STRONG WIND (> maxVal)
       if (windKts > maxVal) {
-        evaluated.sort((a,b) => a.size - b.size);
-        const smallest = evaluated[0];
-        const atHomeSmaller = state.inventory.filter(k => k.active === false && k.size < smallest.size);
+        combos.sort((a, b) => b.maxK - a.maxK);
+        const bestHighCombo = combos[combos.length - 1];
+        const atHomeSmaller = state.inventory.filter(k => k.active === false && k.size < bestHighCombo.kite.size);
         let tip = '';
         if (atHomeSmaller.length > 0) {
           atHomeSmaller.sort((a,b) => a.size - b.size);
           tip = ` 💡 Pack your ${atHomeSmaller[0].size}m from home!`;
         }
-        if (windKts <= smallest.maxK + 4) {
-          return { status: 'overpowered', text: `${smallest.displayName} (🚨 Overpowered — max ~${Math.round(smallest.maxK)} kts, depower fully)${tip}` };
-        } else if (windKts <= smallest.maxK + 8) {
-          return { status: 'overpowered', text: `${smallest.displayName} (🚨 Heavily Overpowered — max ~${Math.round(smallest.maxK)} kts!)${tip}` };
+
+        if (windKts <= bestHighCombo.maxK + 4) {
+          return { status: 'overpowered', text: `${bestHighCombo.displayName} (🚨 Overpowered — max ~${Math.round(bestHighCombo.maxK)} kts, depower fully)${tip}` };
+        } else if (windKts <= bestHighCombo.maxK + 8) {
+          return { status: 'overpowered', text: `${bestHighCombo.displayName} (🚨 Heavily Overpowered — max ~${Math.round(bestHighCombo.maxK)} kts!)${tip}` };
         } else {
-          return { status: 'danger', text: `🍹 Double Caipirinha Time! Nuking at ${Math.round(windKts)} kts — too wild for your ${smallest.displayName} (max ~${Math.round(smallest.maxK)} kts). Watch the show from the beach bar! 🍹🔥${tip}` };
+          if (hour < 12) {
+            return {
+              status: 'coffee-storm',
+              text: `☕ Holy Storm Coffee Time! Nuking at ${Math.round(windKts)} kts — too wild for your ${bestHighCombo.displayName} (max ~${Math.round(bestHighCombo.maxK)} kts). Grab a hot brew and watch the show safely from the beach cafe! ☕⚡${tip}`
+            };
+          } else {
+            return {
+              status: 'danger',
+              text: `🍹 Double Caipirinha Time! Nuking at ${Math.round(windKts)} kts — too wild for your ${bestHighCombo.displayName} (max ~${Math.round(bestHighCombo.maxK)} kts). Watch the show from the beach bar! 🍹🔥${tip}`
+            };
+          }
         }
       }
 
-      evaluated.sort((a,b) => a.distToSweet - b.distToSweet);
-      return { status: 'marginal', text: `${evaluated[0].displayName} (Marginal)` };
+      combos.sort((a, b) => a.distToSweet - b.distToSweet);
+      return { status: 'marginal', text: `${combos[0].displayName} (Marginal)` };
     }
 
     // 4. RENDERING FUNCTIONS
     function renderGearInventory() {
-      const container = document.getElementById('quiver-list');
-      const activeCount = state.inventory.filter(k => k.active !== false).length;
-      const homeCount = state.inventory.length - activeCount;
+      const kiteContainer = document.getElementById('quiver-list');
+      const boardContainer = document.getElementById('boards-list');
+
+      const activeKites = state.inventory.filter(k => k.active !== false).length;
+      const homeKites = state.inventory.length - activeKites;
+
+      const activeBoards = (state.boards || []).filter(b => b.active !== false).length;
+      const homeBoards = (state.boards || []).length - activeBoards;
+
       const badgeCountEl = document.getElementById('backpack-count-badge');
       if (badgeCountEl) {
-        badgeCountEl.innerText = `🎒 ${activeCount} packed with me · ${homeCount} at home`;
+        badgeCountEl.innerText = `🎒 ${activeKites} kites, ${activeBoards} boards packed · ${homeKites + homeBoards} at home`;
       }
 
+      const kiteSubBadge = document.getElementById('kites-sub-badge');
+      if (kiteSubBadge) {
+        kiteSubBadge.innerText = `${activeKites} packed · ${homeKites} at home`;
+      }
+
+      const boardSubBadge = document.getElementById('boards-sub-badge');
+      if (boardSubBadge) {
+        boardSubBadge.innerText = `${activeBoards} packed · ${homeBoards} at home`;
+      }
+
+      // 1. RENDER KITES
       if (state.inventory.length === 0) {
-        container.innerHTML = `
-          <div class="bg-slate-950/60 rounded-2xl p-5 border border-dashed border-slate-800 text-center space-y-2">
+        kiteContainer.innerHTML = `
+          <div class="bg-slate-950/60 rounded-2xl p-4 border border-dashed border-slate-800 text-center space-y-2">
             <p class="text-xs font-bold text-amber-400">⚠️ No kites registered yet!</p>
             <p class="text-[11px] text-slate-400">Add your kites above so the assistant can give you exact sizing and depower recommendations.</p>
             <button onclick="toggleModal('modal-add-kite')" class="px-3 py-1.5 rounded-xl bg-sky-500/20 text-sky-400 text-xs font-bold border border-sky-500/30 hover:bg-sky-500/30">
@@ -1218,69 +1477,131 @@
             </button>
           </div>
         `;
-        return;
-      }
-
-      container.innerHTML = state.inventory.map((k, idx) => {
-        const ev = evaluateKite(k, state.user.weight, 18.0, state.user.level, state.user.board);
-        const isActive = k.active !== false;
-        return `
-          <div class="rounded-2xl p-3.5 border transition-all duration-300 flex flex-col space-y-2.5 ${
-            isActive
-              ? 'bg-gradient-to-r from-slate-900 via-slate-900 to-emerald-950/30 border-emerald-500/70 shadow-lg shadow-emerald-950/40 ring-1 ring-emerald-500/30'
-              : 'bg-slate-950/60 border-slate-800/80 opacity-55 grayscale-[20%]'
-          }">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2.5">
-                <span class="text-xs font-black px-2.5 py-1 rounded-xl border ${
-                  isActive
-                    ? 'text-emerald-300 bg-emerald-500/20 border-emerald-500/40 shadow-sm'
-                    : 'text-slate-400 bg-slate-900 border-slate-800'
-                }">${k.size}m</span>
-                <div>
-                  <div class="flex items-center space-x-2">
-                    <h4 class="text-xs font-bold text-white">${k.brand} ${k.model} <span class="text-slate-400 font-normal">(${k.year || 2024})</span></h4>
-                    ${
-                      isActive
-                        ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center space-x-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span><span>Packed</span></span>`
-                        : `<span class="px-2 py-0.5 rounded-full text-[9px] font-medium bg-slate-800 text-slate-400 border border-slate-700">At Home</span>`
-                    }
+      } else {
+        kiteContainer.innerHTML = state.inventory.map((k, idx) => {
+          const ev = evaluateKiteWithBoard(k, (state.boards && state.boards[0]) || null, state.user.weight, state.user.level, 18.0);
+          const isActive = k.active !== false;
+          return `
+            <div class="rounded-2xl p-3.5 border transition-all duration-300 flex flex-col space-y-2.5 ${
+              isActive
+                ? 'bg-gradient-to-r from-slate-900 via-slate-900 to-emerald-950/30 border-emerald-500/70 shadow-lg shadow-emerald-950/40 ring-1 ring-emerald-500/30'
+                : 'bg-slate-950/60 border-slate-800/80 opacity-55 grayscale-[20%]'
+            }">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2.5">
+                  <span class="text-xs font-black px-2.5 py-1 rounded-xl border ${
+                    isActive
+                      ? 'text-emerald-300 bg-emerald-500/20 border-emerald-500/40 shadow-sm'
+                      : 'text-slate-400 bg-slate-900 border-slate-800'
+                  }">${k.size}m</span>
+                  <div>
+                    <div class="flex items-center space-x-2">
+                      <h4 class="text-xs font-bold text-white">${k.brand} ${k.model} <span class="text-slate-400 font-normal">(${k.year || 2024})</span></h4>
+                      ${
+                        isActive
+                          ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center space-x-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span><span>Packed</span></span>`
+                          : `<span class="px-2 py-0.5 rounded-full text-[9px] font-medium bg-slate-800 text-slate-400 border border-slate-700">At Home</span>`
+                      }
+                    </div>
+                    <p class="text-[10px] text-slate-400 mt-0.5">${ev.type || 'Freeride'} · ${ev.material || 'Standard'}</p>
                   </div>
-                  <p class="text-[10px] text-slate-400 mt-0.5">${ev.type || 'Freeride'} · ${ev.material || 'Standard'}</p>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                  <button onclick="toggleKiteBackpack(${idx})" class="px-2.5 py-1.5 rounded-xl text-[11px] font-bold transition flex items-center space-x-1.5 active:scale-95 ${
+                    isActive
+                      ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20 hover:bg-emerald-400 font-black'
+                      : 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700'
+                  }">
+                    <span>${isActive ? '🎒 Packed' : '🏠 Leave'}</span>
+                  </button>
+                  <button onclick="deleteKite(${idx})" class="text-slate-500 hover:text-rose-400 p-1.5 transition" title="Delete kite">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                  </button>
                 </div>
               </div>
 
-              <!-- Packed vs Left at Home Toggle Button -->
-              <div class="flex items-center space-x-2">
-                <button onclick="toggleKiteBackpack(${idx})" class="px-2.5 py-1.5 rounded-xl text-[11px] font-bold transition flex items-center space-x-1.5 active:scale-95 ${
-                  isActive
-                    ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20 hover:bg-emerald-400 font-black'
-                    : 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700'
-                }">
-                  <span>${isActive ? '🎒 Packed' : '🏠 Leave'}</span>
-                </button>
-                <button onclick="deleteKite(${idx})" class="text-slate-500 hover:text-rose-400 p-1.5 transition" title="Delete kite">
-                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                </button>
+              <!-- Visual Wind Range Bar -->
+              <div class="space-y-1">
+                <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+                  <span>Min: ${Math.round(ev.minK)} kts</span>
+                  <span class="${isActive ? 'text-emerald-400 font-bold' : 'text-slate-400 font-medium'}">Sweet: ${Math.round(ev.sweetMin)}-${Math.round(ev.sweetMax)} kts</span>
+                  <span>Max: ${Math.round(ev.maxK)} kts</span>
+                </div>
+                <div class="w-full h-1.5 bg-slate-800/80 rounded-full overflow-hidden flex">
+                  <div style="width: 20%" class="bg-slate-700"></div>
+                  <div style="width: 50%" class="${isActive ? 'bg-gradient-to-r from-emerald-500 to-cyan-400' : 'bg-slate-600'}"></div>
+                  <div style="width: 30%" class="bg-amber-500/80"></div>
+                </div>
               </div>
             </div>
+          `;
+        }).join('');
+      }
 
-            <!-- Visual Wind Range Bar -->
-            <div class="space-y-1">
-              <div class="flex justify-between text-[10px] text-slate-400 font-mono">
-                <span>Min: ${Math.round(ev.minK)} kts</span>
-                <span class="${isActive ? 'text-emerald-400 font-bold' : 'text-slate-400 font-medium'}">Sweet: ${Math.round(ev.sweetMin)}-${Math.round(ev.sweetMax)} kts</span>
-                <span>Max: ${Math.round(ev.maxK)} kts</span>
-              </div>
-              <div class="w-full h-1.5 bg-slate-800/80 rounded-full overflow-hidden flex">
-                <div style="width: 20%" class="bg-slate-700"></div>
-                <div style="width: 50%" class="${isActive ? 'bg-gradient-to-r from-emerald-500 to-cyan-400' : 'bg-slate-600'}"></div>
-                <div style="width: 30%" class="bg-amber-500/80"></div>
-              </div>
+      // 2. RENDER BOARDS
+      if (boardContainer) {
+        if (!state.boards || state.boards.length === 0) {
+          boardContainer.innerHTML = `
+            <div class="bg-slate-950/60 rounded-2xl p-4 border border-dashed border-slate-800 text-center space-y-2">
+              <p class="text-xs font-bold text-amber-400">⚠️ No boards registered yet!</p>
+              <p class="text-[11px] text-slate-400">Add your boards (Twintip, Hydrofoil, Strapless) to enable multi-discipline pairing.</p>
+              <button onclick="toggleModal('modal-add-board')" class="px-3 py-1.5 rounded-xl bg-violet-500/20 text-violet-300 text-xs font-bold border border-violet-500/30 hover:bg-violet-500/30">
+                + Add First Board
+              </button>
             </div>
-          </div>
-        `;
-      }).join('');
+          `;
+        } else {
+          boardContainer.innerHTML = state.boards.map((b, idx) => {
+            const isActive = b.active !== false;
+            const typeIcon = b.type === 'Hydrofoil' ? '🦅' : (b.type === 'Strapless' ? '🏄‍♂️' : '🛹');
+            const unit = b.type === 'Twintip' ? 'cm' : (b.type === 'Hydrofoil' ? 'cm²' : '');
+            const sizeDisplay = `${b.size}${unit}`;
+            return `
+              <div class="rounded-2xl p-3.5 border transition-all duration-300 flex flex-col space-y-2 ${
+                isActive
+                  ? 'bg-gradient-to-r from-slate-900 via-slate-900 to-violet-950/30 border-violet-500/70 shadow-lg shadow-violet-950/40 ring-1 ring-violet-500/30'
+                  : 'bg-slate-950/60 border-slate-800/80 opacity-55 grayscale-[20%]'
+              }">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-2.5">
+                    <span class="text-xs font-black px-2.5 py-1 rounded-xl border ${
+                      isActive
+                        ? 'text-violet-300 bg-violet-500/20 border-violet-500/40 shadow-sm'
+                        : 'text-slate-400 bg-slate-900 border-slate-800'
+                    }">${sizeDisplay}</span>
+                    <div>
+                      <div class="flex items-center space-x-2">
+                        <h4 class="text-xs font-bold text-white">${typeIcon} ${b.brand || ''} ${b.model || b.type}</h4>
+                        ${
+                          isActive
+                            ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-violet-500/20 text-violet-300 border border-violet-500/30 flex items-center space-x-1"><span class="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse"></span><span>Packed</span></span>`
+                            : `<span class="px-2 py-0.5 rounded-full text-[9px] font-medium bg-slate-800 text-slate-400 border border-slate-700">At Home</span>`
+                        }
+                      </div>
+                      <p class="text-[10px] text-slate-400 mt-0.5">${b.type} · ${b.carbon ? '⚡ Carbon / SLS' : 'Standard'}</p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center space-x-2">
+                    <button onclick="toggleBoardBackpack(${idx})" class="px-2.5 py-1.5 rounded-xl text-[11px] font-bold transition flex items-center space-x-1.5 active:scale-95 ${
+                      isActive
+                        ? 'bg-violet-500 text-white shadow-md shadow-violet-500/20 hover:bg-violet-400 font-black'
+                        : 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700'
+                    }">
+                      <span>${isActive ? '🎒 Packed' : '🏠 Leave'}</span>
+                    </button>
+                    <button onclick="deleteBoard(${idx})" class="text-slate-500 hover:text-rose-400 p-1.5 transition" title="Delete board">
+                      <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
       lucide.createIcons();
     }
     const renderQuiver = renderGearInventory;
@@ -1505,11 +1826,21 @@
         }
       }
 
-      // Kite recommendation for Hero Banner
-      const rec = recommendRigging(heroWind, heroGust);
+      // Kite & Board combo recommendation for Hero Banner
+      let heroHour = new Date().getHours();
+      if (state.forecastData && typeof state.forecastData.utc_offset_seconds === 'number') {
+        const now = new Date();
+        const utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
+        const spotDate = new Date(utcMs + (state.forecastData.utc_offset_seconds * 1000));
+        heroHour = spotDate.getHours();
+      }
+      if (isTomorrow) {
+        heroHour = 13;
+      }
+      const rec = recommendRigging(heroWind, heroGust, heroHour);
       const heroText = document.getElementById('hero-rec-text');
       heroText.innerText = rec.text;
-      if (rec.text.includes('Caipirinha')) {
+      if (rec.text.includes('Caipirinha') || rec.text.includes('coffee') || rec.text.includes('Coffee')) {
         heroText.className = "text-base font-bold text-amber-300 tracking-wide flex items-center";
       } else if (rec.status === 'sweet') {
         heroText.className = "text-base font-bold text-emerald-400 tracking-wide";
@@ -1557,7 +1888,9 @@
       }
 
       schedContainer.innerHTML = Object.entries(schedule).map(([timeLabel, slot]) => {
-        const slotRec = recommendRigging(slot.wind_kts, slot.gust_kts);
+        let slotHour = parseInt(timeLabel.substring(0, 2), 10);
+        if (isNaN(slotHour)) slotHour = 12;
+        const slotRec = recommendRigging(slot.wind_kts, slot.gust_kts, slotHour);
         const slotShore = slot.shoreline || calculateShorelineStatus(slot.degrees || 90, beachAngle);
         const slotStab = slot.stability || calculateStabilityScore(slot.wind_kts, slot.gust_kts);
         const slotCons = slot.consensus || calculateModelConsensus(slot.wind_kts, slot.wind_kts, slot.wind_kts);
@@ -1805,6 +2138,113 @@
       state.inventory.push({ brand, model, size, year, active });
       saveInventory();
       toggleModal('modal-add-kite');
+      renderQuiver();
+      renderForecast();
+    }
+
+    function toggleBoardBackpack(idx) {
+      if (!state.boards || !state.boards[idx]) return;
+      state.boards[idx].active = state.boards[idx].active === false ? true : false;
+      saveInventory();
+      renderQuiver();
+      renderForecast();
+    }
+
+    function deleteBoard(idx) {
+      if (!state.boards || !state.boards[idx]) return;
+      const b = state.boards[idx];
+      if (confirm(`Remove ${b.brand || ''} ${b.model || b.type} (${b.size}) from your gear inventory?`)) {
+        state.boards.splice(idx, 1);
+        saveInventory();
+        renderQuiver();
+        renderForecast();
+      }
+    }
+
+    function onBoardTypeSelectChange(type) {
+      const label = document.getElementById('board-size-label');
+      const sizeSelect = document.getElementById('board-select-size');
+      if (!sizeSelect) return;
+      sizeSelect.innerHTML = '';
+      if (type === 'Hydrofoil') {
+        if (label) label.innerText = 'Front Wing Area (cm²)';
+        const foilSizes = [
+          { val: '650', label: '650 cm² (High Speed / Strong Wind)' },
+          { val: '800', label: '800 cm² (Fast Freeride)' },
+          { val: '950', label: '950 cm² (All-round Foil)' },
+          { val: '1050', label: '1050 cm² (Standard Cruiser)', sel: true },
+          { val: '1250', label: '1250 cm² (Early Lift)' },
+          { val: '1500', label: '1500 cm² (Ultra Lightwind / Pump)' },
+          { val: '1800', label: '1800 cm² (Dockstart / Micro-Breeze)' }
+        ];
+        foilSizes.forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = s.val;
+          opt.innerText = s.label;
+          if (s.sel) opt.selected = true;
+          sizeSelect.appendChild(opt);
+        });
+      } else if (type === 'Strapless') {
+        if (label) label.innerText = 'Surfboard Length (ft / in)';
+        const surfSizes = [
+          { val: "5'2\"", label: "5'2\" (Small Waves / Freestyle)" },
+          { val: "5'4\"", label: "5'4\" (Performance Surf)" },
+          { val: "5'6\"", label: "5'6\" (All-round Surf)" },
+          { val: "5'8\"", label: "5'8\" (Standard Directional)", sel: true },
+          { val: "5'10\"", label: "5'10\" (Cruiser / Medium Waves)" },
+          { val: "6'0\"", label: "6'0\" (Big Surf / Heavy Rider)" }
+        ];
+        surfSizes.forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = s.val;
+          opt.innerText = s.label;
+          if (s.sel) opt.selected = true;
+          sizeSelect.appendChild(opt);
+        });
+      } else {
+        if (label) label.innerText = 'Length (cm)';
+        const ttSizes = [
+          { val: '132', label: '132 cm' },
+          { val: '134', label: '134 cm' },
+          { val: '136', label: '136 cm (Standard)', sel: true },
+          { val: '138', label: '138 cm' },
+          { val: '140', label: '140 cm' },
+          { val: '142', label: '142 cm' },
+          { val: '144', label: '144 cm (Lightwind)' },
+          { val: '150', label: '150 cm (Door)' }
+        ];
+        ttSizes.forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = s.val;
+          opt.innerText = s.label;
+          if (s.sel) opt.selected = true;
+          sizeSelect.appendChild(opt);
+        });
+      }
+    }
+
+    function onAddBoardFormSubmit(e) {
+      e.preventDefault();
+      const type = document.getElementById('board-select-type').value || 'Twintip';
+      const brand = document.getElementById('board-select-brand').value || 'Duotone';
+      const model = document.getElementById('board-input-model').value.trim() || type;
+      const size = document.getElementById('board-select-size').value || (type === 'Hydrofoil' ? '1050' : (type === 'Strapless' ? "5'8\"" : '136'));
+      const carbon = document.getElementById('board-check-carbon').checked;
+      const active = document.getElementById('board-check-in-bag').checked;
+
+      if (!state.boards) state.boards = [];
+      state.boards.push({
+        id: 'b_' + Date.now(),
+        type,
+        brand,
+        model,
+        size,
+        carbon,
+        active
+      });
+
+      saveInventory();
+      toggleModal('modal-add-board');
       renderQuiver();
       renderForecast();
     }
@@ -2163,6 +2603,7 @@
           password,
           name: name || state.user.name,
           gear: state.inventory,
+          boards: state.boards || [],
           weight_kg: state.user.weight,
           level: state.user.level,
           board: state.user.board,
@@ -2208,6 +2649,10 @@
           state.inventory = data.user.gear;
           localStorage.setItem('kf_inventory', JSON.stringify(state.inventory));
         }
+        if (data.user.boards && Array.isArray(data.user.boards) && data.user.boards.length > 0) {
+          state.boards = data.user.boards;
+          localStorage.setItem('kf_boards', JSON.stringify(state.boards));
+        }
 
         renderGearInventory();
         renderForecast();
@@ -2236,6 +2681,7 @@
             email: authUser.email,
             name: state.user.name,
             gear: state.inventory,
+            boards: state.boards || [],
             weight_kg: state.user.weight,
             level: state.user.level,
             board: state.user.board,
@@ -2307,6 +2753,7 @@
 
     function saveInventory() {
       localStorage.setItem('kf_inventory', JSON.stringify(state.inventory));
+      localStorage.setItem('kf_boards', JSON.stringify(state.boards || []));
       if (authUser && authUser.email) {
         // Auto background cloud sync
         fetch('/api/auth/sync', {
@@ -2316,6 +2763,7 @@
             email: authUser.email,
             name: state.user.name,
             gear: state.inventory,
+            boards: state.boards || [],
             weight_kg: state.user.weight,
             level: state.user.level,
             board: state.user.board,
@@ -2329,6 +2777,10 @@
       if (confirm("Reset everything? This will clear all kites and personal settings to start fresh.")) {
         localStorage.clear();
         state.inventory = [];
+        state.boards = [
+          { id: 'b_default', type: 'Twintip', brand: 'Duotone', model: 'Jaime SLS', size: '136', carbon: true, active: true }
+        ];
+        localStorage.setItem('kf_boards', JSON.stringify(state.boards));
         state.user.weight = 75.0;
         state.user.level = 'intermediate';
         state.user.name = '';

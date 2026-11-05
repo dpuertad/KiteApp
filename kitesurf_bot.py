@@ -1172,7 +1172,8 @@ def recommend_from_available_quiver(
     gust_kts: float,
     all_inventory: list = None,
     level: str = "intermediate",
-    board: str = "twintip"
+    board: str = "twintip",
+    slot_hour: int = None
 ) -> str:
     if not active_inventory:
         if all_inventory:
@@ -1191,7 +1192,7 @@ def recommend_from_available_quiver(
     range_matches = [k for k in evaluated if k["in_range"]]
     if range_matches:
         best = min(range_matches, key=lambda k: k["dist_to_sweet"])
-        tag = " (Powered up)" if wind_kts > best["sweet_max"] else " (Light end)"
+        tag = " (Overpowered)" if wind_kts > best["sweet_max"] else " (Underpowered)"
         return f"{best['display_name']}{tag}"
 
     mins = [k["min_k"] for k in evaluated]
@@ -1232,7 +1233,9 @@ def recommend_from_available_quiver(
             b_yr = f" ({b_home['year']})" if b_home.get("year") else ""
             bigger_home_tip = f" 💡 Pack your {b_home['brand']} {b_home['model']}{b_yr} {b_home['size']}m from home: `/take all`"
 
-        return f"🍹 Caipirinha Time! {w_kts_rounded} kts is below your {kite_desc} min (~{min_k_rounded} kts). None of your packed gear fits — chill with a drink! 🏖️🍹{bigger_home_tip}"
+        if slot_hour is not None and slot_hour < 12:
+            return f"☕ Too early for Caipi time, enjoy a beach coffee :) Wind ({w_kts_rounded} kts) is too light for your {kite_desc} (min ~{min_k_rounded} kts) — enjoy the morning ocean view! ☕🥐{bigger_home_tip}"
+        return f"🍹 Caipirinha Time! Wind ({w_kts_rounded} kts) is too light for your {kite_desc} (min ~{min_k_rounded} kts) — none of your gear fits, time to chill at the beach bar! 🏖️🍹{bigger_home_tip}"
 
     # 4. Wind above max of active quiver
     if wind_kts > max(maxs):
@@ -1242,6 +1245,8 @@ def recommend_from_available_quiver(
         elif wind_kts <= smallest["max_k"] + 8:
             return f"{smallest['display_name']} (🚨 Heavily Overpowered — max ~{max_k_rounded} kts!){home_tip}"
         else:
+            if slot_hour is not None and slot_hour < 12:
+                return f"☕ Holy Storm Coffee Time! Nuking at {round_knots(wind_kts)} kts — too wild for your {smallest['display_name']} (max ~{max_k_rounded} kts). Grab a hot brew and watch the show safely from the beach cafe! ☕⚡{home_tip}"
             if home_tip:
                 return f"🍹 Double Caipirinha Time! Nuking at {round_knots(wind_kts)} kts — too wild for your {smallest['display_name']} (max ~{max_k_rounded} kts). Watch from the beach bar! 🍹🔥{home_tip}"
             return f"🍹 Double Caipirinha Time! Nuking at {round_knots(wind_kts)} kts — too wild for your {smallest['display_name']} (max ~{max_k_rounded} kts). Enjoy a cocktail and watch the big air show! 🍹🔥"
@@ -2368,6 +2373,7 @@ def start_embedded_http_server(port: int = 8080):
                     password = data.get("password") or ""
                     name = (data.get("name") or "").strip()
                     gear = data.get("gear") or []
+                    boards = data.get("boards") or []
                     weight_kg = float(data.get("weight_kg", 75.0))
                     level = data.get("level", "intermediate")
                     board = data.get("board", "Twintip")
@@ -2409,6 +2415,7 @@ def start_embedded_http_server(port: int = 8080):
                         "registered_at": now_str,
                         "last_login": now_str,
                         "gear": gear,
+                        "boards": boards,
                         "weight_kg": weight_kg,
                         "level": level,
                         "board": board,
@@ -2433,14 +2440,27 @@ def start_embedded_http_server(port: int = 8080):
                     
                     gear_summary = "\n".join(gear_lines) if gear_lines else "  (No gear registered yet)"
 
+                    board_lines = []
+                    for b in boards:
+                        b_type = b.get("type", "Twintip")
+                        b_brand = b.get("brand", "")
+                        b_model = b.get("model", "")
+                        b_sz = b.get("size", "")
+                        b_carb = " [⚡ Carbon/SLS]" if b.get("carbon") else ""
+                        unit = "cm" if b_type == "Twintip" else ("cm²" if b_type == "Hydrofoil" else "")
+                        board_lines.append(f"  • [{b_type}] {b_brand} {b_model} {b_sz}{unit}{b_carb}")
+                    boards_summary = "\n".join(board_lines) if board_lines else "  (No boards registered yet)"
+
                     notify_text = (
                         f"🎉 New HolyGust Rider Registered!\n\n"
                         f"👤 Rider: {new_user['name']}\n"
                         f"📧 Email: {email}\n"
-                        f"⚖️ Setup: {weight_kg} kg · {level.capitalize()} · {board}\n"
+                        f"⚖️ Setup: {weight_kg} kg · {level.capitalize()}\n"
                         f"📍 Home Beach: {spot.get('name', 'Cumbuco')}\n\n"
-                        f"🎒 Stored Cloud Gear ({gear_count} kites):\n"
+                        f"🎒 Stored Cloud Kites ({gear_count} kites):\n"
                         f"{gear_summary}\n\n"
+                        f"🛹 Stored Cloud Boards ({len(boards)} boards):\n"
+                        f"{boards_summary}\n\n"
                         f"📊 Total HolyGust Riders: {total_count}"
                     )
                     send_admin_telegram(notify_text)
@@ -2520,6 +2540,8 @@ def start_embedded_http_server(port: int = 8080):
                             user["name"] = data["name"]
                         if "gear" in data and isinstance(data["gear"], list):
                             user["gear"] = data["gear"]
+                        if "boards" in data and isinstance(data["boards"], list):
+                            user["boards"] = data["boards"]
                         if "weight_kg" in data:
                             user["weight_kg"] = float(data["weight_kg"])
                         if "level" in data:
