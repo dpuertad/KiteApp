@@ -1649,36 +1649,91 @@ def reverse_geocode(lat: float, lon: float) -> str:
         return f"Spot ({lat:.3f}, {lon:.3f})"
 
 
-def geocode_place_name(query: str):
+def geocode_place_name(query: str, ref_lat: float = None, ref_lon: float = None):
     if not query:
         return None, None, None
 
     # 1. Check curated global kite spots catalog first
     try:
-        from kite_spots import search_spots_catalog
-        matches = search_spots_catalog(query, max_results=1)
+        from kite_spots import search_spots_catalog, haversine_distance_km
+        matches = search_spots_catalog(query, max_results=5)
         if matches:
+            if ref_lat is not None and ref_lon is not None and len(matches) > 1:
+                matches.sort(key=lambda s: haversine_distance_km(ref_lat, ref_lon, s["lat"], s["lon"]))
             top = matches[0]
             return float(top["lat"]), float(top["lon"]), top["name"]
     except Exception:
         pass
 
-    # 2. Open-Meteo High-Availability Geocoding API (Fast, no rate-limits)
+    # 2. Open-Meteo High-Availability Geocoding API with smart coastal & proximity scoring
     try:
-        om_url = f"https://geocoding-api.open-meteo.com/v1/search?name={urllib.parse.quote(query.strip())}&count=1&language=en&format=json"
+        from kite_spots import haversine_distance_km
+    except Exception:
+        def haversine_distance_km(lat1, lon1, lat2, lon2):
+            R = 6371.0
+            dlat = math.radians(lat2 - lat1)
+            dlon = math.radians(lon2 - lon1)
+            a = math.sin(dlat/2)**2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon/2)**2
+            return 2 * R * math.asin(math.sqrt(a))
+
+    try:
+        om_url = f"https://geocoding-api.open-meteo.com/v1/search?name={urllib.parse.quote(query.strip())}&count=10&language=en&format=json"
         om_req = urllib.request.Request(om_url, headers={"User-Agent": "KiteForecastBot/1.0"})
         with urllib.request.urlopen(om_req, context=SSL_CTX, timeout=6) as resp:
             om_data = json.loads(resp.read().decode("utf-8"))
             results = om_data.get("results")
             if results and len(results) > 0:
-                item = results[0]
-                name_parts = [item.get("name", "")]
-                if item.get("admin1"):
-                    name_parts.append(item["admin1"])
-                if item.get("country"):
-                    name_parts.append(item["country"])
+                candidates = []
+                q_lower = query.strip().lower()
+                for item in results:
+                    score = 100
+                    # Elevation scoring: kiteboarding spots are at sea level / coastal beaches
+                    elev = item.get("elevation")
+                    if elev is not None:
+                        if elev <= 20.0:
+                            score += 40  # Sea-level beach
+                        elif elev <= 60.0:
+                            score += 15
+                        elif elev > 150.0:
+                            score -= 50  # Inland hills / mountains
+                        elif elev > 300.0:
+                            score -= 80
+
+                    # Proximity scoring if reference coordinates are provided (e.g. user currently at Cumbuco)
+                    c_lat = float(item["latitude"])
+                    c_lon = float(item["longitude"])
+                    if ref_lat is not None and ref_lon is not None:
+                        dist = haversine_distance_km(ref_lat, ref_lon, c_lat, c_lon)
+                        if dist < 200.0:
+                            score += 80
+                        elif dist < 600.0:
+                            score += 40
+                        elif dist < 1500.0:
+                            score += 20
+                        elif dist > 5000.0:
+                            score -= 30
+
+                    # Query keyword match bonus
+                    admin1 = (item.get("admin1") or "").lower()
+                    country = (item.get("country") or "").lower()
+                    name = (item.get("name") or "").lower()
+                    if q_lower in name:
+                        score += 30
+                    if q_lower in country or q_lower in admin1:
+                        score += 20
+
+                    candidates.append((score, item))
+
+                candidates.sort(key=lambda x: -x[0])
+                best = candidates[0][1]
+
+                name_parts = [best.get("name", "")]
+                if best.get("admin1"):
+                    name_parts.append(best["admin1"])
+                if best.get("country"):
+                    name_parts.append(best["country"])
                 full_name = ", ".join(name_parts)
-                return float(item["latitude"]), float(item["longitude"]), full_name
+                return float(best["latitude"]), float(best["longitude"]), full_name
     except Exception:
         pass
 
@@ -2201,7 +2256,11 @@ def start_embedded_http_server(port: int = 8080):
             # 4. API: Geocoding
             if path == "/api/geocode":
                 q = params.get("q", [""])[0]
-                lat, lon, res_name = geocode_place_name(q)
+                lat_param = params.get("lat", [None])[0]
+                lon_param = params.get("lon", [None])[0]
+                ref_lat = float(lat_param) if lat_param not in (None, "") else None
+                ref_lon = float(lon_param) if lon_param not in (None, "") else None
+                lat, lon, res_name = geocode_place_name(q, ref_lat=ref_lat, ref_lon=ref_lon)
                 self.send_response(200)
                 self.send_header("Content-Type", "application/json")
                 self.send_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
