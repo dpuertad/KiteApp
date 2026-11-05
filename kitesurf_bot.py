@@ -1951,7 +1951,7 @@ def handle_telegram_command(text: str, message_obj: dict, config: dict) -> str:
     elif cmd.startswith("/app") or cmd.startswith("/web") or "interactive web app" in cmd.lower():
         return (
             "📱 *HolyGust Interactive Web App:* 🏄‍♂️\n\n"
-            "👉 https://kiteapp.onrender.com\n\n"
+            "👉 https://holygust.com\n\n"
             "✨ *What you can do in the App:*\n"
             "• Interactive gear garage with brand & model dropdowns\n"
             "• 'In My Backpack' toggle switches for your kites\n"
