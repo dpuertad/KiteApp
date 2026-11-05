@@ -2430,13 +2430,15 @@ def start_embedded_http_server(port: int = 8080):
                     current_yr = 2026
                     gear_lines = []
                     for k in gear:
+                        cat = k.get("category", "kite")
+                        icon = "🪽" if cat == "wing" else "🪁"
                         b = k.get("brand", "Kite")
                         m = k.get("model", "")
                         sz = k.get("size", "")
                         yr = int(k.get("year", current_yr))
                         age = current_yr - yr
                         age_str = f" [{age} yrs old]" if age > 0 else " [New]"
-                        gear_lines.append(f"  • {b} {m} {sz}m ({yr}){age_str}")
+                        gear_lines.append(f"  • {icon} {b} {m} {sz}m ({yr}){age_str}")
                     
                     gear_summary = "\n".join(gear_lines) if gear_lines else "  (No gear registered yet)"
 
@@ -2446,9 +2448,11 @@ def start_embedded_http_server(port: int = 8080):
                         b_brand = b.get("brand", "")
                         b_model = b.get("model", "")
                         b_sz = b.get("size", "")
+                        b_vol = f" {b.get('volume')}L" if b.get("volume") else ""
+                        b_mast = f" ({b.get('mast')}cm mast)" if b.get("mast") else ""
                         b_carb = " [⚡ Carbon/SLS]" if b.get("carbon") else ""
-                        unit = "cm" if b_type == "Twintip" else ("cm²" if b_type == "Hydrofoil" else "")
-                        board_lines.append(f"  • [{b_type}] {b_brand} {b_model} {b_sz}{unit}{b_carb}")
+                        unit = "cm" if b_type == "Twintip" else ("cm²" if b_type in ["Hydrofoil", "Wingfoil"] else "")
+                        board_lines.append(f"  • [{b_type}] {b_brand} {b_model}{b_vol} {b_sz}{unit}{b_mast}{b_carb}")
                     boards_summary = "\n".join(board_lines) if board_lines else "  (No boards registered yet)"
 
                     notify_text = (
