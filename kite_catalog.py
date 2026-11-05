@@ -5,6 +5,66 @@ Includes aerodynamic scaling and hydrodynamic waterstart/planing factors.
 """
 
 KITE_CATALOG = {
+    "Gong": {
+        "Ayto": {
+            "type": "5-Strut High-Performance Big Air / Booster",
+            "material": "Aramid / Boom Airframe",
+            "sizes": {
+                6: {"min": 22, "sweet": (25, 36), "max": 42},
+                7: {"min": 20, "sweet": (23, 33), "max": 40},
+                8: {"min": 18, "sweet": (21, 30), "max": 37},
+                9: {"min": 16, "sweet": (19, 27), "max": 34},
+                10: {"min": 14, "sweet": (17, 25), "max": 32},
+                11: {"min": 13, "sweet": (15, 23), "max": 30},
+                12: {"min": 12, "sweet": (14, 21), "max": 27},
+            }
+        },
+        "Vertigo": {
+            "type": "3-Strut All-Round Freeride / Jumping",
+            "material": "Dacron DP175LL",
+            "sizes": {
+                5: {"min": 24, "sweet": (27, 37), "max": 42},
+                7: {"min": 20, "sweet": (23, 31), "max": 38},
+                9: {"min": 16, "sweet": (19, 27), "max": 34},
+                11: {"min": 13, "sweet": (15, 23), "max": 29},
+                13: {"min": 11, "sweet": (13, 19), "max": 25},
+            }
+        },
+        "Elips": {
+            "type": "3-Strut Wave / Drift / Foil",
+            "material": "Teijin T9669 Triple Ripstop",
+            "sizes": {
+                5: {"min": 24, "sweet": (27, 36), "max": 40},
+                6: {"min": 21, "sweet": (24, 33), "max": 37},
+                7: {"min": 19, "sweet": (22, 30), "max": 35},
+                8: {"min": 17, "sweet": (20, 27), "max": 33},
+                9: {"min": 15, "sweet": (18, 25), "max": 31},
+                10: {"min": 13, "sweet": (16, 23), "max": 28},
+            }
+        },
+        "Strutless": {
+            "type": "0-Strut Ultra-Lightwind & Hydrofoil",
+            "material": "Ultra-Light 2D Tech",
+            "sizes": {
+                7: {"min": 17, "sweet": (20, 28), "max": 33},
+                9: {"min": 14, "sweet": (17, 24), "max": 29},
+                11: {"min": 11.5, "sweet": (13.5, 20), "max": 25},
+                13: {"min": 9.5, "sweet": (11.5, 17), "max": 22},
+                15: {"min": 8.5, "sweet": (10, 15), "max": 20},
+                17: {"min": 7.5, "sweet": (9, 13.5), "max": 18},
+            }
+        },
+        "Freewave": {
+            "type": "3-Strut Freeride / Wave Crossover",
+            "material": "Standard Dacron",
+            "sizes": {
+                5: {"min": 24, "sweet": (27, 36), "max": 41},
+                7: {"min": 20, "sweet": (23, 31), "max": 37},
+                9: {"min": 16, "sweet": (19, 26), "max": 33},
+                11: {"min": 13, "sweet": (15, 22), "max": 28},
+            }
+        }
+    },
     "Duotone": {
         "Rebel SLS": {
             "type": "5-Strut High-Performance Big Air",

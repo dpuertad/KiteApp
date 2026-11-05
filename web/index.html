@@ -116,8 +116,8 @@
         </div>
 
         <div class="flex items-center space-x-1.5">
-          <button onclick="toggleModal('modal-feedback')" class="hidden sm:flex px-2.5 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 active:scale-95 text-amber-300 border border-amber-500/30 text-[11px] font-bold transition items-center space-x-1">
-            <i data-lucide="message-square-plus" class="w-3.5 h-3.5"></i>
+          <button onclick="toggleModal('modal-feedback')" class="flex px-2.5 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 active:scale-95 text-amber-300 border border-amber-500/30 text-[11px] font-bold transition items-center space-x-1 shadow-sm">
+            <span>💡</span>
             <span>Suggestions</span>
           </button>
           <button id="btn-profile-account" onclick="openAuthModal()" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700 text-[11px] font-bold transition flex items-center space-x-1">
@@ -388,6 +388,22 @@
       </div>
     </section>
 
+    <!-- SUGGESTIONS & FEEDBACK CARD (FOR FRIENDS & RIDERS TESTING) -->
+    <section class="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/30 rounded-2xl p-4 shadow-lg flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-300 border border-amber-500/30 text-lg">
+          💡
+        </div>
+        <div>
+          <h4 class="text-xs font-bold text-white">Got feedback, spots or ideas?</h4>
+          <p class="text-[11px] text-slate-400 mt-0.5">Help improve the app! Your comments go directly to Daniel on Telegram.</p>
+        </div>
+      </div>
+      <button onclick="toggleModal('modal-feedback')" class="px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold text-xs shadow-md shadow-amber-500/20 hover:from-amber-400 hover:to-orange-400 active:scale-95 transition whitespace-nowrap">
+        Give Feedback
+      </button>
+    </section>
+
   </main>
 
   <!-- ADD KITE MODAL -->
@@ -408,15 +424,16 @@
           <label class="block font-semibold text-slate-300 mb-1">Brand</label>
           <select id="select-brand" onchange="onBrandChange(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
             <option value="Duotone">Duotone</option>
+            <option value="Gong">GONG</option>
             <option value="Core">Core</option>
             <option value="North">North</option>
             <option value="Cabrinha">Cabrinha</option>
+            <option value="Harlem">Harlem</option>
             <option value="Ozone">Ozone</option>
             <option value="F-One">F-One</option>
             <option value="Reedin">Reedin</option>
             <option value="Naish">Naish</option>
             <option value="Slingshot">Slingshot</option>
-            <option value="Harlem">Harlem</option>
             <option value="Eleveight">Eleveight</option>
             <option value="Other">Other / Custom</option>
           </select>
@@ -470,71 +487,83 @@
         </div>
 
         <button type="submit" class="w-full mt-2 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-95 text-white font-bold text-xs shadow-lg shadow-sky-500/25 transition">
-          Add Kite to Garage
+          Save Kite to My Gear
         </button>
       </form>
     </div>
   </div>
 
   <!-- SPOT PICKER MODAL -->
-  <div id="modal-spot" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4">
+  <div id="modal-spot" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-5 shadow-2xl flex flex-col max-h-[90vh] space-y-3.5">
+      <!-- Header -->
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
         <h3 class="font-bold text-sm text-white flex items-center space-x-2">
-          <span>📍 Select Beach / Spot</span>
+          <i data-lucide="map-pin" class="w-4 h-4 text-sky-400"></i>
+          <span>Global Kite Spots & GPS</span>
         </h3>
         <button onclick="toggleModal('modal-spot')" class="text-slate-400 hover:text-white p-1">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
-      <!-- Search Input -->
-      <div class="space-y-3">
-        <div class="flex space-x-2">
-          <input id="input-spot-search" type="text" placeholder="Type spot (e.g. Tarifa, Taiba)..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
-          <button onclick="onSearchSpotSubmit()" class="px-3 py-2 rounded-xl bg-sky-600 text-white font-bold text-xs active:scale-95">Search</button>
+      <!-- Quick GPS & Instant Search Box -->
+      <div class="space-y-2">
+        <div class="relative flex items-center">
+          <i data-lucide="search" class="w-4 h-4 text-slate-500 absolute left-3 pointer-events-none"></i>
+          <input id="input-spot-search" type="text" oninput="onSearchSpotInput(this.value)" placeholder="Search spots, countries (e.g. Taíba, Tarifa, Silvaplana)..." class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-9 pr-8 py-2 text-white focus:outline-none focus:border-sky-500 text-xs placeholder:text-slate-500">
+          <button id="btn-clear-search" onclick="clearSpotSearch()" class="absolute right-2.5 text-slate-500 hover:text-white text-xs hidden">✕</button>
         </div>
 
-        <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Popular Kitesurf Spots:</p>
-        <div class="grid grid-cols-2 gap-1.5 text-xs">
-          <button onclick="setSpot('Cumbuco, Brazil', -3.6247, -38.7297, 'America/Fortaleza', 40)" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇧🇷 Cumbuco (NE)</button>
-          <button onclick="setSpot('Taiba, Brazil', -3.5042, -38.8953, 'America/Fortaleza', 35)" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇧🇷 Taíba (NNE)</button>
-          <button onclick="setSpot('Tarifa, Spain', 36.0143, -5.6044, 'Europe/Madrid', 220)" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇪🇸 Tarifa (SW)</button>
-          <button onclick="setSpot('Dakhla, Morocco', 23.7136, -15.9355, 'Africa/Casablanca', 270)" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇲🇦 Dakhla (W)</button>
-          <button onclick="setSpot('Leucate, France', 42.9094, 3.0278, 'Europe/Paris', 110)" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇫🇷 Leucate (ESE)</button>
-          <button onclick="setSpot('Pozo Izquierdo, Spain', 27.8184, -15.4243, 'Atlantic/Canary', 90)" class="p-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left text-slate-200">🇪🇸 Pozo (E)</button>
-        </div>
+        <button onclick="useGpsLocation()" class="w-full py-2 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 active:scale-98 text-sky-300 border border-sky-500/30 font-bold text-xs transition flex items-center justify-center space-x-1.5 shadow-sm">
+          <i data-lucide="crosshair" class="w-3.5 h-3.5 text-sky-400"></i>
+          <span>Find Kite Spots Around My Current GPS</span>
+        </button>
+      </div>
 
-        <!-- Coastline / Beach Orientation Selector -->
-        <div class="pt-2 border-t border-slate-800 space-y-1.5">
-          <label class="block font-semibold text-slate-300 text-xs flex items-center justify-between">
-            <span class="flex items-center space-x-1">
-              <i data-lucide="compass" class="w-3.5 h-3.5 text-sky-400"></i>
-              <span>Beach Facing Angle</span>
-            </span>
-            <span id="label-beach-angle" class="text-sky-400 font-mono font-bold text-xs">40° (NE)</span>
-          </label>
-          <select id="select-beach-orientation" onchange="onBeachOrientationChange(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
-            <option value="40">NE (40° - Cumbuco, Taíba, Paracuru)</option>
-            <option value="220">SW (220° - Tarifa Los Lances / Valdevaqueros)</option>
-            <option value="270">W (270° - Dakhla, Bonaire Atlantis)</option>
-            <option value="90">E (90° - Pozo Izquierdo, El Gouna)</option>
-            <option value="110">ESE (110° - Leucate La Franqui)</option>
-            <option value="250">WSW (250° - Cape Town Bloubergstrand)</option>
-            <option value="30">NNE (30° - Cabarete Kite Beach)</option>
-            <option value="350">N (350° - Maui Kanaha)</option>
-            <option value="330">NNW (330° - Jericoacoara)</option>
-            <option value="0">North (0°)</option>
-            <option value="45">North-East (45°)</option>
-            <option value="90">East (90°)</option>
-            <option value="135">South-East (135°)</option>
-            <option value="180">South (180°)</option>
-            <option value="225">South-West (225°)</option>
-            <option value="270">West (270°)</option>
-            <option value="315">North-West (315°)</option>
-          </select>
-          <p class="text-[10px] text-slate-400">Direction looking from the beach out to open sea. Defines whether wind is safe Side-On vs. hazardous Offshore.</p>
-        </div>
+      <!-- Region Filter Tabs -->
+      <div class="flex space-x-1 overflow-x-auto custom-scrollbar pb-1 text-[11px]">
+        <button type="button" onclick="filterSpotsByRegion('all')" id="tab-spot-all" class="px-2.5 py-1 rounded-lg font-bold bg-sky-600 text-white whitespace-nowrap">All Spots</button>
+        <button type="button" onclick="filterSpotsByRegion('Brazil')" id="tab-spot-brazil" class="px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white whitespace-nowrap">🇧🇷 Brazil</button>
+        <button type="button" onclick="filterSpotsByRegion('Spain')" id="tab-spot-spain" class="px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white whitespace-nowrap">🇪🇸 Spain & Canaries</button>
+        <button type="button" onclick="filterSpotsByRegion('Alps')" id="tab-spot-alps" class="px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white whitespace-nowrap">🇨🇭 Lakes & Alps</button>
+        <button type="button" onclick="filterSpotsByRegion('Africa')" id="tab-spot-africa" class="px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white whitespace-nowrap">🇲🇦 Africa & Egypt</button>
+        <button type="button" onclick="filterSpotsByRegion('Americas')" id="tab-spot-americas" class="px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white whitespace-nowrap">🇩🇴 Americas</button>
+        <button type="button" onclick="filterSpotsByRegion('Asia')" id="tab-spot-asia" class="px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white whitespace-nowrap">🇱🇰 Asia</button>
+      </div>
+
+      <!-- Scrollable Spot Cards List -->
+      <div id="spot-list-container" class="flex-1 overflow-y-auto space-y-1.5 pr-0.5 max-h-[300px]">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Coastline Orientation Fine-Tuning Dropdown -->
+      <div class="pt-2 border-t border-slate-800 space-y-1">
+        <label class="block font-semibold text-slate-300 text-xs flex items-center justify-between">
+          <span class="flex items-center space-x-1">
+            <i data-lucide="compass" class="w-3.5 h-3.5 text-sky-400"></i>
+            <span>Coastline Facing Angle</span>
+          </span>
+          <span id="label-beach-angle" class="text-sky-400 font-mono font-bold text-xs">40° (NE)</span>
+        </label>
+        <select id="select-beach-orientation" onchange="onBeachOrientationChange(this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white focus:outline-none focus:border-sky-500 text-xs">
+          <option value="40">NE (40° - Cumbuco, Taíba, Paracuru)</option>
+          <option value="220">SW (220° - Tarifa Los Lances / Valdevaqueros)</option>
+          <option value="270">W (270° - Dakhla, Bonaire Atlantis)</option>
+          <option value="90">E (90° - Pozo Izquierdo, El Gouna)</option>
+          <option value="110">ESE (110° - Leucate La Franqui)</option>
+          <option value="250">WSW (250° - Cape Town Bloubergstrand)</option>
+          <option value="50">NE (50° - Lake Silvaplana)</option>
+          <option value="200">SSW (200° - Lake Garda Torbole)</option>
+          <option value="0">North (0° - Hood River)</option>
+          <option value="45">North-East (45°)</option>
+          <option value="90">East (90°)</option>
+          <option value="135">South-East (135°)</option>
+          <option value="180">South (180°)</option>
+          <option value="225">South-West (225°)</option>
+          <option value="270">West (270°)</option>
+          <option value="315">North-West (315°)</option>
+        </select>
       </div>
     </div>
   </div>
@@ -697,6 +726,10 @@
           <button id="btn-auth-submit" type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 active:scale-95 text-white font-bold text-xs shadow-lg shadow-sky-500/25 transition">
             Create Account & Save Kites
           </button>
+
+          <button type="button" onclick="toggleModal('modal-auth')" class="w-full py-1.5 text-slate-400 hover:text-white text-xs font-medium text-center transition">
+            Continue as Guest for Now →
+          </button>
         </form>
       </div>
     </div>
@@ -706,6 +739,13 @@
   <script>
     // 1. KITE CATALOG DATABASE
     const KITE_CATALOG = {
+      "Gong": {
+        "Ayto": { type: "5-Strut High-Performance Big Air / Booster", material: "Aramid / Boom Frame", sizes: { 6: [22, [25,36], 42], 7: [20, [23,33], 40], 8: [18, [21,30], 37], 9: [16, [19,27], 34], 10: [14, [17,25], 32], 11: [13, [15,23], 30], 12: [12, [14,21], 27] } },
+        "Vertigo": { type: "3-Strut All-Round Freeride / Jumping", material: "Dacron DP175LL", sizes: { 5: [24, [27,37], 42], 7: [20, [23,31], 38], 9: [16, [19,27], 34], 11: [13, [15,23], 29], 13: [11, [13,19], 25] } },
+        "Elips": { type: "3-Strut Wave / Drift / Foil", material: "Teijin T9669 Triple Ripstop", sizes: { 5: [24, [27,36], 40], 6: [21, [24,33], 37], 7: [19, [22,30], 35], 8: [17, [20,27], 33], 9: [15, [18,25], 31], 10: [13, [16,23], 28] } },
+        "Strutless": { type: "0-Strut Ultra-Lightwind & Hydrofoil", material: "Ultra-Light 2D Tech", sizes: { 7: [17, [20,28], 33], 9: [14, [17,24], 29], 11: [11.5, [13.5,20], 25], 13: [9.5, [11.5,17], 22], 15: [8.5, [10,15], 20], 17: [7.5, [9,13.5], 18] } },
+        "Freewave": { type: "3-Strut Freeride / Wave Crossover", material: "Standard Dacron", sizes: { 5: [24, [27,36], 41], 7: [20, [23,31], 37], 9: [16, [19,26], 33], 11: [13, [15,22], 28] } }
+      },
       "Duotone": {
         "Rebel SLS": { type: "5-Strut Big Air", material: "Penta TX SLS", sizes: { 7: [20, [23,33], 40], 8: [18, [21,30], 37], 9: [16, [19,27], 34], 10: [14, [17,25], 32], 11: [13, [15,23], 30], 12: [12, [14,21], 27] } },
         "Rebel D/LAB": { type: "5-Strut Extreme Big Air", material: "Aluula D/LAB", sizes: { 7: [18, [22,33], 40], 8: [16, [20,31], 38], 9: [14.5, [18,28], 35], 10: [13, [16,25], 33], 11: [12, [14,23], 30], 12: [11, [13,21], 28] } },
@@ -766,6 +806,9 @@
         "RS": { type: "3-Strut All-Round Freeride", material: "High Tenacity Dacron", sizes: { 7: [19, [22,30], 36], 8: [17, [20,28], 34], 9: [15, [18,26], 31], 10: [13.5, [16,24], 29], 12: [11.5, [13.5,21], 26], 14: [10, [12,17], 22] } }
       }
     };
+
+    // GLOBAL KITE SPOTS DATABASE (51 Curated International Spots)
+    const GLOBAL_KITE_SPOTS = [{"id": "cumbuco", "name": "Cumbuco, Brazil", "short_name": "Cumbuco", "country": "Brazil", "region": "Ceará", "flag": "🇧🇷", "lat": -3.6247, "lon": -38.7297, "timezone": "America/Fortaleza", "beach_angle": 40.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Thermal Venturi", "thermal_boost": 0.16, "aliases": ["cumbuco", "duro beach", "caucaia"]}, {"id": "taiba", "name": "Taíba, Brazil", "short_name": "Taíba", "country": "Brazil", "region": "Ceará", "flag": "🇧🇷", "lat": -3.5042, "lon": -38.8953, "timezone": "America/Fortaleza", "beach_angle": 35.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Thermal Boost", "thermal_boost": 0.18, "aliases": ["taiba", "lagoa da taiba", "secret spot taiba"]}, {"id": "paracuru", "name": "Paracuru (Quebra Mar), Brazil", "short_name": "Paracuru", "country": "Brazil", "region": "Ceará", "flag": "🇧🇷", "lat": -3.4078, "lon": -39.0142, "timezone": "America/Fortaleza", "beach_angle": 20.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Coastal Reef Boost", "thermal_boost": 0.18, "aliases": ["paracuru", "quebra mar"]}, {"id": "lagoinha", "name": "Lagoinha, Brazil", "short_name": "Lagoinha", "country": "Brazil", "region": "Ceará", "flag": "🇧🇷", "lat": -3.3458, "lon": -39.1417, "timezone": "America/Fortaleza", "beach_angle": 350.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Dune Accel", "thermal_boost": 0.16, "aliases": ["lagoinha", "paracuru lagoinha"]}, {"id": "guajiru", "name": "Ilha do Guajirú, Brazil", "short_name": "Ilha do Guajirú", "country": "Brazil", "region": "Ceará", "flag": "🇧🇷", "lat": -2.9833, "lon": -40.1167, "timezone": "America/Fortaleza", "beach_angle": 350.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Lagoon Chimney", "thermal_boost": 0.2, "aliases": ["ilha do guajiru", "itarema", "guajiru flat"]}, {"id": "prea", "name": "Preá, Brazil", "short_name": "Preá", "country": "Brazil", "region": "Ceará", "flag": "🇧🇷", "lat": -2.8139, "lon": -40.4189, "timezone": "America/Fortaleza", "beach_angle": 340.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Prea Trade Venturi", "thermal_boost": 0.2, "aliases": ["prea", "praia do prea"]}, {"id": "jericoacoara", "name": "Jericoacoara, Brazil", "short_name": "Jericoacoara", "country": "Brazil", "region": "Ceará", "flag": "🇧🇷", "lat": -2.7958, "lon": -40.5142, "timezone": "America/Fortaleza", "beach_angle": 320.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Sunset Dune Venturi", "thermal_boost": 0.22, "aliases": ["jeri", "jericoacoara", "duna do por do sol"]}, {"id": "macapa", "name": "Macapá (Delta), Brazil", "short_name": "Macapá", "country": "Brazil", "region": "Piauí", "flag": "🇧🇷", "lat": -2.9031, "lon": -41.5361, "timezone": "America/Fortaleza", "beach_angle": 330.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Delta Thermal", "thermal_boost": 0.18, "aliases": ["macapa", "luis correia"]}, {"id": "barra_grande", "name": "Barra Grande (Piauí), Brazil", "short_name": "Barra Grande", "country": "Brazil", "region": "Piauí", "flag": "🇧🇷", "lat": -2.915, "lon": -41.442, "timezone": "America/Fortaleza", "beach_angle": 340.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Flatwater Thermal", "thermal_boost": 0.18, "aliases": ["barra grande", "bg"]}, {"id": "atins", "name": "Atins (Lençóis), Brazil", "short_name": "Atins", "country": "Brazil", "region": "Maranhão", "flag": "🇧🇷", "lat": -2.5714, "lon": -42.7483, "timezone": "America/Fortaleza", "beach_angle": 350.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Lençóis Heating", "thermal_boost": 0.18, "aliases": ["atins", "lencois maranhenses"]}, {"id": "sao_miguel_gostoso", "name": "São Miguel do Gostoso, Brazil", "short_name": "SM Gostoso", "country": "Brazil", "region": "Rio Grande do Norte", "flag": "🇧🇷", "lat": -5.1239, "lon": -35.6364, "timezone": "America/Fortaleza", "beach_angle": 20.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Trade Accelerator", "thermal_boost": 0.15, "aliases": ["gostoso", "sao miguel do gostoso", "ponta do santo cristo"]}, {"id": "pipa", "name": "Tibau do Sul / Pipa, Brazil", "short_name": "Pipa", "country": "Brazil", "region": "Rio Grande do Norte", "flag": "🇧🇷", "lat": -6.1833, "lon": -35.0833, "timezone": "America/Fortaleza", "beach_angle": 80.0, "preferred_model": "best_match", "model_label": "ECMWF (9km)", "thermal_boost": 0.12, "aliases": ["pipa", "tibau do sul", "madeiro"]}, {"id": "florianopolis", "name": "Florianópolis (Campeche), Brazil", "short_name": "Florianópolis", "country": "Brazil", "region": "Santa Catarina", "flag": "🇧🇷", "lat": -27.6833, "lon": -48.4833, "timezone": "America/Sao_Paulo", "beach_angle": 110.0, "preferred_model": "best_match", "model_label": "ECMWF (9km)", "thermal_boost": 0.1, "aliases": ["florianopolis", "floripa", "campeche", "lagoa da conceicao"]}, {"id": "ibiraquera", "name": "Barra de Ibiraquera, Brazil", "short_name": "Ibiraquera", "country": "Brazil", "region": "Santa Catarina", "flag": "🇧🇷", "lat": -28.1458, "lon": -48.6472, "timezone": "America/Sao_Paulo", "beach_angle": 100.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Frontal Wave", "thermal_boost": 0.1, "aliases": ["ibiraquera", "barra de ibiraquera", "imbituba"]}, {"id": "tarifa", "name": "Tarifa (Los Lances), Spain", "short_name": "Tarifa", "country": "Spain", "region": "Andalusia", "flag": "🇪🇸", "lat": 36.0143, "lon": -5.6044, "timezone": "Europe/Madrid", "beach_angle": 220.0, "preferred_model": "icon_eu", "model_label": "ICON-EU (7km) / ECMWF + Strait Venturi", "thermal_boost": 0.2, "aliases": ["tarifa", "los lances", "cadiz"]}, {"id": "valdevaqueros", "name": "Tarifa (Valdevaqueros), Spain", "short_name": "Valdevaqueros", "country": "Spain", "region": "Andalusia", "flag": "🇪🇸", "lat": 36.0711, "lon": -5.6914, "timezone": "Europe/Madrid", "beach_angle": 230.0, "preferred_model": "icon_eu", "model_label": "ICON-EU (7km) + Dune Acceleration", "thermal_boost": 0.22, "aliases": ["valdevaqueros", "spin out", "tumbao"]}, {"id": "sotavento", "name": "Sotavento (Fuerteventura), Spain", "short_name": "Sotavento", "country": "Spain", "region": "Canary Islands", "flag": "🇪🇸", "lat": 28.1256, "lon": -14.2694, "timezone": "Atlantic/Canary", "beach_angle": 110.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Valley Venturi", "thermal_boost": 0.2, "aliases": ["sotavento", "fuerteventura", "costa calma", "rene egli"]}, {"id": "el_cotillo", "name": "El Cotillo (Fuerteventura), Spain", "short_name": "El Cotillo", "country": "Spain", "region": "Canary Islands", "flag": "🇪🇸", "lat": 28.6833, "lon": -14.0167, "timezone": "Atlantic/Canary", "beach_angle": 310.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Atlantic Swell", "thermal_boost": 0.12, "aliases": ["el cotillo", "cotillo lagoons"]}, {"id": "pozo", "name": "Pozo Izquierdo (Gran Canaria), Spain", "short_name": "Pozo Izquierdo", "country": "Spain", "region": "Canary Islands", "flag": "🇪🇸", "lat": 27.8184, "lon": -15.4243, "timezone": "Atlantic/Canary", "beach_angle": 90.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Trade Venturi", "thermal_boost": 0.2, "aliases": ["pozo", "pozo izquierdo", "gran canaria"]}, {"id": "el_medano", "name": "El Médano (Tenerife), Spain", "short_name": "El Médano", "country": "Spain", "region": "Canary Islands", "flag": "🇪🇸", "lat": 28.0458, "lon": -16.5361, "timezone": "Atlantic/Canary", "beach_angle": 140.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Teide Thermal", "thermal_boost": 0.18, "aliases": ["el medano", "medano", "tenerife"]}, {"id": "famara", "name": "Famara (Lanzarote), Spain", "short_name": "Famara", "country": "Spain", "region": "Canary Islands", "flag": "🇪🇸", "lat": 29.1167, "lon": -13.55, "timezone": "Atlantic/Canary", "beach_angle": 320.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Cliff Venturi", "thermal_boost": 0.15, "aliases": ["famara", "caleta de famara", "lanzarote"]}, {"id": "delta_ebro", "name": "Delta del Ebro (Riumar), Spain", "short_name": "Delta del Ebro", "country": "Spain", "region": "Catalonia", "flag": "🇪🇸", "lat": 40.7247, "lon": 0.8431, "timezone": "Europe/Madrid", "beach_angle": 110.0, "preferred_model": "icon_eu", "model_label": "ICON-EU (7km) + Mestral Boost", "thermal_boost": 0.18, "aliases": ["delta de l'ebre", "riumar", "trabucador"]}, {"id": "roses", "name": "Sant Pere Pescador (Bay of Roses), Spain", "short_name": "Bay of Roses", "country": "Spain", "region": "Catalonia", "flag": "🇪🇸", "lat": 42.1889, "lon": 3.1028, "timezone": "Europe/Madrid", "beach_angle": 80.0, "preferred_model": "icon_eu", "model_label": "ICON-EU (7km) + Garbí Thermal", "thermal_boost": 0.2, "aliases": ["roses", "sant pere pescador", "costa brava"]}, {"id": "silvaplana", "name": "Lake Silvaplana, Switzerland", "short_name": "Silvaplana", "country": "Switzerland", "region": "Graubünden / Engadin", "flag": "🇨🇭", "lat": 46.4592, "lon": 9.7917, "timezone": "Europe/Zurich", "beach_angle": 50.0, "preferred_model": "icon_d2", "model_label": "ICON-D2 (2km Swiss High-Res) + Maloja Thermal", "thermal_boost": 0.3, "aliases": ["silvaplana", "engadin", "st moritz", "maloja"]}, {"id": "lake_uri", "name": "Flüelen (Lake Uri), Switzerland", "short_name": "Lake Uri", "country": "Switzerland", "region": "Uri / Lake Lucerne", "flag": "🇨🇭", "lat": 46.9039, "lon": 8.6258, "timezone": "Europe/Zurich", "beach_angle": 350.0, "preferred_model": "icon_d2", "model_label": "ICON-D2 (2km Swiss High-Res) + Föhn Thermal", "thermal_boost": 0.25, "aliases": ["lake uri", "urnersee", "fluelen", "isleten"]}, {"id": "lake_neuchatel", "name": "Yvonand (Lake Neuchâtel), Switzerland", "short_name": "Lake Neuchâtel", "country": "Switzerland", "region": "Vaud / Neuchâtel", "flag": "🇨🇭", "lat": 46.8042, "lon": 6.7417, "timezone": "Europe/Zurich", "beach_angle": 310.0, "preferred_model": "icon_d2", "model_label": "ICON-D2 (2km High-Res) + Bise Boost", "thermal_boost": 0.15, "aliases": ["yvonand", "neuchatel", "portalban", "saint blaise"]}, {"id": "garda", "name": "Torbole (Lake Garda), Italy", "short_name": "Lake Garda", "country": "Italy", "region": "Trentino / Alps", "flag": "🇮🇹", "lat": 45.8711, "lon": 10.8756, "timezone": "Europe/Rome", "beach_angle": 200.0, "preferred_model": "icon_d2", "model_label": "ICON-D2 (2km Alpine High-Res) + Ora Thermal", "thermal_boost": 0.25, "aliases": ["garda", "torbole", "malcesine", "riva del garda"]}, {"id": "lake_como", "name": "Colico (Lake Como), Italy", "short_name": "Lake Como", "country": "Italy", "region": "Lombardy / Alps", "flag": "🇮🇹", "lat": 46.1333, "lon": 9.3667, "timezone": "Europe/Rome", "beach_angle": 190.0, "preferred_model": "icon_d2", "model_label": "ICON-D2 (2km Alpine High-Res) + Breva Thermal", "thermal_boost": 0.25, "aliases": ["como", "colico", "gera lario", "dervio"]}, {"id": "leucate", "name": "Leucate / La Franqui, France", "short_name": "Leucate", "country": "France", "region": "Occitanie", "flag": "🇫🇷", "lat": 42.9094, "lon": 3.0278, "timezone": "Europe/Paris", "beach_angle": 110.0, "preferred_model": "best_match", "model_label": "AROME (1.5km French High-Res) + Tramontana", "thermal_boost": 0.18, "aliases": ["leucate", "la franqui", "plage des coussoules", "wesh center"]}, {"id": "almanarre", "name": "Hyères (L'Almanarre), France", "short_name": "Hyères Almanarre", "country": "France", "region": "Provence-Alpes-Côte d'Azur", "flag": "🇫🇷", "lat": 43.0806, "lon": 6.1306, "timezone": "Europe/Paris", "beach_angle": 270.0, "preferred_model": "best_match", "model_label": "AROME (1.5km) + Mistral Acceleration", "thermal_boost": 0.2, "aliases": ["hyeres", "almanarre", "presqu'ile de giens"]}, {"id": "dakhla", "name": "Dakhla (Lagoon), Morocco", "short_name": "Dakhla", "country": "Morocco", "region": "Western Sahara", "flag": "🇲🇦", "lat": 23.7136, "lon": -15.9355, "timezone": "Africa/Casablanca", "beach_angle": 270.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Sahara Desert Thermal", "thermal_boost": 0.2, "aliases": ["dakhla", "pk25", "speed spot", "white dune", "dakhla attitude"]}, {"id": "essaouira", "name": "Essaouira, Morocco", "short_name": "Essaouira", "country": "Morocco", "region": "Marrakech-Safi", "flag": "🇲🇦", "lat": 31.5125, "lon": -9.77, "timezone": "Africa/Casablanca", "beach_angle": 280.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Alizé Trade", "thermal_boost": 0.18, "aliases": ["essaouira", "sidi kaouki", "moulay"]}, {"id": "el_gouna", "name": "El Gouna (Mangroovy), Egypt", "short_name": "El Gouna", "country": "Egypt", "region": "Red Sea", "flag": "🇪🇬", "lat": 27.4042, "lon": 33.6825, "timezone": "Africa/Cairo", "beach_angle": 80.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Red Sea Channel", "thermal_boost": 0.18, "aliases": ["el gouna", "mangroovy", "red sea zone", "sliders"]}, {"id": "soma_bay", "name": "Soma Bay, Egypt", "short_name": "Soma Bay", "country": "Egypt", "region": "Red Sea", "flag": "🇪🇬", "lat": 26.85, "lon": 33.9833, "timezone": "Africa/Cairo", "beach_angle": 70.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Desert Thermal", "thermal_boost": 0.18, "aliases": ["soma bay", "safaga", "7bft"]}, {"id": "prasonisi", "name": "Prasonisi (Rhodes), Greece", "short_name": "Prasonisi", "country": "Greece", "region": "Dodecanese", "flag": "🇬🇷", "lat": 35.8833, "lon": 27.7667, "timezone": "Europe/Athens", "beach_angle": 130.0, "preferred_model": "icon_eu", "model_label": "ICON-EU / ECMWF + Meltemi Channel", "thermal_boost": 0.2, "aliases": ["prasonisi", "rhodes", "rodos"]}, {"id": "paros", "name": "Pounda (Paros), Greece", "short_name": "Paros Pounda", "country": "Greece", "region": "Cyclades", "flag": "🇬🇷", "lat": 37.0472, "lon": 25.1056, "timezone": "Europe/Athens", "beach_angle": 270.0, "preferred_model": "icon_eu", "model_label": "ICON-EU / ECMWF + Antiparos Strait", "thermal_boost": 0.22, "aliases": ["paros", "pounda", "antiparos"]}, {"id": "lefkada", "name": "Milos / Agios Ioannis (Lefkada), Greece", "short_name": "Lefkada", "country": "Greece", "region": "Ionian Islands", "flag": "🇬🇷", "lat": 38.8333, "lon": 20.6833, "timezone": "Europe/Athens", "beach_angle": 310.0, "preferred_model": "icon_eu", "model_label": "ICON-EU / ECMWF + Ionian Thermal", "thermal_boost": 0.22, "aliases": ["lefkada", "agios ioannis", "milos beach"]}, {"id": "stagnone", "name": "Lo Stagnone (Sicily), Italy", "short_name": "Lo Stagnone", "country": "Italy", "region": "Sicily", "flag": "🇮🇹", "lat": 37.8667, "lon": 12.4667, "timezone": "Europe/Rome", "beach_angle": 270.0, "preferred_model": "icon_eu", "model_label": "ICON-EU / ECMWF + Shallow Basin Thermal", "thermal_boost": 0.2, "aliases": ["stagnone", "marsala", "sicily", "birgi"]}, {"id": "porto_pollo", "name": "Porto Pollo (Sardinia), Italy", "short_name": "Porto Pollo", "country": "Italy", "region": "Sardinia", "flag": "🇮🇹", "lat": 41.1944, "lon": 9.3194, "timezone": "Europe/Rome", "beach_angle": 330.0, "preferred_model": "icon_eu", "model_label": "ICON-EU / ECMWF + Bonifacio Strait Venturi", "thermal_boost": 0.22, "aliases": ["porto pollo", "sardinia", "palau"]}, {"id": "cape_town", "name": "Cape Town (Bloubergstrand), South Africa", "short_name": "Cape Town", "country": "South Africa", "region": "Western Cape", "flag": "🇿🇦", "lat": -33.8167, "lon": 18.4667, "timezone": "Africa/Johannesburg", "beach_angle": 260.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Cape Doctor Ridge Venturi", "thermal_boost": 0.22, "aliases": ["cape town", "blouberg", "bloubergstrand", "dolphin beach", "big bay", "kitebeach ct"]}, {"id": "langebaan", "name": "Langebaan (Shark Bay), South Africa", "short_name": "Langebaan", "country": "South Africa", "region": "Western Cape", "flag": "🇿🇦", "lat": -33.09, "lon": 18.0333, "timezone": "Africa/Johannesburg", "beach_angle": 240.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + West Coast Lagoon Thermal", "thermal_boost": 0.2, "aliases": ["langebaan", "shark bay", "main beach langebaan"]}, {"id": "cabarete", "name": "Cabarete (Kite Beach), Dominican Republic", "short_name": "Cabarete", "country": "Dominican Republic", "region": "Puerto Plata", "flag": "🇩🇴", "lat": 19.7583, "lon": -70.4372, "timezone": "America/Santo_Domingo", "beach_angle": 20.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Atlantic Sea Breeze", "thermal_boost": 0.18, "aliases": ["cabarete", "kite beach cabarete", "bozo beach"]}, {"id": "maui", "name": "Maui (Kanaha Beach), Hawaii", "short_name": "Maui (Kanaha)", "country": "United States", "region": "Hawaii", "flag": "🇺🇸", "lat": 20.8986, "lon": -156.4422, "timezone": "Pacific/Honolulu", "beach_angle": 20.0, "preferred_model": "best_match", "model_label": "GFS (13km) + Haleakala Valley Venturi", "thermal_boost": 0.22, "aliases": ["maui", "kanaha", "kite beach maui", "kahului"]}, {"id": "hood_river", "name": "Hood River (The Gorge), USA", "short_name": "Hood River", "country": "United States", "region": "Oregon", "flag": "🇺🇸", "lat": 45.7139, "lon": -121.5083, "timezone": "America/Los_Angeles", "beach_angle": 0.0, "preferred_model": "best_match", "model_label": "HRRR (3km High-Res) + Gorge Pressure Venturi", "thermal_boost": 0.3, "aliases": ["hood river", "the gorge", "columbia river gorge", "event site"]}, {"id": "la_ventana", "name": "La Ventana (Baja), Mexico", "short_name": "La Ventana", "country": "Mexico", "region": "Baja California Sur", "flag": "🇲🇽", "lat": 24.0531, "lon": -109.9989, "timezone": "America/Hermosillo", "beach_angle": 60.0, "preferred_model": "best_match", "model_label": "HRRR / GFS + Sea of Cortez Thermal", "thermal_boost": 0.25, "aliases": ["la ventana", "baja", "los barriles", "el sargento"]}, {"id": "hatteras", "name": "Cape Hatteras (Kite Point), USA", "short_name": "Cape Hatteras", "country": "United States", "region": "North Carolina", "flag": "🇺🇸", "lat": 35.25, "lon": -75.5333, "timezone": "America/New_York", "beach_angle": 120.0, "preferred_model": "best_match", "model_label": "HRRR (3km High-Res) + Pamlico Sound", "thermal_boost": 0.15, "aliases": ["hatteras", "outer banks", "obx", "waves", "rodanthe"]}, {"id": "st_pete", "name": "St. Petersburg (Skyway), USA", "short_name": "St. Pete Skyway", "country": "United States", "region": "Florida", "flag": "🇺🇸", "lat": 27.6333, "lon": -82.65, "timezone": "America/New_York", "beach_angle": 210.0, "preferred_model": "best_match", "model_label": "HRRR (3km High-Res) + Tampa Bay", "thermal_boost": 0.15, "aliases": ["st pete", "skyway", "tampa bay", "fort de soto"]}, {"id": "le_morne", "name": "Le Morne (Kite Lagoon), Mauritius", "short_name": "Le Morne", "country": "Mauritius", "region": "Black River", "flag": "🇲🇺", "lat": -20.45, "lon": 57.3167, "timezone": "Indian/Mauritius", "beach_angle": 240.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Brabant Mountain Venturi", "thermal_boost": 0.2, "aliases": ["le morne", "one eye", "kite lagoon", "mauritius"]}, {"id": "kalpitiya", "name": "Kalpitiya Lagoon, Sri Lanka", "short_name": "Kalpitiya", "country": "Sri Lanka", "region": "North Western Province", "flag": "🇱🇰", "lat": 8.2333, "lon": 79.7667, "timezone": "Asia/Colombo", "beach_angle": 270.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Monsoon Venturi", "thermal_boost": 0.2, "aliases": ["kalpitiya", "sri lanka", "kappalady"]}, {"id": "boracay", "name": "Boracay (Bulabog Beach), Philippines", "short_name": "Boracay", "country": "Philippines", "region": "Aklan", "flag": "🇵🇭", "lat": 11.9667, "lon": 121.9333, "timezone": "Asia/Manila", "beach_angle": 90.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Amihan Trade", "thermal_boost": 0.15, "aliases": ["boracay", "bulabog", "bulabog beach"]}, {"id": "mui_ne", "name": "Mui Ne, Vietnam", "short_name": "Mui Ne", "country": "Vietnam", "region": "Bình Thuận", "flag": "🇻🇳", "lat": 10.9333, "lon": 108.2833, "timezone": "Asia/Ho_Chi_Minh", "beach_angle": 140.0, "preferred_model": "best_match", "model_label": "ECMWF (9km) + Coastal Sand Venturi", "thermal_boost": 0.18, "aliases": ["mui ne", "vietnam", "phan thiet"]}];
 
     // SHORELINE & SAFETY METRICS LOGIC
     const DEFAULT_BEACH_ORIENTATIONS = {
@@ -1437,11 +1480,17 @@
       if (consBox && consText) {
         consPct.innerText = heroCons.rating || `${heroCons.confidence_pct}%`;
         consText.innerText = heroCons.label || '';
-        const m = heroCons.models;
-        if (m && m.ecmwf !== undefined && m.ecmwf !== null) {
-          consSub.innerText = `ECMWF ${m.ecmwf} · GFS ${m.gfs} · ICON ${m.icon} kts`;
+        const modelLabel = f.model_info || state.spot.model_label;
+        if (modelLabel) {
+          consSub.innerText = modelLabel;
+          consSub.title = `Wind Model: ${modelLabel}`;
         } else {
-          consSub.innerText = heroCons.description || 'ECMWF · GFS · ICON';
+          const m = heroCons.models;
+          if (m && m.ecmwf !== undefined && m.ecmwf !== null) {
+            consSub.innerText = `ECMWF ${m.ecmwf} · GFS ${m.gfs} · ICON ${m.icon} kts`;
+          } else {
+            consSub.innerText = heroCons.description || 'ECMWF · GFS · ICON';
+          }
         }
         consSub.title = heroCons.description || '';
         if (heroCons.confidence_pct >= 85) {
@@ -1719,7 +1768,7 @@
     }
 
     function deleteKite(idx) {
-      if (confirm(`Remove ${state.inventory[idx].brand} ${state.inventory[idx].model} ${state.inventory[idx].size}m from your garage?`)) {
+      if (confirm(`Remove ${state.inventory[idx].brand} ${state.inventory[idx].model} ${state.inventory[idx].size}m from your gear inventory?`)) {
         state.inventory.splice(idx, 1);
         saveInventory();
         renderQuiver();
@@ -1787,19 +1836,101 @@
       }
     }
 
-    function setSpot(name, lat, lon, tz = "auto", beachAngle = null) {
+    // GREAT-CIRCLE DISTANCE (HAVERSINE) FOR GPS PROXIMITY SORTING
+    function calculateDistanceKm(lat1, lon1, lat2, lon2) {
+      const R = 6371.0;
+      const dLat = (lat2 - lat1) * Math.PI / 180.0;
+      const dLon = (lon2 - lon1) * Math.PI / 180.0;
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180.0) * Math.cos(lat2 * Math.PI / 180.0) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return Math.round(R * c * 10) / 10;
+    }
+
+    let activeSpotRegion = 'all';
+    let userGpsCoords = null;
+
+    function renderSpotList(spots) {
+      const container = document.getElementById('spot-list-container');
+      if (!container) return;
+      const list = spots || GLOBAL_KITE_SPOTS;
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="p-4 text-center space-y-2 bg-slate-950/60 rounded-2xl border border-dashed border-slate-800">
+            <p class="text-xs text-slate-400">No matching kite spots found.</p>
+            <button onclick="onSearchCustomGeocoder()" class="px-3 py-1.5 rounded-xl bg-sky-600 text-white font-bold text-xs shadow-md">
+              Search Global Map
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = list.map(s => {
+        const isCurrent = state.spot && (
+          (state.spot.name && state.spot.name.toLowerCase().includes(s.id)) ||
+          (Math.abs(state.spot.lat - s.lat) < 0.05 && Math.abs(state.spot.lon - s.lon) < 0.05)
+        );
+        const distBadge = s.dist_km !== undefined ? `
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${s.dist_km <= 60 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-slate-800 text-slate-400 border border-slate-700'}">
+            📍 ${s.dist_km < 1 ? '<1' : Math.round(s.dist_km)} km away
+          </span>
+        ` : '';
+
+        return `
+          <div onclick="selectSpotFromCatalog('${s.id}')" class="p-2.5 rounded-2xl border cursor-pointer transition flex items-center justify-between ${
+            isCurrent
+              ? 'bg-sky-950/50 border-sky-500/80 shadow-md ring-1 ring-sky-500/30'
+              : 'bg-slate-950/80 hover:bg-slate-800/80 border-slate-800/90'
+          }">
+            <div class="flex items-center space-x-2.5">
+              <span class="text-xl">${s.flag}</span>
+              <div>
+                <div class="flex items-center space-x-1.5">
+                  <h4 class="text-xs font-bold text-white">${s.short_name}</h4>
+                  <span class="text-[10px] text-slate-400 font-normal">· ${s.country}</span>
+                  ${isCurrent ? '<span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">Active</span>' : ''}
+                </div>
+                <p class="text-[10px] text-sky-400/90 font-medium mt-0.5">
+                  ⚡ ${s.model_label || 'High-Res Wind Model'} · Coast ${s.beach_angle}°
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2">
+              ${distBadge}
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500"></i>
+            </div>
+          </div>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    function selectSpotFromCatalog(spotId) {
+      const spot = GLOBAL_KITE_SPOTS.find(s => s.id === spotId);
+      if (!spot) return;
+      setSpot(spot.name, spot.lat, spot.lon, spot.timezone, spot.beach_angle, spot.model_label);
+    }
+
+    function setSpot(name, lat, lon, tz = "auto", beachAngle = null, modelLabel = null) {
       let bAngle = beachAngle;
       if (bAngle === null || bAngle === undefined) {
         bAngle = resolveBeachAngle(name);
       }
-      state.spot = { name, lat, lon, timezone: tz, beach_angle: bAngle };
+      state.spot = { name, lat, lon, timezone: tz, beach_angle: bAngle, model_label: modelLabel };
       localStorage.setItem('kf_spot', JSON.stringify(state.spot));
       document.getElementById('header-spot-name').innerText = name.split(',')[0];
       const bSelect = document.getElementById('select-beach-orientation');
       if (bSelect) bSelect.value = String(bAngle);
       const bLabel = document.getElementById('label-beach-angle');
       if (bLabel) bLabel.innerText = `${bAngle}° (${degreesToCardinal(bAngle)})`;
-      toggleModal('modal-spot');
+      
+      const modal = document.getElementById('modal-spot');
+      if (modal && !modal.classList.contains('hidden')) {
+        toggleModal('modal-spot');
+      }
       fetchForecast();
     }
 
@@ -1812,48 +1943,135 @@
       fetchForecast();
     }
 
+    function filterSpotsByRegion(region) {
+      activeSpotRegion = region;
+      const tabs = ['all', 'brazil', 'spain', 'alps', 'africa', 'americas', 'asia'];
+      tabs.forEach(t => {
+        const el = document.getElementById(`tab-spot-${t}`);
+        if (!el) return;
+        if (t === region.toLowerCase()) {
+          el.className = "px-2.5 py-1 rounded-lg font-bold bg-sky-600 text-white whitespace-nowrap shadow-sm";
+        } else {
+          el.className = "px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white whitespace-nowrap";
+        }
+      });
+
+      let filtered = GLOBAL_KITE_SPOTS;
+      const rLower = region.toLowerCase();
+      if (rLower === 'brazil') {
+        filtered = GLOBAL_KITE_SPOTS.filter(s => s.country.toLowerCase() === 'brazil');
+      } else if (rLower === 'spain') {
+        filtered = GLOBAL_KITE_SPOTS.filter(s => s.country.toLowerCase() === 'spain' || s.region.toLowerCase().includes('canary'));
+      } else if (rLower === 'alps') {
+        filtered = GLOBAL_KITE_SPOTS.filter(s => s.country.toLowerCase() === 'switzerland' || s.country.toLowerCase() === 'italy' || s.region.toLowerCase().includes('lake') || s.region.toLowerCase().includes('alp'));
+      } else if (rLower === 'africa') {
+        filtered = GLOBAL_KITE_SPOTS.filter(s => ['morocco', 'egypt', 'south africa', 'mauritius'].includes(s.country.toLowerCase()));
+      } else if (rLower === 'americas') {
+        filtered = GLOBAL_KITE_SPOTS.filter(s => ['united states', 'caribbean', 'dominican republic', 'colombia', 'peru', 'mexico'].includes(s.country.toLowerCase()));
+      } else if (rLower === 'asia') {
+        filtered = GLOBAL_KITE_SPOTS.filter(s => ['sri lanka', 'philippines', 'vietnam'].includes(s.country.toLowerCase()));
+      }
+
+      if (userGpsCoords) {
+        filtered = filtered.map(s => ({
+          ...s,
+          dist_km: calculateDistanceKm(userGpsCoords.lat, userGpsCoords.lon, s.lat, s.lon)
+        })).sort((a,b) => a.dist_km - b.dist_km);
+      }
+
+      renderSpotList(filtered);
+    }
+
+    function onSearchSpotInput(query) {
+      const q = (query || '').trim().toLowerCase();
+      const clearBtn = document.getElementById('btn-clear-search');
+      if (clearBtn) {
+        if (q) clearBtn.classList.remove('hidden');
+        else clearBtn.classList.add('hidden');
+      }
+      if (!q) {
+        filterSpotsByRegion(activeSpotRegion);
+        return;
+      }
+      let filtered = GLOBAL_KITE_SPOTS.filter(s => {
+        return s.name.toLowerCase().includes(q) ||
+               s.country.toLowerCase().includes(q) ||
+               s.region.toLowerCase().includes(q) ||
+               (s.aliases && s.aliases.some(a => a.toLowerCase().includes(q)));
+      });
+      if (userGpsCoords) {
+        filtered = filtered.map(s => ({
+          ...s,
+          dist_km: calculateDistanceKm(userGpsCoords.lat, userGpsCoords.lon, s.lat, s.lon)
+        })).sort((a,b) => a.dist_km - b.dist_km);
+      }
+      renderSpotList(filtered);
+    }
+
+    function clearSpotSearch() {
+      const inp = document.getElementById('input-spot-search');
+      if (inp) inp.value = '';
+      const clearBtn = document.getElementById('btn-clear-search');
+      if (clearBtn) clearBtn.classList.add('hidden');
+      filterSpotsByRegion(activeSpotRegion);
+    }
+
+    async function onSearchCustomGeocoder() {
+      const q = document.getElementById('input-spot-search').value.trim();
+      if (!q) return;
+      try {
+        const resp = await fetch(`/api/geocode?q=${encodeURIComponent(q)}`);
+        const data = await resp.json();
+        if (data && data.lat && data.lon) {
+          setSpot(data.name || q, data.lat, data.lon, "auto");
+        } else {
+          alert("Could not locate beach. Try a major town nearby or select from our verified spots!");
+        }
+      } catch (e) {
+        alert("Search failed. Please select from the spot catalog.");
+      }
+    }
+
     function useGpsLocation() {
       if (!navigator.geolocation) {
         alert("Geolocation not supported by your browser.");
         return;
       }
       const btn = document.getElementById('btn-gps');
-      btn.classList.add('animate-spin');
+      if (btn) btn.classList.add('animate-spin');
+
       navigator.geolocation.getCurrentPosition(
-        async (pos) => {
-          btn.classList.remove('animate-spin');
+        (pos) => {
+          if (btn) btn.classList.remove('animate-spin');
           const lat = pos.coords.latitude;
           const lon = pos.coords.longitude;
-          try {
-            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
-            const data = await res.json();
-            const beachName = data.address?.beach || data.address?.suburb || data.address?.village || data.address?.city || "My Location";
-            setSpot(beachName, lat, lon, "auto");
-          } catch {
-            setSpot("My Beach Location", lat, lon, "auto");
+          userGpsCoords = { lat, lon };
+
+          // Calculate distance to all spots in the world
+          const spotsWithDist = GLOBAL_KITE_SPOTS.map(s => ({
+            ...s,
+            dist_km: calculateDistanceKm(lat, lon, s.lat, s.lon)
+          })).sort((a,b) => a.dist_km - b.dist_km);
+
+          const nearest = spotsWithDist[0];
+          // If within 60km, auto-select it directly!
+          if (nearest && nearest.dist_km <= 60.0) {
+            setSpot(nearest.name, nearest.lat, nearest.lon, nearest.timezone, nearest.beach_angle, nearest.model_label);
+          } else {
+            // Open spot modal sorted with closest spots first
+            filterSpotsByRegion('all');
+            const modal = document.getElementById('modal-spot');
+            if (modal && modal.classList.contains('hidden')) {
+              toggleModal('modal-spot');
+            }
           }
         },
         (err) => {
-          btn.classList.remove('animate-spin');
-          alert("Could not access GPS. Please ensure location permissions are enabled.");
-        }
+          if (btn) btn.classList.remove('animate-spin');
+          alert("Could not access GPS. Please check location permissions in your browser or phone settings.");
+        },
+        { enableHighAccuracy: true, timeout: 8000 }
       );
-    }
-
-    async function onSearchSpotSubmit() {
-      const q = document.getElementById('input-spot-search').value.trim();
-      if (!q) return;
-      try {
-        const resp = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1`);
-        const data = await resp.json();
-        if (data && data.length > 0) {
-          setSpot(data[0].display_name.split(',')[0], parseFloat(data[0].lat), parseFloat(data[0].lon), "auto");
-        } else {
-          alert("Could not find spot. Try another beach name!");
-        }
-      } catch (e) {
-        alert("Search request failed.");
-      }
     }
 
     function escapeHtml(str) {
@@ -2166,11 +2384,19 @@
         } catch (e) {}
       }
 
+      renderSpotList();
       renderQuiver();
       if (state.forecastData) {
         renderForecast();
       }
       fetchForecast();
+
+      // Prompt new or unauthenticated riders to sign in / create account
+      if (!authUser || !authUser.email) {
+        setTimeout(() => {
+          openAuthModal();
+        }, 500);
+      }
 
       // Periodic auto-refresh every 5 minutes
       setInterval(fetchForecast, 300000);

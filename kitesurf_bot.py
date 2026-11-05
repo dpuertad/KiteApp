@@ -1082,6 +1082,19 @@ def fetch_live_forecast(spot: dict) -> dict:
     tmrw_temp = forecast.get("tomorrow_temp_max", cur_temp)
     forecast["tomorrow_wetsuit"] = calculate_wetsuit_guide(tomorrow_sst, tmrw_temp)
 
+    # Attach Regional Meteorological Wind Model Label
+    try:
+        from kite_spots import GLOBAL_KITE_SPOTS
+        spot_name_clean = spot.get("name", "").lower()
+        matched_model = "ECMWF (9km) + High-Res Local Model"
+        for s in GLOBAL_KITE_SPOTS:
+            if s["id"] in spot_name_clean or s["name"].lower() in spot_name_clean or spot_name_clean in s["name"].lower():
+                matched_model = s.get("model_label", matched_model)
+                break
+        forecast["model_info"] = matched_model
+    except Exception:
+        forecast["model_info"] = "ECMWF (9km) + High-Res Ensemble"
+
     try:
         with open(CACHE_FILE, "w", encoding="utf-8") as f:
             json.dump(forecast, f)
@@ -1632,8 +1645,41 @@ def reverse_geocode(lat: float, lon: float) -> str:
 
 
 def geocode_place_name(query: str):
+    if not query:
+        return None, None, None
+
+    # 1. Check curated global kite spots catalog first
+    try:
+        from kite_spots import search_spots_catalog
+        matches = search_spots_catalog(query, max_results=1)
+        if matches:
+            top = matches[0]
+            return float(top["lat"]), float(top["lon"]), top["name"]
+    except Exception:
+        pass
+
+    # 2. Open-Meteo High-Availability Geocoding API (Fast, no rate-limits)
+    try:
+        om_url = f"https://geocoding-api.open-meteo.com/v1/search?name={urllib.parse.quote(query.strip())}&count=1&language=en&format=json"
+        om_req = urllib.request.Request(om_url, headers={"User-Agent": "KiteForecastBot/1.0"})
+        with urllib.request.urlopen(om_req, context=SSL_CTX, timeout=6) as resp:
+            om_data = json.loads(resp.read().decode("utf-8"))
+            results = om_data.get("results")
+            if results and len(results) > 0:
+                item = results[0]
+                name_parts = [item.get("name", "")]
+                if item.get("admin1"):
+                    name_parts.append(item["admin1"])
+                if item.get("country"):
+                    name_parts.append(item["country"])
+                full_name = ", ".join(name_parts)
+                return float(item["latitude"]), float(item["longitude"]), full_name
+    except Exception:
+        pass
+
+    # 3. Fallback to OpenStreetMap Nominatim
     url = f"https://nominatim.openstreetmap.org/search?q={urllib.parse.quote(query)}&format=json&limit=1"
-    req = urllib.request.Request(url, headers={"User-Agent": "KiteForecastBot/1.0"})
+    req = urllib.request.Request(url, headers={"User-Agent": "KiteForecastBot/1.0 (daniel@kitesurf.dev)"})
     try:
         with urllib.request.urlopen(req, context=SSL_CTX, timeout=6) as resp:
             data = json.loads(resp.read().decode("utf-8"))
@@ -2159,7 +2205,46 @@ def start_embedded_http_server(port: int = 8080):
                 self.wfile.write(json.dumps({"lat": lat, "lon": lon, "name": res_name}).encode("utf-8"))
                 return
 
-            # 5. Static Files: PWA Web App
+            # 5. API: Global Kite Spots & GPS Discovery
+            if path == "/api/spots":
+                try:
+                    from kite_spots import GLOBAL_KITE_SPOTS, find_spots_near_gps, search_spots_catalog
+                    lat_str = params.get("lat", [None])[0]
+                    lon_str = params.get("lon", [None])[0]
+                    q_str = params.get("q", [None])[0]
+
+                    if lat_str and lon_str:
+                        nearby = find_spots_near_gps(float(lat_str), float(lon_str), max_spots=15)
+                        self.send_response(200)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"spots": nearby, "type": "nearby"}).encode("utf-8"))
+                        return
+
+                    if q_str:
+                        matches = search_spots_catalog(q_str, max_results=20)
+                        self.send_response(200)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"spots": matches, "type": "search"}).encode("utf-8"))
+                        return
+
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"spots": GLOBAL_KITE_SPOTS, "type": "all"}).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # 6. Static Files: PWA Web App
             if path in ["/", "/index.html"]:
                 index_path = os.path.join(web_dir, "index.html")
                 if os.path.exists(index_path):
