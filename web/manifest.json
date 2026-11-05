@@ -1,7 +1,7 @@
 {
-  "name": "KiteForecast - Smart Kite Assistant",
-  "short_name": "KiteForecast",
-  "description": "Smart, personalized kitesurf forecasts & quiver kite recommendations tailored to your exact gear and weight.",
+  "name": "HolyGust - Smart Wind & Gear Assistant",
+  "short_name": "HolyGust",
+  "description": "Smart, personalized kitesurf forecasts & kite recommendations tailored to your exact gear and weight.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#020617",

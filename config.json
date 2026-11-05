@@ -14,7 +14,7 @@
         "timezone": "America/Fortaleza"
       },
       "inventory": [],
-      "morning_briefing": true
+      "morning_briefing": false
     }
   }
 }

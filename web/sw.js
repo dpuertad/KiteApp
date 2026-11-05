@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kiteforecast-v6';
+const CACHE_NAME = 'holygust-v7';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',

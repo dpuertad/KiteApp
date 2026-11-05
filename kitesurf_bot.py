@@ -1766,7 +1766,7 @@ def handle_telegram_command(text: str, message_obj: dict, config: dict) -> str:
             else f"🎒 *Your gear has {len(user_profile.get('inventory', []))} kite(s) registered.* (Type `/kites` to inspect)"
         )
         welcome_intro = (
-            f"👋 *Welcome to KiteForecast, {first_name}!* 🏄‍♂️\n\n"
+            f"👋 *Welcome to HolyGust, {first_name}!* 🏄‍♂️\n\n"
             f"{quiver_alert}\n\n"
             "⚡ *Quick Setup Guide:*\n"
             f"1️⃣ *Set your rider weight:* `/weight 75` (currently {user_profile['rider_weight_kg']} kg — tunes wind ranges)\n"
@@ -1814,7 +1814,7 @@ def handle_telegram_command(text: str, message_obj: dict, config: dict) -> str:
     elif cmd.startswith("/qr") or cmd.startswith("/share") or cmd.startswith("/invite"):
         qr_url = "https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https://t.me/KiteForecast_bot&format=png&margin=20"
         caption = (
-            "📲 *Share KiteForecast with your buddies!*\n\n"
+            "📲 *Share HolyGust with your buddies!*\n\n"
             "Direct link: https://t.me/KiteForecast_bot\n\n"
             "When they scan this QR code or tap the link, they get their own private rider profile, quiver, and GPS spot forecasts!"
         )
@@ -1823,7 +1823,7 @@ def handle_telegram_command(text: str, message_obj: dict, config: dict) -> str:
 
     elif cmd.startswith("/app") or cmd.startswith("/web") or "interactive web app" in cmd.lower():
         return (
-            "📱 *KiteForecast Interactive Web App:* 🏄‍♂️\n\n"
+            "📱 *HolyGust Interactive Web App:* 🏄‍♂️\n\n"
             "👉 https://kiteapp.onrender.com\n\n"
             "✨ *What you can do in the App:*\n"
             "• Interactive gear garage with brand & model dropdowns\n"
@@ -2417,17 +2417,31 @@ def start_embedded_http_server(port: int = 8080):
                     db["users"][email] = new_user
                     save_users_db(db)
 
-                    # Notify Daniel on Telegram!
+                    # Notify Daniel on Telegram with full rider & gear details!
                     total_count = len(db["users"])
                     gear_count = len(gear)
+                    current_yr = 2026
+                    gear_lines = []
+                    for k in gear:
+                        b = k.get("brand", "Kite")
+                        m = k.get("model", "")
+                        sz = k.get("size", "")
+                        yr = int(k.get("year", current_yr))
+                        age = current_yr - yr
+                        age_str = f" [{age} yrs old]" if age > 0 else " [New]"
+                        gear_lines.append(f"  • {b} {m} {sz}m ({yr}){age_str}")
+                    
+                    gear_summary = "\n".join(gear_lines) if gear_lines else "  (No gear registered yet)"
+
                     notify_text = (
-                        f"🎉 New KiteApp User Registered!\n\n"
-                        f"👤 Name: {new_user['name']}\n"
+                        f"🎉 New HolyGust Rider Registered!\n\n"
+                        f"👤 Rider: {new_user['name']}\n"
                         f"📧 Email: {email}\n"
-                        f"⚖️ Weight: {weight_kg} kg ({level} · {board})\n"
-                        f"🎒 Gear: {gear_count} kite(s) registered\n"
-                        f"📍 Spot: {spot.get('name', 'Cumbuco')}\n\n"
-                        f"📊 Total Registered Web Users: {total_count}"
+                        f"⚖️ Setup: {weight_kg} kg · {level.capitalize()} · {board}\n"
+                        f"📍 Home Beach: {spot.get('name', 'Cumbuco')}\n\n"
+                        f"🎒 Stored Cloud Gear ({gear_count} kites):\n"
+                        f"{gear_summary}\n\n"
+                        f"📊 Total HolyGust Riders: {total_count}"
                     )
                     send_admin_telegram(notify_text)
 
@@ -2660,7 +2674,7 @@ def send_morning_briefing_to_all():
     print(f"Dispatched morning briefings to {len(users)} registered users...")
 
     for uid, profile in users.items():
-        if profile.get("morning_briefing", True):
+        if profile.get("morning_briefing", False):
             try:
                 forecast = fetch_live_forecast(profile["spot"])
                 briefing = format_briefing(forecast, profile)
@@ -2679,13 +2693,15 @@ def main():
         send_morning_briefing_to_all()
         return
 
-    # Single-user or default run
-    admin_id = str(config.get("admin_id", "7424865438"))
-    profile = config.get("users", {}).get(admin_id, list(config.get("users", {}).values())[0])
-    forecast = fetch_live_forecast(profile["spot"])
-    briefing = format_briefing(forecast, profile)
-    send_telegram(briefing, config["telegram_token"], str(profile["user_id"]))
-    print(f"Morning briefing delivered to {profile['rider_name']}!")
+    # Single-user or default run: do NOT send long morning briefings unless explicitly requested
+    print("HolyGust App Server started. Automatic morning briefing Telegram spam is disabled by user preference.")
+    if len(sys.argv) > 1 and sys.argv[1] in ["--briefing", "-b"]:
+        admin_id = str(config.get("admin_id", "7424865438"))
+        profile = config.get("users", {}).get(admin_id, list(config.get("users", {}).values())[0])
+        forecast = fetch_live_forecast(profile["spot"])
+        briefing = format_briefing(forecast, profile)
+        send_telegram(briefing, config["telegram_token"], str(profile["user_id"]))
+        print(f"Morning briefing delivered to {profile['rider_name']}!")
 
 
 if __name__ == "__main__":
