@@ -138,9 +138,9 @@
           <span id="profile-weight-display" class="text-sm font-bold text-white">75.0 kg</span>
         </div>
         <div class="flex items-center space-x-1.5">
-          <button onclick="adjustWeight(-2.5)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 text-xs font-bold border border-slate-700 flex items-center justify-center">-</button>
+          <button onclick="adjustWeight(-1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 text-xs font-bold border border-slate-700 flex items-center justify-center">-</button>
           <input id="slider-weight" type="range" min="45" max="125" step="1" value="75" oninput="onWeightSlider(this.value)" class="w-24 accent-sky-500 cursor-pointer">
-          <button onclick="adjustWeight(2.5)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 text-xs font-bold border border-slate-700 flex items-center justify-center">+</button>
+          <button onclick="adjustWeight(1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 text-xs font-bold border border-slate-700 flex items-center justify-center">+</button>
         </div>
       </div>
 
@@ -5193,7 +5193,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=8').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=9').then(reg => {
           reg.update();
         }).catch(err => console.log('SW register failed:', err));
       }
