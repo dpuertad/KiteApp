@@ -995,7 +995,6 @@
           <div class="flex items-center space-x-2">
             <span class="text-xl">✈️</span>
             <h3 class="font-bold text-base text-white tracking-tight">Kite Trip Advisor & Quiver Matcher</h3>
-            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40">Beta Lab</span>
           </div>
           <p class="text-xs text-slate-400 mt-0.5">Atmospheric climatology, wind probabilities & tailored quiver packing</p>
         </div>
@@ -6108,7 +6107,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=11').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=12').then(reg => {
           reg.update();
         }).catch(err => console.log('SW register failed:', err));
       }
