@@ -4303,8 +4303,8 @@
       const isBetaRider = authUser && (
         authUser.is_beta_rider === true || 
         authUser.beta_status === 'approved' ||
-        ['d_puerta@hotmail.com', 'admin.holygust@gmail.com', 'd.puertadiaz@gmail.com'].includes((authUser.email || '').toLowerCase().trim())
-      );
+        (['d_puerta@hotmail.com', 'admin.holygust@gmail.com', 'd.puertadiaz@gmail.com'].includes((authUser.email || '').toLowerCase().trim()) && authUser.beta_status !== 'left')
+      ) && authUser.beta_status !== 'left';
 
       if (profileCardBadge) {
         if (isBetaRider) {
@@ -4323,15 +4323,23 @@
         let cardContent = '';
         if (isBetaRider) {
           cardContent = `
-            <div class="flex items-center space-x-3">
-              <div class="w-9 h-9 rounded-xl bg-amber-400/20 text-amber-300 flex items-center justify-center text-lg border border-amber-400/30 flex-shrink-0">
-                ⚡
-              </div>
-              <div class="min-w-0 flex-1">
-                <div class="flex items-center space-x-1.5">
-                  <span class="text-xs font-bold text-amber-300">⚡ Beta Rider Active</span>
+            <div class="space-y-2.5">
+              <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-xl bg-amber-400/20 text-amber-300 flex items-center justify-center text-lg border border-amber-400/30 flex-shrink-0">
+                  ⚡
                 </div>
-                <p class="text-[10px] text-slate-400 mt-0.5">You have early access to cutting-edge wind models & dev features.</p>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center space-x-1.5">
+                    <span class="text-xs font-bold text-amber-300">⚡ Beta Rider Active</span>
+                  </div>
+                  <p class="text-[10px] text-slate-400 mt-0.5">You have early access to cutting-edge wind models & dev features.</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-slate-800/80">
+                <span class="text-[10px] text-slate-400">Return to normal version?</span>
+                <button type="button" onclick="leaveBetaCrew()" class="px-2.5 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 active:scale-95 text-rose-400 hover:text-rose-300 border border-rose-500/30 text-[10px] font-semibold transition">
+                  Leave Beta Program
+                </button>
               </div>
             </div>
           `;
@@ -4379,6 +4387,42 @@
         cards.forEach(c => {
           c.innerHTML = cardContent;
         });
+      }
+    }
+
+    async function leaveBetaCrew() {
+      if (!authUser || !authUser.email) return;
+      if (!confirm("Are you sure you want to leave the HolyGust Beta Rider program?\n\nYou will return to the standard production environment and your Beta Rider badge will be removed.")) {
+        return;
+      }
+      try {
+        const res = await fetch('/api/beta/leave', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: authUser.email })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Could not leave beta");
+
+        if (data.user) {
+          authUser = data.user;
+        } else {
+          authUser.is_beta_rider = false;
+          authUser.beta_status = 'left';
+        }
+        localStorage.setItem('kf_auth_user', JSON.stringify(authUser));
+        localStorage.removeItem('hg_beta_mode');
+
+        updateAuthUI();
+        renderBetaUI();
+
+        alert("You have left the Beta program and returned to standard production.");
+
+        if (window.location.hostname.startsWith('beta.') || window.location.hostname.includes('-beta')) {
+          window.location.href = "https://holygust.com";
+        }
+      } catch (err) {
+        alert("Error leaving beta: " + err.message);
       }
     }
 

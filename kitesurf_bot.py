@@ -105,9 +105,12 @@ def load_users_db() -> dict:
         except Exception:
             pass
     
-    # Auto-apply approved beta emails
+    # Auto-apply approved beta emails unless user opted out
     approved_set = load_approved_beta_emails()
     for em, u in db.get("users", {}).items():
+        if u.get("beta_status") == "left":
+            u["is_beta_rider"] = False
+            continue
         if em in approved_set:
             u["is_beta_rider"] = True
             u["beta_status"] = "approved"
@@ -226,6 +229,43 @@ def decline_beta_rider(email: str):
         db["users"][email_clean]["beta_status"] = "declined"
         save_users_db(db)
     return True
+
+def remove_approved_beta_email(email: str):
+    email_clean = email.strip().lower()
+    emails = load_approved_beta_emails()
+    if email_clean in emails:
+        emails.remove(email_clean)
+        try:
+            with open(APPROVED_BETA_FILE, "w", encoding="utf-8") as f:
+                json.dump(list(emails), f, indent=2)
+        except Exception as e:
+            print(f"Error removing approved beta email: {e}")
+
+def leave_beta_program(email: str) -> tuple:
+    db = load_users_db()
+    email_clean = email.strip().lower()
+    user = db.get("users", {}).get(email_clean)
+    rider_name = (user.get("name") if user else None) or email_clean.split("@")[0].title()
+    
+    if user:
+        user["is_beta_rider"] = False
+        user["beta_status"] = "left"
+        save_users_db(db)
+    
+    remove_approved_beta_email(email_clean)
+    
+    # Notify Daniel via Telegram
+    tele_text = (
+        f"ℹ️ BETA PROGRAM UPDATE\n"
+        f"━━━━━━━━━━━━━━━━━━━━━\n"
+        f"👤 Rider: {rider_name}\n"
+        f"📧 Email: {email_clean}\n"
+        f"━━━━━━━━━━━━━━━━━━━━━\n"
+        f"Rider has opted out of the Beta program and returned to the production version."
+    )
+    send_admin_telegram(tele_text)
+    
+    return True, rider_name
 
 def handle_telegram_callback(cb: dict, token: str, config: dict):
     try:
@@ -3944,6 +3984,43 @@ def start_embedded_http_server(port: int = 8080):
                     self.wfile.write(json.dumps({
                         "success": True,
                         "message": "The HolyGust team has received your request. You will get an email once approved!"
+                    }).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # BETA: Leave Beta Rider Program
+            if parsed.path == "/api/beta/leave":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    data = json.loads(body) if body else {}
+                    email = (data.get("email") or "").strip().lower()
+
+                    if not email or "@" not in email:
+                        self.send_response(400)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": "A valid email is required."}).encode("utf-8"))
+                        return
+
+                    success, r_name = leave_beta_program(email)
+                    db = load_users_db()
+                    updated_user = db.get("users", {}).get(email, {})
+
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({
+                        "success": True,
+                        "message": "You have left the Beta Rider crew and returned to standard production.",
+                        "user": updated_user
                     }).encode("utf-8"))
                 except Exception as e:
                     self.send_response(500)
