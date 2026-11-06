@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <script>
     // Canonical Domain: force redirect any visitor on old onrender.com domain to https://holygust.com
-    if (window.location.hostname && window.location.hostname.includes('onrender.com') && !window.location.hostname.includes('beta')) {
+    if (window.location.hostname === 'www.holygust.com' || (window.location.hostname && window.location.hostname.includes('onrender.com') && !window.location.hostname.includes('beta'))) {
       window.location.replace('https://holygust.com' + window.location.pathname + window.location.search + window.location.hash);
     }
   </script>
@@ -3955,12 +3955,6 @@
           })
         });
         const data = await res.json();
-        if (res.ok && data.success && data.user) {
-          authUser = data.user;
-          localStorage.setItem('kf_auth_user', JSON.stringify(authUser));
-          updateAuthUI();
-        }
-        const data = await res.json();
         if (res.ok && data.success) {
           if (data.user) {
             authUser = data.user;
@@ -3979,7 +3973,7 @@
     async function syncUserDataQuiet() {
       if (!authUser || !authUser.email) return;
       try {
-        await fetch('/api/auth/sync', {
+        const res = await fetch('/api/auth/sync', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -3994,6 +3988,12 @@
             favorite_spots: state.favorite_spots || []
           })
         });
+        const data = await res.json();
+        if (res.ok && data.success && data.user) {
+          authUser = data.user;
+          localStorage.setItem('kf_auth_user', JSON.stringify(authUser));
+          updateAuthUI();
+        }
       } catch (e) {}
     }
 

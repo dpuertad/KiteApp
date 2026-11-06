@@ -52,26 +52,6 @@
       "is_beta_rider": true,
       "beta_status": "approved",
       "beta_approved_at": "2026-11-06T13:07:35.934278+00:00Z"
-    },
-    "rider_validation@holygust.com": {
-      "email": "rider_validation@holygust.com",
-      "name": "Validation Rider",
-      "created_at": "2026-11-06T14:08:04.264756Z",
-      "gear": [
-        {
-          "brand": "Duotone",
-          "model": "Rebel SLS",
-          "size": 11.0,
-          "active": true
-        }
-      ],
-      "boards": [],
-      "favorite_spots": [
-        "spot_it_dongo_3177526",
-        "cumbuco"
-      ],
-      "weight_kg": 74.0,
-      "last_sync": "2026-11-06T14:08:04.264756Z"
     }
   },
   "feedback": []
