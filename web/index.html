@@ -81,9 +81,6 @@
           <div class="flex items-center space-x-1.5">
             <h1 class="text-base font-bold tracking-tight bg-gradient-to-r from-white via-sky-100 to-cyan-300 bg-clip-text text-transparent">HolyGust</h1>
             <span id="header-beta-env-badge" class="hidden px-1.5 py-0.2 rounded text-[9px] font-black uppercase font-mono bg-amber-500/20 text-amber-300 border border-amber-500/40">BETA LAB</span>
-            <span id="header-beta-rider-badge" class="hidden px-2 py-0.2 rounded-full text-[9px] font-black uppercase tracking-wider bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 shadow-sm shadow-amber-500/30 flex items-center space-x-1">
-              <span>⚡</span><span>Beta Rider</span>
-            </span>
           </div>
           <p class="text-[11px] text-sky-400 font-medium">Smart Wind & Gear Assistant</p>
         </div>
@@ -3623,15 +3620,18 @@
         if (feedbackName && !feedbackName.value) feedbackName.value = displayName;
         if (feedbackEmail && !feedbackEmail.value) feedbackEmail.value = authUser.email;
 
-        if (rInput && (!rInput.value || rInput.value === '')) {
+        // Hide separate input so the name is not displayed 2 times
+        if (rInput) {
+          rInput.classList.add('hidden');
           rInput.value = displayName;
           state.user.name = displayName;
         }
 
+        // Combine rider name with the green online status indicator
         if (badgeBtn) {
-          badgeBtn.className = "text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 hover:text-white font-semibold border border-emerald-500/30 active:scale-95 transition cursor-pointer flex items-center space-x-1.5 shadow-sm flex-shrink-0";
-          badgeBtn.title = "Cloud Synced - Click to view profile or log out";
-          badgeBtn.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block"></span><span class="truncate max-w-[85px]">${escapeHtml(displayName)}</span>`;
+          badgeBtn.className = "text-xs px-3 py-1 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 hover:text-white font-bold border border-emerald-500/40 active:scale-95 transition cursor-pointer flex items-center space-x-2 shadow-sm flex-shrink-0";
+          badgeBtn.title = `Online & Cloud Synced as ${displayName} (${authUser.email}) · Click to open profile`;
+          badgeBtn.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse inline-block shadow-sm shadow-emerald-400/50"></span><span class="text-white font-bold text-xs sm:text-sm tracking-wide max-w-[140px] truncate">${escapeHtml(displayName)}</span>`;
         }
 
         if (avatarBtn) {
@@ -3644,6 +3644,12 @@
         if (formsView) formsView.classList.remove('hidden');
         if (modalTitle) modalTitle.innerText = "Rider Account & Cloud Sync";
         if (feedbackName && !feedbackName.value && state.user.name) feedbackName.value = state.user.name;
+
+        // Show editable input for guest name
+        if (rInput) {
+          rInput.classList.remove('hidden');
+          rInput.placeholder = "Your Name";
+        }
 
         if (badgeBtn) {
           badgeBtn.className = "text-[11px] px-2.5 py-0.5 rounded-full bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 hover:text-white font-semibold border border-sky-500/30 active:scale-95 transition cursor-pointer flex items-center space-x-1 shadow-sm flex-shrink-0";
@@ -4016,6 +4022,7 @@
         authUser = null;
         localStorage.removeItem('kf_auth_user');
         updateAuthUI();
+        renderBetaUI();
         const modal = document.getElementById('modal-auth');
         if (modal && !modal.classList.contains('hidden')) {
           toggleModal('modal-auth');
@@ -4196,22 +4203,13 @@
         }
       }
 
-      // 2. Rider Beta Badge (⚡ Beta Rider) in header & profile card
-      const headerRiderBadge = document.getElementById('header-beta-rider-badge');
+      // 2. Rider Beta Badge (⚡ Beta Rider) in profile card only
       const profileCardBadge = document.getElementById('profile-card-beta-badge');
       const isBetaRider = authUser && (
         authUser.is_beta_rider === true || 
         authUser.beta_status === 'approved' ||
         ['d_puerta@hotmail.com', 'admin.holygust@gmail.com', 'd.puertadiaz@gmail.com'].includes((authUser.email || '').toLowerCase().trim())
       );
-
-      if (headerRiderBadge) {
-        if (isBetaRider) {
-          headerRiderBadge.classList.remove('hidden');
-        } else {
-          headerRiderBadge.classList.add('hidden');
-        }
-      }
 
       if (profileCardBadge) {
         if (isBetaRider) {
