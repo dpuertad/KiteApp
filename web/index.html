@@ -4137,9 +4137,24 @@
     // ==========================================
     // BETA RIDER CREW & LAB LOGIC
     // ==========================================
+    function toggleBetaLabMode() {
+      const isLab = localStorage.getItem('hg_beta_mode') === 'true';
+      const next = !isLab;
+      localStorage.setItem('hg_beta_mode', next ? 'true' : 'false');
+      renderBetaUI();
+      if (next) {
+        alert("⚡ HolyGust Beta Lab Enabled! Experimental models and dev tools are now active on your device.");
+      } else {
+        alert("Switched back to standard production mode.");
+      }
+    }
+
     function renderBetaUI() {
+      const isLabActive = localStorage.getItem('hg_beta_mode') === 'true';
       const isBetaHost = window.location.hostname.startsWith('beta.') || 
                          window.location.hostname.includes('-beta') || 
+                         window.location.search.includes('beta=1') ||
+                         isLabActive ||
                          window.location.port === '8991';
       
       // 1. Beta Lab Environment Tag in top header
@@ -4193,9 +4208,9 @@
                   <p class="text-[10px] text-slate-400 mt-0.5">You have early access to cutting-edge wind models & dev features.</p>
                 </div>
               </div>
-              <a href="https://beta.holygust.com" target="_blank" class="px-3 py-1.5 rounded-xl text-[10px] font-bold bg-amber-400 hover:bg-amber-300 text-slate-950 shadow transition flex-shrink-0">
-                Open Lab
-              </a>
+              <button type="button" onclick="toggleBetaLabMode()" class="px-3 py-1.5 rounded-xl text-[10px] font-bold ${isLabActive ? 'bg-amber-400 text-slate-950 ring-2 ring-amber-300' : 'bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40'} shadow transition flex-shrink-0">
+                ${isLabActive ? '⚡ Lab Mode ON' : '⚡ Enable Lab'}
+              </button>
             </div>
           `;
         } else if (authUser && authUser.beta_status === 'pending') {

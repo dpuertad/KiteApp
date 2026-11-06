@@ -3336,12 +3336,30 @@ def start_embedded_http_server(port: int = 8080):
 
                     db = load_users_db()
                     if email in db["users"]:
-                        self.send_response(400)
-                        self.send_header("Content-Type", "application/json")
-                        self._send_cors_headers()
-                        self.end_headers()
-                        self.wfile.write(json.dumps({"error": "An account with this email already exists. Try signing in!"}).encode("utf-8"))
-                        return
+                        # If existing account has no password yet (e.g. pre-seeded or beta-invited):
+                        if not db["users"][email].get("password_hash"):
+                            user = db["users"][email]
+                            p_hash, p_salt = hash_password(password)
+                            user["password_hash"] = p_hash
+                            user["password_salt"] = p_salt
+                            if name: user["name"] = name
+                            if gear: user["gear"] = gear
+                            if boards: user["boards"] = boards
+                            save_users_db(db)
+                            safe_user = {k: v for k, v in user.items() if not k.startswith("password_")}
+                            self.send_response(200)
+                            self.send_header("Content-Type", "application/json")
+                            self._send_cors_headers()
+                            self.end_headers()
+                            self.wfile.write(json.dumps({"success": True, "user": safe_user}).encode("utf-8"))
+                            return
+                        else:
+                            self.send_response(400)
+                            self.send_header("Content-Type", "application/json")
+                            self._send_cors_headers()
+                            self.end_headers()
+                            self.wfile.write(json.dumps({"error": "An account with this email already exists. Try signing in!"}).encode("utf-8"))
+                            return
 
                     p_hash, p_salt = hash_password(password)
                     from datetime import datetime
@@ -3447,13 +3465,22 @@ def start_embedded_http_server(port: int = 8080):
                         self.wfile.write(json.dumps({"error": "No account found with this email."}).encode("utf-8"))
                         return
 
-                    calc_hash, _ = hash_password(password, user.get("password_salt", ""))
+                    # Auto-set password if account was created without one (e.g. pre-seeded)
+                    if not user.get("password_hash"):
+                        p_hash, p_salt = hash_password(password)
+                        user["password_hash"] = p_hash
+                        user["password_salt"] = p_salt
+                        save_users_db(db)
+                        calc_hash = p_hash
+                    else:
+                        calc_hash, _ = hash_password(password, user.get("password_salt", ""))
+
                     if calc_hash != user.get("password_hash"):
                         self.send_response(401)
                         self.send_header("Content-Type", "application/json")
                         self._send_cors_headers()
                         self.end_headers()
-                        self.wfile.write(json.dumps({"error": "Incorrect password. Please try again."}).encode("utf-8"))
+                        self.wfile.write(json.dumps({"error": "Incorrect password. Please try again or tap 'Forgot?'."}).encode("utf-8"))
                         return
 
                     from datetime import datetime

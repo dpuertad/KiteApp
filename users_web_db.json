@@ -56,7 +56,7 @@
     "rider_validation@holygust.com": {
       "email": "rider_validation@holygust.com",
       "name": "Validation Rider",
-      "created_at": "2026-11-06T13:25:38.445587Z",
+      "created_at": "2026-11-06T14:08:04.264756Z",
       "gear": [
         {
           "brand": "Duotone",
@@ -71,34 +71,7 @@
         "cumbuco"
       ],
       "weight_kg": 74.0,
-      "last_sync": "2026-11-06T13:25:38.445587Z"
-    },
-    "tester_rider@holygust.com": {
-      "email": "tester_rider@holygust.com",
-      "name": "Beta Tester Marco",
-      "created_at": "2026-11-06T13:25:51.376567+00:00Z",
-      "gear": [],
-      "boards": [],
-      "weight_kg": 76.0,
-      "level": "advanced",
-      "board": "Twintip",
-      "favorite_spots": [],
-      "beta_status": "approved",
-      "beta_applied_at": "2026-11-06T13:25:51.376567+00:00Z",
-      "is_beta_rider": true,
-      "beta_approved_at": "2026-11-06T13:25:51.977475+00:00Z"
-    },
-    "another_rider@holygust.com": {
-      "email": "another_rider@holygust.com",
-      "name": "Another_Rider",
-      "created_at": "2026-11-06T13:25:52.406121+00:00Z",
-      "gear": [],
-      "boards": [],
-      "weight_kg": 74.0,
-      "favorite_spots": [],
-      "is_beta_rider": true,
-      "beta_status": "approved",
-      "beta_approved_at": "2026-11-06T13:25:52.406121+00:00Z"
+      "last_sync": "2026-11-06T14:08:04.264756Z"
     }
   },
   "feedback": []
