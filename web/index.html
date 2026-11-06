@@ -103,7 +103,7 @@
         </div>
 
         <!-- Row 2: Travelling? Trip Advisor Button (Inside Pink Circled Header Area) -->
-        <button onclick="openTravelModal()" title="Kite Travel Advisor & Quiver Matcher" class="w-full flex items-center justify-center space-x-1.5 px-2.5 py-1 rounded-xl bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/20 hover:from-amber-500/30 hover:to-orange-500/30 active:scale-95 text-amber-300 hover:text-white border border-amber-500/40 text-[11px] font-bold transition shadow-sm">
+        <button id="header-travel-btn" onclick="openTravelModal()" title="Kite Travel Advisor & Quiver Matcher" class="w-full flex items-center justify-center space-x-1.5 px-2.5 py-1 rounded-xl bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/20 hover:from-amber-500/30 hover:to-orange-500/30 active:scale-95 text-amber-300 hover:text-white border border-amber-500/40 text-[11px] font-bold transition shadow-sm hidden">
           <span>✈️</span>
           <span>Travelling? Trip Advisor</span>
         </button>
@@ -4570,11 +4570,17 @@
     }
 
     function renderBetaUI() {
+      // Auto-persist ?beta=1 so installed PWA remembers Beta status across launches
+      if (window.location.search.includes('beta=1')) {
+        try { localStorage.setItem('hg_beta_mode', 'true'); } catch (e) {}
+      }
+
       const isLabActive = localStorage.getItem('hg_beta_mode') === 'true';
       const isBetaHost = window.location.hostname.startsWith('beta.') || 
                          window.location.hostname.includes('-beta') || 
                          window.location.search.includes('beta=1') ||
-                         window.location.port === '8991';
+                         window.location.port === '8991' ||
+                         isLabActive;
       
       // 1. Beta Lab Environment Tag in top header
       const headerEnvBadge = document.getElementById('header-beta-env-badge');
@@ -4588,11 +4594,11 @@
 
       // 2. Rider Beta Badge (⚡ Beta Rider) in profile card only
       const profileCardBadge = document.getElementById('profile-card-beta-badge');
-      const isBetaRider = authUser && (
+      const isBetaRider = (authUser && (
         authUser.is_beta_rider === true || 
         authUser.beta_status === 'approved' ||
         (['d_puerta@hotmail.com', 'admin.holygust@gmail.com', 'd.puertadiaz@gmail.com'].includes((authUser.email || '').toLowerCase().trim()) && authUser.beta_status !== 'left')
-      ) && authUser.beta_status !== 'left';
+      ) && authUser.beta_status !== 'left') || isBetaHost || isLabActive;
 
       if (profileCardBadge) {
         if (isBetaRider) {
@@ -4602,7 +4608,17 @@
         }
       }
 
-      // 3. Render Beta Status Card inside modals
+      // 3. Header Travelling? Trip Advisor Button (Beta Feature - visible for Beta Riders, ?beta=1, or Beta Lab)
+      const headerTravelBtn = document.getElementById('header-travel-btn');
+      if (headerTravelBtn) {
+        if (isBetaRider || isBetaHost || isLabActive) {
+          headerTravelBtn.classList.remove('hidden');
+        } else {
+          headerTravelBtn.classList.add('hidden');
+        }
+      }
+
+      // 4. Render Beta Status Card inside modals
       const authBetaCard = document.getElementById('auth-beta-card');
       const settingsBetaCard = document.getElementById('settings-beta-card');
       const cards = [authBetaCard, settingsBetaCard].filter(Boolean);
