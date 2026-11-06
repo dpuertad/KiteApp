@@ -1106,7 +1106,10 @@
             <input id="auth-input-email" type="email" required placeholder="rider@domain.com" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
           </div>
           <div>
-            <label class="block font-semibold text-slate-300 mb-1">Password</label>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block font-semibold text-slate-300">Password</label>
+              <button type="button" id="link-forgot-pass" onclick="switchAuthTab('forgot')" class="text-[11px] text-sky-400 hover:text-sky-300 hover:underline transition hidden">Forgot?</button>
+            </div>
             <input id="auth-input-password" type="password" required minlength="4" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
           </div>
 
@@ -1118,6 +1121,63 @@
 
           <button type="button" onclick="toggleModal('modal-auth')" class="w-full py-1.5 text-slate-400 hover:text-white text-xs font-medium text-center transition">
             Continue as Guest for Now →
+          </button>
+        </form>
+      </div>
+
+      <!-- Auth Forgot Password View -->
+      <div id="auth-forgot-view" class="space-y-3 text-xs hidden">
+        <div>
+          <h4 class="font-bold text-white text-sm flex items-center space-x-1.5">
+            <i data-lucide="key-round" class="w-4 h-4 text-sky-400"></i>
+            <span>Reset Your Password</span>
+          </h4>
+          <p class="text-[11px] text-slate-400 mt-1">Enter your account email. We'll send you a secure password reset link.</p>
+        </div>
+
+        <form id="form-forgot" onsubmit="handleForgotPasswordSubmit(event)" class="space-y-2.5">
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">Account Email</label>
+            <input id="forgot-input-email" type="email" required placeholder="rider@domain.com" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
+          </div>
+
+          <div id="forgot-status-box" class="hidden text-xs py-1.5 px-2.5 rounded-lg"></div>
+
+          <button id="btn-forgot-submit" type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 active:scale-95 text-white font-bold text-xs shadow-lg shadow-sky-500/25 transition">
+            Send Reset Link
+          </button>
+
+          <button type="button" onclick="switchAuthTab('login')" class="w-full py-1.5 text-slate-400 hover:text-white text-xs font-medium text-center transition">
+            ← Back to Sign In
+          </button>
+        </form>
+      </div>
+
+      <!-- Auth New Password View (Token/Code) -->
+      <div id="auth-reset-view" class="space-y-3 text-xs hidden">
+        <div>
+          <h4 class="font-bold text-white text-sm flex items-center space-x-1.5">
+            <i data-lucide="lock" class="w-4 h-4 text-emerald-400"></i>
+            <span>Choose New Password</span>
+          </h4>
+          <p class="text-[11px] text-slate-400 mt-1">Enter your new password below to regain access.</p>
+        </div>
+
+        <form id="form-reset" onsubmit="handleResetPasswordSubmit(event)" class="space-y-2.5">
+          <input type="hidden" id="reset-token-input" value="">
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">New Password</label>
+            <input id="reset-input-password" type="password" required minlength="4" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">Confirm Password</label>
+            <input id="reset-input-confirm" type="password" required minlength="4" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
+          </div>
+
+          <div id="reset-status-box" class="hidden text-xs py-1.5 px-2.5 rounded-lg"></div>
+
+          <button id="btn-reset-submit" type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 active:scale-95 text-white font-bold text-xs shadow-lg shadow-emerald-500/25 transition">
+            Update Password & Sign In
           </button>
         </form>
       </div>
@@ -3543,20 +3603,158 @@
       const submitBtn = document.getElementById('btn-auth-submit');
       const hint = document.getElementById('auth-tab-hint');
       const statusBox = document.getElementById('auth-status-box');
+      const linkForgot = document.getElementById('link-forgot-pass');
+      const formsView = document.getElementById('auth-forms-view');
+      const forgotView = document.getElementById('auth-forgot-view');
+      const resetView = document.getElementById('auth-reset-view');
+      const modalTitle = document.getElementById('auth-modal-title');
+
       if (statusBox) statusBox.classList.add('hidden');
+
+      if (tab === 'forgot') {
+        if (formsView) formsView.classList.add('hidden');
+        if (forgotView) forgotView.classList.remove('hidden');
+        if (resetView) resetView.classList.add('hidden');
+        if (modalTitle) modalTitle.innerText = "Reset Password";
+        const fStatus = document.getElementById('forgot-status-box');
+        if (fStatus) fStatus.classList.add('hidden');
+        const lEmail = document.getElementById('auth-input-email');
+        const fEmail = document.getElementById('forgot-input-email');
+        if (lEmail && fEmail && lEmail.value) fEmail.value = lEmail.value;
+        if (window.lucide) lucide.createIcons();
+        return;
+      }
+
+      if (tab === 'reset') {
+        if (formsView) formsView.classList.add('hidden');
+        if (forgotView) forgotView.classList.add('hidden');
+        if (resetView) resetView.classList.remove('hidden');
+        if (modalTitle) modalTitle.innerText = "New Password";
+        const rStatus = document.getElementById('reset-status-box');
+        if (rStatus) rStatus.classList.add('hidden');
+        if (window.lucide) lucide.createIcons();
+        return;
+      }
+
+      if (forgotView) forgotView.classList.add('hidden');
+      if (resetView) resetView.classList.add('hidden');
+      if (formsView) formsView.classList.remove('hidden');
+      if (modalTitle) modalTitle.innerText = "Rider Account & Cloud Sync";
 
       if (tab === 'register') {
         tabReg.className = "flex-1 py-1.5 rounded-lg font-bold text-white bg-sky-600 shadow-sm transition";
         tabLog.className = "flex-1 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition";
-        nameField.classList.remove('hidden');
+        if (nameField) nameField.classList.remove('hidden');
+        if (linkForgot) linkForgot.classList.add('hidden');
         submitBtn.innerText = "Create Account & Save Kites";
         hint.innerText = "Save your kites & rider setup with an email and password so you never lose your bag data.";
       } else {
         tabLog.className = "flex-1 py-1.5 rounded-lg font-bold text-white bg-sky-600 shadow-sm transition";
         tabReg.className = "flex-1 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition";
-        nameField.classList.add('hidden');
+        if (nameField) nameField.classList.add('hidden');
+        if (linkForgot) linkForgot.classList.remove('hidden');
         submitBtn.innerText = "Sign In & Load Kites";
         hint.innerText = "Welcome back! Sign in to restore your registered kites and preferences.";
+      }
+      if (window.lucide) lucide.createIcons();
+    }
+
+    async function handleForgotPasswordSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('forgot-input-email').value.trim();
+      const statusBox = document.getElementById('forgot-status-box');
+      const submitBtn = document.getElementById('btn-forgot-submit');
+
+      statusBox.className = "text-xs py-1.5 px-2.5 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/30";
+      statusBox.innerText = "Sending reset instructions...";
+      statusBox.classList.remove('hidden');
+      submitBtn.disabled = true;
+
+      try {
+        const res = await fetch('/api/auth/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || "Could not send reset instructions.");
+        }
+        statusBox.className = "text-xs py-2 px-3 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+        statusBox.innerText = "✉️ Password reset email sent! Check your inbox or spam folder.";
+      } catch (err) {
+        statusBox.className = "text-xs py-1.5 px-2.5 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/30";
+        statusBox.innerText = err.message;
+      } finally {
+        submitBtn.disabled = false;
+      }
+    }
+
+    async function handleResetPasswordSubmit(e) {
+      e.preventDefault();
+      const token = document.getElementById('reset-token-input').value.trim();
+      const p1 = document.getElementById('reset-input-password').value;
+      const p2 = document.getElementById('reset-input-confirm').value;
+      const statusBox = document.getElementById('reset-status-box');
+      const submitBtn = document.getElementById('btn-reset-submit');
+
+      if (p1 !== p2) {
+        statusBox.className = "text-xs py-1.5 px-2.5 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/30";
+        statusBox.innerText = "Passwords do not match. Please verify.";
+        statusBox.classList.remove('hidden');
+        return;
+      }
+
+      statusBox.className = "text-xs py-1.5 px-2.5 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/30";
+      statusBox.innerText = "Updating password...";
+      statusBox.classList.remove('hidden');
+      submitBtn.disabled = true;
+
+      try {
+        const res = await fetch('/api/auth/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, new_password: p1 })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || "Password reset failed.");
+        }
+
+        if (data.user) {
+          authUser = {
+            email: data.user.email,
+            name: data.user.name
+          };
+          localStorage.setItem('kf_auth_user', JSON.stringify(authUser));
+          if (data.user.name) {
+            state.user.name = data.user.name;
+            localStorage.setItem('kf_name', state.user.name);
+          }
+          if (data.user.gear) {
+            state.inventory = data.user.gear;
+            localStorage.setItem('kf_inventory', JSON.stringify(state.inventory));
+          }
+          renderGearInventory();
+          renderForecast();
+          updateAuthUI();
+        }
+
+        statusBox.className = "text-xs py-2 px-3 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+        statusBox.innerText = "🎉 Password successfully updated! Signing you in...";
+
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        setTimeout(() => {
+          toggleModal('modal-auth');
+        }, 1500);
+      } catch (err) {
+        statusBox.className = "text-xs py-1.5 px-2.5 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/30";
+        statusBox.innerText = err.message;
+      } finally {
+        submitBtn.disabled = false;
       }
     }
 
@@ -3996,6 +4194,21 @@
       }
       
       updateAuthUI();
+
+      // Check for password reset token in URL (?reset_token=...)
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const rToken = urlParams.get('reset_token');
+        if (rToken) {
+          const tInput = document.getElementById('reset-token-input');
+          if (tInput) tInput.value = rToken;
+          switchAuthTab('reset');
+          const aModal = document.getElementById('modal-auth');
+          if (aModal && aModal.classList.contains('hidden')) {
+            toggleModal('modal-auth');
+          }
+        }
+      } catch (e) {}
 
       document.getElementById('profile-weight-display').innerText = `${state.user.weight.toFixed(1)} kg`;
       document.getElementById('slider-weight').value = state.user.weight;

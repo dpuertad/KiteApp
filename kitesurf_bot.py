@@ -1,3 +1,19 @@
+def load_env_file():
+    env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+    if os.path.exists(env_path):
+        try:
+            with open(env_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith("#") and "=" in line:
+                        k, v = line.split("=", 1)
+                        if k.strip() not in os.environ:
+                            os.environ[k.strip()] = v.strip().strip('"').strip("'")
+        except Exception:
+            pass
+
+load_env_file()
+
 #!/usr/bin/env python3
 """
 Automated Kitesurf Morning Briefing Assistant - Multi-User Cloud Edition
@@ -81,6 +97,58 @@ def send_admin_telegram(text: str) -> bool:
 
 def notify_admin_telegram(text: str):
     send_admin_telegram(text)
+
+def send_email_via_resend(to_email: str, subject: str, html_body: str) -> bool:
+    try:
+        config = load_config()
+        api_key = os.getenv("RESEND_API_KEY") or config.get("resend_api_key") or os.getenv("RESEND_API_KEY")
+        from_email = os.getenv("RESEND_FROM_EMAIL") or config.get("resend_from_email") or "HolyGust <noreply@holygust.com>"
+        payload = {
+            "from": from_email,
+            "to": [to_email],
+            "subject": subject,
+            "html": html_body
+        }
+        data = json.dumps(payload).encode("utf-8")
+        req = urllib.request.Request(
+            "https://api.resend.com/emails",
+            data=data,
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+                "User-Agent": "HolyGust/1.0"
+            }
+        )
+        try:
+            with urllib.request.urlopen(req, context=SSL_CTX, timeout=12) as resp:
+                res_data = json.loads(resp.read().decode("utf-8"))
+                print(f"[Resend] Email sent to {to_email}: {res_data}")
+                return True
+        except urllib.error.HTTPError as he:
+            err_body = he.read().decode("utf-8")
+            print(f"[Resend] HTTP {he.code}: {err_body}")
+            if he.code == 403 and "not verified" in err_body:
+                # If custom domain pending verification, fallback to onboarding@resend.dev sandbox
+                print("[Resend] Domain holygust.com pending verification; falling back to onboarding@resend.dev...")
+                payload["from"] = "HolyGust <onboarding@resend.dev>"
+                data2 = json.dumps(payload).encode("utf-8")
+                req2 = urllib.request.Request(
+                    "https://api.resend.com/emails",
+                    data=data2,
+                    headers={
+                        "Authorization": f"Bearer {api_key}",
+                        "Content-Type": "application/json",
+                        "User-Agent": "HolyGust/1.0"
+                    }
+                )
+                with urllib.request.urlopen(req2, context=SSL_CTX, timeout=12) as resp2:
+                    res_data2 = json.loads(resp2.read().decode("utf-8"))
+                    print(f"[Resend] Sandbox fallback sent: {res_data2}")
+                    return True
+            return False
+    except Exception as e:
+        print(f"[Resend] Error sending email: {e}")
+        return False
 
 REPLY_KEYBOARD = {
     "keyboard": [
@@ -2806,6 +2874,190 @@ def start_embedded_http_server(port: int = 8080):
                         self._send_cors_headers()
                         self.end_headers()
                         self.wfile.write(json.dumps({"error": "User profile not found for cloud sync."}).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # AUTH: Forgot Password Request
+            if parsed.path == "/api/auth/forgot-password":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    data = json.loads(body)
+                    email = (data.get("email") or "").strip().lower()
+
+                    if not email:
+                        self.send_response(400)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": "Please enter a valid email address."}).encode("utf-8"))
+                        return
+
+                    db = load_users_db()
+                    user = db.get("users", {}).get(email)
+                    if not user:
+                        self.send_response(404)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": "No account found with this email. Please check spelling or create an account."}).encode("utf-8"))
+                        return
+
+                    import secrets, time
+                    reset_token = secrets.token_urlsafe(32)
+                    reset_code = f"{secrets.randbelow(900000) + 100000}"
+                    expires_at = time.time() + 3600  # 1 hour expiration
+
+                    user["reset_token"] = reset_token
+                    user["reset_code"] = reset_code
+                    user["reset_expires"] = expires_at
+                    save_users_db(db)
+
+                    user_name = user.get("name") or email.split("@")[0]
+                    reset_link = f"https://holygust.com/?reset_token={reset_token}"
+
+                    html_email = f"""<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="margin: 0; padding: 24px 0; background-color: #0b1120; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <div style="max-width: 520px; margin: 0 auto; background: #0f172a; border-radius: 20px; overflow: hidden; border: 1px solid #1e293b; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+    <div style="padding: 24px 20px; text-align: center; background: linear-gradient(135deg, #0284c7 0%, #06b6d4 100%);">
+      <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 800; letter-spacing: -0.5px;">HolyGust</h1>
+      <p style="margin: 4px 0 0; color: rgba(255,255,255,0.9); font-size: 13px; font-weight: 500;">Smart Wind &amp; Gear Assistant</p>
+    </div>
+    <div style="padding: 30px 24px; color: #f8fafc;">
+      <h2 style="margin: 0 0 12px; font-size: 19px; color: #ffffff; font-weight: 700;">Password Reset Request</h2>
+      <p style="margin: 0 0 20px; font-size: 14px; line-height: 1.6; color: #94a3b8;">
+        Hi <strong>{user_name}</strong>,<br>
+        We received a request to reset your HolyGust password. Tap the button below to set a new password:
+      </p>
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="{reset_link}" style="display: inline-block; background: #0284c7; color: #ffffff; font-weight: 700; font-size: 14px; padding: 13px 32px; border-radius: 12px; text-decoration: none; box-shadow: 0 4px 14px rgba(2, 132, 199, 0.45);">
+          Set New Password
+        </a>
+      </div>
+      <p style="margin: 20px 0 0; font-size: 13px; line-height: 1.5; color: #64748b; text-align: center;">
+        Or enter this 6-digit code in the app:<br>
+        <strong style="color: #38bdf8; font-size: 20px; letter-spacing: 4px; display: inline-block; margin-top: 6px;">{reset_code}</strong>
+      </p>
+      <div style="margin: 28px 0 0; padding-top: 18px; border-top: 1px solid #1e293b; font-size: 12px; color: #64748b; text-align: center; line-height: 1.5;">
+        This link is valid for 1 hour. If you didn't request a password reset, you can safely ignore this email.
+      </div>
+    </div>
+  </div>
+</body>
+</html>"""
+
+                    email_sent = send_email_via_resend(
+                        to_email=email,
+                        subject="Reset Your HolyGust Password",
+                        html_body=html_email
+                    )
+
+                    # Admin alert
+                    tele_msg = f"🔑 Password reset requested for: {email} (Code: {reset_code}, Resend Sent: {email_sent})"
+                    send_admin_telegram(tele_msg)
+
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({
+                        "success": True,
+                        "email_sent": email_sent,
+                        "message": "Password reset instructions sent to your email!"
+                    }).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # AUTH: Reset Password Submission
+            if parsed.path == "/api/auth/reset-password":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    data = json.loads(body)
+                    token = (data.get("token") or "").strip()
+                    code = (data.get("code") or "").strip()
+                    new_password = data.get("new_password") or ""
+                    email = (data.get("email") or "").strip().lower()
+
+                    if not new_password or len(new_password) < 4:
+                        self.send_response(400)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": "Password must be at least 4 characters long."}).encode("utf-8"))
+                        return
+
+                    if not token and not code:
+                        self.send_response(400)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": "Missing reset token or code."}).encode("utf-8"))
+                        return
+
+                    db = load_users_db()
+                    matched_user = None
+                    matched_email = None
+
+                    import time
+                    now = time.time()
+
+                    for u_email, u_data in db.get("users", {}).items():
+                        token_match = token and u_data.get("reset_token") == token
+                        code_match = code and (not email or u_email == email) and u_data.get("reset_code") == code
+                        if token_match or code_match:
+                            if u_data.get("reset_expires", 0) < now:
+                                self.send_response(400)
+                                self.send_header("Content-Type", "application/json")
+                                self._send_cors_headers()
+                                self.end_headers()
+                                self.wfile.write(json.dumps({"error": "This reset link or code has expired. Please request a new one."}).encode("utf-8"))
+                                return
+                            matched_user = u_data
+                            matched_email = u_email
+                            break
+
+                    if not matched_user:
+                        self.send_response(400)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": "Invalid or expired reset token or code."}).encode("utf-8"))
+                        return
+
+                    # Update password
+                    p_hash, p_salt = hash_password(new_password)
+                    matched_user["password_hash"] = p_hash
+                    matched_user["password_salt"] = p_salt
+                    matched_user.pop("reset_token", None)
+                    matched_user.pop("reset_code", None)
+                    matched_user.pop("reset_expires", None)
+                    from datetime import datetime
+                    matched_user["last_login"] = datetime.utcnow().isoformat() + "Z"
+                    save_users_db(db)
+
+                    safe_user = {k: v for k, v in matched_user.items() if not k.startswith("password_")}
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({
+                        "success": True,
+                        "message": "Password reset successfully! You are now signed in.",
+                        "user": safe_user
+                    }).encode("utf-8"))
                 except Exception as e:
                     self.send_response(500)
                     self.send_header("Content-Type", "application/json")
