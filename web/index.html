@@ -80,7 +80,6 @@
         <div class="min-w-0">
           <div class="flex items-center space-x-1.5">
             <h1 class="text-base font-bold tracking-tight bg-gradient-to-r from-white via-sky-100 to-cyan-300 bg-clip-text text-transparent truncate">HolyGust</h1>
-            <span id="header-beta-env-badge" class="hidden px-1.5 py-0.2 rounded text-[9px] font-black uppercase font-mono bg-amber-500/20 text-amber-300 border border-amber-500/40 flex-shrink-0">BETA LAB</span>
           </div>
           <p class="text-[10.5px] text-sky-400 font-medium truncate">Smart Wind & Gear Assistant</p>
         </div>
@@ -1038,31 +1037,72 @@
 
         <!-- MODE A CONTENT -->
         <div id="travel-mode-a-container" class="space-y-3.5">
-          <!-- Selectors: Destination & Month -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            <div>
-              <label class="block font-semibold text-slate-300 mb-1">Destination</label>
-              <select id="travel-destination-select" onchange="onTravelDestinationChange()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium focus:outline-none focus:border-amber-500">
-                <!-- Dynamically loaded -->
-              </select>
+          <!-- Selectors: Country, Destination Spot & Month -->
+          <div class="space-y-2.5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div>
+                <label class="block font-semibold text-xs text-slate-300 mb-1">1. Select Country</label>
+                <select id="travel-country-select" onchange="onTravelCountryChange()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium text-xs focus:outline-none focus:border-amber-500">
+                  <option value="">-- Select Country --</option>
+                </select>
+              </div>
+              <div>
+                <label class="block font-semibold text-xs text-slate-300 mb-1">2. Select Destination Spot</label>
+                <select id="travel-destination-select" onchange="onTravelDestinationChange()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium text-xs focus:outline-none focus:border-amber-500" disabled>
+                  <option value="">-- Select country first --</option>
+                </select>
+              </div>
             </div>
-            <div>
-              <label class="block font-semibold text-slate-300 mb-1">Travel Timing</label>
-              <select id="travel-month-select" onchange="onTravelMonthChange()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium focus:outline-none focus:border-amber-500">
-                <option value="all">🗓️ All 12 Months (Season Overview)</option>
-                <option value="1">January</option>
-                <option value="2">February</option>
-                <option value="3">March</option>
-                <option value="4">April</option>
-                <option value="5">May</option>
-                <option value="6">June</option>
-                <option value="7">July</option>
-                <option value="8">August</option>
-                <option value="9">September</option>
-                <option value="10">October</option>
-                <option value="11">November</option>
-                <option value="12">December</option>
-              </select>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div>
+                <label class="block font-semibold text-xs text-slate-300 mb-1">3. Travel Timing (Optional)</label>
+                <select id="travel-month-select" onchange="onTravelMonthChange()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium text-xs focus:outline-none focus:border-amber-500">
+                  <option value="all">📅 All 12 Months (Full Season Climatology)</option>
+                  <option value="1">January</option>
+                  <option value="2">February</option>
+                  <option value="3">March</option>
+                  <option value="4">April</option>
+                  <option value="5">May</option>
+                  <option value="6">June</option>
+                  <option value="7">July</option>
+                  <option value="8">August</option>
+                  <option value="9">September</option>
+                  <option value="10">October</option>
+                  <option value="11">November</option>
+                  <option value="12">December</option>
+                </select>
+              </div>
+              <div class="flex items-end pb-0.5">
+                <button type="button" onclick="toggleRequestSpotSection()" class="w-full py-2 px-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-sky-400 hover:text-sky-300 border border-slate-700 text-xs font-semibold flex items-center justify-center space-x-1.5 transition">
+                  <i data-lucide="help-circle" class="w-3.5 h-3.5"></i>
+                  <span>Is your desired spot not here?</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Auto-Processing Spot Request Box (Collapsible) -->
+            <div id="request-spot-container" class="hidden p-3.5 rounded-2xl bg-slate-950/95 border border-sky-500/30 space-y-2.5 shadow-xl">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-sky-300 flex items-center space-x-1.5">
+                  <i data-lucide="sparkles" class="w-4 h-4 text-sky-400"></i>
+                  <span>Request a New Kitesurf Destination</span>
+                </span>
+                <button type="button" onclick="toggleRequestSpotSection()" class="text-slate-400 hover:text-white p-1">
+                  <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+              <p class="text-[11px] text-slate-300 leading-relaxed">
+                Type any beach, city, or secret kitesurf spot worldwide. Our cloud weather engine will automatically locate coordinates, calculate 12-month ECMWF ERA5 wind probabilities, and instantly add it to HolyGust for you and other riders!
+              </p>
+              <div class="flex items-center space-x-2">
+                <input id="input-request-spot" type="text" placeholder="e.g. Preá, Brazil or Dakhla White Dune" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500">
+                <button id="btn-submit-request-spot" type="button" onclick="submitDestinationRequest()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 active:scale-95 text-white font-bold text-xs shadow transition flex-shrink-0 flex items-center space-x-1.5">
+                  <span id="req-btn-text">Request Destination</span>
+                  <i id="req-btn-spinner" data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin hidden"></i>
+                </button>
+              </div>
+              <div id="request-spot-status" class="hidden text-[11px] p-2.5 rounded-xl font-medium"></div>
             </div>
           </div>
 
@@ -4582,17 +4622,7 @@
                          window.location.port === '8991' ||
                          isLabActive;
       
-      // 1. Beta Lab Environment Tag in top header
-      const headerEnvBadge = document.getElementById('header-beta-env-badge');
-      if (headerEnvBadge) {
-        if (isBetaHost) {
-          headerEnvBadge.classList.remove('hidden');
-        } else {
-          headerEnvBadge.classList.add('hidden');
-        }
-      }
-
-      // 2. Rider Beta Badge (⚡ Beta Rider) in profile card only
+      // 1. Rider Beta Badge (⚡ Beta Rider) in profile card only
       const profileCardBadge = document.getElementById('profile-card-beta-badge');
       const isBetaRider = (authUser && (
         authUser.is_beta_rider === true || 
@@ -5273,20 +5303,29 @@
     }
 
     // -------------------------------------------------------------------------
-    // ✈️ KITE TRAVEL ADVISOR & QUIVER MATCHER
+    // -------------------------------------------------------------------------
+    // ✈️ KITE TRAVEL ADVISOR & QUIVER MATCHER (120+ Spots & Auto-Expansion)
     // -------------------------------------------------------------------------
     let travelSpots = [];
+    let travelCountries = {};
     let travelDiscipline = 'Twintip';
     let travelActiveStyle = 'all';
     let travelActiveMode = 'A';
 
-    async function loadTravelSpotsList() {
-      if (travelSpots && travelSpots.length > 0) return travelSpots;
+    async function loadTravelSpotsList(force = false) {
+      if (!force && travelSpots && travelSpots.length > 0 && Object.keys(travelCountries).length > 0) {
+        return travelSpots;
+      }
       try {
-        const res = await fetch('/api/travel/spots');
-        const data = await res.json();
-        travelSpots = data.spots || [];
-        populateTravelDestinationSelect();
+        const [resSpots, resCountries] = await Promise.all([
+          fetch('/api/travel/spots'),
+          fetch('/api/travel/countries')
+        ]);
+        const dataSpots = await resSpots.json();
+        const dataCountries = await resCountries.json();
+        travelSpots = dataSpots.spots || [];
+        travelCountries = dataCountries || {};
+        populateTravelCountryAndSpotSelects();
         return travelSpots;
       } catch (e) {
         console.error('Failed to load travel spots:', e);
@@ -5294,12 +5333,204 @@
       }
     }
 
-    function populateTravelDestinationSelect() {
-      const sel = document.getElementById('travel-destination-select');
-      if (!sel) return;
-      sel.innerHTML = travelSpots.map(s => {
-        return `<option value="${s.id}">${s.flag || '📍'} ${s.name} (${s.country})</option>`;
-      }).join('');
+    function populateTravelCountryAndSpotSelects() {
+      const countrySel = document.getElementById('travel-country-select');
+      const spotSel = document.getElementById('travel-destination-select');
+      if (!countrySel || !spotSel) return;
+
+      const currentCountry = countrySel.value;
+      const currentSpot = spotSel.value;
+
+      const countryNames = Object.keys(travelCountries);
+      let countryOpts = `<option value="">-- 1. Select Country (${countryNames.length} worldwide) --</option>`;
+      countryNames.forEach(cName => {
+        const cObj = travelCountries[cName];
+        const count = (cObj.spots && cObj.spots.length) || 0;
+        countryOpts += `<option value="${escapeHtml(cName)}">${cObj.flag || '📍'} ${escapeHtml(cName)} (${count} spot${count === 1 ? '' : 's'})</option>`;
+      });
+      countrySel.innerHTML = countryOpts;
+
+      if (currentCountry && travelCountries[currentCountry]) {
+        countrySel.value = currentCountry;
+        populateSpotsForCountry(currentCountry, currentSpot);
+      } else {
+        spotSel.innerHTML = `<option value="">-- Select country first --</option>`;
+        spotSel.disabled = true;
+      }
+    }
+
+    function populateSpotsForCountry(countryName, preselectedSpotId = '') {
+      const spotSel = document.getElementById('travel-destination-select');
+      if (!spotSel) return;
+
+      if (!countryName || !travelCountries[countryName]) {
+        spotSel.innerHTML = `<option value="">-- Select country first --</option>`;
+        spotSel.disabled = true;
+        renderTravelEmptyState();
+        return;
+      }
+
+      const cObj = travelCountries[countryName];
+      const spots = cObj.spots || [];
+      spotSel.disabled = false;
+
+      let spotOpts = `<option value="">-- 2. Select your destination here (${spots.length} spots) --</option>`;
+      spots.forEach(s => {
+        spotOpts += `<option value="${s.id}">${s.flag || '📍'} ${escapeHtml(s.name)}</option>`;
+      });
+      spotSel.innerHTML = spotOpts;
+
+      if (preselectedSpotId && spots.some(s => s.id === preselectedSpotId)) {
+        spotSel.value = preselectedSpotId;
+      } else {
+        spotSel.value = '';
+      }
+    }
+
+    function onTravelCountryChange() {
+      const countrySel = document.getElementById('travel-country-select');
+      const countryName = countrySel ? countrySel.value : '';
+      populateSpotsForCountry(countryName);
+      const spotSel = document.getElementById('travel-destination-select');
+      if (spotSel && spotSel.value) {
+        loadTravelRecommendation();
+      } else {
+        renderTravelEmptyState();
+      }
+    }
+
+    function onTravelDestinationChange() {
+      const spotSel = document.getElementById('travel-destination-select');
+      if (spotSel && spotSel.value) {
+        loadTravelRecommendation();
+      } else {
+        renderTravelEmptyState();
+      }
+    }
+
+    function onTravelMonthChange() {
+      const spotSel = document.getElementById('travel-destination-select');
+      if (spotSel && spotSel.value) {
+        loadTravelRecommendation();
+      } else {
+        renderTravelEmptyState();
+      }
+    }
+
+    function renderTravelEmptyState() {
+      const container = document.getElementById('travel-results-container');
+      const spinner = document.getElementById('travel-loading-spinner');
+      if (spinner) spinner.classList.add('hidden');
+      if (!container) return;
+
+      container.innerHTML = `
+        <div class="p-8 rounded-2xl bg-slate-950/60 border border-slate-800 text-center space-y-3.5">
+          <div class="w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-300 border border-amber-500/20 flex items-center justify-center mx-auto text-2xl shadow-inner">
+            🗺️
+          </div>
+          <div class="space-y-1.5">
+            <h4 class="text-sm font-bold text-slate-100">Select Your Destination Above</h4>
+            <p class="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">
+              Choose a country and spot from our global directory of 120+ destinations to view 12-month wind climatology, optimal seasons, water temperatures, and tailored quiver packing advice.
+            </p>
+          </div>
+          <div class="pt-1">
+            <button type="button" onclick="toggleRequestSpotSection()" class="text-xs text-sky-400 hover:text-sky-300 font-semibold underline underline-offset-4 transition">
+              Can\'t find your spot? Request any destination worldwide ➔
+            </button>
+          </div>
+        </div>
+      `;
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function toggleRequestSpotSection() {
+      const c = document.getElementById('request-spot-container');
+      if (c) {
+        c.classList.toggle('hidden');
+        if (!c.classList.contains('hidden')) {
+          const inp = document.getElementById('input-request-spot');
+          if (inp) inp.focus();
+        }
+      }
+    }
+
+    async function submitDestinationRequest() {
+      const inp = document.getElementById('input-request-spot');
+      const statusEl = document.getElementById('request-spot-status');
+      const btn = document.getElementById('btn-submit-request-spot');
+      const btnText = document.getElementById('req-btn-text');
+      const btnSpinner = document.getElementById('req-btn-spinner');
+
+      if (!inp) return;
+      const query = inp.value.trim();
+      if (!query) {
+        alert("Please enter a spot or city name to request (e.g. 'Paracuru, Brazil' or 'Dakhla White Dune').");
+        return;
+      }
+
+      if (statusEl) {
+        statusEl.className = "text-[11px] p-2.5 rounded-xl font-medium bg-sky-500/10 text-sky-300 border border-sky-500/30 flex items-center space-x-1.5";
+        statusEl.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i><span>Locating spot coordinates and generating 12-month wind climatology...</span>`;
+        statusEl.classList.remove('hidden');
+        if (window.lucide) lucide.createIcons();
+      }
+      if (btn) btn.disabled = true;
+      if (btnText) btnText.innerText = "Analyzing...";
+      if (btnSpinner) btnSpinner.classList.remove('hidden');
+
+      try {
+        const res = await fetch('/api/travel/request-spot', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            query: query,
+            name: (state.user && state.user.name) || (authUser && authUser.name) || '',
+            email: (authUser && authUser.email) || ''
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Could not process destination");
+
+        const newSpot = data.spot;
+        if (statusEl) {
+          statusEl.className = "text-[11px] p-2.5 rounded-xl font-medium bg-emerald-500/10 text-emerald-300 border border-emerald-500/30";
+          statusEl.innerText = `🎉 Successfully analyzed and added ${newSpot.name}!`;
+        }
+        inp.value = '';
+
+        // Reload spots and countries from server
+        await loadTravelSpotsList(true);
+        populateTravelCountryAndSpotSelects();
+
+        // Automatically select the newly created spot
+        const countrySelect = document.getElementById('travel-country-select');
+        if (countrySelect) {
+          countrySelect.value = newSpot.country;
+          populateSpotsForCountry(newSpot.country, newSpot.id);
+          const destSelect = document.getElementById('travel-destination-select');
+          if (destSelect) {
+            destSelect.value = newSpot.id;
+            loadTravelRecommendation();
+          }
+        }
+
+        setTimeout(() => {
+          const c = document.getElementById('request-spot-container');
+          if (c) c.classList.add('hidden');
+        }, 4000);
+
+      } catch (err) {
+        if (statusEl) {
+          statusEl.className = "text-[11px] p-2.5 rounded-xl font-medium bg-rose-500/10 text-rose-300 border border-rose-500/30";
+          statusEl.innerText = "⚠️ " + err.message;
+        }
+      } finally {
+        if (btn) btn.disabled = false;
+        if (btnText) btnText.innerText = "Request Destination";
+        if (btnSpinner) btnSpinner.classList.add('hidden');
+        if (window.lucide) lucide.createIcons();
+      }
     }
 
     function updateTravelRiderSummary() {
@@ -5311,7 +5542,7 @@
       summaryEl.innerText = `${weight} kg · ${disc} · ${kiteCount} Kite${kiteCount === 1 ? '' : 's'} in Quiver`;
     }
 
-    function setTravelDiscipline(disc) {
+    function setTravelDiscipline(disc, reload = true) {
       travelDiscipline = disc;
       const btnTT = document.getElementById('btn-travel-disc-tt');
       const btnSurf = document.getElementById('btn-travel-disc-surf');
@@ -5325,7 +5556,7 @@
         }
       }
       updateTravelRiderSummary();
-      loadTravelRecommendation();
+      if (reload) loadTravelRecommendation();
     }
 
     function switchTravelMode(mode) {
@@ -5340,7 +5571,12 @@
         if (btnB) btnB.className = "py-2 rounded-xl text-center font-semibold text-xs text-slate-400 hover:text-slate-200 transition";
         if (contA) contA.classList.remove('hidden');
         if (contB) contB.classList.add('hidden');
-        loadTravelRecommendation();
+        const destSelect = document.getElementById('travel-destination-select');
+        if (destSelect && destSelect.value) {
+          loadTravelRecommendation();
+        } else {
+          renderTravelEmptyState();
+        }
       } else {
         if (btnB) btnB.className = "py-2 rounded-xl text-center font-bold text-xs bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm transition";
         if (btnA) btnA.className = "py-2 rounded-xl text-center font-semibold text-xs text-slate-400 hover:text-slate-200 transition";
@@ -5355,29 +5591,43 @@
       if (!modal) return;
       modal.classList.remove('hidden');
 
-      // Sync discipline with user's saved board preference if twintip/surf
       if (state.user && state.user.board && state.user.board.toLowerCase().includes('surf')) {
         travelDiscipline = 'Surf / Strapless';
       } else {
         travelDiscipline = 'Twintip';
       }
-      setTravelDiscipline(travelDiscipline);
+      setTravelDiscipline(travelDiscipline, false);
 
       await loadTravelSpotsList();
 
+      const countrySelect = document.getElementById('travel-country-select');
       const destSelect = document.getElementById('travel-destination-select');
       const monthSelect = document.getElementById('travel-month-select');
 
-      if (spotId && destSelect) {
-        destSelect.value = spotId;
-      } else if (destSelect && !destSelect.value) {
-        destSelect.value = 'cabarete'; // Default to Dominican Republic - Cabarete!
-      }
-
       if (month !== undefined && month !== null && monthSelect) {
         monthSelect.value = String(month);
-      } else if (monthSelect && !monthSelect.value) {
-        monthSelect.value = String(new Date().getMonth() + 1);
+      } else if (monthSelect) {
+        monthSelect.value = 'all';
+      }
+
+      if (spotId) {
+        let foundCountry = '';
+        for (const [cName, cObj] of Object.entries(travelCountries)) {
+          if (cObj.spots && cObj.spots.some(s => s.id === spotId)) {
+            foundCountry = cName;
+            break;
+          }
+        }
+        if (foundCountry && countrySelect) {
+          countrySelect.value = foundCountry;
+          populateSpotsForCountry(foundCountry, spotId);
+        }
+      } else {
+        if (countrySelect) countrySelect.value = '';
+        if (destSelect) {
+          destSelect.innerHTML = `<option value="">-- Select country first --</option>`;
+          destSelect.disabled = true;
+        }
       }
 
       const exploreMonthSelect = document.getElementById('travel-explore-month-select');
@@ -5387,14 +5637,6 @@
 
       switchTravelMode('A');
       if (window.lucide) lucide.createIcons();
-    }
-
-    function onTravelDestinationChange() {
-      loadTravelRecommendation();
-    }
-
-    function onTravelMonthChange() {
-      loadTravelRecommendation();
     }
 
     function selectTravelMonth(mIdx) {
@@ -5412,7 +5654,11 @@
       const spinner = document.getElementById('travel-loading-spinner');
 
       if (!destSelect || !container) return;
-      const spotId = destSelect.value || 'cabarete';
+      const spotId = destSelect.value;
+      if (!spotId) {
+        renderTravelEmptyState();
+        return;
+      }
       const monthVal = monthSelect ? monthSelect.value : 'all';
 
       if (spinner) spinner.classList.remove('hidden');
@@ -5862,7 +6108,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=10').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=11').then(reg => {
           reg.update();
         }).catch(err => console.log('SW register failed:', err));
       }

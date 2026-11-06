@@ -3276,10 +3276,29 @@ def start_embedded_http_server(port: int = 8080):
                     spots = travel_climatology_db.get_all_travel_spots()
                     self.send_response(200)
                     self.send_header("Content-Type", "application/json")
-                    self.send_header("Cache-Control", "public, max-age=3600")
+                    self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
                     self._send_cors_headers()
                     self.end_headers()
                     self.wfile.write(json.dumps({"spots": spots}).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # 6b. API: Kite Travel Countries & Spots (2-tier hierarchy)
+            if path == "/api/travel/countries":
+                try:
+                    import travel_climatology_db
+                    data = travel_climatology_db.get_travel_countries_and_spots()
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps(data).encode("utf-8"))
                 except Exception as e:
                     self.send_response(500)
                     self.send_header("Content-Type", "application/json")
@@ -4160,6 +4179,53 @@ def start_embedded_http_server(port: int = 8080):
                     self.wfile.write(json.dumps({"success": True, "data": rec}).encode("utf-8"))
                 except Exception as e:
                     self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # API: Request & Auto-Process New Travel Destination
+            if parsed.path == "/api/travel/request-spot":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    data = json.loads(body) if body else {}
+
+                    query = (data.get("query") or "").strip()
+                    user_name = (data.get("name") or "").strip()
+                    user_email = (data.get("email") or "").strip().lower()
+
+                    import travel_climatology_db
+                    new_spot = travel_climatology_db.process_new_destination(
+                        query=query,
+                        user_name=user_name,
+                        user_email=user_email
+                    )
+
+                    # Telemetry logging
+                    try:
+                        import spot_telemetry
+                        spot_telemetry.record_spot_search(
+                            spot_id=new_spot.get("id"),
+                            spot_name=new_spot.get("name"),
+                            country=new_spot.get("country"),
+                            source="travel_advisor_request"
+                        )
+                    except Exception as te:
+                        print(f"[telemetry] custom spot error: {te}")
+
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({
+                        "success": True,
+                        "spot": new_spot,
+                        "message": f"'{new_spot['name']}' has been analyzed and added to the destination list!"
+                    }).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(400)
                     self.send_header("Content-Type", "application/json")
                     self._send_cors_headers()
                     self.end_headers()
