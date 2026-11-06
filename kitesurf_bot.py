@@ -1,19 +1,3 @@
-def load_env_file():
-    env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
-    if os.path.exists(env_path):
-        try:
-            with open(env_path, "r", encoding="utf-8") as f:
-                for line in f:
-                    line = line.strip()
-                    if line and not line.startswith("#") and "=" in line:
-                        k, v = line.split("=", 1)
-                        if k.strip() not in os.environ:
-                            os.environ[k.strip()] = v.strip().strip('"').strip("'")
-        except Exception:
-            pass
-
-load_env_file()
-
 #!/usr/bin/env python3
 """
 Automated Kitesurf Morning Briefing Assistant - Multi-User Cloud Edition
@@ -42,6 +26,24 @@ from datetime import datetime, timezone, timedelta
 from zoneinfo import ZoneInfo
 
 from kite_catalog import lookup_kite_specs, KITE_CATALOG
+
+def load_env_file():
+    env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+    if os.path.exists(env_path):
+        try:
+            with open(env_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith("#") and "=" in line:
+                        k, v = line.split("=", 1)
+                        if k.strip() not in os.environ:
+                            os.environ[k.strip()] = v.strip().strip('"').strip("'")
+        except Exception:
+            pass
+
+load_env_file()
+
+
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
