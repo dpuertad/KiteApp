@@ -971,6 +971,14 @@
         </div>
 
         <div>
+          <label class="block font-semibold text-slate-300 mb-1 flex items-center justify-between">
+            <span>Rider Nationality</span>
+            <span class="text-[10px] text-slate-400 font-normal">Passport / Country</span>
+          </label>
+          <input id="modal-rider-nationality" type="text" placeholder="e.g. Italian, Spanish, German, Brazilian, Swiss..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
+        </div>
+
+        <div>
           <div class="flex justify-between items-center mb-1">
             <label class="font-semibold text-slate-300">Rider Weight (kg)</label>
             <span id="modal-weight-val" class="text-sky-400 font-bold">75 kg</span>
@@ -1078,6 +1086,7 @@
             <div class="flex items-center space-x-2">
               <h4 id="auth-current-name" class="font-bold text-white text-sm">Rider</h4>
               <span class="text-[10px] px-2 py-0.2 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30">Synced</span>
+              <span id="auth-current-nationality" class="hidden text-[10px] px-2 py-0.2 rounded-full bg-slate-800 text-sky-300 font-semibold border border-slate-700"></span>
             </div>
             <p id="auth-current-email" class="text-slate-400 text-[11px] font-mono mt-0.5">user@example.com</p>
           </div>
@@ -1099,6 +1108,17 @@
         <!-- ⚡ Beta Rider Status Card in Cloud Profile -->
         <div id="auth-beta-card" class="p-3 rounded-2xl border border-slate-800 bg-slate-950/60 transition">
           <!-- Injected dynamically -->
+        </div>
+
+        <!-- 📊 Admin Spot & Telemetry Insights Shortcut (Visible for Admins / Beta Riders) -->
+        <div id="auth-admin-card" class="hidden">
+          <a href="/admin" target="_blank" class="w-full py-2.5 px-3 rounded-2xl bg-gradient-to-r from-sky-500/15 to-cyan-500/10 hover:from-sky-500/25 hover:to-cyan-500/20 text-sky-300 hover:text-white border border-sky-500/30 font-bold text-xs flex items-center justify-between transition shadow-sm group">
+            <span class="flex items-center space-x-2">
+              <span class="text-base group-hover:scale-110 transition">📊</span>
+              <span>Spot Intelligence & Telemetry (Admin)</span>
+            </span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-sky-400 group-hover:translate-x-0.5 transition"></i>
+          </a>
         </div>
 
         <!-- ⭐ My Favorite Spots in Cloud Profile -->
@@ -1134,6 +1154,10 @@
           <div id="field-auth-name">
             <label class="block font-semibold text-slate-300 mb-1">Your Name / Nickname</label>
             <input id="auth-input-name" type="text" placeholder="Your Name" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
+          </div>
+          <div id="field-auth-nationality">
+            <label class="block font-semibold text-slate-300 mb-1">Your Nationality</label>
+            <input id="auth-input-nationality" type="text" placeholder="e.g. Italian, Spanish, German, Brazilian, Swiss..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
           </div>
           <div>
             <label class="block font-semibold text-slate-300 mb-1">Email Address</label>
@@ -1710,6 +1734,7 @@
     let state = {
       user: {
         name: savedName !== null ? savedName : '',
+        nationality: localStorage.getItem('kf_nationality') || '',
         weight: savedWeight !== null ? parseFloat(savedWeight) : 75.0,
         level: savedLevel || 'intermediate',
         board: savedBoard || 'Twintip'
@@ -2845,7 +2870,10 @@
       try {
         const spot = state.spot;
         const bAngle = spot.beach_angle !== undefined ? spot.beach_angle : resolveBeachAngle(spot.name);
-        const url = `/api/forecast?lat=${spot.lat}&lon=${spot.lon}&name=${encodeURIComponent(spot.name)}&timezone=${encodeURIComponent(spot.timezone || 'auto')}&beach_angle=${bAngle}&_t=${Date.now()}`;
+        const emailP = authUser ? authUser.email : '';
+        const riderP = state.user.name || (authUser ? authUser.name : '');
+        const natP = state.user.nationality || (authUser ? authUser.nationality : '');
+        const url = `/api/forecast?lat=${spot.lat}&lon=${spot.lon}&name=${encodeURIComponent(spot.name)}&timezone=${encodeURIComponent(spot.timezone || 'auto')}&beach_angle=${bAngle}&email=${encodeURIComponent(emailP)}&rider=${encodeURIComponent(riderP)}&nationality=${encodeURIComponent(natP)}&_t=${Date.now()}`;
         const resp = await fetch(url);
         if (!resp.ok) throw new Error("API error " + resp.status);
         const data = await resp.json();
@@ -3614,9 +3642,32 @@
         
         const cName = document.getElementById('auth-current-name');
         const cEmail = document.getElementById('auth-current-email');
+        const cNat = document.getElementById('auth-current-nationality');
+        const adminCard = document.getElementById('auth-admin-card');
         const displayName = authUser.name || state.user.name || 'Rider';
+        const displayNat = authUser.nationality || state.user.nationality || '';
         if (cName) cName.innerText = displayName;
         if (cEmail) cEmail.innerText = authUser.email;
+        if (cNat) {
+          if (displayNat) {
+            cNat.innerText = displayNat;
+            cNat.classList.remove('hidden');
+          } else {
+            cNat.classList.add('hidden');
+          }
+        }
+        if (adminCard) {
+          const isBetaOrAdmin = authUser.is_beta_rider || authUser.email === 'd_puerta@hotmail.com' || authUser.email.includes('admin');
+          if (isBetaOrAdmin) {
+            adminCard.classList.remove('hidden');
+          } else {
+            adminCard.classList.add('hidden');
+          }
+        }
+        const mNatInput = document.getElementById('modal-rider-nationality');
+        if (mNatInput && !mNatInput.value && displayNat) {
+          mNatInput.value = displayNat;
+        }
         if (feedbackName && !feedbackName.value) feedbackName.value = displayName;
         if (feedbackEmail && !feedbackEmail.value) feedbackEmail.value = authUser.email;
 
@@ -3742,10 +3793,12 @@
       if (formsView) formsView.classList.remove('hidden');
       if (modalTitle) modalTitle.innerText = "Rider Account & Cloud Sync";
 
+      const natField = document.getElementById('field-auth-nationality');
       if (tab === 'register') {
         tabReg.className = "flex-1 py-1.5 rounded-lg font-bold text-white bg-sky-600 shadow-sm transition";
         tabLog.className = "flex-1 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition";
         if (nameField) nameField.classList.remove('hidden');
+        if (natField) natField.classList.remove('hidden');
         if (linkForgot) linkForgot.classList.add('hidden');
         submitBtn.innerText = "Create Account & Save Kites";
         hint.innerText = "Save your kites & rider setup with an email and password so you never lose your bag data.";
@@ -3753,6 +3806,7 @@
         tabLog.className = "flex-1 py-1.5 rounded-lg font-bold text-white bg-sky-600 shadow-sm transition";
         tabReg.className = "flex-1 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition";
         if (nameField) nameField.classList.add('hidden');
+        if (natField) natField.classList.add('hidden');
         if (linkForgot) linkForgot.classList.remove('hidden');
         submitBtn.innerText = "Sign In & Load Kites";
         hint.innerText = "Welcome back! Sign in to restore your registered kites and preferences.";
@@ -3874,10 +3928,13 @@
 
       try {
         const endpoint = activeAuthTab === 'register' ? '/api/auth/register' : '/api/auth/login';
+        const natInput = document.getElementById('auth-input-nationality');
+        const nationality = (natInput ? natInput.value : '').trim() || state.user.nationality || '';
         const payload = activeAuthTab === 'register' ? {
           email,
           password,
           name: name || state.user.name,
+          nationality,
           gear: state.inventory,
           boards: state.boards || [],
           weight_kg: state.user.weight,
@@ -3909,6 +3966,12 @@
           localStorage.setItem('kf_name', state.user.name);
           const rInput = document.getElementById('rider-name-input');
           if (rInput) rInput.value = state.user.name;
+        }
+        if (data.user.nationality) {
+          state.user.nationality = data.user.nationality;
+          localStorage.setItem('kf_nationality', data.user.nationality);
+          const mNat = document.getElementById('modal-rider-nationality');
+          if (mNat) mNat.value = data.user.nationality;
         }
         if (data.user.weight_kg) {
           state.user.weight = data.user.weight_kg;
@@ -3965,6 +4028,7 @@
           body: JSON.stringify({
             email: authUser.email,
             name: state.user.name,
+            nationality: state.user.nationality || (authUser ? authUser.nationality : '') || '',
             gear: state.inventory,
             boards: state.boards || [],
             weight_kg: state.user.weight,
@@ -4306,7 +4370,8 @@
         const payload = {
           email: authUser.email,
           name: authUser.name || state.user.name || 'Rider',
-          spot: (state.spot && state.spot.name) ? state.spot.name : 'Cumbuco',
+          nationality: state.user.nationality || (authUser ? authUser.nationality : '') || '',
+          spot: (state.spot && state.spot.name) ? state.spot.name : '',
           weight_kg: state.user.weight || 75.0,
           level: state.user.level || 'intermediate',
           board: state.user.board || 'Twintip'
@@ -4378,6 +4443,42 @@
           })
         }).catch(() => {});
       }
+    }
+
+    function saveModalProfile() {
+      const name = (document.getElementById('modal-rider-name')?.value || '').trim();
+      const nat = (document.getElementById('modal-rider-nationality')?.value || '').trim();
+      const weight = parseFloat(document.getElementById('modal-rider-weight')?.value || state.user.weight || 75);
+      const board = document.getElementById('modal-board-type')?.value || state.user.board;
+
+      if (name) {
+        state.user.name = name;
+        localStorage.setItem('kf_name', name);
+        if (authUser) authUser.name = name;
+      }
+      if (nat) {
+        state.user.nationality = nat;
+        localStorage.setItem('kf_nationality', nat);
+        if (authUser) authUser.nationality = nat;
+      }
+      if (!isNaN(weight)) {
+        state.user.weight = weight;
+        localStorage.setItem('kf_weight', weight);
+        document.getElementById('profile-weight-display').innerText = `${weight.toFixed(1)} kg`;
+        document.getElementById('slider-weight').value = weight;
+      }
+      if (board) {
+        state.user.board = board;
+        localStorage.setItem('kf_board', board);
+      }
+      if (authUser) {
+        localStorage.setItem('kf_auth_user', JSON.stringify(authUser));
+      }
+      updateAuthUI();
+      renderForecast();
+      toggleModal('modal-profile');
+      syncUserDataQuiet();
+      alert("✅ Rider profile & nationality updated!");
     }
 
     function resetProfileAll() {

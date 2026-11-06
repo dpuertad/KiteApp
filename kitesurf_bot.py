@@ -2812,6 +2812,7 @@ def start_embedded_http_server(port: int = 8080):
                     {
                         "email": u.get("email"),
                         "name": u.get("name"),
+                        "nationality": u.get("nationality", ""),
                         "registered_at": u.get("registered_at"),
                         "gear_count": len(u.get("gear", [])),
                         "weight_kg": u.get("weight_kg"),
@@ -2830,6 +2831,30 @@ def start_embedded_http_server(port: int = 8080):
                 self._send_cors_headers()
                 self.end_headers()
                 self.wfile.write(json.dumps(stats).encode("utf-8"))
+                return
+
+            # 2b. ADMIN DASHBOARD: Spot Intelligence & Rider Demographics
+            if path in ["/admin", "/admin/spots"]:
+                import spot_telemetry, admin_dashboard_html
+                summary = spot_telemetry.get_spot_analytics_summary()
+                html_out = admin_dashboard_html.render_admin_dashboard(summary)
+                self.send_response(200)
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.send_header("Cache-Control", "no-cache")
+                self.end_headers()
+                self.wfile.write(html_out.encode("utf-8"))
+                return
+
+            # 2c. API: Spot Analytics & Intelligence JSON
+            if path == "/api/admin/spot-insights":
+                import spot_telemetry
+                summary = spot_telemetry.get_spot_analytics_summary()
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Cache-Control", "no-cache")
+                self._send_cors_headers()
+                self.end_headers()
+                self.wfile.write(json.dumps(summary).encode("utf-8"))
                 return
 
             # 3. API: Kite Catalog
@@ -2857,6 +2882,25 @@ def start_embedded_http_server(port: int = 8080):
                             beach_angle = float(beach_angle_param)
                         except ValueError:
                             pass
+                    # Telemetry tracking for spot activity & rider demographics
+                    try:
+                        import spot_telemetry
+                        rider_p = params.get("rider", [""])[0]
+                        email_p = params.get("email", [""])[0]
+                        nat_p = params.get("nationality", [""])[0]
+                        ip_p = self.headers.get("X-Forwarded-For", "").split(",")[0].strip() or (self.client_address[0] if self.client_address else "")
+                        spot_telemetry.record_spot_view(
+                            spot_name=name,
+                            lat=lat,
+                            lon=lon,
+                            email=email_p,
+                            rider_name=rider_p,
+                            nationality=nat_p,
+                            ip=ip_p
+                        )
+                    except Exception:
+                        pass
+
                     f_data = fetch_live_forecast({"lat": lat, "lon": lon, "name": name, "timezone": tz, "beach_angle": beach_angle})
                     out = json.dumps(f_data).encode("utf-8")
                     self.send_response(200)
@@ -3026,6 +3070,12 @@ def start_embedded_http_server(port: int = 8080):
                 try:
                     q = params.get("q", [""])[0].strip()
                     cc = params.get("country", [""])[0].strip().upper()
+                    email_p = params.get("email", [""])[0]
+                    try:
+                        import spot_telemetry
+                        spot_telemetry.record_spot_search(q, country_code=cc, email=email_p)
+                    except Exception:
+                        pass
                     
                     results = []
                     seen_keys = set()
@@ -3364,9 +3414,11 @@ def start_embedded_http_server(port: int = 8080):
                     p_hash, p_salt = hash_password(password)
                     from datetime import datetime
                     now_str = datetime.utcnow().isoformat() + "Z"
+                    nationality = (data.get("nationality") or "").strip()
                     new_user = {
                         "email": email,
                         "name": name or email.split("@")[0],
+                        "nationality": nationality,
                         "password_hash": p_hash,
                         "password_salt": p_salt,
                         "registered_at": now_str,
@@ -3421,9 +3473,9 @@ def start_embedded_http_server(port: int = 8080):
                     notify_text = (
                         f"🎉 New HolyGust Rider Registered!\n\n"
                         f"👤 Rider: {new_user['name']}\n"
+                        f"🌍 Nationality: {nationality or 'Not specified'}\n"
                         f"📧 Email: {email}\n"
-                        f"⚖️ Setup: {weight_kg} kg · {level.capitalize()}\n"
-                        f"📍 Home Beach: {spot.get('name', 'Cumbuco')}\n\n"
+                        f"⚖️ Setup: {weight_kg} kg · {level.capitalize()}\n\n"
                         f"🎒 Stored Cloud Gear ({gear_count} items):\n"
                         f"{gear_summary}\n\n"
                         f"🏄 Stored Cloud Boards ({len(boards)} boards):\n"
@@ -3589,6 +3641,8 @@ def start_embedded_http_server(port: int = 8080):
                     user = db["users"][email]
                     if "name" in data and data["name"]:
                         user["name"] = data["name"]
+                    if "nationality" in data and data["nationality"]:
+                        user["nationality"] = data["nationality"].strip()
                     if "gear" in data and isinstance(data["gear"], list):
                         if len(data["gear"]) > 0 or not user.get("gear"):
                             user["gear"] = data["gear"]
@@ -3856,13 +3910,18 @@ def start_embedded_http_server(port: int = 8080):
                     user["beta_applied_at"] = datetime.now(timezone.utc).isoformat() + "Z"
                     save_users_db(db)
 
+                    nat = (data.get("nationality") or user.get("nationality") or "").strip()
+                    if nat:
+                        user["nationality"] = nat
+                        save_users_db(db)
+
                     # Send Telegram Alert with Inline Buttons for 1-Tap Approval
                     tele_text = (
                         f"⚡ NEW BETA RIDER APPLICATION!\n"
                         f"━━━━━━━━━━━━━━━━━━━━━\n"
                         f"👤 Rider: {name}\n"
+                        f"🌍 Nationality: {nat or 'Not specified'}\n"
                         f"📧 Email: {email}\n"
-                        f"📍 Home Spot: {spot}\n"
                         f"⚖️ Weight: {weight_kg} kg | Level: {level}\n"
                         f"🏄 Board: {board}\n"
                         f"━━━━━━━━━━━━━━━━━━━━━\n"
