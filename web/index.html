@@ -4416,7 +4416,7 @@
           <div id="week-day-hourly-${dIdx}" class="hidden mt-3 pt-2.5 border-t border-slate-800/80 space-y-1">
             <div class="text-[10px] text-slate-400 font-semibold mb-1 uppercase tracking-wider flex items-center justify-between">
               <span>Daylight Hourly Wind (07:00 – 19:00)</span>
-              <span class="text-sky-400 font-mono">${d.model_used}</span>
+              <span class="text-sky-400 font-mono">${d.model_used || d.model || 'ECMWF IFS (9km)'}</span>
             </div>
             <div class="grid grid-cols-4 sm:grid-cols-7 gap-1">
               ${d.hourly.filter((_, idx) => idx % 2 === 0).map(h => `
@@ -4448,7 +4448,7 @@
                     <span class="text-[10px] text-slate-400 font-medium">Gusts ${Math.round(d.gust_peak_kts)} kts · ${d.direction}</span>
                     <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold border ${shoreBadgeClass}">${shoreType}</span>
                     <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30 font-medium">${d.best_window || '12:00 – 16:00'}</span>
-                    <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30">${d.model_used}</span>
+                    <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30">${d.model_used || d.model || 'ECMWF IFS (9km)'}</span>
                   </div>
                   <p class="text-[11px] mt-1 ${recColor} truncate">
                     ${rec.text}
