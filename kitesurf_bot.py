@@ -2490,7 +2490,7 @@ def start_embedded_http_server(port: int = 8080):
             host = (self.headers.get("Host") or "").lower().split(":")[0]
             if "onrender.com" in host and path not in ["/api/health", "/health", "/ping"]:
                 self.send_response(301)
-                self.send_header("Location", f"https://www.holygust.com{self.path}")
+                self.send_header("Location", f"https://holygust.com{self.path}")
                 self._send_cors_headers()
                 self.end_headers()
                 return
@@ -2519,10 +2519,10 @@ def start_embedded_http_server(port: int = 8080):
                 self.wfile.write(b'{"status": "ok", "service": "KiteForecastApp", "multi_user": true}\n')
                 return
 
-            # CANONICAL REDIRECT: Redirect all old onrender.com domain traffic to https://www.holygust.com
+            # CANONICAL REDIRECT: Redirect all old onrender.com domain traffic to https://holygust.com
             host = (self.headers.get("Host") or "").lower().split(":")[0]
             if "onrender.com" in host:
-                target_url = f"https://www.holygust.com{self.path}"
+                target_url = f"https://holygust.com{self.path}"
                 self.send_response(301)
                 self.send_header("Location", target_url)
                 self.send_header("Cache-Control", "public, max-age=86400")
@@ -3006,7 +3006,7 @@ def start_embedded_http_server(port: int = 8080):
             # Redirect old onrender.com domain POST requests preserving method/body (HTTP 308)
             host = (self.headers.get("Host") or "").lower().split(":")[0]
             if "onrender.com" in host and not parsed.path.startswith("/api/health"):
-                target_url = f"https://www.holygust.com{self.path}"
+                target_url = f"https://holygust.com{self.path}"
                 self.send_response(308)
                 self.send_header("Location", target_url)
                 self._send_cors_headers()
