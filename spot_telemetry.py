@@ -19,7 +19,11 @@ def _load_telemetry() -> dict:
         "nationality_totals": {},
         "spot_by_nationality": {},
         "searches": [],
-        "search_totals": {}
+        "search_totals": {},
+        "travel_inquiries": [],
+        "travel_destinations": {},
+        "travel_months": {},
+        "travel_gear_gaps": {}
     }
 
 def _save_telemetry(data: dict):
@@ -79,7 +83,6 @@ def record_spot_search(query: str, country_code: str = "", results_count: int = 
     data = _load_telemetry()
     now_iso = datetime.now(timezone.utc).isoformat() + "Z"
     
-    # Add to searches list
     searches = data.setdefault("searches", [])
     searches.insert(0, {
         "timestamp": now_iso,
@@ -91,10 +94,72 @@ def record_spot_search(query: str, country_code: str = "", results_count: int = 
     if len(searches) > 1000:
         data["searches"] = searches[:1000]
         
-    # Increment search query totals
     s_totals = data.setdefault("search_totals", {})
     s_totals[q_clean] = s_totals.get(q_clean, 0) + 1
     
+    _save_telemetry(data)
+
+def record_travel_inquiry(
+    spot_id: str,
+    spot_name: str,
+    country: str,
+    month: int,
+    style: str = "All",
+    weight_kg: float = 75.0,
+    discipline: str = "Twintip",
+    quiver_sizes: list = None,
+    recommended_pack: list = None,
+    gear_gaps: list = None,
+    email: str = "",
+    rider_name: str = "",
+    nationality: str = ""
+):
+    data = _load_telemetry()
+    now_iso = datetime.now(timezone.utc).isoformat() + "Z"
+    
+    clean_nat = (nationality or "").strip().title()
+    clean_rider = (rider_name or (email.split("@")[0].title() if email else "Visiting Rider")).strip()
+    
+    month_names = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+    m_name = month_names[month-1] if 1 <= month <= 12 else "All Year"
+    
+    inquiry = {
+        "timestamp": now_iso,
+        "spot_id": spot_id,
+        "spot_name": spot_name,
+        "country": country,
+        "month": month,
+        "month_name": m_name,
+        "style": style,
+        "weight_kg": weight_kg,
+        "discipline": discipline,
+        "quiver_sizes": quiver_sizes or [],
+        "recommended_pack": recommended_pack or [],
+        "gear_gaps": gear_gaps or [],
+        "email": email or "anonymous",
+        "rider_name": clean_rider,
+        "nationality": clean_nat or "Not specified"
+    }
+    
+    inquiries = data.setdefault("travel_inquiries", [])
+    inquiries.insert(0, inquiry)
+    if len(inquiries) > 2000:
+        data["travel_inquiries"] = inquiries[:2000]
+        
+    t_spots = data.setdefault("travel_destinations", {})
+    t_spots[spot_name] = t_spots.get(spot_name, 0) + 1
+    
+    t_months = data.setdefault("travel_months", {})
+    m_key = str(month) if 1 <= month <= 12 else "all_year"
+    t_months[m_key] = t_months.get(m_key, 0) + 1
+    
+    if gear_gaps:
+        t_gaps = data.setdefault("travel_gear_gaps", {})
+        for g in gear_gaps:
+            sz = str(g.get("size") or g.get("suggested_size") or "")
+            if sz:
+                t_gaps[sz] = t_gaps.get(sz, 0) + 1
+                
     _save_telemetry(data)
 
 def get_spot_analytics_summary() -> dict:
@@ -104,13 +169,11 @@ def get_spot_analytics_summary() -> dict:
     nat_totals = data.get("nationality_totals", {})
     s_totals = data.get("search_totals", {})
     
-    # Sort top spots
     sorted_spots = sorted(totals.items(), key=lambda x: x[1], reverse=True)[:15]
     top_spots = []
     total_views = sum(totals.values()) or 1
     
     for s_name, count in sorted_spots:
-        # Find latest entry for coordinates
         latest = next((v for v in views if v.get("spot_name") == s_name), {})
         top_spots.append({
             "spot_name": s_name,
@@ -121,7 +184,6 @@ def get_spot_analytics_summary() -> dict:
             "last_viewed": latest.get("timestamp")
         })
         
-    # Sort nationalities
     sorted_nats = sorted(nat_totals.items(), key=lambda x: x[1], reverse=True)[:10]
     total_nats = sum(nat_totals.values()) or 1
     top_nationalities = [
@@ -133,22 +195,43 @@ def get_spot_analytics_summary() -> dict:
         for nat, cnt in sorted_nats
     ]
     
-    # Top searches
     top_searches = [
         {"query": q.title(), "count": cnt}
         for q, cnt in sorted(s_totals.items(), key=lambda x: x[1], reverse=True)[:10]
     ]
+
+    # Kite Travel Demand & Monetization Signals
+    travel_inquiries = data.get("travel_inquiries", [])
+    travel_dests = data.get("travel_destinations", {})
+    travel_gaps = data.get("travel_gear_gaps", {})
     
-    # Unique riders
-    unique_emails = set(v.get("email") for v in views if v.get("email") and v.get("email") != "anonymous")
+    top_travel_destinations = [
+        {"destination": d, "count": cnt}
+        for d, cnt in sorted(travel_dests.items(), key=lambda x: x[1], reverse=True)[:10]
+    ]
+    
+    top_gear_gaps = [
+        {"size": f"{sz}m Kite", "count": cnt}
+        for sz, cnt in sorted(travel_gaps.items(), key=lambda x: x[1], reverse=True)[:8]
+    ]
     
     return {
-        "total_spot_views": len(views),
-        "total_cumulative_views": sum(totals.values()),
-        "unique_registered_riders_active": len(unique_emails),
+        "summary": {
+            "total_views": sum(totals.values()),
+            "total_unique_spots": len(totals),
+            "total_riders_tracked": len(set(v.get("email") for v in views if v.get("email") and v.get("email") != "anonymous")),
+            "total_searches": sum(s_totals.values()),
+            "total_travel_inquiries": len(travel_inquiries)
+        },
         "top_spots": top_spots,
         "top_nationalities": top_nationalities,
-        "recent_activity": views[:30],
+        "recent_views": views[:25],
         "top_searches": top_searches,
-        "last_updated": datetime.now(timezone.utc).isoformat() + "Z"
+        "spot_by_nationality": data.get("spot_by_nationality", {}),
+        "travel_intelligence": {
+            "total_travel_inquiries": len(travel_inquiries),
+            "top_destinations": top_travel_destinations,
+            "top_gear_gaps": top_gear_gaps,
+            "recent_travel_inquiries": travel_inquiries[:25]
+        }
     }
