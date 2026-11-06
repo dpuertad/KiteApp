@@ -73,37 +73,37 @@
   <!-- TOP HEADER -->
   <header class="sticky top-0 z-40 bg-slate-900/80 backdrop-blur-md border-b border-slate-800/80 px-4 py-3">
     <div class="max-w-xl mx-auto flex items-center justify-between">
-      <div class="flex items-center space-x-2.5">
-        <div class="w-10 h-10 rounded-2xl overflow-hidden border border-sky-400/30 shadow-lg shadow-sky-500/20 bg-sky-950/50 flex items-center justify-center">
+      <div class="flex items-center space-x-2 min-w-0 pr-1">
+        <div class="w-9 h-9 rounded-2xl overflow-hidden border border-sky-400/30 shadow-lg shadow-sky-500/20 bg-sky-950/50 flex items-center justify-center flex-shrink-0">
           <img src="/icon.png" alt="HolyGust" class="w-full h-full object-cover">
         </div>
-        <div>
+        <div class="min-w-0">
           <div class="flex items-center space-x-1.5">
-            <h1 class="text-base font-bold tracking-tight bg-gradient-to-r from-white via-sky-100 to-cyan-300 bg-clip-text text-transparent">HolyGust</h1>
-            <span id="header-beta-env-badge" class="hidden px-1.5 py-0.2 rounded text-[9px] font-black uppercase font-mono bg-amber-500/20 text-amber-300 border border-amber-500/40">BETA LAB</span>
+            <h1 class="text-base font-bold tracking-tight bg-gradient-to-r from-white via-sky-100 to-cyan-300 bg-clip-text text-transparent truncate">HolyGust</h1>
+            <span id="header-beta-env-badge" class="hidden px-1.5 py-0.2 rounded text-[9px] font-black uppercase font-mono bg-amber-500/20 text-amber-300 border border-amber-500/40 flex-shrink-0">BETA LAB</span>
           </div>
-          <p class="text-[11px] text-sky-400 font-medium">Smart Wind & Gear Assistant</p>
+          <p class="text-[10.5px] text-sky-400 font-medium truncate">Smart Wind & Gear Assistant</p>
         </div>
       </div>
 
       <!-- Right Header Cluster: Row 1 (Refresh, GPS, Spot) + Row 2 (Trip Advisor) -->
       <div class="flex flex-col items-end space-y-1.5 flex-shrink-0">
         <!-- Row 1: Quick Refresh, GPS & Spot Selector -->
-        <div class="flex items-center space-x-1.5">
-          <button id="btn-refresh" onclick="fetchForecast(true)" title="Refresh Live Forecast" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 border border-slate-700 transition">
-            <i id="refresh-icon" data-lucide="rotate-cw" class="w-4 h-4"></i>
+        <div class="flex items-center space-x-1">
+          <button id="btn-refresh" onclick="fetchForecast(true)" title="Refresh Live Forecast" class="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 border border-slate-700 transition">
+            <i id="refresh-icon" data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
           </button>
-          <button id="btn-gps" onclick="useGpsLocation()" title="Use Current GPS" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 border border-slate-700 transition">
-            <i data-lucide="crosshair" class="w-4 h-4"></i>
+          <button id="btn-gps" onclick="useGpsLocation()" title="Use Current GPS" class="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 border border-slate-700 transition">
+            <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
           </button>
-          <button onclick="toggleModal('modal-spot')" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-sky-950/60 hover:bg-sky-900/60 active:scale-95 text-sky-300 border border-sky-800/60 text-xs font-semibold transition">
+          <button onclick="toggleModal('modal-spot')" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-xl bg-sky-950/60 hover:bg-sky-900/60 active:scale-95 text-sky-300 border border-sky-800/60 text-xs font-semibold transition">
             <i data-lucide="map-pin" class="w-3.5 h-3.5 text-sky-400"></i>
-            <span id="header-spot-name" class="truncate max-w-[110px]">Select Spot</span>
+            <span id="header-spot-name" class="truncate max-w-[95px]">Select Spot</span>
           </button>
         </div>
 
         <!-- Row 2: Travelling? Trip Advisor Button (Inside Pink Circled Header Area) -->
-        <button id="header-travel-btn" onclick="openTravelModal()" title="Kite Travel Advisor & Quiver Matcher" class="w-full flex items-center justify-center space-x-1.5 px-2.5 py-1 rounded-xl bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/20 hover:from-amber-500/30 hover:to-orange-500/30 active:scale-95 text-amber-300 hover:text-white border border-amber-500/40 text-[11px] font-bold transition shadow-sm hidden">
+        <button id="header-travel-btn" onclick="openTravelModal()" title="Kite Travel Advisor & Quiver Matcher" class="w-full flex items-center justify-center space-x-1.5 px-2 py-1 rounded-xl bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/20 hover:from-amber-500/30 hover:to-orange-500/30 active:scale-95 text-amber-300 hover:text-white border border-amber-500/40 text-[11px] font-bold transition shadow-sm hidden">
           <span>✈️</span>
           <span>Travelling? Trip Advisor</span>
         </button>
