@@ -96,7 +96,7 @@
         </button>
         <button onclick="toggleModal('modal-spot')" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-sky-950/60 hover:bg-sky-900/60 active:scale-95 text-sky-300 border border-sky-800/60 text-xs font-semibold transition">
           <i data-lucide="map-pin" class="w-3.5 h-3.5 text-sky-400"></i>
-          <span id="header-spot-name" class="truncate max-w-[110px]">Cumbuco</span>
+          <span id="header-spot-name" class="truncate max-w-[110px]">Select Spot</span>
         </button>
       </div>
     </div>
@@ -158,8 +158,34 @@
       </div>
     </section>
 
+    <!-- 📍 NO SPOT SELECTED (EMPTY STATE FOR NEW USERS) -->
+    <div id="no-spot-view" class="hidden bg-gradient-to-b from-slate-900 to-ocean-900 rounded-3xl p-6 sm:p-8 border border-sky-900/40 shadow-2xl text-center space-y-4 relative overflow-hidden">
+      <!-- Glow accent -->
+      <div class="absolute -top-12 -right-12 w-40 h-40 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="w-16 h-16 mx-auto rounded-3xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-3xl shadow-inner">
+        📍
+      </div>
+      <div class="space-y-1.5">
+        <h3 class="text-base font-bold text-white tracking-tight">No Spot Selected</h3>
+        <p class="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">
+          Select a kitesurf spot or tap GPS to view live wind knots, coastal safety angle, thermal guide, and high-resolution 7-day forecast.
+        </p>
+      </div>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-2.5 pt-2">
+        <button onclick="toggleModal('modal-spot')" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 active:scale-95 text-white font-bold text-xs shadow-lg shadow-sky-500/25 transition flex items-center justify-center space-x-2">
+          <i data-lucide="map-pin" class="w-4 h-4"></i>
+          <span>Select a Kitesurf Spot</span>
+        </button>
+        <button onclick="useGpsLocation()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 border border-slate-700 font-semibold text-xs transition flex items-center justify-center space-x-2">
+          <i data-lucide="crosshair" class="w-4 h-4"></i>
+          <span>Use Current GPS</span>
+        </button>
+      </div>
+    </div>
+
     <!-- LIVE CONDITIONS & KITE DECISION HERO BANNER -->
-    <section class="bg-gradient-to-b from-slate-900 to-ocean-900 rounded-3xl p-5 border border-sky-900/40 shadow-2xl relative overflow-hidden">
+    <section id="section-live-hero" class="bg-gradient-to-b from-slate-900 to-ocean-900 rounded-3xl p-5 border border-sky-900/40 shadow-2xl relative overflow-hidden">
       <!-- Glow background accent -->
       <div class="absolute -top-12 -right-12 w-40 h-40 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -309,7 +335,7 @@
     </section>
 
     <!-- DAY TOGGLE TABS (Today vs Tomorrow vs 1-Week Forecast) -->
-    <div class="grid grid-cols-3 gap-1 rounded-2xl bg-slate-900 p-1 border border-slate-800">
+    <div id="section-day-tabs" class="grid grid-cols-3 gap-1 rounded-2xl bg-slate-900 p-1 border border-slate-800">
       <button id="tab-today" onclick="switchDayTab('today')" class="py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1 bg-sky-600 text-white shadow-md">
         <i data-lucide="sun" class="w-3.5 h-3.5"></i>
         <span>Today</span>
@@ -325,7 +351,7 @@
     </div>
 
     <!-- FORECAST SCHEDULE LIST -->
-    <section class="space-y-2.5">
+    <section id="section-schedule" class="space-y-2.5">
       <div class="flex items-center justify-between text-xs text-slate-400 px-1">
         <span class="font-bold uppercase tracking-wider flex items-center space-x-1">
           <i data-lucide="calendar" class="w-3.5 h-3.5 text-sky-400"></i>
@@ -347,7 +373,7 @@
     </section>
 
     <!-- INTERACTIVE WIND GRAPH (VISUAL CHART) -->
-    <section class="bg-slate-900/70 rounded-2xl p-4 border border-slate-800 shadow-md space-y-3">
+    <section id="section-chart" class="bg-slate-900/70 rounded-2xl p-4 border border-slate-800 shadow-md space-y-3">
       <div class="flex items-center justify-between">
         <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
           <i data-lucide="bar-chart-2" class="w-4 h-4 text-sky-400"></i>
@@ -366,7 +392,7 @@
     </section>
 
     <!-- TIDES CARD -->
-    <section class="bg-slate-900/70 rounded-2xl p-4 border border-slate-800 shadow-md space-y-2.5">
+    <section id="section-tides" class="bg-slate-900/70 rounded-2xl p-4 border border-slate-800 shadow-md space-y-2.5">
       <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
         <i data-lucide="waves" class="w-4 h-4 text-cyan-400"></i>
         <span>Tide Heights & Turnarounds</span>
@@ -1723,15 +1749,17 @@
     const savedWeight = localStorage.getItem('kf_weight');
     const savedLevel = localStorage.getItem('kf_level');
     const savedBoard = localStorage.getItem('kf_board');
-    const savedSpot = JSON.parse(localStorage.getItem('kf_spot')) || {
-      name: "Cumbuco, Brazil",
-      lat: -3.6247,
-      lon: -38.7297,
-      timezone: "America/Fortaleza",
-      beach_angle: 40.0
-    };
-    if (savedSpot.beach_angle === undefined) {
-      savedSpot.beach_angle = resolveBeachAngle(savedSpot.name);
+    const savedSpotRaw = localStorage.getItem('kf_spot');
+    let savedSpot = null;
+    if (savedSpotRaw) {
+      try {
+        savedSpot = JSON.parse(savedSpotRaw);
+        if (savedSpot && savedSpot.beach_angle === undefined && savedSpot.name) {
+          savedSpot.beach_angle = resolveBeachAngle(savedSpot.name);
+        }
+      } catch (e) {
+        savedSpot = null;
+      }
     }
 
     const savedScheduleView = localStorage.getItem('kf_schedule_view') || '2h';
@@ -1766,6 +1794,53 @@
       scheduleView: savedScheduleView,
       forecastData: null
     };
+
+    // Updates spot UI display (shows empty state when no spot is selected)
+    function updateSpotDisplayState() {
+      const noSpotView = document.getElementById('no-spot-view');
+      const heroSection = document.getElementById('section-live-hero');
+      const dayTabsSection = document.getElementById('section-day-tabs');
+      const scheduleSection = document.getElementById('section-schedule');
+      const chartSection = document.getElementById('section-chart');
+      const tidesSection = document.getElementById('section-tides');
+      const headerSpotName = document.getElementById('header-spot-name');
+
+      if (!state.spot || !state.spot.name) {
+        if (noSpotView) noSpotView.classList.remove('hidden');
+        if (heroSection) heroSection.classList.add('hidden');
+        if (dayTabsSection) dayTabsSection.classList.add('hidden');
+        if (scheduleSection) scheduleSection.classList.add('hidden');
+        if (chartSection) chartSection.classList.add('hidden');
+        if (tidesSection) tidesSection.classList.add('hidden');
+        if (headerSpotName) headerSpotName.innerText = 'Select Spot';
+        return false;
+      } else {
+        if (noSpotView) noSpotView.classList.add('hidden');
+        if (heroSection) heroSection.classList.remove('hidden');
+        if (dayTabsSection) dayTabsSection.classList.remove('hidden');
+        if (scheduleSection) scheduleSection.classList.remove('hidden');
+        if (chartSection) chartSection.classList.remove('hidden');
+        if (tidesSection) tidesSection.classList.remove('hidden');
+        if (headerSpotName) headerSpotName.innerText = state.spot.name.split(',')[0];
+        return true;
+      }
+    }
+
+    // Prompts guest riders to create a free account before adding equipment
+    function promptRegistrationForGear(gearType = 'quiver') {
+      const modal = document.getElementById('modal-auth');
+      if (!modal) return;
+      switchAuthTab('register');
+      const hint = document.getElementById('auth-tab-hint');
+      const itemLabel = gearType === 'board' ? 'boards' : (gearType === 'wing' ? 'wings' : 'kites');
+      if (hint) {
+        hint.innerHTML = `<span class="text-amber-300 font-semibold">🔐 Create your free Rider Account to add your ${itemLabel} to the cloud and unlock smart gear recommendations!</span>`;
+      }
+      if (modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+      }
+      if (window.lucide) lucide.createIcons();
+    }
 
     function setScheduleView(view) {
       state.scheduleView = view;
@@ -2267,22 +2342,42 @@
 
       // 1. RENDER KITES & WINGS
       if (state.inventory.length === 0) {
-        tractionContainer.innerHTML = `
-          <div class="bg-slate-950/60 rounded-2xl p-4 border border-dashed border-slate-800 text-center space-y-2">
-            <p class="text-xs font-bold text-amber-400">⚠️ No kites or wings registered yet!</p>
-            <p class="text-[11px] text-slate-400">Add your kites and handheld wings above to unlock smart multi-discipline sizing.</p>
-            <div class="flex items-center justify-center space-x-2 pt-1">
-              <button onclick="openAddKiteModal()" class="px-3 py-1.5 rounded-xl bg-sky-500/20 text-sky-400 text-xs font-bold border border-sky-500/30 hover:bg-sky-500/30 flex items-center space-x-1.5 active:scale-95 transition">
-                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-                <span>Add Kite</span>
-              </button>
-              <button onclick="openAddWingModal()" class="px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-500/30 hover:bg-amber-500/30 flex items-center space-x-1.5 active:scale-95 transition">
-                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-                <span>Add Wing</span>
-              </button>
+        if (!authUser || !authUser.email) {
+          tractionContainer.innerHTML = `
+            <div class="bg-slate-950/60 rounded-2xl p-4 border border-dashed border-sky-500/30 text-center space-y-2">
+              <div class="flex items-center justify-center space-x-1.5 text-sky-400 font-bold text-xs">
+                <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+                <span>Register to Add Your Quiver</span>
+              </div>
+              <p class="text-[11px] text-slate-400 max-w-xs mx-auto">
+                Sign up for a free Rider Profile to add your kites, wings & boards to the cloud and get smart size recommendations.
+              </p>
+              <div class="pt-1">
+                <button onclick="promptRegistrationForGear('quiver')" class="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 active:scale-95 text-white font-bold text-xs shadow-md shadow-sky-500/20 transition flex items-center space-x-1.5 mx-auto">
+                  <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+                  <span>Create Free Account / Sign In</span>
+                </button>
+              </div>
             </div>
-          </div>
-        `;
+          `;
+        } else {
+          tractionContainer.innerHTML = `
+            <div class="bg-slate-950/60 rounded-2xl p-4 border border-dashed border-slate-800 text-center space-y-2">
+              <p class="text-xs font-bold text-amber-400">⚠️ No kites or wings registered yet!</p>
+              <p class="text-[11px] text-slate-400">Add your kites and handheld wings above to unlock smart multi-discipline sizing.</p>
+              <div class="flex items-center justify-center space-x-2 pt-1">
+                <button onclick="openAddKiteModal()" class="px-3 py-1.5 rounded-xl bg-sky-500/20 text-sky-400 text-xs font-bold border border-sky-500/30 hover:bg-sky-500/30 flex items-center space-x-1.5 active:scale-95 transition">
+                  <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                  <span>Add Kite</span>
+                </button>
+                <button onclick="openAddWingModal()" class="px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-500/30 hover:bg-amber-500/30 flex items-center space-x-1.5 active:scale-95 transition">
+                  <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                  <span>Add Wing</span>
+                </button>
+              </div>
+            </div>
+          `;
+        }
       } else {
         tractionContainer.innerHTML = state.inventory.map((k, idx) => {
           const isWing = (k.category === 'wing');
@@ -2365,16 +2460,36 @@
       // 2. RENDER BOARDS
       if (boardContainer) {
         if (!state.boards || state.boards.length === 0) {
-          boardContainer.innerHTML = `
-            <div class="bg-slate-950/60 rounded-2xl p-4 border border-dashed border-slate-800 text-center space-y-2">
-              <p class="text-xs font-bold text-amber-400">⚠️ No boards registered yet!</p>
-              <p class="text-[11px] text-slate-400">Add your boards (Twintip, Wingfoil, Hydrofoil, Strapless) to enable smart pairing.</p>
-              <button onclick="openAddBoardModal()" class="px-3.5 py-1.5 rounded-xl bg-violet-500/20 text-violet-300 text-xs font-bold border border-violet-500/30 hover:bg-violet-500/30 flex items-center space-x-1.5 mx-auto active:scale-95 transition">
-                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-                <span>Add Board</span>
-              </button>
-            </div>
-          `;
+          if (!authUser || !authUser.email) {
+            boardContainer.innerHTML = `
+              <div class="bg-slate-950/60 rounded-2xl p-4 border border-dashed border-violet-500/30 text-center space-y-2">
+                <div class="flex items-center justify-center space-x-1.5 text-violet-400 font-bold text-xs">
+                  <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+                  <span>Register to Add Your Boards</span>
+                </div>
+                <p class="text-[11px] text-slate-400 max-w-xs mx-auto">
+                  Save your twintips, wave surfboards, and hydrofoils to your cloud profile.
+                </p>
+                <div class="pt-1">
+                  <button onclick="promptRegistrationForGear('board')" class="px-4 py-2 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-400 hover:to-purple-500 active:scale-95 text-white font-bold text-xs shadow-md shadow-violet-500/20 transition flex items-center space-x-1.5 mx-auto">
+                    <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+                    <span>Create Free Account / Sign In</span>
+                  </button>
+                </div>
+              </div>
+            `;
+          } else {
+            boardContainer.innerHTML = `
+              <div class="bg-slate-950/60 rounded-2xl p-4 border border-dashed border-slate-800 text-center space-y-2">
+                <p class="text-xs font-bold text-amber-400">⚠️ No boards registered yet!</p>
+                <p class="text-[11px] text-slate-400">Add your boards (Twintip, Wingfoil, Hydrofoil, Strapless) to enable smart pairing.</p>
+                <button onclick="openAddBoardModal()" class="px-3.5 py-1.5 rounded-xl bg-violet-500/20 text-violet-300 text-xs font-bold border border-violet-500/30 hover:bg-violet-500/30 flex items-center space-x-1.5 mx-auto active:scale-95 transition">
+                  <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                  <span>Add Board</span>
+                </button>
+              </div>
+            `;
+          }
         } else {
           boardContainer.innerHTML = state.boards.map((b, idx) => {
             const isActive = b.active !== false;
@@ -2884,6 +2999,13 @@
     // 5. DATA FETCHING (API)
     async function fetchForecast(isManual = false) {
       const refreshIcon = document.getElementById('refresh-icon');
+
+      if (!state.spot || !state.spot.name) {
+        updateSpotDisplayState();
+        if (refreshIcon) refreshIcon.classList.remove('animate-spin');
+        return;
+      }
+
       if (refreshIcon) refreshIcon.classList.add('animate-spin');
 
       try {
@@ -2984,6 +3106,10 @@
 
     // --- KITE MODAL (TUBE OR SOFT KITE) ---
     function openAddKiteModal() {
+      if (!authUser || !authUser.email) {
+        promptRegistrationForGear('kite');
+        return;
+      }
       const iconSpan = document.getElementById('modal-kite-title-icon');
       if (iconSpan) iconSpan.innerHTML = GEAR_ICONS.kiteTube("w-5 h-5 text-sky-400 inline-block align-middle");
       const tabTube = document.getElementById('icon-tab-tube');
@@ -3096,6 +3222,10 @@
 
     // --- WING MODAL (HANDHELD WINGFOIL WING) ---
     function openAddWingModal() {
+      if (!authUser || !authUser.email) {
+        promptRegistrationForGear('wing');
+        return;
+      }
       const iconSpan = document.getElementById('modal-wing-title-icon');
       if (iconSpan) iconSpan.innerHTML = GEAR_ICONS.wing("w-5 h-5 text-amber-400 inline-block align-middle");
       const indSpan = document.getElementById('wing-indicator-icon');
@@ -3164,6 +3294,10 @@
 
     // --- BOARD MODAL (TWINTIP, WINGFOIL, HYDROFOIL, STRAPLESS) ---
     function openAddBoardModal() {
+      if (!authUser || !authUser.email) {
+        promptRegistrationForGear('board');
+        return;
+      }
       const iconSpan = document.getElementById('modal-board-title-icon');
       if (iconSpan) iconSpan.innerHTML = GEAR_ICONS.boardTwintip("w-5 h-5 text-violet-400 inline-block align-middle");
       const saveIcon = document.getElementById('btn-save-board-icon');
@@ -3477,7 +3611,7 @@
       }
       state.spot = { name, lat, lon, timezone: tz, beach_angle: bAngle, model_label: modelLabel };
       localStorage.setItem('kf_spot', JSON.stringify(state.spot));
-      document.getElementById('header-spot-name').innerText = name.split(',')[0];
+      updateSpotDisplayState();
       const bSelect = document.getElementById('select-beach-orientation');
       if (bSelect) bSelect.value = String(bAngle);
       const bLabel = document.getElementById('label-beach-angle');
@@ -4601,6 +4735,7 @@
     function resetProfileAll() {
       if (confirm("Reset everything? This will clear all kites and personal settings to start fresh.")) {
         localStorage.clear();
+        state.spot = null;
         state.inventory = [];
         state.boards = [];
         localStorage.removeItem('kf_boards');
@@ -4611,8 +4746,8 @@
         document.getElementById('slider-weight').value = 75;
         document.getElementById('profile-weight-display').innerText = '75.0 kg';
         updateLevelButtonsUI();
+        updateSpotDisplayState();
         renderQuiver();
-        renderForecast();
       }
     }
 
@@ -5012,42 +5147,46 @@
 
       document.getElementById('profile-weight-display').innerText = `${state.user.weight.toFixed(1)} kg`;
       document.getElementById('slider-weight').value = state.user.weight;
-      document.getElementById('header-spot-name').innerText = state.spot.name.split(',')[0];
       updateLevelButtonsUI();
       updateScheduleViewUI();
 
-      // Initialize Beach Orientation controls
-      const bAngle = state.spot.beach_angle !== undefined ? state.spot.beach_angle : resolveBeachAngle(state.spot.name);
-      state.spot.beach_angle = bAngle;
-      const bSelect = document.getElementById('select-beach-orientation');
-      if (bSelect) bSelect.value = String(bAngle);
-      const bLabel = document.getElementById('label-beach-angle');
-      if (bLabel) bLabel.innerText = `${bAngle}° (${degreesToCardinal(bAngle)})`;
+      updateSpotDisplayState();
 
-      // Instant local spot clock initialization & tick every 5 seconds
-      updateLiveSpotClock();
-      setInterval(updateLiveSpotClock, 5000);
+      if (state.spot && state.spot.name) {
+        // Initialize Beach Orientation controls
+        const bAngle = state.spot.beach_angle !== undefined ? state.spot.beach_angle : resolveBeachAngle(state.spot.name);
+        state.spot.beach_angle = bAngle;
+        const bSelect = document.getElementById('select-beach-orientation');
+        if (bSelect) bSelect.value = String(bAngle);
+        const bLabel = document.getElementById('label-beach-angle');
+        if (bLabel) bLabel.innerText = `${bAngle}° (${degreesToCardinal(bAngle)})`;
 
-      // Instant cached forecast render if available (< 30 minutes old)
-      const cached = localStorage.getItem('kf_last_forecast');
-      const cachedTime = localStorage.getItem('kf_last_forecast_time');
-      if (cached && cachedTime && (Date.now() - parseInt(cachedTime, 10)) < 1800000) {
-        try {
-          state.forecastData = JSON.parse(cached);
-        } catch (e) {}
+        // Instant local spot clock initialization & tick every 5 seconds
+        updateLiveSpotClock();
+        setInterval(updateLiveSpotClock, 5000);
+
+        // Instant cached forecast render if available (< 30 minutes old)
+        const cached = localStorage.getItem('kf_last_forecast');
+        const cachedTime = localStorage.getItem('kf_last_forecast_time');
+        if (cached && cachedTime && (Date.now() - parseInt(cachedTime, 10)) < 1800000) {
+          try {
+            state.forecastData = JSON.parse(cached);
+          } catch (e) {}
+        }
+
+        renderSpotList();
+        renderQuiver();
+        if (state.forecastData) {
+          renderForecast();
+        }
+        fetchForecast();
+
+        // Periodic auto-refresh every 5 minutes
+        setInterval(fetchForecast, 300000);
+      } else {
+        renderSpotList();
+        renderQuiver();
       }
-
-      renderSpotList();
-      renderQuiver();
-      if (state.forecastData) {
-        renderForecast();
-      }
-      fetchForecast();
-
-// Unauthenticated riders can sign in anytime via Account button
-
-      // Periodic auto-refresh every 5 minutes
-      setInterval(fetchForecast, 300000);
 
       // Register PWA Service Worker
       if ('serviceWorker' in navigator) {
