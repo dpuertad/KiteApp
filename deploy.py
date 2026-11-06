@@ -45,7 +45,7 @@ def main():
 
     print("2. Triggering Render live build...")
     trigger_render_deploy()
-    print("3. Deployment initiated! Live in ~60-90 seconds at https://kiteapp.onrender.com")
+    print("3. Deployment initiated! Live in ~60-90 seconds at https://www.holygust.com")
 
 if __name__ == "__main__":
     main()

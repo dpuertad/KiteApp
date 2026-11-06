@@ -2,6 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script>
+    // Canonical Domain: force redirect any visitor on old onrender.com domain to https://www.holygust.com
+    if (window.location.hostname && window.location.hostname.includes('onrender.com')) {
+      window.location.replace('https://www.holygust.com' + window.location.pathname + window.location.search + window.location.hash);
+    }
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>HolyGust - Smart Wind & Gear Assistant</title>
   
@@ -1268,70 +1274,76 @@
     // 1. KITE CATALOG DATABASE
     const KITE_CATALOG = {
       "Gong": {
-        "Ayto": { type: "5-Strut High-Performance Big Air / Booster", material: "Aramid / Boom Frame", sizes: { 6: [22, [25,36], 42], 7: [20, [23,33], 40], 8: [18, [21,30], 37], 9: [16, [19,27], 34], 10: [14, [17,25], 32], 11: [13, [15,23], 30], 12: [12, [14,21], 27] } },
-        "Vertigo": { type: "3-Strut All-Round Freeride / Jumping", material: "Dacron DP175LL", sizes: { 5: [24, [27,37], 42], 7: [20, [23,31], 38], 9: [16, [19,27], 34], 11: [13, [15,23], 29], 13: [11, [13,19], 25] } },
-        "Elips": { type: "3-Strut Wave / Drift / Foil", material: "Teijin T9669 Triple Ripstop", sizes: { 5: [24, [27,36], 40], 6: [21, [24,33], 37], 7: [19, [22,30], 35], 8: [17, [20,27], 33], 9: [15, [18,25], 31], 10: [13, [16,23], 28] } },
-        "Strutless": { type: "0-Strut Ultra-Lightwind & Hydrofoil", material: "Ultra-Light 2D Tech", sizes: { 7: [17, [20,28], 33], 9: [14, [17,24], 29], 11: [11.5, [13.5,20], 25], 13: [9.5, [11.5,17], 22], 15: [8.5, [10,15], 20], 17: [7.5, [9,13.5], 18] } },
-        "Freewave": { type: "3-Strut Freeride / Wave Crossover", material: "Standard Dacron", sizes: { 5: [24, [27,36], 41], 7: [20, [23,31], 37], 9: [16, [19,26], 33], 11: [13, [15,22], 28] } }
+        "Ayto": { type: "5-Strut High-Performance Big Air / Booster", material: "Aramid / Boom Frame", sizes: { 6: [23, [27,38], 44], 7: [20.5, [24.5,35], 41], 8: [18.5, [22.5,32], 38], 9: [16.5, [20.5,29], 35], 10: [15, [18.5,26.5], 32], 11: [13.5, [17,24.5], 30], 12: [12.5, [16,23], 28] } },
+        "Vertigo": { type: "3-Strut All-Round Freeride / Jumping", material: "Dacron DP175LL", sizes: { 5: [24, [27,37], 42], 7: [19, [22.5,31.5], 38], 9: [15, [18.5,27], 34], 11: [12.5, [15.5,23], 29], 13: [10.5, [13.5,20], 25] } },
+        "Elips": { type: "3-Strut Wave / Drift / Foil", material: "Teijin T9669 Triple Ripstop", sizes: { 5: [23, [26.5,37], 41], 6: [20, [23.5,33], 38], 7: [18, [21,30], 36], 8: [16, [19,27.5], 34], 9: [14, [17,25], 32], 10: [12.5, [15,22.5], 29] } },
+        "Strutless": { type: "0-Strut Ultra-Lightwind & Hydrofoil", material: "Ultra-Light 2D Tech", sizes: { 7: [15, [18,26], 31], 9: [12.5, [15,22], 27], 11: [10.5, [13,19], 24], 13: [9, [11,16.5], 21], 15: [8, [9.5,14.5], 19], 17: [7, [8.5,13], 17] } },
+        "Freewave": { type: "3-Strut Freeride / Wave Crossover", material: "Standard Dacron", sizes: { 5: [24, [27,36], 41], 7: [19, [22.5,31], 37], 9: [15, [18.5,26.5], 33], 11: [12.5, [15.5,22.5], 28] } }
       },
       "Duotone": {
-        "Rebel SLS": { type: "5-Strut Big Air", material: "Penta TX SLS", sizes: { 7: [20, [23,33], 40], 8: [18, [21,30], 37], 9: [16, [19,27], 34], 10: [14, [17,25], 32], 11: [13, [15,23], 30], 12: [12, [14,21], 27] } },
-        "Rebel D/LAB": { type: "5-Strut Extreme Big Air", material: "Aluula D/LAB", sizes: { 7: [18, [22,33], 40], 8: [16, [20,31], 38], 9: [14.5, [18,28], 35], 10: [13, [16,25], 33], 11: [12, [14,23], 30], 12: [11, [13,21], 28] } },
-        "Evo": { type: "3-Strut All-Round Freeride", material: "Standard Dacron", sizes: { 7: [20, [23,31], 38], 8: [18, [21,29], 36], 9: [16, [19,27], 34], 10: [14, [17,25], 32], 11: [13, [15,23], 29], 12: [12, [14,21], 27] } },
-        "Evo SLS": { type: "3-Strut All-Round Performance", material: "Penta TX SLS", sizes: { 7: [19, [22,31], 39], 8: [17, [20,29], 37], 9: [15, [18,27], 35], 10: [13.5, [16,25], 33], 11: [12, [14,23], 30], 12: [11, [13,21], 28] } },
-        "Evo D/LAB": { type: "3-Strut Ultimate Aluula", material: "Aluula D/LAB", sizes: { 7: [17, [21,31], 39], 8: [15, [19,29], 37], 9: [13.5, [17,27], 35], 10: [12, [15,25], 33], 11: [11, [13,22], 30], 12: [10, [12,20], 28] } },
-        "Dice SLS": { type: "3-Strut Freestyle", material: "Penta TX SLS", sizes: { 7: [20, [23,32], 38], 8: [18, [21,30], 36], 9: [16, [19,28], 34], 10: [14, [17,25], 32], 11: [13, [15,22], 29], 12: [12, [14,20], 26] } },
-        "Neo SLS": { type: "3-Strut Wave / Drift", material: "Penta TX SLS", sizes: { 7: [19, [22,31], 36], 8: [17, [20,28], 34], 9: [15, [18,26], 32], 10: [13, [16,24], 30], 11: [12, [14,21], 27], 12: [11, [13,19], 24] } },
-        "Juice D/LAB": { type: "3-Strut Lightwind", material: "Aluula D/LAB", sizes: { 13: [9, [11,17], 21], 14: [8.5, [10,16], 20], 15: [8, [9.5,15], 19], 17: [7.5, [9,14], 18] } }
+        "Rebel SLS": { type: "5-Strut Big Air", material: "Penta TX SLS", sizes: { 6: [23, [27,38], 44], 7: [20.5, [24.5,35], 41], 8: [18.5, [22.5,32], 38], 9: [16.5, [20.5,29], 35], 10: [15, [18.5,26.5], 32], 11: [13.5, [17,24.5], 30], 12: [12.5, [16,23], 28], 13: [12, [15,21.5], 26], 14: [11.5, [14,20], 24] } },
+        "Rebel D/LAB": { type: "5-Strut Extreme Big Air", material: "Aluula D/LAB", sizes: { 7: [19.5, [23.5,35], 42], 8: [17.5, [21.5,33], 40], 9: [15.5, [19.5,30], 37], 10: [14, [17.5,27.5], 34], 11: [12.5, [16,25.5], 31], 12: [11.5, [15,24], 29] } },
+        "Evo": { type: "3-Strut All-Round Freeride", material: "Standard Dacron", sizes: { 7: [19, [22.5,31.5], 38], 8: [17, [20.5,29.5], 36], 9: [15, [18.5,27], 34], 10: [13.5, [17,25], 32], 11: [12.5, [15.5,23], 29], 12: [11.5, [14.5,21.5], 27] } },
+        "Evo SLS": { type: "3-Strut All-Round Performance", material: "Penta TX SLS", sizes: { 7: [18.5, [22,32], 39], 8: [16.5, [20,30], 37], 9: [14.5, [18,27.5], 35], 10: [13, [16.5,25.5], 33], 11: [12, [15,23.5], 30], 12: [11, [14,22], 28] } },
+        "Evo D/LAB": { type: "3-Strut Ultimate Aluula", material: "Aluula D/LAB", sizes: { 7: [17.5, [21,32], 40], 8: [15.5, [19,30], 38], 9: [13.5, [17,28], 36], 10: [12, [15.5,26], 34], 11: [11, [14,24], 31], 12: [10, [13,22], 29] } },
+        "Dice SLS": { type: "3-Strut Freestyle", material: "Penta TX SLS", sizes: { 6: [23, [26.5,36], 42], 7: [20, [23.5,33], 39], 8: [18, [21.5,31], 37], 9: [16, [19.5,29], 35], 10: [14.5, [17.5,26.5], 33], 11: [13, [16,24], 30], 12: [12, [15,22], 27] } },
+        "Neo SLS": { type: "3-Strut Wave / Drift", material: "Penta TX SLS", sizes: { 5: [23, [26.5,37], 41], 6: [20, [23.5,33], 38], 7: [18, [21,30], 36], 8: [16, [19,27.5], 34], 9: [14, [17,25], 32], 10: [12.5, [15,22.5], 29], 11: [11.5, [14,20.5], 26], 12: [10.5, [13,19], 24] } },
+        "Juice D/LAB": { type: "3-Strut Lightwind", material: "Aluula D/LAB", sizes: { 11: [10.5, [13.5,19.5], 24], 13: [9.5, [12,17.5], 22], 14: [9, [11,16.5], 21], 15: [8, [10,15.5], 20], 17: [7.5, [9,14.5], 18] } }
       },
       "Harlem": {
-        "Thrive V1": { type: "3-Strut All-Round / Wave / Progression", material: "Brainchild PRO Weld", sizes: { 6: [21, [25,35], 40], 7: [19, [22,32], 38], 8: [17, [20,30], 36], 9: [15, [18,27], 34], 10: [13.5, [16,25], 32], 11: [12.5, [15,23], 29], 12: [11.5, [13.5,21], 27], 13: [10.5, [12.5,19], 24], 15: [9.5, [11,17], 22] } },
-        "Thrive": { type: "3-Strut All-Round / Wave", material: "Brainchild PRO Weld", sizes: { 7: [19, [22,32], 38], 8: [17, [20,30], 36], 9: [15, [18,27], 34], 10: [13.5, [16,25], 32], 12: [11.5, [13.5,21], 27] } },
-        "Force": { type: "3-Strut Big Air Booster", material: "Titanium / Brainchild", sizes: { 7: [18, [22,34], 40], 8: [16, [20,32], 38], 9: [14, [18,29], 35], 10: [12.5, [16,26], 32], 11: [11.5, [14.5,24], 29], 12: [10.5, [13,22], 27] } },
-        "Pace": { type: "3-Strut Freeride / Progression", material: "Brainchild Weld Tech", sizes: { 7: [19, [22,30], 36], 8: [17, [20,28], 34], 9: [15, [18,26], 32], 10: [13.5, [16,24], 30], 12: [11.5, [13.5,20], 26], 14: [10, [12,17], 22] } },
-        "Light": { type: "Lightwind Freeride / Foil", material: "Ultra-Light Fabric", sizes: { 13: [9.5, [11.5,17], 22], 15: [8.5, [10.5,16], 20], 17: [8, [9.5,14.5], 18] } }
+        "Thrive V1": { type: "3-Strut All-Round / Wave / Progression", material: "Brainchild PRO Weld", sizes: { 6: [21, [24.5,33], 39], 7: [19, [22.5,31.5], 37], 8: [17, [20.5,29.5], 35], 9: [15, [18.5,26.5], 33], 10: [13.5, [17,25], 31], 11: [12.5, [15.5,23], 28], 12: [11.5, [14.5,21.5], 26], 13: [10.5, [13.5,20], 24], 15: [9.5, [11.5,17.5], 21] } },
+        "Thrive": { type: "3-Strut All-Round / Wave", material: "Brainchild PRO Weld", sizes: { 7: [19, [22.5,31.5], 37], 8: [17, [20.5,29.5], 35], 9: [15, [18.5,26.5], 33], 10: [13.5, [17,25], 31], 12: [11.5, [14.5,21.5], 26] } },
+        "Force": { type: "3-Strut Big Air Booster", material: "Titanium / Brainchild", sizes: { 7: [19, [23,34], 40], 8: [17, [21,32], 38], 9: [15, [19,29], 35], 10: [13.5, [17,26], 32], 11: [12.5, [16,24.5], 30], 12: [11.5, [14.5,22.5], 28] } },
+        "Pace": { type: "3-Strut Freeride / Progression", material: "Brainchild Weld Tech", sizes: { 7: [19, [22.5,30.5], 36], 8: [17, [20.5,28.5], 34], 9: [15, [18.5,26.5], 31], 10: [13.5, [16.5,24.5], 29], 12: [11.5, [14,21.5], 26], 14: [10, [12.5,18], 23] } },
+        "Light": { type: "Lightwind Freeride / Foil", material: "Ultra-Light Fabric", sizes: { 13: [9.5, [12,17.5], 22], 15: [8, [10,15.5], 20], 17: [7.5, [9,14.5], 18] } }
       },
       "Core": {
-        "XR8": { type: "5-Strut Big Air / High Aspect", material: "ExoTex 2", sizes: { 7: [19, [23,33], 39], 8: [17, [20,30], 36], 9: [15, [18,27], 33], 10: [13.5, [16,25], 31], 11: [12.5, [15,23], 29], 12: [11.5, [13.5,21], 27] } },
-        "XR Pro": { type: "5-Strut Big Air Aluula", material: "Aluula Airframe", sizes: { 7: [18, [22,34], 40], 8: [16, [19,31], 38], 9: [14, [17,28], 35], 10: [12.5, [15,26], 33], 12: [10.5, [13,22], 28] } },
-        "Nexus 3": { type: "3-Strut Universal Freeride/Wave", material: "ExoTex 2", sizes: { 7: [19, [22,31], 37], 8: [17, [20,29], 35], 9: [15, [18,26], 32], 10: [13.5, [16,24], 30], 12: [11, [13,20], 26] } },
-        "Pace Pro": { type: "3-Strut High-Performance Big Air", material: "Aluula 3-Strut", sizes: { 7: [18.5, [22,34], 40], 8: [16.5, [20,31], 38], 9: [14.5, [17.5,28], 35], 10: [13, [15.5,25], 32], 12: [11, [13,22], 28] } }
+        "XR8": { type: "5-Strut Big Air / High Aspect", material: "ExoTex 2", sizes: { 6: [23, [27,38], 44], 7: [20.5, [24.5,35], 41], 8: [18.5, [22.5,32], 38], 9: [16.5, [20.5,29], 35], 10: [15, [18.5,26.5], 32], 11: [13.5, [17,24.5], 30], 12: [12.5, [16,23], 28], 13.5: [11.5, [14.5,21], 25], 15: [9.5, [11.5,17.5], 21], 17: [8, [9.5,15], 18] } },
+        "XR Pro": { type: "5-Strut Big Air Aluula", material: "Aluula Airframe", sizes: { 6: [22, [26,38], 44], 7: [19.5, [23.5,35], 42], 8: [17.5, [21.5,33], 40], 9: [15.5, [19.5,30], 37], 10: [14, [17.5,27.5], 34], 12: [11.5, [15,24], 29] } },
+        "Nexus 3": { type: "3-Strut Universal Freeride/Wave", material: "ExoTex 2", sizes: { 6: [21, [24.5,33], 39], 7: [19, [22.5,31.5], 37], 8: [17, [20.5,29.5], 35], 9: [15, [18.5,26.5], 33], 10: [13.5, [17,25], 31], 11: [12.5, [15.5,23], 28], 12: [11.5, [14.5,21.5], 26] } },
+        "Pace Pro": { type: "3-Strut High-Performance Big Air", material: "Aluula 3-Strut", sizes: { 6: [21, [25,37], 43], 7: [18.5, [22,34], 40], 8: [16.5, [20,31], 38], 9: [14.5, [17.5,28], 35], 10: [13, [15.5,25], 32], 12: [11, [13,22], 28] } }
       },
       "North": {
-        "Orbit": { type: "5-Strut Big Air", material: "N-Force Dacron", sizes: { 7: [20, [23,34], 40], 8: [18, [21,32], 38], 9: [16, [19,29], 35], 10: [14, [17,26], 32], 11: [13, [15,24], 29], 12: [12, [14,22], 27] } },
-        "Orbit Pro": { type: "5-Strut Competition Big Air", material: "N-Max / Aluula", sizes: { 7: [18.5, [22,34], 41], 8: [16.5, [20,32], 39], 9: [14.5, [18,29], 36], 10: [13, [16,26], 33], 11: [12, [14.5,24], 30] } },
-        "Reach": { type: "3-Strut All-Round Freeride", material: "N-HTYR Dacron", sizes: { 7: [19, [22,29], 34], 8: [17, [20,27], 32], 9: [15, [18,25], 30], 10: [13.5, [16,23], 28], 11: [12, [14.5,21], 26], 12: [11, [13,19], 24] } },
-        "Carve": { type: "3-Strut Wave / Strapless", material: "Performance Dacron", sizes: { 7: [19, [22,31], 37], 8: [17, [20,29], 35], 9: [15, [18,26], 32], 10: [13, [16,24], 29], 12: [11, [13,20], 25] } }
+        "Orbit": { type: "5-Strut Big Air", material: "N-Force Dacron", sizes: { 6: [23, [27,38], 44], 7: [20.5, [24.5,35], 41], 8: [18.5, [22.5,32], 38], 9: [16.5, [20.5,29], 35], 10: [15, [18.5,26.5], 32], 11: [13.5, [17,24.5], 30], 12: [12.5, [16,23], 28] } },
+        "Orbit Pro": { type: "5-Strut Competition Big Air", material: "N-Max / Aluula", sizes: { 7: [19.5, [23.5,35], 42], 8: [17.5, [21.5,33], 40], 9: [15.5, [19.5,30], 37], 10: [14, [17.5,27.5], 34], 11: [12.5, [16,25.5], 31] } },
+        "Reach": { type: "3-Strut All-Round Freeride", material: "N-HTYR Dacron", sizes: { 6: [21, [24.5,33], 38], 7: [19, [22.5,31], 36], 8: [17, [20.5,29], 34], 9: [15, [18.5,27], 32], 10: [13.5, [17,25], 30], 11: [12.5, [15.5,23], 28], 12: [11.5, [14.5,21.5], 26], 13: [10.5, [13.5,20], 24], 15: [9.5, [11.5,17.5], 21] } },
+        "Carve": { type: "3-Strut Wave / Strapless", material: "Performance Dacron", sizes: { 6: [20, [23.5,33], 38], 7: [18, [21,30], 36], 8: [16, [19,27.5], 34], 9: [14, [17,25], 32], 10: [12.5, [15,22.5], 29], 11: [11.5, [14,20.5], 26] } }
       },
       "Cabrinha": {
-        "Switchblade": { type: "5-Strut Freeride / Grunt & Lift", material: "HTD Plus Dacron", sizes: { 7: [20, [23,31], 36], 8: [18, [21,29], 34], 9: [16, [18.5,26], 31], 10: [14, [16.5,24], 29], 11: [13, [15,22], 27], 12: [12, [14,20], 25], 14: [10, [12,17], 22] } },
-        "Nitro Apex": { type: "5-Strut Extreme Big Air", material: "Ultra HT Material", sizes: { 7: [19, [23,34], 40], 8: [17, [21,32], 38], 9: [15, [19,29], 35], 10: [13.5, [17,26], 32], 12: [11.5, [14,22], 28] } },
-        "Moto X": { type: "3-Strut All-Round Freeride", material: "HTD Plus", sizes: { 7: [19, [22,30], 36], 8: [17, [20,28], 34], 9: [15, [18,26], 31], 10: [13.5, [16,24], 29], 12: [11.5, [13.5,21], 26] } },
-        "Drifter": { type: "3-Strut Surf / Wave Drift", material: "HTD Dacron", sizes: { 7: [19, [22,31], 37], 8: [17, [20,28], 34], 9: [15, [18,26], 31], 10: [13, [16,23], 28] } }
+        "Switchblade": { type: "5-Strut Freeride / Grunt & Lift", material: "HTD Plus Dacron", sizes: { 6: [22, [25,34], 39], 7: [19.5, [23,33], 39], 8: [17.5, [21,31], 37], 9: [15.5, [19,28], 34], 10: [14, [17.5,26], 32], 11: [13, [16,23.5], 29], 12: [12, [14.5,21.5], 27], 14: [10, [12.5,18], 23] } },
+        "Nitro Apex": { type: "5-Strut Extreme Big Air", material: "Ultra HT Material", sizes: { 7: [20.5, [24.5,35], 41], 8: [18.5, [22.5,32], 38], 9: [16.5, [20.5,29], 35], 10: [15, [18.5,26.5], 32], 12: [12.5, [16,23], 28] } },
+        "Contra": { type: "3-Strut / 1-Strut Light Wind Specialist", material: "HTD Plus Light", sizes: { 11: [10.5, [13.5,19.5], 24], 13: [9.5, [12,17.5], 22], 15: [8, [10,15.5], 20], 17: [7.5, [9,14.5], 18] } },
+        "Moto X": { type: "3-Strut All-Round Freeride", material: "HTD Plus", sizes: { 7: [19, [22.5,30.5], 36], 8: [17, [20.5,28.5], 34], 9: [15, [18.5,26.5], 31], 10: [13.5, [16.5,24.5], 29], 12: [11.5, [14,21.5], 26] } },
+        "Drifter": { type: "3-Strut Surf / Wave Drift", material: "HTD Dacron", sizes: { 6: [20, [23.5,33], 38], 7: [18, [21,30], 36], 8: [16, [19,27.5], 34], 9: [14, [17,25], 32], 10: [12.5, [15,22.5], 29], 11: [11.5, [14,20.5], 26] } }
       },
       "Ozone": {
-        "Edge V11/V12": { type: "5-Strut High Aspect Booster", material: "Teijin Dacron", sizes: { 7: [19, [22,30], 35], 8: [17, [20,28], 33], 9: [15, [18,26], 30], 10: [13.5, [16,23], 28], 11: [12.5, [15,21], 26], 13: [10.5, [13,18], 22] } },
+        "Edge V11/V12": { type: "5-Strut High Aspect Booster", material: "Teijin Dacron", sizes: { 7: [20.5, [24.5,35], 41], 8: [18.5, [22.5,32], 38], 9: [16.5, [20.5,29], 35], 10: [15, [18.5,26.5], 32], 11: [13.5, [17,24.5], 30], 13: [11.5, [14.5,21], 25] } },
+        "Zephyr V8": { type: "17m Light Wind Powerhouse", material: "Teijin Dacron Lightweight", sizes: { 17: [7.5, [9,14.5], 18] } },
         "Vortex": { type: "3-Strut Big Air / Aluula", material: "Aluula Airframe", sizes: { 7: [18, [22,34], 40], 8: [16, [20,32], 38], 9: [14, [18,29], 35], 10: [12.5, [16,26], 32], 11: [11.5, [14,23], 29] } },
-        "Enduro V4": { type: "3-Strut Multi-Discipline", material: "Teijin Dacron", sizes: { 7: [19, [22,30], 36], 8: [17, [20,28], 34], 9: [15, [18,26], 31], 10: [13.5, [16,24], 29], 12: [11, [13,20], 25] } }
+        "Enduro V4": { type: "3-Strut Multi-Discipline", material: "Teijin Dacron", sizes: { 7: [19, [22.5,30.5], 36], 8: [17, [20.5,28.5], 34], 9: [15, [18.5,26.5], 31], 10: [13.5, [16.5,24.5], 29], 11: [12.5, [15.5,23], 28], 12: [11.5, [14,21.5], 26] } }
       },
       "F-One": {
-        "Bandit (XVI/XVII)": { type: "3-Strut Delta C-Shape", material: "Teijin 130g", sizes: { 7: [20, [24,34], 40], 8: [18, [21,31], 37], 9: [16, [19,28], 34], 10: [14, [17,25], 31], 11: [12.5, [15,23], 28], 12: [11.5, [13.5,21], 26], 14: [10, [12,17], 22] } },
-        "Trigger": { type: "5-Strut Big Air", material: "High Tenacity Dacron", sizes: { 7: [19, [23,34], 40], 8: [17, [21,32], 38], 9: [15, [19,29], 35], 10: [13.5, [17,26], 32], 12: [11, [13.5,22], 27] } }
+        "Bandit (XVI/XVII)": { type: "3-Strut Delta C-Shape", material: "Teijin 130g", sizes: { 7: [19, [22.5,31.5], 38], 8: [17, [20.5,29.5], 36], 9: [15, [18.5,27], 34], 10: [13.5, [17,25], 32], 11: [12.5, [15.5,23], 29], 12: [11.5, [14.5,21.5], 27], 14: [10, [12.5,18], 23] } },
+        "Trigger": { type: "5-Strut Big Air", material: "High Tenacity Dacron", sizes: { 7: [20.5, [24.5,35], 41], 8: [18.5, [22.5,32], 38], 9: [16.5, [20.5,29], 35], 10: [15, [18.5,26.5], 32], 11: [13.5, [17,24.5], 30], 12: [12.5, [16,23], 28] } }
       },
       "Reedin": {
-        "SuperModel HTF": { type: "3-Strut All-Round Freeride", material: "Hybrid Torsion Frame", sizes: { 7: [20, [23,33], 39], 8: [18, [21,30], 36], 9: [16, [19,27], 33], 10: [14, [17,25], 31], 12: [11.5, [13.5,21], 26], 14: [10, [12,17], 22] } }
+        "SuperModel HTF": { type: "3-Strut All-Round Freeride", material: "Hybrid Torsion Frame", sizes: { 6: [21, [24.5,33], 39], 7: [19, [22.5,31.5], 37], 8: [17, [20.5,29.5], 35], 9: [15, [18.5,26.5], 33], 10: [13.5, [17,25], 31], 11: [12.5, [15.5,23], 28], 12: [11.5, [14.5,21.5], 26], 14: [10, [12.5,18], 23] } }
       },
       "Naish": {
-        "Pivot": { type: "3-Strut Freeride / Big Air", material: "Quad-Tex Ripstop", sizes: { 7: [20, [23,33], 38], 8: [18, [21,30], 36], 9: [16, [19,27], 33], 10: [14, [17,25], 31], 11: [13, [15,23], 28], 12: [12, [14,21], 26], 14: [10.5, [12.5,18], 23] } },
+        "Pivot": { type: "3-Strut Freeride / Big Air", material: "Quad-Tex Ripstop", sizes: { 6: [21, [24.5,33], 39], 7: [19, [22.5,31.5], 37], 8: [17, [20.5,29.5], 35], 9: [15, [18.5,26.5], 33], 10: [13.5, [17,25], 31], 11: [12.5, [15.5,23], 28], 12: [11.5, [14.5,21.5], 26], 14: [10, [12.5,18], 23] } },
         "Pivot Nvision": { type: "3-Strut Aluula Frame", material: "Aluula Airframe", sizes: { 7: [18, [22,34], 40], 8: [16, [20,32], 38], 9: [14, [18,29], 35], 10: [13, [16,26], 32], 12: [11, [13.5,22], 28] } }
       },
       "Slingshot": {
-        "Machine V2": { type: "5-Strut Big Air", material: "Dacron 4x4", sizes: { 7: [20, [24,34], 40], 8: [18, [21,32], 37], 9: [16, [19,29], 34], 10: [14, [17,26], 32], 11: [12.5, [15,23], 29], 12: [11.5, [13.5,21], 26] } },
-        "Code V1": { type: "3-Strut Freeride", material: "FrameL Lightweight", sizes: { 7: [19, [22,30], 36], 8: [17, [20,28], 34], 9: [15, [18,26], 31], 10: [13.5, [16,24], 29], 12: [11.5, [13.5,21], 26] } }
+        "Machine V2": { type: "5-Strut Big Air", material: "Dacron 4x4", sizes: { 7: [20.5, [24.5,35], 41], 8: [18.5, [22.5,32], 38], 9: [16.5, [20.5,29], 35], 10: [15, [18.5,26.5], 32], 11: [13.5, [17,24.5], 30], 12: [12.5, [16,23], 28] } },
+        "Code V1": { type: "3-Strut Freeride", material: "FrameL Lightweight", sizes: { 7: [19, [22.5,30.5], 36], 8: [17, [20.5,28.5], 34], 9: [15, [18.5,26.5], 31], 10: [13.5, [16.5,24.5], 29], 12: [11.5, [14,21.5], 26] } }
       },
       "Eleveight": {
-        "XS": { type: "5-Strut Big Air", material: "Teijin X4", sizes: { 7: [19, [23,34], 40], 8: [17, [21,32], 38], 9: [15, [19,29], 35], 10: [13.5, [17,26], 32], 12: [11.5, [14,22], 27] } },
-        "RS": { type: "3-Strut All-Round Freeride", material: "High Tenacity Dacron", sizes: { 7: [19, [22,30], 36], 8: [17, [20,28], 34], 9: [15, [18,26], 31], 10: [13.5, [16,24], 29], 12: [11.5, [13.5,21], 26], 14: [10, [12,17], 22] } }
+        "XS": { type: "5-Strut Big Air", material: "Teijin X4", sizes: { 7: [20.5, [24.5,35], 41], 8: [18.5, [22.5,32], 38], 9: [16.5, [20.5,29], 35], 10: [13.5, [17,26], 32], 12: [12.5, [16,23], 28] } },
+        "RS": { type: "3-Strut All-Round Freeride", material: "High Tenacity Dacron", sizes: { 7: [19, [22.5,30.5], 36], 8: [17, [20.5,28.5], 34], 9: [15, [18.5,26.5], 31], 10: [13.5, [16.5,24.5], 29], 12: [11.5, [14,21.5], 26], 14: [10, [12.5,18], 23] } }
+      },
+      "Flysurfer": {
+        "Soul 3": { type: "Ram-Air All-Round Foil Kite", material: "TX-Light Closed-Cell Foil", sizes: { 8: [11.5, [13.5,22], 27], 10: [9.5, [11.5,19], 24], 12: [8, [10,16.5], 21], 15: [7, [8.5,14.5], 18], 18: [6, [7.5,13], 16], 21: [5.5, [7,12], 15] } },
+        "Sonic 4": { type: "High-Performance Race / Freeride Foil Kite", material: "TX-Light High-Performance Foil", sizes: { 9: [10.5, [12.5,20], 25], 12: [8, [10,16.5], 21], 15: [7, [8.5,14.5], 18] } }
       }
     };
 
@@ -1872,30 +1884,34 @@
 
         // Apply Board Hydrodynamic Multipliers for Kites
         if (bType === 'Hydrofoil') {
-          minK *= 0.65;
-          sweetMin *= 0.70;
+          minK *= 0.60;
+          sweetMin *= 0.65;
           sweetMax *= 0.75;
           maxK *= 0.78;
+          const foilArea = parseFloat(brd.size) || 1050;
+          if (foilArea >= 1200) { minK *= 0.94; sweetMin *= 0.94; }
+          else if (foilArea <= 850) { minK *= 1.08; sweetMin *= 1.08; }
         } else if (bType === 'Strapless') {
-          minK *= 0.92;
-          sweetMin *= 0.93;
-          sweetMax *= 0.95;
-          maxK *= 0.96;
+          minK *= 0.84;
+          sweetMin *= 0.85;
+          sweetMax *= 0.90;
+          maxK *= 0.88;
         } else {
           // Twintip size factor
-          const ttLen = parseFloat(brd.size) || 136;
-          if (ttLen >= 144) {
-            minK *= 0.90; sweetMin *= 0.92; sweetMax *= 0.95; maxK *= 0.94;
-          } else if (ttLen >= 140) {
-            minK *= 0.94; sweetMin *= 0.96; sweetMax *= 0.98; maxK *= 0.97;
-          } else if (ttLen <= 134) {
-            minK *= 1.05; sweetMin *= 1.04; sweetMax *= 1.02; maxK *= 1.03;
+          const ttLen = parseFloat(brd.size) || 138;
+          if (ttLen >= 145) {
+            minK *= 0.88; sweetMin *= 0.90; sweetMax *= 0.94; maxK *= 0.94;
+          } else if (ttLen >= 141) {
+            minK *= 0.94; sweetMin *= 0.95; sweetMax *= 0.97; maxK *= 0.97;
+          } else if (ttLen <= 133) {
+            minK *= 1.08; sweetMin *= 1.08; sweetMax *= 1.03; maxK *= 1.04;
+          } else if (ttLen <= 136) {
+            minK *= 1.05; sweetMin *= 1.05; sweetMax *= 1.02; maxK *= 1.03;
           }
         }
 
         if (isCarbon) {
-          minK *= 0.97;
-          sweetMin *= 0.98;
+          // Carbon increases edge grip and control at high speeds, but does not increase displacement at sub-planing speed
           maxK *= 1.04;
         }
       }
@@ -2008,9 +2024,13 @@
           return a.distToSweet - b.distToSweet;
         });
         const best = sweets[0];
+        let advisory = '';
+        if (gustKts && (gustKts - windKts >= 11) && (windKts - best.sweetMin <= 1.5)) {
+          advisory = ` (Punchy Gusts ${Math.round(gustKts)} kts)`;
+        }
         return {
           status: 'sweet',
-          text: best.displayName,
+          text: `${best.displayName}${advisory}`,
           combo: best
         };
       }
@@ -2029,7 +2049,16 @@
           return a.distToSweet - b.distToSweet;
         });
         const best = inRanges[0];
-        const tag = windKts > best.sweetMax ? ' (Overpowered)' : ' (Underpowered)';
+        let tag = '';
+        if (windKts > best.sweetMax) {
+          tag = ' (Overpowered)';
+        } else {
+          if (gustKts && (gustKts - windKts >= 9 || gustKts >= best.sweetMin)) {
+            tag = ` (Underpowered in lulls · Gusts ${Math.round(gustKts)} kts)`;
+          } else {
+            tag = ' (Underpowered)';
+          }
+        }
         return {
           status: 'range',
           text: `${best.displayName}${tag}`,
@@ -2058,6 +2087,14 @@
       if (windKts < minVal) {
         combos.sort((a, b) => a.minK - b.minK);
         const bestLightCombo = combos[0];
+        // Check if heavy gusts make it rideable in spikes despite light base wind
+        if (gustKts && gustKts >= bestLightCombo.sweetMin && (gustKts - windKts >= 10)) {
+          return {
+            status: 'range',
+            text: `${bestLightCombo.displayName} (Underpowered in lulls · Gusts ${Math.round(gustKts)} kts)`,
+            combo: bestLightCombo
+          };
+        }
         
         const atHomeBigger = state.inventory.filter(k => k.active === false && k.size > bestLightCombo.item.size);
         const atHomeFoil = (state.boards || []).filter(b => b.active === false && (b.type === 'Hydrofoil' || b.type === 'Wingfoil'));
@@ -2648,14 +2685,17 @@
           : '';
 
         const isCaipi = slotRec.text.includes('Caipirinha');
+        const isLulls = slotRec.text.includes('Underpowered in lulls');
         const recColor = slotRec.status === 'sweet' ? 'text-emerald-400 font-bold'
           : isCaipi ? 'text-amber-300 font-bold'
+          : isLulls ? 'text-amber-300/90 font-medium'
           : slotRec.status === 'overpowered' ? 'text-amber-400'
           : slotRec.status === 'danger' ? 'text-rose-400 font-bold'
           : 'text-slate-300';
 
         const dotColor = slotRec.status === 'sweet' ? 'bg-emerald-400 shadow-sm shadow-emerald-400/50'
           : isCaipi ? 'bg-amber-400 shadow-sm shadow-amber-400/50'
+          : isLulls ? 'bg-amber-400/80'
           : slotRec.status === 'overpowered' ? 'bg-amber-400'
           : 'bg-slate-700';
 

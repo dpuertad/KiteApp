@@ -2,6 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script>
+    if (window.location.hostname && window.location.hostname.includes('onrender.com')) {
+      window.location.replace('https://www.holygust.com' + window.location.pathname + window.location.search + window.location.hash);
+    }
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>KiteForecast Pro — Smart Kite & Weather Assistant</title>
   
@@ -857,7 +862,7 @@
     // Default Catalog
     const CATALOG = {
       "Duotone": {
-        "Rebel SLS": { type: "5-Strut Big Air", sizes: { 7: [20, [24,34], 40], 8: [18, [22,31], 37], 9: [16, [20,29], 34], 10: [14, [18,26], 31], 11: [12, [16,23], 28], 12: [11, [14,21], 25] } },
+        "Rebel SLS": { type: "5-Strut Big Air", sizes: { 7: [20.5, [24.5,35], 41], 8: [18.5, [22.5,32], 38], 9: [16.5, [20.5,29], 35], 10: [15, [18.5,26.5], 32], 11: [13.5, [17,24.5], 30], 12: [12.5, [16,23], 28] } },
         "Evo D/LAB": { type: "3-Strut Allround Freeride", sizes: { 7: [19, [23,32], 38], 8: [17, [21,29], 35], 9: [15, [19,27], 32], 10: [13, [17,25], 29], 12: [10.5, [14,21], 25] } },
         "Juice D/LAB": { type: "Lightwind Freeride", sizes: { 13: [8.5, [10,17], 20], 15: [7.5, [9,15], 18] } }
       },

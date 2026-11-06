@@ -1268,16 +1268,42 @@ def evaluate_active_kite(
         sweet_max *= 1.08
         max_k *= 1.12
 
-    # Board Discipline adjustments
+    # Board Discipline & Hydrodynamic adjustments
     brd = (board or "twintip").lower()
     if "surf" in brd or "strapless" in brd:
-        min_k *= 0.85
+        min_k *= 0.84
         sweet_min *= 0.85
+        sweet_max *= 0.90
         max_k *= 0.88
     elif "foil" in brd:
         min_k *= 0.60
         sweet_min *= 0.65
-        max_k *= 0.75
+        sweet_max *= 0.75
+        max_k *= 0.78
+    else:
+        # Twintip sizing factor (e.g. 136cm vs 142cm vs door)
+        tt_match = re.search(r"(\d{3})", brd)
+        tt_len = float(tt_match.group(1)) if tt_match else 138.0
+        if tt_len >= 145:
+            min_k *= 0.88
+            sweet_min *= 0.90
+            sweet_max *= 0.94
+            max_k *= 0.94
+        elif tt_len >= 141:
+            min_k *= 0.94
+            sweet_min *= 0.95
+            sweet_max *= 0.97
+            max_k *= 0.97
+        elif tt_len <= 133:
+            min_k *= 1.08
+            sweet_min *= 1.08
+            sweet_max *= 1.03
+            max_k *= 1.04
+        elif tt_len <= 136:
+            min_k *= 1.05
+            sweet_min *= 1.05
+            sweet_max *= 1.02
+            max_k *= 1.03
 
     in_range = min_k <= wind_kts <= max_k
     in_sweet = sweet_min <= wind_kts <= sweet_max
@@ -1323,13 +1349,22 @@ def recommend_from_available_quiver(
     sweet_matches = [k for k in evaluated if k["in_sweet"]]
     if sweet_matches:
         best = min(sweet_matches, key=lambda k: k["dist_to_sweet"])
-        return f"{best['display_name']}"
+        advisory = ""
+        if gust_kts and (gust_kts - wind_kts >= 11) and (wind_kts - best["sweet_min"] <= 1.5):
+            advisory = f" (Punchy Gusts {round_knots(gust_kts)} kts)"
+        return f"{best['display_name']}{advisory}"
 
     # 2. Inside rideable wind range
     range_matches = [k for k in evaluated if k["in_range"]]
     if range_matches:
         best = min(range_matches, key=lambda k: k["dist_to_sweet"])
-        tag = " (Overpowered)" if wind_kts > best["sweet_max"] else " (Underpowered)"
+        if wind_kts > best["sweet_max"]:
+            tag = " (Overpowered)"
+        else:
+            if gust_kts and (gust_kts - wind_kts >= 9 or gust_kts >= best["sweet_min"]):
+                tag = f" (Underpowered in lulls · Gusts {round_knots(gust_kts)} kts)"
+            else:
+                tag = " (Underpowered)"
         return f"{best['display_name']}{tag}"
 
     mins = [k["min_k"] for k in evaluated]
@@ -1352,6 +1387,9 @@ def recommend_from_available_quiver(
     # 3. Wind too light (< min of active quiver): Caipirinha Time!
     if wind_kts < min(mins):
         biggest = max(evaluated, key=lambda k: k["size"])
+        # Check if heavy gusts make it rideable in spikes
+        if gust_kts and gust_kts >= biggest["sweet_min"] and (gust_kts - wind_kts >= 10):
+            return f"{biggest['display_name']} (Underpowered in lulls · Gusts {round_knots(gust_kts)} kts)"
         min_k_rounded = round_knots(biggest["min_k"])
         w_kts_rounded = round_knots(wind_kts)
         yr_str = f" ({biggest['year']})" if biggest.get("year") else ""
@@ -2279,6 +2317,13 @@ def start_embedded_http_server(port: int = 8080):
         def do_HEAD(self):
             parsed = urllib.parse.urlparse(self.path)
             path = parsed.path
+            host = (self.headers.get("Host") or "").lower().split(":")[0]
+            if "onrender.com" in host and path not in ["/api/health", "/health", "/ping"]:
+                self.send_response(301)
+                self.send_header("Location", f"https://www.holygust.com{self.path}")
+                self._send_cors_headers()
+                self.end_headers()
+                return
             self.send_response(200)
             if path in ["/api/health", "/health", "/ping"]:
                 self.send_header("Content-Type", "application/json")
@@ -2302,6 +2347,18 @@ def start_embedded_http_server(port: int = 8080):
                 self._send_cors_headers()
                 self.end_headers()
                 self.wfile.write(b'{"status": "ok", "service": "KiteForecastApp", "multi_user": true}\n')
+                return
+
+            # CANONICAL REDIRECT: Redirect all old onrender.com domain traffic to https://www.holygust.com
+            host = (self.headers.get("Host") or "").lower().split(":")[0]
+            if "onrender.com" in host:
+                target_url = f"https://www.holygust.com{self.path}"
+                self.send_response(301)
+                self.send_header("Location", target_url)
+                self.send_header("Cache-Control", "public, max-age=86400")
+                self._send_cors_headers()
+                self.end_headers()
+                self.wfile.write(f"Redirecting permanently to {target_url}\n".encode("utf-8"))
                 return
 
             # Intercept uptime monitoring bots hitting root URL to prevent "Response data too big" errors
@@ -2639,6 +2696,15 @@ def start_embedded_http_server(port: int = 8080):
 
         def do_POST(self):
             parsed = urllib.parse.urlparse(self.path)
+            # Redirect old onrender.com domain POST requests preserving method/body (HTTP 308)
+            host = (self.headers.get("Host") or "").lower().split(":")[0]
+            if "onrender.com" in host and not parsed.path.startswith("/api/health"):
+                target_url = f"https://www.holygust.com{self.path}"
+                self.send_response(308)
+                self.send_header("Location", target_url)
+                self._send_cors_headers()
+                self.end_headers()
+                return
             if parsed.path == "/api/recommend":
                 try:
                     content_len = int(self.headers.get("Content-Length", 0))
