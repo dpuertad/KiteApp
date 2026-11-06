@@ -1749,9 +1749,10 @@
     const savedWeight = localStorage.getItem('kf_weight');
     const savedLevel = localStorage.getItem('kf_level');
     const savedBoard = localStorage.getItem('kf_board');
+    const spotChosen = localStorage.getItem('kf_spot_chosen') === 'true';
     const savedSpotRaw = localStorage.getItem('kf_spot');
     let savedSpot = null;
-    if (savedSpotRaw) {
+    if (spotChosen && savedSpotRaw) {
       try {
         savedSpot = JSON.parse(savedSpotRaw);
         if (savedSpot && savedSpot.beach_angle === undefined && savedSpot.name) {
@@ -3611,6 +3612,7 @@
       }
       state.spot = { name, lat, lon, timezone: tz, beach_angle: bAngle, model_label: modelLabel };
       localStorage.setItem('kf_spot', JSON.stringify(state.spot));
+      localStorage.setItem('kf_spot_chosen', 'true');
       updateSpotDisplayState();
       const bSelect = document.getElementById('select-beach-orientation');
       if (bSelect) bSelect.value = String(bAngle);
@@ -4736,6 +4738,7 @@
       if (confirm("Reset everything? This will clear all kites and personal settings to start fresh.")) {
         localStorage.clear();
         state.spot = null;
+        localStorage.removeItem('kf_spot_chosen');
         state.inventory = [];
         state.boards = [];
         localStorage.removeItem('kf_boards');
@@ -5188,9 +5191,11 @@
         renderQuiver();
       }
 
-      // Register PWA Service Worker
+      // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW register failed:', err));
+        navigator.serviceWorker.register('/sw.js?v=8').then(reg => {
+          reg.update();
+        }).catch(err => console.log('SW register failed:', err));
       }
     });
   </script>
