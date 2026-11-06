@@ -31,7 +31,7 @@ def render_admin_dashboard(summary: dict) -> str:
               <span class="font-extrabold text-sm sm:text-base text-white tracking-tight">HolyGust</span>
               <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase font-mono bg-sky-500/20 text-sky-300 border border-sky-500/30">Admin Intelligence</span>
             </div>
-            <p class="text-[11px] text-slate-400">Rider Demographics & Spot Telemetry</p>
+            <p class="text-[11px] text-slate-400">Rider Demographics, Spot Telemetry & Travel Leads</p>
           </div>
         </a>
       </div>
@@ -62,6 +62,15 @@ def render_admin_dashboard(summary: dict) -> str:
 
       <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-sm">
         <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-1">
+          <span>Travel Inquiries</span>
+          <i data-lucide="plane" class="w-4 h-4 text-amber-400"></i>
+        </div>
+        <div id="stat-total-travel" class="text-2xl font-black text-amber-400 font-mono">-</div>
+        <p class="text-[10px] text-slate-500 mt-1">Trip plans & quiver matches</p>
+      </div>
+
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-sm">
+        <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-1">
           <span>Active Watched Spots</span>
           <i data-lucide="map-pin" class="w-4 h-4 text-emerald-400"></i>
         </div>
@@ -71,56 +80,84 @@ def render_admin_dashboard(summary: dict) -> str:
 
       <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-sm">
         <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-1">
-          <span>Active Riders</span>
-          <i data-lucide="users" class="w-4 h-4 text-amber-400"></i>
-        </div>
-        <div id="stat-active-riders" class="text-2xl font-black text-white font-mono">-</div>
-        <p class="text-[10px] text-slate-500 mt-1">Registered cloud riders</p>
-      </div>
-
-      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-sm">
-        <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-1">
           <span>Rider Nationalities</span>
           <i data-lucide="globe" class="w-4 h-4 text-cyan-400"></i>
         </div>
         <div id="stat-nationalities" class="text-2xl font-black text-white font-mono">-</div>
-        <p class="text-[10px] text-slate-500 mt-1">Countries represented</p>
+        <p class="text-[10px] text-slate-500 mt-1">Distinct countries represented</p>
       </div>
     </div>
 
-    <!-- Main 2-Column Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- Left Column: Top Spots & Searches (Span 2) -->
-      <div class="lg:col-span-2 space-y-6">
-        <!-- Top Spots Card -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 shadow-sm space-y-4">
-          <div class="flex items-center justify-between">
-            <div>
-              <h3 class="font-bold text-white text-sm flex items-center space-x-2">
-                <i data-lucide="flame" class="w-4 h-4 text-amber-400"></i>
-                <span>Most Viewed Kite Spots (What People Are Looking At)</span>
-              </h3>
-              <p class="text-xs text-slate-400 mt-0.5">Real-time demand ranking across HolyGust riders</p>
-            </div>
-            <span class="text-[10px] font-mono text-slate-500">Live Telemetry</span>
+    <!-- ✈️ KITE TRAVEL DEMAND & GEAR GAP MONETIZATION SIGNALS -->
+    <div class="bg-gradient-to-br from-slate-900/95 to-slate-900/60 border border-amber-500/30 rounded-3xl p-5 sm:p-6 shadow-xl space-y-5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xl">✈️</span>
+            <h3 class="font-extrabold text-base text-white tracking-tight">Kite Travel Demand & Gear Gap Signals</h3>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase font-mono bg-amber-500/20 text-amber-300 border border-amber-500/30">Commercial Leads</span>
           </div>
+          <p class="text-xs text-slate-400 mt-1">High-intent purchase signals: destinations searched, travel months, and missing kite sizes for affiliate & hotel partnerships.</p>
+        </div>
+        <div id="stat-travel-count" class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700 text-xs font-mono font-bold text-amber-400 self-start sm:self-auto">
+          0 Inquiries
+        </div>
+      </div>
 
-          <div id="top-spots-container" class="space-y-2">
-            <!-- Dynamic Spot Rows -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- Top Travel Destinations -->
+        <div class="space-y-3">
+          <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
+            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span>Top Trip Destinations Demanded</span>
+          </h4>
+          <div id="travel-destinations-container" class="space-y-2">
+            <!-- Dynamic destinations -->
           </div>
         </div>
 
-        <!-- Top Searches Card -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 shadow-sm space-y-3">
-          <div class="flex items-center justify-between">
-            <h3 class="font-bold text-white text-sm flex items-center space-x-2">
-              <i data-lucide="search" class="w-4 h-4 text-sky-400"></i>
-              <span>Most Searched Locations & Secret Spots</span>
-            </h3>
-            <span class="text-[10px] font-mono text-slate-500">Search Engine Log</span>
+        <!-- Top Gear Gaps (Purchase Signals) -->
+        <div class="space-y-3">
+          <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
+            <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-emerald-400"></i>
+            <span>Most Advised Missing Kite Sizes (Affiliate Intent)</span>
+          </h4>
+          <div id="travel-gaps-container" class="space-y-2">
+            <!-- Dynamic gear gaps -->
           </div>
-          <div id="top-searches-container" class="flex flex-wrap gap-2">
-            <!-- Dynamic search badges -->
+        </div>
+      </div>
+
+      <!-- Recent Travel Leads Table -->
+      <div class="pt-4 border-t border-slate-800/80 space-y-3">
+        <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
+          <i data-lucide="users" class="w-3.5 h-3.5 text-sky-400"></i>
+          <span>Recent Traveler Inquiries & Gear Intent</span>
+        </h4>
+        <div id="travel-leads-container" class="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+          <!-- Dynamic lead items -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Grid: Top Spots vs Demographics -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Left Column: Top Spots Leaderboard (Span 2) -->
+      <div class="lg:col-span-2 space-y-6">
+        <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <h3 class="font-bold text-white text-base flex items-center space-x-2">
+                <i data-lucide="trophy" class="w-4 h-4 text-amber-400"></i>
+                <span>Top Queried Kite Spots</span>
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Ranked by rider search and live forecast activity</p>
+            </div>
+            <span class="text-xs font-mono text-slate-500">Live Telemetry</span>
+          </div>
+
+          <div id="top-spots-container" class="space-y-2.5">
+            <!-- Dynamic spot items -->
           </div>
         </div>
       </div>
@@ -177,9 +214,10 @@ def render_admin_dashboard(summary: dict) -> str:
     }}
 
     function renderDashboard(d) {{
-      document.getElementById('stat-total-views').innerText = d.total_spot_views || 0;
+      const summary = d.summary || {{}};
+      document.getElementById('stat-total-views').innerText = summary.total_views || 0;
       document.getElementById('stat-total-spots').innerText = (d.top_spots || []).length;
-      document.getElementById('stat-active-riders').innerText = d.unique_registered_riders_active || 0;
+      document.getElementById('stat-total-travel').innerText = summary.total_travel_inquiries || 0;
       document.getElementById('stat-nationalities').innerText = (d.top_nationalities || []).length;
 
       // Top Spots
@@ -231,10 +269,80 @@ def render_admin_dashboard(summary: dict) -> str:
         }}
       }}
 
+      // Travel Intelligence
+      const travelIntel = d.travel_intelligence || {{}};
+      const travelCountEl = document.getElementById('stat-travel-count');
+      if (travelCountEl) {{
+        travelCountEl.innerText = `${{summary.total_travel_inquiries || 0}} Inquiries`;
+      }}
+
+      // Travel Destinations
+      const travelDestCont = document.getElementById('travel-destinations-container');
+      if (travelDestCont) {{
+        const dests = travelIntel.top_destinations || [];
+        if (dests.length === 0) {{
+          travelDestCont.innerHTML = '<div class="text-xs text-slate-500 py-3 text-center bg-slate-950/40 rounded-xl border border-slate-800">No travel trip inquiries logged yet.</div>';
+        }} else {{
+          travelDestCont.innerHTML = dests.map(item => `
+            <div class="p-2.5 bg-slate-950/80 border border-slate-800 rounded-xl flex items-center justify-between text-xs">
+              <span class="font-bold text-white truncate">${{item.destination}}</span>
+              <span class="font-mono text-amber-400 font-bold">${{item.count}} searches</span>
+            </div>
+          `).join('');
+        }}
+      }}
+
+      // Gear Gaps
+      const gapsCont = document.getElementById('travel-gaps-container');
+      if (gapsCont) {{
+        const gaps = travelIntel.top_gear_gaps || [];
+        if (gaps.length === 0) {{
+          gapsCont.innerHTML = '<div class="text-xs text-slate-500 py-3 text-center bg-slate-950/40 rounded-xl border border-slate-800">No missing gear gap signals detected yet.</div>';
+        }} else {{
+          gapsCont.innerHTML = gaps.map(item => `
+            <div class="p-2.5 bg-slate-950/80 border border-emerald-500/20 rounded-xl flex items-center justify-between text-xs">
+              <div class="flex items-center space-x-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span class="font-bold text-emerald-300">${{item.size}}</span>
+              </div>
+              <span class="font-mono text-slate-300 font-bold">${{item.count}} riders advised</span>
+            </div>
+          `).join('');
+        }}
+      }}
+
+      // Recent Travel Leads
+      const leadsCont = document.getElementById('travel-leads-container');
+      if (leadsCont) {{
+        const leads = travelIntel.recent_travel_inquiries || [];
+        if (leads.length === 0) {{
+          leadsCont.innerHTML = '<div class="text-xs text-slate-500 py-3 text-center bg-slate-950/40 rounded-xl border border-slate-800">Waiting for first traveler lead.</div>';
+        }} else {{
+          leadsCont.innerHTML = leads.map(l => `
+            <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center space-x-2">
+                  <span class="font-bold text-white">${{l.rider_name || 'Rider'}}</span>
+                  ${{l.nationality && l.nationality !== 'Not Specified' ? `<span class="px-1.5 py-0.2 rounded text-[9px] bg-slate-800 text-sky-300 font-medium">${{l.nationality}}</span>` : ''}}
+                  <span class="text-[10px] text-amber-400 font-semibold">→ ${{l.spot_name}} (${{l.month_name}})</span>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-0.5 truncate">
+                  Discipline: ${{l.discipline}} (${{l.weight_kg}}kg) · Quiver: ${{l.quiver_sizes.length ? l.quiver_sizes.map(s => s + 'm').join(', ') : 'None registered'}}
+                </p>
+              </div>
+              <div class="text-left sm:text-right flex-shrink-0">
+                ${{l.gear_gaps && l.gear_gaps.length ? `<span class="px-2 py-0.5 rounded-full text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">Needs: ${{l.gear_gaps.map(g => g.size + 'm').join(', ')}}</span>` : '<span class="text-[9px] text-slate-500">Quiver complete</span>'}}
+                <span class="block text-[9px] text-slate-500 font-mono mt-0.5">${{timeAgo(l.timestamp)}}</span>
+              </div>
+            </div>
+          `).join('');
+        }}
+      }}
+
       // Live Feed
       const feedCont = document.getElementById('live-feed-container');
       if (feedCont) {{
-        const acts = d.recent_activity || [];
+        const acts = d.recent_views || [];
         if (acts.length === 0) {{
           feedCont.innerHTML = '<div class="text-xs text-slate-500 py-4 text-center">Telemetry feed is waiting for next spot check.</div>';
         }} else {{
@@ -253,22 +361,6 @@ def render_admin_dashboard(summary: dict) -> str:
         }}
       }}
 
-      // Top Searches
-      const searchCont = document.getElementById('top-searches-container');
-      if (searchCont) {{
-        const searches = d.top_searches || [];
-        if (searches.length === 0) {{
-          searchCont.innerHTML = '<span class="text-xs text-slate-500">No searches recorded yet.</span>';
-        }} else {{
-          searchCont.innerHTML = searches.map(s => `
-            <span class="px-2.5 py-1 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300 flex items-center space-x-1">
-              <span>${{s.query}}</span>
-              <span class="text-sky-400 font-mono text-[10px] font-bold">×${{s.count}}</span>
-            </span>
-          `).join('');
-        }}
-      }}
-
       if (window.lucide) lucide.createIcons();
     }}
 
@@ -276,18 +368,17 @@ def render_admin_dashboard(summary: dict) -> str:
       try {{
         const res = await fetch('/api/admin/spot-insights');
         if (res.ok) {{
-          const d = await res.json();
-          renderDashboard(d);
+          const data = await res.json();
+          renderDashboard(data);
         }}
       }} catch(e) {{
-        console.warn('Dashboard refresh failed:', e);
+        console.error("Refresh error:", e);
       }}
     }}
 
-    document.addEventListener('DOMContentLoaded', () => {{
-      renderDashboard(initialData);
-      setInterval(fetchFreshData, 10000);
-    }});
+    // Initial render
+    renderDashboard(initialData);
   </script>
 </body>
-</html>"""
+</html>
+"""

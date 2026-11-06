@@ -3269,6 +3269,72 @@ def start_embedded_http_server(port: int = 8080):
                     self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
                 return
 
+            # 6. API: Kite Travel Destinations Directory
+            if path == "/api/travel/spots":
+                try:
+                    import travel_climatology_db
+                    spots = travel_climatology_db.get_all_travel_spots()
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Cache-Control", "public, max-age=3600")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"spots": spots}).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # 7. API: Kite Travel Spot Climatology
+            if path == "/api/travel/spot-climate":
+                try:
+                    import travel_climatology_db
+                    spot_id = params.get("spot_id", ["cabarete"])[0]
+                    spot_data = travel_climatology_db.get_spot_climatology(spot_id)
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Cache-Control", "public, max-age=3600")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps(spot_data).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # 8. API: Kite Travel Explore by Month & Style
+            if path == "/api/travel/explore":
+                try:
+                    import travel_climatology_db
+                    from datetime import datetime
+                    curr_month = datetime.utcnow().month
+                    month_p = int(params.get("month", [curr_month])[0])
+                    style_p = params.get("style", ["all"])[0]
+                    ranked = travel_climatology_db.explore_spots_by_month_and_style(month_p, style_p)
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Cache-Control", "public, max-age=600")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({
+                        "month": month_p,
+                        "style": style_p,
+                        "spots": ranked
+                    }).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
             # 6. Static Files: PWA Web App
             if path in ["/", "/index.html"]:
                 index_path = os.path.join(web_dir, "index.html")
@@ -4022,6 +4088,75 @@ def start_embedded_http_server(port: int = 8080):
                         "message": "You have left the Beta Rider crew and returned to standard production.",
                         "user": updated_user
                     }).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # KITE TRAVEL: Personalized Quiver Matching & Demand Telemetry
+            if parsed.path == "/api/travel/recommend":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    data = json.loads(body) if body else {}
+
+                    spot_id = (data.get("spot_id") or "cabarete").strip().lower()
+                    month = int(data.get("month") or 7)
+                    if month < 1 or month > 12:
+                        month = 7
+                    weight_kg = float(data.get("weight_kg") or 75.0)
+                    discipline = (data.get("discipline") or "Twintip").strip()
+                    gear = data.get("gear") or []
+                    email = (data.get("email") or "").strip().lower()
+                    name = (data.get("name") or "").strip()
+                    nationality = (data.get("nationality") or "").strip()
+                    style = (data.get("style") or "All").strip()
+
+                    import travel_climatology_db
+                    rec = travel_climatology_db.calculate_quiver_trip_recommendation(
+                        spot_id=spot_id,
+                        month=month,
+                        rider_weight=weight_kg,
+                        discipline=discipline,
+                        gear_inventory=gear
+                    )
+
+                    # Record commercial demand telemetry for partnerships & monetization
+                    try:
+                        import spot_telemetry
+                        spot_name = rec.get("spot", {}).get("name", spot_id)
+                        country = rec.get("spot", {}).get("country", "")
+                        quiver_sizes = [g.get("size") for g in gear if isinstance(g, dict) and g.get("size")]
+                        rec_pack = [p.get("size") for p in rec.get("quiver_advice", {}).get("pack", [])]
+                        gear_gaps = rec.get("quiver_advice", {}).get("gaps", [])
+
+                        spot_telemetry.record_travel_inquiry(
+                            spot_id=spot_id,
+                            spot_name=spot_name,
+                            country=country,
+                            month=month,
+                            style=style,
+                            weight_kg=weight_kg,
+                            discipline=discipline,
+                            quiver_sizes=quiver_sizes,
+                            recommended_pack=rec_pack,
+                            gear_gaps=gear_gaps,
+                            email=email,
+                            rider_name=name,
+                            nationality=nationality
+                        )
+                    except Exception as te:
+                        print(f"record_travel_inquiry telemetry error: {te}")
+
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Cache-Control", "no-cache")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"success": True, "data": rec}).encode("utf-8"))
                 except Exception as e:
                     self.send_response(500)
                     self.send_header("Content-Type", "application/json")

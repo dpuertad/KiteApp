@@ -86,8 +86,12 @@
         </div>
       </div>
 
-      <!-- Quick Spot / GPS / Feedback / Refresh Pill -->
+      <!-- Quick Spot / GPS / Trip Planner / Refresh Pill -->
       <div class="flex items-center space-x-1.5">
+        <button onclick="openTravelModal()" title="Kite Travel Advisor & Quiver Matcher" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 hover:from-amber-500/30 hover:to-orange-500/30 active:scale-95 text-amber-300 hover:text-white border border-amber-500/40 text-xs font-bold transition shadow-sm">
+          <span>✈️</span>
+          <span class="hidden sm:inline">Trip Planner</span>
+        </button>
         <button id="btn-refresh" onclick="fetchForecast(true)" title="Refresh Live Forecast" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 border border-slate-700 transition">
           <i id="refresh-icon" data-lucide="rotate-cw" class="w-4 h-4"></i>
         </button>
@@ -947,6 +951,149 @@
         <!-- Search Results List -->
         <div id="addspot-results-container" class="space-y-1.5 max-h-[260px] overflow-y-auto pr-0.5 custom-scrollbar">
           <div class="text-[11px] text-slate-500 text-center py-4">Type a spot name above to search worldwide kitesurf & weather data.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✈️ KITE TRAVEL & TRIP ADVISOR MODAL -->
+  <div id="modal-trip-planner" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-4 sm:p-5 shadow-2xl space-y-4 max-h-[92vh] flex flex-col">
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between border-b border-slate-800 pb-3 flex-shrink-0">
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xl">✈️</span>
+            <h3 class="font-bold text-base text-white tracking-tight">Kite Trip Advisor & Quiver Matcher</h3>
+            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40">Beta Lab</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-0.5">Atmospheric climatology, wind probabilities & tailored quiver packing</p>
+        </div>
+        <button onclick="toggleModal('modal-trip-planner')" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Scrollable content area -->
+      <div class="space-y-4 overflow-y-auto pr-1 custom-scrollbar flex-1 text-xs">
+        <!-- Rider Sync & Board Discipline Quick Selector -->
+        <div class="bg-slate-950/70 border border-slate-800/80 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center space-x-2">
+            <span class="text-base">🎒</span>
+            <div>
+              <span id="travel-rider-summary" class="font-bold text-slate-200">75 kg · 3 Kites Loaded</span>
+              <p class="text-[10px] text-slate-400">Packs from your actual HolyGust gear quiver</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-1 bg-slate-900 border border-slate-800 rounded-xl p-0.5">
+            <button id="btn-travel-disc-tt" type="button" onclick="setTravelDiscipline('Twintip')" class="px-2.5 py-1 rounded-lg font-bold text-[11px] bg-sky-600 text-white transition">
+              Twintip
+            </button>
+            <button id="btn-travel-disc-surf" type="button" onclick="setTravelDiscipline('Surf / Strapless')" class="px-2.5 py-1 rounded-lg font-semibold text-[11px] text-slate-400 hover:text-white transition">
+              Surf / Strapless
+            </button>
+          </div>
+        </div>
+
+        <!-- Mode Tabs: Mode A vs Mode B -->
+        <div class="grid grid-cols-2 gap-1.5 bg-slate-950/80 p-1 rounded-2xl border border-slate-800">
+          <button id="btn-travel-tab-a" type="button" onclick="switchTravelMode('A')" class="py-2 rounded-xl text-center font-bold text-xs bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm transition">
+            📍 Mode A: Destination First
+          </button>
+          <button id="btn-travel-tab-b" type="button" onclick="switchTravelMode('B')" class="py-2 rounded-xl text-center font-semibold text-xs text-slate-400 hover:text-slate-200 transition">
+            📅 Mode B: Month & Style
+          </button>
+        </div>
+
+        <!-- MODE A CONTENT -->
+        <div id="travel-mode-a-container" class="space-y-3.5">
+          <!-- Selectors: Destination & Month -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label class="block font-semibold text-slate-300 mb-1">Destination</label>
+              <select id="travel-destination-select" onchange="onTravelDestinationChange()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium focus:outline-none focus:border-amber-500">
+                <!-- Dynamically loaded -->
+              </select>
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-300 mb-1">Travel Timing</label>
+              <select id="travel-month-select" onchange="onTravelMonthChange()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium focus:outline-none focus:border-amber-500">
+                <option value="all">🗓️ All 12 Months (Season Overview)</option>
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Loading Spinner -->
+          <div id="travel-loading-spinner" class="hidden text-center py-6 text-slate-400 space-y-2">
+            <i data-lucide="refresh-cw" class="w-6 h-6 text-amber-400 animate-spin mx-auto"></i>
+            <p class="text-xs font-medium">Crunching atmospheric climatology & quiver matching...</p>
+          </div>
+
+          <!-- Mode A Results Container -->
+          <div id="travel-results-container" class="space-y-3.5">
+            <!-- Injected dynamically -->
+          </div>
+        </div>
+
+        <!-- MODE B CONTENT -->
+        <div id="travel-mode-b-container" class="space-y-3.5 hidden">
+          <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-3 space-y-3">
+            <div>
+              <label class="block font-semibold text-slate-300 mb-1">When are you free to travel?</label>
+              <select id="travel-explore-month-select" onchange="loadTravelExploration()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-white font-medium focus:outline-none focus:border-amber-500">
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-semibold text-slate-300 mb-1.5">What is your preferred riding style?</label>
+              <div class="grid grid-cols-2 gap-1.5" id="travel-style-pills">
+                <button type="button" onclick="setTravelStyle('all', this)" class="travel-style-btn active px-2.5 py-1.5 rounded-xl border text-left font-bold text-[11px] bg-amber-500/20 text-amber-300 border-amber-500/40">
+                  🌍 All Styles
+                </button>
+                <button type="button" onclick="setTravelStyle('waves', this)" class="travel-style-btn px-2.5 py-1.5 rounded-xl border text-left font-medium text-[11px] bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700">
+                  🌊 Waves & Strapless
+                </button>
+                <button type="button" onclick="setTravelStyle('flat', this)" class="travel-style-btn px-2.5 py-1.5 rounded-xl border text-left font-medium text-[11px] bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700">
+                  🧈 Butter Flat Lagoons
+                </button>
+                <button type="button" onclick="setTravelStyle('big_air', this)" class="travel-style-btn px-2.5 py-1.5 rounded-xl border text-left font-medium text-[11px] bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700">
+                  🚀 Big Air & Nuking Wind
+                </button>
+                <button type="button" onclick="setTravelStyle('warm', this)" class="travel-style-btn col-span-2 px-2.5 py-1.5 rounded-xl border text-left font-medium text-[11px] bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700">
+                  ☀️ Warm Water / Boardshorts Only
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mode B Explore Results List -->
+          <div id="travel-explore-results" class="space-y-2">
+            <!-- Injected dynamically -->
+          </div>
         </div>
       </div>
     </div>
@@ -4964,6 +5111,507 @@
           if (chev) chev.innerText = '▼';
         }
       }
+    }
+
+    // -------------------------------------------------------------------------
+    // ✈️ KITE TRAVEL ADVISOR & QUIVER MATCHER
+    // -------------------------------------------------------------------------
+    let travelSpots = [];
+    let travelDiscipline = 'Twintip';
+    let travelActiveStyle = 'all';
+    let travelActiveMode = 'A';
+
+    async function loadTravelSpotsList() {
+      if (travelSpots && travelSpots.length > 0) return travelSpots;
+      try {
+        const res = await fetch('/api/travel/spots');
+        const data = await res.json();
+        travelSpots = data.spots || [];
+        populateTravelDestinationSelect();
+        return travelSpots;
+      } catch (e) {
+        console.error('Failed to load travel spots:', e);
+        return [];
+      }
+    }
+
+    function populateTravelDestinationSelect() {
+      const sel = document.getElementById('travel-destination-select');
+      if (!sel) return;
+      sel.innerHTML = travelSpots.map(s => {
+        return `<option value="${s.id}">${s.flag || '📍'} ${s.name} (${s.country})</option>`;
+      }).join('');
+    }
+
+    function updateTravelRiderSummary() {
+      const summaryEl = document.getElementById('travel-rider-summary');
+      if (!summaryEl) return;
+      const weight = (state.user && state.user.weight) ? state.user.weight : 75;
+      const kiteCount = (state.inventory && state.inventory.length) ? state.inventory.length : 0;
+      const disc = travelDiscipline;
+      summaryEl.innerText = `${weight} kg · ${disc} · ${kiteCount} Kite${kiteCount === 1 ? '' : 's'} in Quiver`;
+    }
+
+    function setTravelDiscipline(disc) {
+      travelDiscipline = disc;
+      const btnTT = document.getElementById('btn-travel-disc-tt');
+      const btnSurf = document.getElementById('btn-travel-disc-surf');
+      if (btnTT && btnSurf) {
+        if (disc === 'Twintip') {
+          btnTT.className = "px-2.5 py-1 rounded-lg font-bold text-[11px] bg-sky-600 text-white transition";
+          btnSurf.className = "px-2.5 py-1 rounded-lg font-semibold text-[11px] text-slate-400 hover:text-white transition";
+        } else {
+          btnSurf.className = "px-2.5 py-1 rounded-lg font-bold text-[11px] bg-sky-600 text-white transition";
+          btnTT.className = "px-2.5 py-1 rounded-lg font-semibold text-[11px] text-slate-400 hover:text-white transition";
+        }
+      }
+      updateTravelRiderSummary();
+      loadTravelRecommendation();
+    }
+
+    function switchTravelMode(mode) {
+      travelActiveMode = mode;
+      const btnA = document.getElementById('btn-travel-tab-a');
+      const btnB = document.getElementById('btn-travel-tab-b');
+      const contA = document.getElementById('travel-mode-a-container');
+      const contB = document.getElementById('travel-mode-b-container');
+
+      if (mode === 'A') {
+        if (btnA) btnA.className = "py-2 rounded-xl text-center font-bold text-xs bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm transition";
+        if (btnB) btnB.className = "py-2 rounded-xl text-center font-semibold text-xs text-slate-400 hover:text-slate-200 transition";
+        if (contA) contA.classList.remove('hidden');
+        if (contB) contB.classList.add('hidden');
+        loadTravelRecommendation();
+      } else {
+        if (btnB) btnB.className = "py-2 rounded-xl text-center font-bold text-xs bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm transition";
+        if (btnA) btnA.className = "py-2 rounded-xl text-center font-semibold text-xs text-slate-400 hover:text-slate-200 transition";
+        if (contB) contB.classList.remove('hidden');
+        if (contA) contA.classList.add('hidden');
+        loadTravelExploration();
+      }
+    }
+
+    async function openTravelModal(spotId, month) {
+      const modal = document.getElementById('modal-trip-planner');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+
+      // Sync discipline with user's saved board preference if twintip/surf
+      if (state.user && state.user.board && state.user.board.toLowerCase().includes('surf')) {
+        travelDiscipline = 'Surf / Strapless';
+      } else {
+        travelDiscipline = 'Twintip';
+      }
+      setTravelDiscipline(travelDiscipline);
+
+      await loadTravelSpotsList();
+
+      const destSelect = document.getElementById('travel-destination-select');
+      const monthSelect = document.getElementById('travel-month-select');
+
+      if (spotId && destSelect) {
+        destSelect.value = spotId;
+      } else if (destSelect && !destSelect.value) {
+        destSelect.value = 'cabarete'; // Default to Dominican Republic - Cabarete!
+      }
+
+      if (month !== undefined && month !== null && monthSelect) {
+        monthSelect.value = String(month);
+      } else if (monthSelect && !monthSelect.value) {
+        monthSelect.value = String(new Date().getMonth() + 1);
+      }
+
+      const exploreMonthSelect = document.getElementById('travel-explore-month-select');
+      if (exploreMonthSelect && month && month !== 'all') {
+        exploreMonthSelect.value = String(month);
+      }
+
+      switchTravelMode('A');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function onTravelDestinationChange() {
+      loadTravelRecommendation();
+    }
+
+    function onTravelMonthChange() {
+      loadTravelRecommendation();
+    }
+
+    function selectTravelMonth(mIdx) {
+      const sel = document.getElementById('travel-month-select');
+      if (sel) {
+        sel.value = String(mIdx);
+        loadTravelRecommendation();
+      }
+    }
+
+    async function loadTravelRecommendation() {
+      const destSelect = document.getElementById('travel-destination-select');
+      const monthSelect = document.getElementById('travel-month-select');
+      const container = document.getElementById('travel-results-container');
+      const spinner = document.getElementById('travel-loading-spinner');
+
+      if (!destSelect || !container) return;
+      const spotId = destSelect.value || 'cabarete';
+      const monthVal = monthSelect ? monthSelect.value : 'all';
+
+      if (spinner) spinner.classList.remove('hidden');
+      container.innerHTML = '';
+
+      try {
+        if (monthVal === 'all') {
+          // Fetch full 12-month overview only
+          const res = await fetch(`/api/travel/spot-climate?spot_id=${encodeURIComponent(spotId)}`);
+          const data = await res.json();
+          if (spinner) spinner.classList.add('hidden');
+          renderTravelAllYearOverview(data, container);
+        } else {
+          // Fetch month detail & personalized quiver recommendation
+          const payload = {
+            spot_id: spotId,
+            month: parseInt(monthVal),
+            weight_kg: (state.user && state.user.weight) ? state.user.weight : 75,
+            discipline: travelDiscipline,
+            gear: state.inventory || [],
+            email: (authUser && authUser.email) ? authUser.email : '',
+            name: (state.user && state.user.name) ? state.user.name : '',
+            nationality: (state.user && state.user.nationality) ? state.user.nationality : '',
+            style: 'All'
+          };
+
+          const res = await fetch('/api/travel/recommend', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const json = await res.json();
+          if (spinner) spinner.classList.add('hidden');
+          if (json.success && json.data) {
+            renderTravelMonthDetail(json.data, container);
+          } else {
+            container.innerHTML = `<div class="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-center">Unable to load recommendation for this destination.</div>`;
+          }
+        }
+      } catch (e) {
+        if (spinner) spinner.classList.add('hidden');
+        console.error('Error in loadTravelRecommendation:', e);
+        container.innerHTML = `<div class="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-center">Error loading trip advice: ${e.message}</div>`;
+      }
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function renderTravelMonthDetail(data, container) {
+      const spot = data.spot || {};
+      const month = data.month || {};
+      const ideal = data.ideal_sizes || {};
+      const advice = data.quiver_advice || {};
+      const pack = advice.pack || [];
+      const leave = advice.leave_home || [];
+      const gaps = advice.gaps || [];
+      const allMonths = data.all_months || [];
+
+      // Season badge class
+      let seasonBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">🔥 PEAK SEASON</span>';
+      if (month.season === 'shoulder') {
+        seasonBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">⚡ SHOULDER SEASON</span>';
+      } else if (month.season === 'low') {
+        seasonBadge = '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-400 border border-slate-700">🌱 LOW SEASON</span>';
+      }
+
+      // Wind probability color
+      const probColor = month.wind_prob >= 75 ? 'text-emerald-400' : (month.wind_prob >= 55 ? 'text-amber-400' : 'text-slate-400');
+
+      let packHtml = '';
+      if (pack.length > 0) {
+        packHtml = pack.map(k => `
+          <div class="flex items-center justify-between p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+            <div class="flex items-center space-x-2">
+              <span class="text-sm">🎒</span>
+              <div>
+                <span class="font-bold text-white">${k.label || `${k.brand} ${k.size}m`}</span>
+                <span class="text-[10px] text-emerald-400 font-semibold block">${k.role}</span>
+              </div>
+            </div>
+            <span class="text-[10px] text-slate-400 max-w-[140px] text-right truncate" title="${k.reason}">${k.reason}</span>
+          </div>
+        `).join('');
+      } else {
+        packHtml = `<div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 text-center">No kites in your quiver currently match this month's wind. See missing gear advice below!</div>`;
+      }
+
+      let leaveHtml = '';
+      if (leave.length > 0) {
+        leaveHtml = leave.map(k => `
+          <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-400">
+            <div class="flex items-center space-x-2">
+              <span class="text-sm">🏠</span>
+              <div>
+                <span class="font-medium text-slate-300">${k.label || `${k.brand} ${k.size}m`}</span>
+                <span class="text-[10px] text-slate-500 block">Leave at home</span>
+              </div>
+            </div>
+            <span class="text-[10px] text-slate-500 max-w-[130px] text-right truncate" title="${k.reason}">${k.reason}</span>
+          </div>
+        `).join('');
+      }
+
+      let gapsHtml = '';
+      if (gaps.length > 0) {
+        gapsHtml = gaps.map(g => `
+          <div class="p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-200 space-y-1">
+            <div class="flex items-center space-x-1.5 font-bold text-xs text-amber-300">
+              <span>⚠️</span>
+              <span>${g.type === 'high_wind_gap' ? 'High Wind Gap' : 'Light Wind Gap'} Detected</span>
+              <span class="ml-auto px-1.5 py-0.2 rounded bg-amber-500/20 text-[10px] font-mono">Recommend: ${g.suggested_size}m</span>
+            </div>
+            <p class="text-[11px] text-amber-100/90 leading-relaxed">${g.advice}</p>
+          </div>
+        `).join('');
+      }
+
+      // 12-Month Matrix
+      const matrixHtml = allMonths.map(m => {
+        const isCurrent = m.month_idx === month.index;
+        const activeClass = isCurrent ? 'ring-2 ring-amber-400 bg-amber-500/20 border-amber-400/60' : 'bg-slate-950/60 border-slate-800 hover:border-slate-700';
+        const pColor = m.wind_prob >= 75 ? 'text-emerald-400' : (m.wind_prob >= 55 ? 'text-amber-400' : 'text-slate-500');
+        return `
+          <button type="button" onclick="selectTravelMonth(${m.month_idx})" class="p-2 rounded-xl border text-center transition ${activeClass} flex flex-col items-center justify-between">
+            <span class="font-bold text-[11px] text-slate-300">${m.month_name}</span>
+            <span class="font-black text-xs ${pColor}">${m.wind_prob}%</span>
+            <span class="text-[9px] text-slate-400 font-mono">${m.avg_kts}k</span>
+          </button>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <!-- HERO MONTH CARD -->
+        <div class="bg-gradient-to-br from-slate-900 to-slate-950 rounded-2xl p-3.5 border border-amber-500/30 space-y-3 shadow-lg">
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="flex items-center space-x-1.5">
+                <span class="text-lg">${spot.flag || '📍'}</span>
+                <h4 class="font-bold text-sm text-white">${spot.short_name || spot.name} · <span class="text-amber-300">${month.name}</span></h4>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-0.5">${spot.water_type || ''}</p>
+            </div>
+            <div>${seasonBadge}</div>
+          </div>
+
+          <!-- Quick Stats Grid -->
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="bg-slate-950/70 p-2 rounded-xl border border-slate-800">
+              <span class="text-[10px] text-slate-400 block">Wind Probability</span>
+              <span class="text-base font-black ${probColor}">${month.wind_prob}%</span>
+              <span class="text-[9px] text-slate-500 block">&gt;14 kts days</span>
+            </div>
+            <div class="bg-slate-950/70 p-2 rounded-xl border border-slate-800">
+              <span class="text-[10px] text-slate-400 block">Typical Wind</span>
+              <span class="text-base font-black text-sky-400">${month.avg_kts} <span class="text-[10px] font-normal">kts</span></span>
+              <span class="text-[9px] text-slate-500 block">${month.range ? `${month.range[0]}–${month.range[1]} kts` : ''}</span>
+            </div>
+            <div class="bg-slate-950/70 p-2 rounded-xl border border-slate-800">
+              <span class="text-[10px] text-slate-400 block">Thermal & Sea</span>
+              <span class="text-base font-black text-amber-300">${month.sea_temp || 26}°C</span>
+              <span class="text-[9px] text-slate-500 block truncate" title="${month.wetsuit || 'Boardshorts'}">${month.wetsuit || 'Boardshorts'}</span>
+            </div>
+          </div>
+
+          <!-- Local Insider Tip -->
+          ${month.tip ? `
+            <div class="p-2.5 rounded-xl bg-sky-950/40 border border-sky-800/40 flex items-start space-x-2">
+              <span class="text-sky-400 text-sm">💡</span>
+              <p class="text-[11px] text-sky-200 leading-snug">${month.tip}</p>
+            </div>
+          ` : ''}
+        </div>
+
+        <!-- PERSONALIZED QUIVER MATCHING CARD -->
+        <div class="bg-slate-950/70 rounded-2xl p-3.5 border border-slate-800 space-y-3">
+          <div class="flex items-center justify-between">
+            <h5 class="font-bold text-xs text-slate-200 flex items-center space-x-1.5">
+              <span>🎯</span>
+              <span>Tailored Quiver for ${travelDiscipline} (${(state.user && state.user.weight) ? state.user.weight : 74}kg)</span>
+            </h5>
+            <span class="text-[10px] font-mono text-sky-400 bg-sky-950/60 px-2 py-0.5 rounded-lg border border-sky-800/50">
+              Ideal: ${ideal.high_wind || 8}m – ${ideal.light_wind || 12}m
+            </span>
+          </div>
+
+          <!-- Pack List -->
+          <div class="space-y-1.5">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 block">🎒 Pack in Travel Bag</span>
+            ${packHtml}
+          </div>
+
+          <!-- Missing Gear / Quiver Gap Advice -->
+          ${gapsHtml}
+
+          <!-- Leave at Home List -->
+          ${leave.length > 0 ? `
+            <div class="space-y-1.5 pt-1">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">🏠 Leave at Home</span>
+              ${leaveHtml}
+            </div>
+          ` : ''}
+        </div>
+
+        <!-- 12-MONTH SEASON OVERVIEW (CLICKABLE) -->
+        <div class="bg-slate-950/70 rounded-2xl p-3 border border-slate-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-xs text-slate-300 flex items-center space-x-1.5">
+              <span>🗓️</span>
+              <span>Full Year Climatology (Tap month to view)</span>
+            </span>
+            <span class="text-[10px] text-amber-400 font-medium">Prime: ${spot.prime_season || 'Year-round'}</span>
+          </div>
+          <div class="grid grid-cols-4 sm:grid-cols-6 gap-1.5">
+            ${matrixHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTravelAllYearOverview(data, container) {
+      const spot = data || {};
+      const months = spot.months || {};
+      const monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ];
+
+      const cardsHtml = Object.keys(months).map(mStr => {
+        const mIdx = parseInt(mStr);
+        const m = months[mStr];
+        const mName = monthNames[mIdx - 1];
+        const pColor = m.wind_prob >= 75 ? 'text-emerald-400' : (m.wind_prob >= 55 ? 'text-amber-400' : 'text-slate-400');
+        let seasonBadge = '<span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">PEAK</span>';
+        if (m.season === 'shoulder') {
+          seasonBadge = '<span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">SHOULDER</span>';
+        } else if (m.season === 'low') {
+          seasonBadge = '<span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-slate-800 text-slate-400 border border-slate-700">LOW</span>';
+        }
+
+        return `
+          <div onclick="selectTravelMonth(${mIdx})" class="cursor-pointer p-3 rounded-2xl bg-slate-950/70 border border-slate-800 hover:border-amber-500/40 hover:bg-slate-900 transition space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-xs text-white">${mName}</span>
+              ${seasonBadge}
+            </div>
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="text-slate-400">Wind Reliability:</span>
+              <span class="font-black ${pColor}">${m.wind_prob}%</span>
+            </div>
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="text-slate-400">Wind Range:</span>
+              <span class="font-semibold text-sky-400">${m.range[0]}–${m.range[1]} kts (Avg ${m.avg_kts}k)</span>
+            </div>
+            <div class="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-slate-800/80">
+              <span>${m.sea_temp}°C Sea · ${m.wetsuit}</span>
+              <span class="text-amber-400 font-semibold">View Quiver 👉</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <div class="bg-gradient-to-br from-slate-900 to-slate-950 rounded-2xl p-3.5 border border-slate-800 space-y-2">
+          <div class="flex items-center space-x-2">
+            <span class="text-xl">${spot.flag || '📍'}</span>
+            <div>
+              <h4 class="font-bold text-sm text-white">${spot.name}</h4>
+              <p class="text-[11px] text-slate-400">${spot.water_type || ''}</p>
+            </div>
+          </div>
+          <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-200 text-xs flex items-center justify-between">
+            <span><strong>Prime Season:</strong> ${spot.prime_season}</span>
+            <span class="text-[10px] text-amber-400 font-bold">Tap any month for quiver advice!</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          ${cardsHtml}
+        </div>
+      `;
+    }
+
+    function setTravelStyle(style, btn) {
+      travelActiveStyle = style;
+      const pills = document.querySelectorAll('.travel-style-btn');
+      pills.forEach(p => {
+        p.className = "travel-style-btn px-2.5 py-1.5 rounded-xl border text-left font-medium text-[11px] bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700";
+      });
+      if (btn) {
+        btn.className = "travel-style-btn active px-2.5 py-1.5 rounded-xl border text-left font-bold text-[11px] bg-amber-500/20 text-amber-300 border-amber-500/40";
+      }
+      loadTravelExploration();
+    }
+
+    async function loadTravelExploration() {
+      const monthSel = document.getElementById('travel-explore-month-select');
+      const container = document.getElementById('travel-explore-results');
+      if (!container) return;
+
+      const month = monthSel ? parseInt(monthSel.value) : (new Date().getMonth() + 1);
+      const style = travelActiveStyle || 'all';
+
+      container.innerHTML = `<div class="text-center py-6 text-slate-400 text-xs">Finding best global destinations for this month & style...</div>`;
+
+      try {
+        const res = await fetch(`/api/travel/explore?month=${month}&style=${encodeURIComponent(style)}`);
+        const json = await res.json();
+        const spots = json.spots || [];
+
+        if (spots.length === 0) {
+          container.innerHTML = `<div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 text-center text-xs">No matching spots found for this filter. Try "All Styles".</div>`;
+          return;
+        }
+
+        container.innerHTML = spots.map(s => {
+          const pColor = s.wind_prob >= 75 ? 'text-emerald-400' : (s.wind_prob >= 55 ? 'text-amber-400' : 'text-slate-400');
+          const tagsHtml = (s.style_tags || []).slice(0, 3).map(t => `
+            <span class="px-1.5 py-0.2 rounded bg-slate-800 text-[9px] text-slate-300 border border-slate-700">${t}</span>
+          `).join('');
+
+          return `
+            <div onclick="selectExploredSpot('${s.id}', ${month})" class="cursor-pointer p-3 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-amber-500/40 hover:bg-slate-900 transition space-y-2">
+              <div class="flex items-start justify-between">
+                <div>
+                  <div class="flex items-center space-x-1.5">
+                    <span class="text-base">${s.flag || '📍'}</span>
+                    <h5 class="font-bold text-xs text-white">${s.name}</h5>
+                  </div>
+                  <p class="text-[10px] text-slate-400 mt-0.5">${s.water_type || ''}</p>
+                </div>
+                <div class="text-right flex-shrink-0">
+                  <span class="text-xs font-black ${pColor}">${s.wind_prob}%</span>
+                  <span class="text-[9px] text-slate-500 block font-mono">${s.avg_kts} kts</span>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between text-[10px]">
+                <div class="flex flex-wrap gap-1">${tagsHtml}</div>
+                <span class="text-amber-300 font-bold flex items-center space-x-1">
+                  <span>Match Quiver</span>
+                  <span>👉</span>
+                </span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (e) {
+        console.error('Error in loadTravelExploration:', e);
+        container.innerHTML = `<div class="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-center text-xs">Failed to load exploration spots: ${e.message}</div>`;
+      }
+    }
+
+    function selectExploredSpot(spotId, month) {
+      const destSelect = document.getElementById('travel-destination-select');
+      const monthSelect = document.getElementById('travel-month-select');
+      if (destSelect) destSelect.value = spotId;
+      if (monthSelect) monthSelect.value = String(month);
+      switchTravelMode('A');
     }
 
     window.addEventListener('DOMContentLoaded', () => {
