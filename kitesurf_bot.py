@@ -254,7 +254,7 @@ def handle_telegram_callback(cb: dict, token: str, config: dict):
                 edit_payload = {
                     "chat_id": chat_id,
                     "message_id": msg_id,
-                    "text": f"""{orig_text}\n\n✅ APPROVED by Daniel! ⚡ Beta Rider badge active & welcome email sent.""",
+                    "text": f"""{orig_text}\n\n✅ APPROVED by HolyGust Team! ⚡ Beta Rider badge active & welcome email sent.""",
                     "reply_markup": {"inline_keyboard": []}
                 }
                 try:
@@ -279,7 +279,7 @@ def handle_telegram_callback(cb: dict, token: str, config: dict):
                 edit_payload = {
                     "chat_id": chat_id,
                     "message_id": msg_id,
-                    "text": f"""{orig_text}\n\n❌ DECLINED by Daniel.""",
+                    "text": f"""{orig_text}\n\n❌ DECLINED by HolyGust Team.""",
                     "reply_markup": {"inline_keyboard": []}
                 }
                 try:
@@ -3590,22 +3590,28 @@ def start_embedded_http_server(port: int = 8080):
                     if "name" in data and data["name"]:
                         user["name"] = data["name"]
                     if "gear" in data and isinstance(data["gear"], list):
-                        user["gear"] = data["gear"]
+                        if len(data["gear"]) > 0 or not user.get("gear"):
+                            user["gear"] = data["gear"]
                     if "boards" in data and isinstance(data["boards"], list):
-                        user["boards"] = data["boards"]
-                    if "weight_kg" in data:
-                        user["weight_kg"] = float(data["weight_kg"])
-                    if "level" in data:
+                        if len(data["boards"]) > 0 or not user.get("boards"):
+                            user["boards"] = data["boards"]
+                    if "weight_kg" in data and data["weight_kg"] is not None:
+                        try:
+                            user["weight_kg"] = float(data["weight_kg"])
+                        except (ValueError, TypeError):
+                            pass
+                    if "level" in data and data["level"]:
                         user["level"] = data["level"]
-                    if "board" in data:
+                    if "board" in data and data["board"]:
                         user["board"] = data["board"]
                     if "spot" in data and isinstance(data["spot"], dict):
                         user["spot"] = data["spot"]
                     if "favorite_spots" in data and isinstance(data["favorite_spots"], list):
-                        user["favorite_spots"] = data["favorite_spots"]
+                        if len(data["favorite_spots"]) > 0 or not user.get("favorite_spots"):
+                            user["favorite_spots"] = data["favorite_spots"]
 
                     approved_set = load_approved_beta_emails()
-                    if email in approved_set:
+                    if email in approved_set or user.get("is_beta_rider"):
                         user["is_beta_rider"] = True
                         user["beta_status"] = "approved"
 
