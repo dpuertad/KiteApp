@@ -23022,7 +23022,7 @@ def process_new_destination(query: str, user_name: str = "", user_email: str = "
     except Exception as e:
         print(f"[travel_db] Geocoding primary failed for '{query}': {e}")
 
-    # Fallback: if user wrote "Town, Country", try searching just "Town"
+    # Fallback 1: if user wrote "Town, Country", try searching just "Town"
     if not results and "," in query:
         fallback_query = query.split(",")[0].strip()
         geo_url = f"https://geocoding-api.open-meteo.com/v1/search?name={urllib.parse.quote(fallback_query)}&count=5&language=en&format=json"
@@ -23032,7 +23032,21 @@ def process_new_destination(query: str, user_name: str = "", user_email: str = "
                 geo_data = json.loads(resp.read().decode("utf-8"))
                 results = geo_data.get("results") or []
         except Exception as e:
-            print(f"[travel_db] Geocoding fallback failed for '{fallback_query}': {e}")
+            print(f"[travel_db] Geocoding fallback 1 failed for '{fallback_query}': {e}")
+
+    # Fallback 2: strip spot/beach keywords (e.g. "Kite Beach Dubai" -> "Dubai")
+    if not results:
+        cleaned = re.sub(r'(?i)\b(kite\s*beach|kitebeach|beach|playa|praia|lagoon|spot)\b', '', query).strip()
+        cleaned = re.sub(r'\s+', ' ', cleaned).strip(' ,')
+        if cleaned and cleaned.lower() != query.lower():
+            clean_url = f"https://geocoding-api.open-meteo.com/v1/search?name={urllib.parse.quote(cleaned)}&count=5&language=en&format=json"
+            req_c = urllib.request.Request(clean_url, headers={"User-Agent": "HolyGust-KiteAssistant/2.0"})
+            try:
+                with urllib.request.urlopen(req_c, timeout=8) as resp:
+                    geo_data = json.loads(resp.read().decode("utf-8"))
+                    results = geo_data.get("results") or []
+            except Exception as e:
+                print(f"[travel_db] Geocoding fallback 2 failed for '{cleaned}': {e}")
 
     if not results:
         raise ValueError(f"Could not locate '{query}'. Please check spelling or specify the country (e.g. 'Paracuru, Brazil').")
