@@ -51,6 +51,24 @@ if hasattr(sys.stdout, "reconfigure"):
 CONFIG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
 CACHE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "forecast_cache.json")
 USERS_DB_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "users_web_db.json")
+PUBLIC_SPOTS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "public_spots_db.json")
+
+def load_public_spots() -> list:
+    if os.path.exists(PUBLIC_SPOTS_FILE):
+        try:
+            with open(PUBLIC_SPOTS_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return []
+
+def save_public_spots(spots: list):
+    try:
+        with open(PUBLIC_SPOTS_FILE, "w", encoding="utf-8") as f:
+            json.dump(spots, f, indent=2, ensure_ascii=False)
+    except Exception as e:
+        print(f"Error saving public_spots_db: {e}")
+
 GUST_WARNING_THRESHOLD_KTS = 30
 SSL_CTX = ssl._create_unverified_context()
 
@@ -312,6 +330,40 @@ CARDINAL_DEGREES = {
     "W": 270.0, "WNW": 292.5, "NW": 315.0, "NNW": 337.5
 }
 
+
+
+def resolve_spot_model_and_angle(lat: float, lon: float, country_code: str = "", name: str = ""):
+    cc = (country_code or "").upper()
+    n_lower = (name or "").lower()
+    
+    # 1. Model resolution
+    if cc in ["IT", "DE", "CH", "AT"] or "garda" in n_lower or "como" in n_lower or "silvaplana" in n_lower or (44.0 <= lat <= 55.0 and 5.0 <= lon <= 17.0):
+        preferred_model = "icon_seamless"
+        model_label = "DWD ICON-D2 (2km) & ICON-EU"
+    elif cc == "FR" or "leucate" in n_lower or "hyeres" in n_lower or (42.0 <= lat <= 51.5 and -5.0 <= lon <= 8.5):
+        preferred_model = "best_match"
+        model_label = "Météo-France AROME (1.3km) & ECMWF"
+    elif cc in ["ES", "PT", "GR", "TR", "HR"] or "tarifa" in n_lower or "pozo" in n_lower:
+        preferred_model = "icon_seamless"
+        model_label = "DWD ICON-EU (7km) & ECMWF (9km)"
+    elif cc in ["US", "CA"] or "hood river" in n_lower or "maui" in n_lower or "hatteras" in n_lower:
+        preferred_model = "best_match"
+        model_label = "NOAA HRRR (3km) & GFS (13km)"
+    elif cc == "BR" or "cumbuco" in n_lower or "taiba" in n_lower or "prea" in n_lower:
+        preferred_model = "best_match"
+        model_label = "ECMWF IFS (9km) + Thermal Venturi"
+    else:
+        preferred_model = "best_match"
+        model_label = "ECMWF IFS (9km) High-Resolution"
+
+    # 2. Beach Angle resolution
+    b_angle = resolve_beach_angle(name)
+    if "dongo" in n_lower or "como" in n_lower:
+        b_angle = 100.0  # Lake Como western shore facing ESE
+    elif "garda" in n_lower or "torbole" in n_lower:
+        b_angle = 200.0  # Lake Garda northern shore facing SSW
+
+    return preferred_model, model_label, b_angle
 
 def resolve_beach_angle(spot_name: str, custom_angle=None) -> float:
     if custom_angle is not None:
@@ -851,12 +903,13 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
     params = {
         "latitude": spot["lat"],
         "longitude": spot["lon"],
-        "current": "temperature_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,wind_gusts_10m",
-        "hourly": "temperature_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,wind_gusts_10m",
+        "current": "temperature_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,wind_gusts_10m,weather_code",
+        "hourly": "temperature_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,wind_gusts_10m,weather_code",
+        "daily": "weather_code,temperature_2m_max,temperature_2m_min,wind_speed_10m_max,wind_gusts_10m_max,wind_direction_10m_dominant",
         "models": "best_match,ecmwf_ifs025,gfs_seamless,icon_seamless",
         "wind_speed_unit": "kn",
         "timezone": spot.get("timezone", "auto"),
-        "forecast_days": 2
+        "forecast_days": 7
     }
     url = f"https://api.open-meteo.com/v1/forecast?{urllib.parse.urlencode(params)}"
     req = urllib.request.Request(url, headers={"User-Agent": "KiteForecastBot/1.0"})
@@ -1001,6 +1054,122 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
         "spot_profile": get_spot_thermal_profile(spot.get("name", ""))
     }
 
+    # 7-Day Forecast Construction
+    weekly_forecast = []
+    daily_data = data.get("daily", {})
+    daily_times = daily_data.get("time", [])
+
+    spot_name_l = (spot.get("name") or "").lower()
+    s_lat = float(spot.get("lat", 0))
+    s_lon = float(spot.get("lon", 0))
+
+    if "italy" in spot_name_l or "garda" in spot_name_l or "como" in spot_name_l or "silvaplana" in spot_name_l or "germany" in spot_name_l or "switzerland" in spot_name_l or "austria" in spot_name_l or (44.0 <= s_lat <= 55.0 and 5.0 <= s_lon <= 17.0):
+        short_model = "DWD ICON-D2 (2km) & ICON-EU"
+    elif "france" in spot_name_l or "leucate" in spot_name_l or "hyeres" in spot_name_l:
+        short_model = "Météo-France AROME (1.3km)"
+    elif "united states" in spot_name_l or "usa" in spot_name_l or "hood river" in spot_name_l or "maui" in spot_name_l:
+        short_model = "NOAA HRRR (3km) High-Res"
+    elif "spain" in spot_name_l or "tarifa" in spot_name_l or "pozo" in spot_name_l or "portugal" in spot_name_l or "greece" in spot_name_l:
+        short_model = "DWD ICON-EU (7km)"
+    elif "brazil" in spot_name_l or "cumbuco" in spot_name_l or "taiba" in spot_name_l or "prea" in spot_name_l:
+        short_model = "ECMWF IFS (9km) + Thermal Venturi"
+    else:
+        short_model = spot.get("model_label") or "ECMWF IFS (9km) High-Res"
+
+    def decode_wmo(code):
+        if code == 0: return "Clear Sky", "☀️"
+        if code in [1, 2]: return "Partly Cloudy", "⛅"
+        if code == 3: return "Overcast", "☁️"
+        if code in [45, 48]: return "Fog", "🌫️"
+        if code in [51, 53, 55]: return "Drizzle", "🌦️"
+        if code in [61, 63, 65]: return "Rain", "🌧️"
+        if code in [71, 73, 75]: return "Snow", "🌨️"
+        if code in [80, 81, 82]: return "Rain Showers", "🌦️"
+        if code in [95, 96, 99]: return "Thunderstorm", "⛈️"
+        return "Breezy", "💨"
+
+    num_days = min(7, len(daily_times)) if daily_times else 7
+    for d in range(num_days):
+        dt_str = daily_times[d] if d < len(daily_times) else ""
+        try:
+            d_obj = datetime.strptime(dt_str, "%Y-%m-%d")
+            day_name = "Today" if d == 0 else ("Tomorrow" if d == 1 else d_obj.strftime("%A"))
+            date_display = d_obj.strftime("%a, %b %d")
+        except Exception:
+            day_name = "Today" if d == 0 else ("Tomorrow" if d == 1 else f"Day +{d}")
+            date_display = dt_str
+
+        h_start = d * 24 + 8
+        h_end = d * 24 + 19
+        d_speeds = [speeds[h] for h in range(h_start, min(h_end, len(speeds)))]
+        d_gusts = [gusts[h] for h in range(h_start, min(h_end, len(gusts)))]
+        d_dirs = [directions[h] for h in range(h_start, min(h_end, len(directions)))]
+        d_temps = [temps[h] for h in range(h_start, min(h_end, len(temps)))]
+
+        peak_w = round_knots(max(d_speeds) if d_speeds else 15.0)
+        min_w = round_knots(min(d_speeds) if d_speeds else 10.0)
+        avg_w = round(sum(d_speeds)/len(d_speeds), 1) if d_speeds else 12.0
+        peak_g = round_knots(max(d_gusts) if d_gusts else peak_w * 1.25)
+        dom_deg = round(d_dirs[len(d_dirs)//2]) if d_dirs else 90
+        dom_card = degrees_to_cardinal(dom_deg)
+
+        w_code = 0
+        w_codes_list = daily_data.get("weather_code_best_match") or daily_data.get("weather_code")
+        if w_codes_list and d < len(w_codes_list):
+            w_code = w_codes_list[d]
+        w_desc, w_icon = decode_wmo(w_code)
+
+        shore = calculate_shoreline_status(dom_deg, beach_angle)
+        stab = calculate_stability_score(avg_w, peak_g)
+
+        best_hr_idx = 13
+        if d_speeds:
+            max_idx = d_speeds.index(max(d_speeds))
+            best_hr_idx = 8 + max_idx
+        start_w = max(8, best_hr_idx - 2)
+        end_w = min(19, best_hr_idx + 2)
+        best_window = f"{start_w:02d}:00 – {end_w:02d}:00"
+
+        day_model = short_model if d < 2 else "ECMWF IFS (9km) Synoptic Ensemble"
+
+        day_hourly = []
+        for h_sub in range(7, 20):
+            full_h = d * 24 + h_sub
+            if full_h < len(speeds):
+                h_w = round_knots(speeds[full_h])
+                h_g = round_knots(gusts[full_h]) if full_h < len(gusts) else h_w
+                h_d = round(directions[full_h]) if full_h < len(directions) else 90
+                day_hourly.append({
+                    "hour": f"{h_sub:02d}:00",
+                    "wind_kts": h_w,
+                    "gust_kts": h_g,
+                    "direction": degrees_to_cardinal(h_d),
+                    "degrees": h_d,
+                    "shoreline": calculate_shoreline_status(h_d, beach_angle)
+                })
+
+        weekly_forecast.append({
+            "day_index": d,
+            "day_name": day_name,
+            "date": dt_str,
+            "date_display": date_display,
+            "weather_code": w_code,
+            "weather_desc": w_desc,
+            "weather_icon": w_icon,
+            "wind_min_kts": min_w,
+            "wind_peak_kts": peak_w,
+            "wind_avg_kts": avg_w,
+            "gust_peak_kts": peak_g,
+            "direction": dom_card,
+            "degrees": dom_deg,
+            "shoreline": shore,
+            "stability": stab,
+            "best_window": best_window,
+            "best_hour": best_hr_idx,
+            "model_used": day_model,
+            "hourly": day_hourly
+        })
+
     return {
         "spot": spot["name"],
         "beach_angle": beach_angle,
@@ -1026,6 +1195,7 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
         "schedule_hourly": schedule_hourly,
         "schedule_tomorrow": schedule_tomorrow,
         "schedule_tomorrow_hourly": schedule_tomorrow_hourly,
+        "weekly_forecast": weekly_forecast,
         "peak_session": peak_session,
         "tomorrow_peak_session": tomorrow_peak_session,
         "thermal": thermal_meta
@@ -2569,6 +2739,143 @@ def start_embedded_http_server(port: int = 8080):
                     self.wfile.write(json.dumps({"verified": False, "error": str(e)}).encode("utf-8"))
                     return
 
+            # API: Public Community Spots
+            if path == "/api/spots/public":
+                try:
+                    spots = load_public_spots()
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Cache-Control", "no-cache")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"success": True, "spots": spots}).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # API: Spot Search (Curated + Public + Open-Meteo Geocoding)
+            if path == "/api/spots/search":
+                try:
+                    q = params.get("q", [""])[0].strip()
+                    cc = params.get("country", [""])[0].strip().upper()
+                    
+                    results = []
+                    seen_keys = set()
+
+                    def get_country_flag(c_code):
+                        if c_code and len(c_code) == 2:
+                            return chr(ord(c_code[0].upper()) + 127397) + chr(ord(c_code[1].upper()) + 127397)
+                        return "📍"
+
+                    q_lower = q.lower()
+
+                    # 1. Check curated spots
+                    try:
+                        from kite_spots import GLOBAL_KITE_SPOTS
+                        for s in GLOBAL_KITE_SPOTS:
+                            s_cc = (s.get("country_code") or "").upper()
+                            s_name = s.get("name", "").lower()
+                            s_country = s.get("country", "").lower()
+                            s_aliases = [a.lower() for a in s.get("aliases", [])]
+                            
+                            if cc and s_cc and s_cc != cc and cc.lower() not in s_country:
+                                continue
+                            
+                            if not q or q_lower in s_name or q_lower in s_country or any(q_lower in a for a in s_aliases):
+                                k = f"{round(s['lat'], 3)}_{round(s['lon'], 3)}"
+                                if k not in seen_keys:
+                                    seen_keys.add(k)
+                                    results.append({
+                                        "id": s["id"],
+                                        "name": s["name"],
+                                        "short_name": s["short_name"],
+                                        "country": s["country"],
+                                        "region": s.get("region", ""),
+                                        "flag": s.get("flag", "📍"),
+                                        "lat": s["lat"],
+                                        "lon": s["lon"],
+                                        "timezone": s.get("timezone", "auto"),
+                                        "beach_angle": s.get("beach_angle", 45),
+                                        "model_label": s.get("model_label", "ECMWF (9km)"),
+                                        "is_curated": True
+                                    })
+                    except Exception as e:
+                        print("Error searching curated spots:", e)
+
+                    # 2. Check public community spots
+                    for s in load_public_spots():
+                        s_name = s.get("name", "").lower()
+                        s_country = s.get("country", "").lower()
+                        s_cc = (s.get("country_code") or "").upper()
+                        if cc and s_cc and s_cc != cc and cc.lower() not in s_country:
+                            continue
+                        if not q or q_lower in s_name or q_lower in s_country:
+                            k = f"{round(s['lat'], 3)}_{round(s['lon'], 3)}"
+                            if k not in seen_keys:
+                                seen_keys.add(k)
+                                results.append(s)
+
+                    # 3. Query Open-Meteo Geocoding API if query is provided
+                    if q:
+                        geo_url = f"https://geocoding-api.open-meteo.com/v1/search?name={urllib.parse.quote(q)}&count=10&language=en&format=json"
+                        req = urllib.request.Request(geo_url, headers={"User-Agent": "HolyGust/1.0"})
+                        with urllib.request.urlopen(req, context=SSL_CTX, timeout=6) as resp:
+                            geo_data = json.loads(resp.read().decode("utf-8"))
+                            for item in geo_data.get("results", []):
+                                item_cc = (item.get("country_code") or "").upper()
+                                if cc and item_cc != cc:
+                                    continue
+                                i_lat = item.get("latitude")
+                                i_lon = item.get("longitude")
+                                if i_lat is None or i_lon is None:
+                                    continue
+                                k = f"{round(i_lat, 3)}_{round(i_lon, 3)}"
+                                if k in seen_keys:
+                                    continue
+                                seen_keys.add(k)
+
+                                i_name = item.get("name")
+                                admin = item.get("admin1") or item.get("admin2") or ""
+                                c_name = item.get("country") or item_cc
+                                display_name = f"{i_name}, {admin}, {c_name}" if admin else f"{i_name}, {c_name}"
+
+                                p_model, m_label, b_ang = resolve_spot_model_and_angle(i_lat, i_lon, item_cc, display_name)
+                                slug_id = re.sub(r'[^a-z0-9]+', '_', i_name.lower()).strip('_')[:20]
+
+                                results.append({
+                                    "id": f"spot_{item_cc.lower()}_{slug_id}_{item.get('id', 0)}",
+                                    "name": display_name,
+                                    "short_name": i_name,
+                                    "country": c_name,
+                                    "country_code": item_cc,
+                                    "region": admin,
+                                    "flag": get_country_flag(item_cc),
+                                    "lat": round(i_lat, 4),
+                                    "lon": round(i_lon, 4),
+                                    "timezone": item.get("timezone", "auto"),
+                                    "beach_angle": b_ang,
+                                    "preferred_model": p_model,
+                                    "model_label": m_label,
+                                    "is_public": True
+                                })
+
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"success": True, "results": results[:20]}).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e), "results": []}).encode("utf-8"))
+                return
+
             # 5. API: Global Kite Spots & GPS Discovery
             if path == "/api/spots":
                 try:
@@ -2903,7 +3210,64 @@ def start_embedded_http_server(port: int = 8080):
                     self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
                 return
 
-            # AUTH: User Cloud Data Sync
+            # SPOTS: Add New Public Community Spot
+            if parsed.path == "/api/spots/add":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    spot_data = json.loads(body)
+                    
+                    if not spot_data.get("name") or spot_data.get("lat") is None or spot_data.get("lon") is None:
+                        self.send_response(400)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": "Missing required spot name or coordinates."}).encode("utf-8"))
+                        return
+
+                    spots = load_public_spots()
+                    
+                    def haversine_km(lat1, lon1, lat2, lon2):
+                        R = 6371.0
+                        dlat = math.radians(lat2 - lat1)
+                        dlon = math.radians(lon2 - lon1)
+                        a = math.sin(dlat/2)**2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon/2)**2
+                        return 2 * R * math.asin(math.sqrt(a))
+
+                    s_lat = float(spot_data["lat"])
+                    s_lon = float(spot_data["lon"])
+                    
+                    existing_idx = None
+                    for idx, s in enumerate(spots):
+                        if s.get("id") == spot_data.get("id") or haversine_km(s_lat, s_lon, float(s["lat"]), float(s["lon"])) < 2.0:
+                            existing_idx = idx
+                            break
+
+                    spot_data["is_public"] = True
+                    from datetime import datetime
+                    spot_data["created_at"] = datetime.utcnow().isoformat() + "Z"
+
+                    if existing_idx is not None:
+                        spots[existing_idx] = spot_data
+                    else:
+                        spots.insert(0, spot_data)
+
+                    save_public_spots(spots)
+
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"success": True, "spot": spot_data}).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # AUTH: User Cloud Data Sync (Auto-Upsert Profile)
             if parsed.path == "/api/auth/sync":
                 try:
                     content_len = int(self.headers.get("Content-Length", 0))
@@ -2911,37 +3275,53 @@ def start_embedded_http_server(port: int = 8080):
                     data = json.loads(body)
                     email = (data.get("email") or "").strip().lower()
 
+                    if not email:
+                        self.send_response(400)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": "Email is required for sync."}).encode("utf-8"))
+                        return
+
                     db = load_users_db()
-                    if email and email in db["users"]:
-                        user = db["users"][email]
-                        if "name" in data and data["name"]:
-                            user["name"] = data["name"]
-                        if "gear" in data and isinstance(data["gear"], list):
-                            user["gear"] = data["gear"]
-                        if "boards" in data and isinstance(data["boards"], list):
-                            user["boards"] = data["boards"]
-                        if "weight_kg" in data:
-                            user["weight_kg"] = float(data["weight_kg"])
-                        if "level" in data:
-                            user["level"] = data["level"]
-                        if "board" in data:
-                            user["board"] = data["board"]
-                        if "spot" in data and isinstance(data["spot"], dict):
-                            user["spot"] = data["spot"]
-                        from datetime import datetime
-                        user["last_sync"] = datetime.utcnow().isoformat() + "Z"
-                        save_users_db(db)
-                        self.send_response(200)
-                        self.send_header("Content-Type", "application/json")
-                        self._send_cors_headers()
-                        self.end_headers()
-                        self.wfile.write(json.dumps({"success": True, "synced": True}).encode("utf-8"))
-                    else:
-                        self.send_response(404)
-                        self.send_header("Content-Type", "application/json")
-                        self._send_cors_headers()
-                        self.end_headers()
-                        self.wfile.write(json.dumps({"error": "User profile not found for cloud sync."}).encode("utf-8"))
+                    from datetime import datetime
+                    if email not in db["users"]:
+                        db["users"][email] = {
+                            "email": email,
+                            "name": data.get("name") or email.split("@")[0].title(),
+                            "created_at": datetime.utcnow().isoformat() + "Z",
+                            "gear": [],
+                            "boards": [],
+                            "favorite_spots": []
+                        }
+
+                    user = db["users"][email]
+                    if "name" in data and data["name"]:
+                        user["name"] = data["name"]
+                    if "gear" in data and isinstance(data["gear"], list):
+                        user["gear"] = data["gear"]
+                    if "boards" in data and isinstance(data["boards"], list):
+                        user["boards"] = data["boards"]
+                    if "weight_kg" in data:
+                        user["weight_kg"] = float(data["weight_kg"])
+                    if "level" in data:
+                        user["level"] = data["level"]
+                    if "board" in data:
+                        user["board"] = data["board"]
+                    if "spot" in data and isinstance(data["spot"], dict):
+                        user["spot"] = data["spot"]
+                    if "favorite_spots" in data and isinstance(data["favorite_spots"], list):
+                        user["favorite_spots"] = data["favorite_spots"]
+
+                    user["last_sync"] = datetime.utcnow().isoformat() + "Z"
+                    save_users_db(db)
+
+                    safe_user = {k: v for k, v in user.items() if not k.startswith("password_")}
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"success": True, "synced": True, "user": safe_user}).encode("utf-8"))
                 except Exception as e:
                     self.send_response(500)
                     self.send_header("Content-Type", "application/json")

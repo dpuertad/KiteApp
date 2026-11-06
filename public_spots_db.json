@@ -1,0 +1,19 @@
+[
+  {
+    "id": "spot_it_dongo_3177526",
+    "name": "Dongo, Lombardy, Italy",
+    "short_name": "Dongo",
+    "country": "Italy",
+    "country_code": "IT",
+    "region": "Lombardy",
+    "flag": "🇮🇹",
+    "lat": 46.13,
+    "lon": 9.2817,
+    "timezone": "Europe/Rome",
+    "beach_angle": 100.0,
+    "preferred_model": "icon_seamless",
+    "model_label": "DWD ICON-D2 (2km) & ICON-EU",
+    "is_public": true,
+    "created_at": "2026-11-06T11:51:55.162950Z"
+  }
+]

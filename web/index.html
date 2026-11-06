@@ -302,15 +302,19 @@
       </div>
     </section>
 
-    <!-- DAY TOGGLE TABS (Today vs Tomorrow) -->
-    <div class="flex rounded-2xl bg-slate-900 p-1 border border-slate-800">
-      <button id="tab-today" onclick="switchDayTab('today')" class="flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-sky-600 text-white shadow-md">
+    <!-- DAY TOGGLE TABS (Today vs Tomorrow vs 1-Week Forecast) -->
+    <div class="grid grid-cols-3 gap-1 rounded-2xl bg-slate-900 p-1 border border-slate-800">
+      <button id="tab-today" onclick="switchDayTab('today')" class="py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1 bg-sky-600 text-white shadow-md">
         <i data-lucide="sun" class="w-3.5 h-3.5"></i>
-        <span>Today's Schedule</span>
+        <span>Today</span>
       </button>
-      <button id="tab-tomorrow" onclick="switchDayTab('tomorrow')" class="flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 text-slate-400 hover:text-white">
+      <button id="tab-tomorrow" onclick="switchDayTab('tomorrow')" class="py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1 text-slate-400 hover:text-white">
         <i data-lucide="sunrise" class="w-3.5 h-3.5"></i>
-        <span>Tomorrow's Forecast</span>
+        <span>Tomorrow</span>
+      </button>
+      <button id="tab-week" onclick="switchDayTab('week')" class="py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1 text-slate-400 hover:text-white">
+        <i data-lucide="calendar-days" class="w-3.5 h-3.5"></i>
+        <span>1-Week</span>
       </button>
     </div>
 
@@ -322,7 +326,7 @@
           <span id="schedule-title-date">Schedule (07:00 – 19:00)</span>
         </span>
         <!-- Schedule View Toggle: 2h vs 1h -->
-        <div class="flex items-center bg-slate-950 p-0.5 rounded-xl border border-slate-800 text-[10px]">
+        <div id="schedule-view-toggle-bar" class="flex items-center bg-slate-950 p-0.5 rounded-xl border border-slate-800 text-[10px]">
           <button id="btn-view-2h" onclick="setScheduleView('2h')" class="px-2.5 py-0.5 rounded-lg font-bold bg-sky-600 text-white transition">2h Slots</button>
           <button id="btn-view-1h" onclick="setScheduleView('1h')" class="px-2.5 py-0.5 rounded-lg font-medium text-slate-400 hover:text-white transition">Hourly (1h)</button>
         </div>
@@ -820,7 +824,7 @@
       <!-- Region Filter Tabs -->
       <div class="flex space-x-1 overflow-x-auto custom-scrollbar pb-1 text-[11px]">
         <button type="button" onclick="filterSpotsByRegion('all')" id="tab-spot-all" class="px-2.5 py-1 rounded-lg font-bold bg-sky-600 text-white whitespace-nowrap">All Spots</button>
-        <button type="button" onclick="filterSpotsByRegion('custom')" id="tab-spot-custom" class="px-2.5 py-1 rounded-lg font-medium text-amber-300 hover:text-white whitespace-nowrap">⭐ My Spots</button>
+        <button type="button" onclick="filterSpotsByRegion('favorites')" id="tab-spot-favorites" class="px-2.5 py-1 rounded-lg font-bold text-amber-400 bg-amber-500/15 border border-amber-500/30 whitespace-nowrap">⭐ Favorites</button>
         <button type="button" onclick="filterSpotsByRegion('Brazil')" id="tab-spot-brazil" class="px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white whitespace-nowrap">🇧🇷 Brazil</button>
         <button type="button" onclick="filterSpotsByRegion('Spain')" id="tab-spot-spain" class="px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white whitespace-nowrap">🇪🇸 Spain & Canaries</button>
         <button type="button" onclick="filterSpotsByRegion('Alps')" id="tab-spot-alps" class="px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-white whitespace-nowrap">🇨🇭 Lakes & Alps</button>
@@ -865,13 +869,13 @@
     </div>
   </div>
 
-  <!-- ADD & VERIFY CUSTOM KITE SPOT MODAL -->
+  <!-- ADD & SEARCH NEW KITE SPOT MODAL -->
   <div id="modal-add-spot" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-5 shadow-2xl flex flex-col space-y-4 max-h-[92vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
         <h3 class="font-bold text-sm text-white flex items-center space-x-2">
           <i data-lucide="map-pin" class="w-4 h-4 text-emerald-400"></i>
-          <span>Add & Verify New Kite Spot</span>
+          <span>Add New Kite Spot</span>
         </h3>
         <button onclick="toggleModal('modal-add-spot')" class="text-slate-400 hover:text-white p-1">
           <i data-lucide="x" class="w-4 h-4"></i>
@@ -879,84 +883,64 @@
       </div>
 
       <p class="text-xs text-slate-400">
-        Enter any beach, lagoon, or secret spot in the world. HolyGust will check Open-Meteo live atmospheric models to prove weather coverage and compute coastline orientation before adding it.
+        Search any lake, lagoon, or beach in the world. Added spots become public for all HolyGust riders and saved to your favorites.
       </p>
 
       <div class="space-y-3 text-xs">
-        <div>
-          <label class="block font-semibold text-slate-300 mb-1">Spot Name or Beach Town</label>
-          <input id="input-addspot-name" type="text" placeholder="e.g. Tatajuba, Brazil or My Secret Lagoon" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500 text-xs">
-          <span class="text-[10px] text-slate-500 mt-0.5 block">Works with spot names, beach villages, or lagoons.</span>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block font-semibold text-slate-400 mb-1">Latitude (Optional)</label>
-            <input id="input-addspot-lat" type="number" step="any" placeholder="-2.8595" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-1.5 text-white focus:outline-none focus:border-emerald-500 text-xs font-mono">
-          </div>
-          <div>
-            <label class="block font-semibold text-slate-400 mb-1">Longitude (Optional)</label>
-            <input id="input-addspot-lon" type="number" step="any" placeholder="-40.6948" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-1.5 text-white focus:outline-none focus:border-emerald-500 text-xs font-mono">
-          </div>
-        </div>
-
+        <!-- 1. Country Selection -->
         <div>
           <label class="block font-semibold text-slate-300 mb-1 flex items-center justify-between">
-            <span>Coastline Facing Direction</span>
-            <span id="label-addspot-angle" class="font-mono text-emerald-400 font-bold">45° (NE)</span>
+            <span>Select Country</span>
+            <span class="text-[10px] text-slate-400 font-normal">Filters meteo search</span>
           </label>
-          <div class="grid grid-cols-4 gap-1 text-[11px] mb-1.5">
-            <button type="button" onclick="setAddSpotAngle(0, 'N')" class="btn-coast-opt py-1 rounded-lg bg-slate-950 border border-slate-800 hover:border-emerald-500/50 text-slate-300">N (0°)</button>
-            <button type="button" onclick="setAddSpotAngle(45, 'NE')" class="btn-coast-opt py-1 rounded-lg bg-emerald-600/30 border border-emerald-500 text-white font-bold">NE (45°)</button>
-            <button type="button" onclick="setAddSpotAngle(90, 'E')" class="btn-coast-opt py-1 rounded-lg bg-slate-950 border border-slate-800 hover:border-emerald-500/50 text-slate-300">E (90°)</button>
-            <button type="button" onclick="setAddSpotAngle(135, 'SE')" class="btn-coast-opt py-1 rounded-lg bg-slate-950 border border-slate-800 hover:border-emerald-500/50 text-slate-300">SE (135°)</button>
-            <button type="button" onclick="setAddSpotAngle(180, 'S')" class="btn-coast-opt py-1 rounded-lg bg-slate-950 border border-slate-800 hover:border-emerald-500/50 text-slate-300">S (180°)</button>
-            <button type="button" onclick="setAddSpotAngle(225, 'SW')" class="btn-coast-opt py-1 rounded-lg bg-slate-950 border border-slate-800 hover:border-emerald-500/50 text-slate-300">SW (225°)</button>
-            <button type="button" onclick="setAddSpotAngle(270, 'W')" class="btn-coast-opt py-1 rounded-lg bg-slate-950 border border-slate-800 hover:border-emerald-500/50 text-slate-300">W (270°)</button>
-            <button type="button" onclick="setAddSpotAngle(315, 'NW')" class="btn-coast-opt py-1 rounded-lg bg-slate-950 border border-slate-800 hover:border-emerald-500/50 text-slate-300">NW (315°)</button>
-          </div>
-          <input type="hidden" id="input-addspot-angle" value="45">
+          <select id="select-addspot-country" onchange="triggerSpotSearch()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500 text-xs">
+            <option value="">🌍 All Countries</option>
+            <option value="IT" selected>🇮🇹 Italy (Lakes Como, Garda, Sardinia, Sicily)</option>
+            <option value="BR">🇧🇷 Brazil (Ceará, Piauí, Maranhão)</option>
+            <option value="ES">🇪🇸 Spain & Canaries (Tarifa, Pozo, Fuerteventura)</option>
+            <option value="PT">🇵🇹 Portugal (Guincho, Viana, Algarve)</option>
+            <option value="CH">🇨🇭 Switzerland (Silvaplana, Uri, Neuchâtel)</option>
+            <option value="DE">🇩🇪 Germany (Fehmarn, Rügen, Starnberg)</option>
+            <option value="AT">🇦🇹 Austria (Neusiedlersee, Podersdorf)</option>
+            <option value="FR">🇫🇷 France (Leucate, Hyères, Brittany)</option>
+            <option value="GR">🇬🇷 Greece (Rhodes, Paros, Lefkada)</option>
+            <option value="EG">🇪🇬 Egypt (El Gouna, Soma Bay, Dahab)</option>
+            <option value="MA">🇲🇦 Morocco (Dakhla, Essaouira)</option>
+            <option value="ZA">🇿🇦 South Africa (Cape Town, Langebaan)</option>
+            <option value="US">🇺🇸 United States (Hood River, Maui, Hatteras, Corpus)</option>
+            <option value="MX">🇲🇽 Mexico (La Ventana, Holbox, Cancun)</option>
+            <option value="DO">🇩🇴 Dominican Republic (Cabarete)</option>
+            <option value="CV">🇨🇻 Cape Verde (Sal, Boa Vista)</option>
+            <option value="MU">🇲🇺 Mauritius (Le Morne, Anse La Raie)</option>
+            <option value="NL">🇳🇱 Netherlands (Brouwersdam, IJmuiden)</option>
+            <option value="TR">🇹🇷 Turkey (Gökova, Alacati)</option>
+            <option value="VN">🇻🇳 Vietnam (Mui Ne, Phan Rang)</option>
+            <option value="PH">🇵🇭 Philippines (Boracay, Siargao)</option>
+            <option value="AU">🇦🇺 Australia (Perth, Sydney, Gold Coast)</option>
+          </select>
         </div>
 
-        <button id="btn-verify-spot" type="button" onclick="verifyCustomSpotAction()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-98 text-white font-bold text-xs shadow-lg shadow-emerald-600/25 transition flex items-center justify-center space-x-1.5">
-          <i data-lucide="check-circle" class="w-4 h-4"></i>
-          <span>Verify Live Wind & Forecast Coverage</span>
-        </button>
-
-        <!-- Verification Results Box (hidden until verified) -->
-        <div id="box-spot-verification" class="hidden p-3.5 rounded-2xl bg-slate-950/90 border border-emerald-500/40 space-y-2.5">
-          <div class="flex items-center space-x-2 text-emerald-400 font-bold text-xs">
-            <i data-lucide="check-check" class="w-4 h-4 text-emerald-400"></i>
-            <span id="text-verification-status">Spot Verified with Live Weather Model!</span>
+        <!-- 2. Spot Name Input -->
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Spot Name or Beach Town</label>
+          <div class="relative flex items-center">
+            <input id="input-addspot-name" type="text" oninput="debounceSpotSearch()" onkeydown="if(event.key==='Enter'){event.preventDefault(); triggerSpotSearch();}" placeholder="Type spot name (e.g. Dongo, Lake Como, Chia, Taíba...)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500 text-xs pr-16">
+            <button type="button" onclick="triggerSpotSearch()" class="absolute right-1 px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition">
+              Search
+            </button>
           </div>
-          <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800 space-y-1 text-[11px]">
-            <div class="flex justify-between text-slate-300 font-bold">
-              <span id="verif-spot-name">Spot Name</span>
-              <span id="verif-spot-coords" class="font-mono text-slate-400 text-[10px]">-- , --</span>
-            </div>
-            <div class="flex justify-between text-slate-400">
-              <span>Live Wind & Gusts:</span>
-              <span id="verif-spot-wind" class="text-white font-mono font-bold">-- kts</span>
-            </div>
-            <div class="flex justify-between text-slate-400">
-              <span>Temperature:</span>
-              <span id="verif-spot-temp" class="text-cyan-300 font-mono">--°C</span>
-            </div>
-            <div class="flex justify-between text-slate-400">
-              <span>Model Coverage:</span>
-              <span id="verif-spot-model" class="text-sky-300 text-[10px]">ECMWF High-Res Active</span>
-            </div>
-          </div>
-
-          <button id="btn-save-custom-spot" type="button" onclick="saveVerifiedSpotAction()" class="w-full py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-98 text-white font-bold text-xs shadow-lg shadow-sky-500/25 transition flex items-center justify-center space-x-1.5">
-            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-            <span>Save & Ride This Spot Now 🚀</span>
-          </button>
+          <span class="text-[10px] text-slate-500 mt-1 block">Live search connected to global kitesurf & Open-Meteo database.</span>
         </div>
 
-        <div id="box-spot-verif-error" class="hidden p-3 rounded-2xl bg-rose-950/60 border border-rose-500/40 text-rose-300 text-xs flex items-center space-x-2">
-          <i data-lucide="alert-circle" class="w-4 h-4 text-rose-400 flex-shrink-0"></i>
-          <span id="text-verif-error">Could not find weather data for this location.</span>
+        <!-- Search Status / Spinner -->
+        <div id="addspot-search-status" class="hidden text-xs text-slate-400 flex items-center space-x-2 py-1">
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-emerald-400 animate-spin"></i>
+          <span>Searching meteo database...</span>
+        </div>
+
+        <!-- Search Results List -->
+        <div id="addspot-results-container" class="space-y-1.5 max-h-[260px] overflow-y-auto pr-0.5 custom-scrollbar">
+          <div class="text-[11px] text-slate-500 text-center py-4">Type a spot name above to search worldwide kitesurf & weather data.</div>
         </div>
       </div>
     </div>
@@ -995,6 +979,20 @@
             <option value="Surf / Strapless">Surfboard / Strapless Wave</option>
             <option value="Foil">Hydrofoil</option>
           </select>
+        </div>
+
+        <!-- ⭐ My Favorite Spots -->
+        <div class="pt-3 border-t border-slate-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-slate-200 flex items-center space-x-1.5">
+              <span class="text-amber-400">⭐</span>
+              <span>My Favorite Spots</span>
+            </span>
+            <span id="profile-fav-count" class="text-[10px] text-slate-400 font-mono">0 spots</span>
+          </div>
+          <div id="profile-favorites-list" class="space-y-1.5 max-h-[140px] overflow-y-auto pr-0.5 custom-scrollbar">
+            <!-- Rendered dynamically -->
+          </div>
         </div>
 
         <button onclick="saveModalProfile()" class="w-full py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-95 text-white font-bold text-xs shadow-lg shadow-sky-500/25 transition">
@@ -1085,6 +1083,20 @@
             <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
             <span>Log Out</span>
           </button>
+        </div>
+
+        <!-- ⭐ My Favorite Spots in Cloud Profile -->
+        <div class="pt-3 border-t border-slate-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-slate-200 flex items-center space-x-1.5">
+              <span class="text-amber-400">⭐</span>
+              <span>My Favorite Spots</span>
+            </span>
+            <span id="auth-fav-count" class="text-[10px] text-slate-400 font-mono">0 spots</span>
+          </div>
+          <div id="auth-favorites-list" class="space-y-1.5 max-h-[140px] overflow-y-auto pr-0.5 custom-scrollbar">
+            <!-- Rendered dynamically -->
+          </div>
         </div>
       </div>
 
@@ -2418,6 +2430,13 @@
       if (!state.forecastData) return;
       const f = state.forecastData;
       const isTomorrow = state.currentTab === 'tomorrow';
+      const isWeek = state.currentTab === 'week';
+
+      // If in 1-Week view, render 7-day forecast cards
+      if (isWeek) {
+        renderWeeklyForecastView(f);
+        return;
+      }
 
       // Update Live Spot Clock
       updateLiveSpotClock();
@@ -3309,15 +3328,16 @@
       const list = spots || GLOBAL_KITE_SPOTS;
 
       if (list.length === 0) {
-        const isCustomTab = document.getElementById('tab-spot-custom')?.classList.contains('bg-sky-600');
+        const isFavTab = activeSpotRegion === 'favorites';
         container.innerHTML = `
-          <div class="p-4 text-center space-y-2.5 bg-slate-950/60 rounded-2xl border border-dashed border-slate-800">
-            <p class="text-xs text-slate-400">${isCustomTab ? "You haven't added any custom spots yet." : "No matching kite spots found in this category."}</p>
+          <div class="p-5 text-center space-y-2 bg-slate-950/60 rounded-2xl border border-dashed border-slate-800">
+            <span class="text-2xl">${isFavTab ? '⭐' : '🏄'}</span>
+            <p class="text-xs text-slate-300 font-medium">${isFavTab ? "No favorite spots saved yet." : "No matching kite spots found in this category."}</p>
+            <p class="text-[11px] text-slate-500">${isFavTab ? "Tap the ☆ star next to any spot to bookmark it here for 1-click access!" : "Try searching or add a new custom spot below."}</p>
             <div class="flex items-center justify-center space-x-2 pt-1 flex-wrap gap-2">
-              ${!isCustomTab ? `<button type="button" onclick="onSearchCustomGeocoder()" class="px-3 py-1.5 rounded-xl bg-sky-600/80 hover:bg-sky-600 text-white font-bold text-xs shadow-md transition">Search Global Map</button>` : ''}
               <button type="button" onclick="openAddSpotModal(document.getElementById('input-spot-search')?.value || '')" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md transition flex items-center space-x-1">
                 <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
-                <span>+ Add & Verify Spot</span>
+                <span>+ Add New Spot</span>
               </button>
             </div>
           </div>
@@ -3331,6 +3351,12 @@
           (state.spot.name && state.spot.name.toLowerCase().includes(s.id)) ||
           (Math.abs(state.spot.lat - s.lat) < 0.05 && Math.abs(state.spot.lon - s.lon) < 0.05)
         );
+        const isFav = isFavoriteSpot(s.id);
+        const starBtn = `
+          <button type="button" onclick="event.stopPropagation(); toggleFavoriteSpot('${s.id}')" class="p-1 rounded-lg hover:bg-slate-800 transition ${isFav ? 'text-amber-400 font-bold' : 'text-slate-600 hover:text-amber-300'}" title="${isFav ? 'Remove from favorites' : 'Add to favorites'}">
+            <span class="text-sm">${isFav ? '★' : '☆'}</span>
+          </button>
+        `;
         const distBadge = s.dist_km !== undefined ? `
           <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${s.dist_km <= 60 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-slate-800 text-slate-400 border border-slate-700'}">
             📍 ${s.dist_km < 1 ? '<1' : Math.round(s.dist_km)} km away
@@ -3356,8 +3382,9 @@
                 </p>
               </div>
             </div>
-            <div class="flex items-center space-x-2">
+            <div class="flex items-center space-x-1.5">
               ${distBadge}
+              ${starBtn}
               <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500"></i>
             </div>
           </div>
@@ -3403,7 +3430,7 @@
 
     function filterSpotsByRegion(region) {
       activeSpotRegion = region;
-      const tabs = ['all', 'custom', 'brazil', 'spain', 'alps', 'africa', 'americas', 'asia'];
+      const tabs = ['all', 'favorites', 'brazil', 'spain', 'alps', 'africa', 'americas', 'asia'];
       tabs.forEach(t => {
         const el = document.getElementById(`tab-spot-${t}`);
         if (!el) return;
@@ -3416,8 +3443,8 @@
 
       let filtered = GLOBAL_KITE_SPOTS;
       const rLower = region.toLowerCase();
-      if (rLower === 'custom') {
-        filtered = GLOBAL_KITE_SPOTS.filter(s => s.is_custom);
+      if (rLower === 'favorites' || rLower === 'custom') {
+        filtered = GLOBAL_KITE_SPOTS.filter(s => isFavoriteSpot(s.id) || s.is_custom);
       } else if (rLower === 'brazil') {
         filtered = GLOBAL_KITE_SPOTS.filter(s => s.country.toLowerCase() === 'brazil');
       } else if (rLower === 'spain') {
@@ -3887,7 +3914,10 @@
     }
 
     async function syncUserDataNow() {
-      if (!authUser || !authUser.email) return;
+      if (!authUser || !authUser.email) {
+        alert("Please sign in or create an account to back up your setup to the cloud.");
+        return;
+      }
       try {
         const res = await fetch('/api/auth/sync', {
           method: 'POST',
@@ -3900,17 +3930,40 @@
             weight_kg: state.user.weight,
             level: state.user.level,
             board: state.user.board,
-            spot: state.spot
+            spot: state.spot,
+            favorite_spots: state.favorite_spots || []
           })
         });
-        if (res.ok) {
-          alert("✅ Your kites & profile are backed up to the cloud!");
+        const data = await res.json();
+        if (res.ok && data.success) {
+          alert("✅ Your kites, favorite spots & profile are backed up to the cloud!");
         } else {
-          alert("Sync could not complete. Please check connection.");
+          alert("Sync issue: " + (data.error || "Could not complete cloud backup."));
         }
       } catch (e) {
         alert("Sync error: " + e.message);
       }
+    }
+
+    async function syncUserDataQuiet() {
+      if (!authUser || !authUser.email) return;
+      try {
+        await fetch('/api/auth/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: authUser.email,
+            name: state.user.name,
+            gear: state.inventory,
+            boards: state.boards || [],
+            weight_kg: state.user.weight,
+            level: state.user.level,
+            board: state.user.board,
+            spot: state.spot,
+            favorite_spots: state.favorite_spots || []
+          })
+        });
+      } catch (e) {}
     }
 
     function logoutUser() {
@@ -4032,7 +4085,11 @@
 
     function toggleModal(id) {
       const el = document.getElementById(id);
+      if (!el) return;
       el.classList.toggle('hidden');
+      if (id === 'modal-profile' || id === 'modal-auth') {
+        renderProfileFavorites();
+      }
     }
 
     function saveInventory() {
@@ -4051,7 +4108,8 @@
             weight_kg: state.user.weight,
             level: state.user.level,
             board: state.user.board,
-            spot: state.spot
+            spot: state.spot,
+            favorite_spots: state.favorite_spots || []
           })
         }).catch(() => {});
       }
@@ -4077,149 +4135,356 @@
 
     // 7. INITIAL STARTUP
 
-    // --- CUSTOM KITE SPOTS & VERIFICATION SYSTEM ---
-    let pendingVerifiedSpot = null;
 
-    function openAddSpotModal(prefillName = '') {
-      const modal = document.getElementById('modal-add-spot');
-      if (!modal) return;
-      const nameInp = document.getElementById('input-addspot-name');
-      if (nameInp && prefillName) nameInp.value = prefillName;
-      
-      const vBox = document.getElementById('box-spot-verification');
-      const errBox = document.getElementById('box-spot-verif-error');
-      if (vBox) vBox.classList.add('hidden');
-      if (errBox) errBox.classList.add('hidden');
-      pendingVerifiedSpot = null;
 
-      if (window.lucide) lucide.createIcons();
-      toggleModal('modal-add-spot');
+
+    // ==========================================
+    // FAVORITE SPOTS & COMMUNITY PUBLIC SPOTS
+    // ==========================================
+    function isFavoriteSpot(spotId) {
+      if (!spotId) return false;
+      return (state.favorite_spots || []).includes(spotId);
     }
 
-    function setAddSpotAngle(deg, cardinal) {
-      document.getElementById('input-addspot-angle').value = deg;
-      document.getElementById('label-addspot-angle').innerText = `${deg}° (${cardinal})`;
-      document.querySelectorAll('.btn-coast-opt').forEach(btn => {
-        if (btn.innerText.includes(`(${deg}°)`)) {
-          btn.className = "btn-coast-opt py-1 rounded-lg bg-emerald-600/30 border border-emerald-500 text-white font-bold";
-        } else {
-          btn.className = "btn-coast-opt py-1 rounded-lg bg-slate-950 border border-slate-800 hover:border-emerald-500/50 text-slate-300";
+    function toggleFavoriteSpot(spotId) {
+      if (!spotId) return;
+      if (!state.favorite_spots) state.favorite_spots = [];
+      const idx = state.favorite_spots.indexOf(spotId);
+      if (idx >= 0) {
+        state.favorite_spots.splice(idx, 1);
+      } else {
+        state.favorite_spots.push(spotId);
+      }
+      localStorage.setItem('hg_favorite_spots', JSON.stringify(state.favorite_spots));
+      
+      // Re-render spot list if in favorites tab or current list
+      filterSpotsByRegion(activeSpotRegion);
+      renderProfileFavorites();
+      syncUserDataQuiet();
+    }
+
+    function renderProfileFavorites() {
+      const c = document.getElementById('profile-favorites-list');
+      const countEl = document.getElementById('profile-fav-count');
+      const favIds = state.favorite_spots || [];
+      const favSpots = GLOBAL_KITE_SPOTS.filter(s => favIds.includes(s.id));
+
+      if (countEl) countEl.innerText = `${favSpots.length} spot${favSpots.length === 1 ? '' : 's'}`;
+      if (!c) return;
+
+      if (favSpots.length === 0) {
+        c.innerHTML = '<div class="text-[11px] text-slate-500 py-3 text-center bg-slate-950/40 rounded-xl border border-slate-800">No favorite spots saved yet. Click the ⭐ next to any spot to add it here.</div>';
+        return;
+      }
+
+      c.innerHTML = favSpots.map(s => {
+        const isCurrent = state.spot && (state.spot.name.includes(s.short_name) || (Math.abs(state.spot.lat - s.lat) < 0.05 && Math.abs(state.spot.lon - s.lon) < 0.05));
+        return `
+          <div class="bg-slate-950/90 border ${isCurrent ? 'border-sky-500/80 bg-sky-950/30' : 'border-slate-800/80 hover:border-slate-700'} rounded-xl p-2 flex items-center justify-between text-xs">
+            <div class="flex items-center space-x-2 min-w-0 flex-1 truncate">
+              <span class="text-base flex-shrink-0">${s.flag || '📍'}</span>
+              <div class="truncate">
+                <span class="font-bold text-white truncate block">${s.short_name}</span>
+                <span class="text-[10px] text-slate-400 truncate block">${s.region ? s.region + ', ' : ''}${s.country}</span>
+              </div>
+            </div>
+            <div class="flex items-center space-x-1 flex-shrink-0 ml-2">
+              <button type="button" onclick="selectSpotFromCatalog('${s.id}'); closeAllModals();" class="px-2.5 py-1 rounded-lg ${isCurrent ? 'bg-sky-600/30 text-sky-300 font-bold border border-sky-500/40' : 'bg-sky-600 hover:bg-sky-500 text-white font-medium'} text-[11px] transition">
+                ${isCurrent ? 'Active' : 'Ride Spot'}
+              </button>
+              <button type="button" onclick="toggleFavoriteSpot('${s.id}')" class="p-1 text-slate-500 hover:text-rose-400 transition" title="Remove from favorites">
+                ✕
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closeAllModals() {
+      ['modal-spot', 'modal-add-spot', 'modal-profile', 'modal-auth', 'modal-feedback', 'modal-board'].forEach(mId => {
+        const el = document.getElementById(mId);
+        if (el && !el.classList.contains('hidden')) {
+          toggleModal(mId);
         }
       });
     }
 
-    async function verifyCustomSpotAction() {
-      const name = (document.getElementById('input-addspot-name').value || '').trim();
-      const lat = (document.getElementById('input-addspot-lat').value || '').trim();
-      const lon = (document.getElementById('input-addspot-lon').value || '').trim();
-      const angle = document.getElementById('input-addspot-angle').value;
-
-      const btn = document.getElementById('btn-verify-spot');
-      const vBox = document.getElementById('box-spot-verification');
-      const errBox = document.getElementById('box-spot-verif-error');
-      const errText = document.getElementById('text-verif-error');
-
-      if (!name && (!lat || !lon)) {
-        if (errBox) {
-          errBox.classList.remove('hidden');
-          errText.innerText = "Please enter a spot name, beach town, or coordinates.";
-        }
-        return;
-      }
-
-      if (vBox) vBox.classList.add('hidden');
-      if (errBox) errBox.classList.add('hidden');
-      if (btn) {
-        btn.disabled = true;
-        btn.innerHTML = `<i data-lucide="refresh-cw" class="w-4 h-4 animate-spin"></i><span>Auditing Coordinates & Live Wind...</span>`;
-        if (window.lucide) lucide.createIcons();
-      }
-
+    async function loadPublicSpots() {
       try {
-        const refLat = state.spot ? state.spot.lat : '';
-        const refLon = state.spot ? state.spot.lon : '';
-        const queryParams = new URLSearchParams({
-          q: name,
-          lat: lat,
-          lon: lon,
-          beach_angle: angle,
-          ref_lat: refLat,
-          ref_lon: refLon
-        });
-
-        const resp = await fetch(`/api/spots/verify?${queryParams.toString()}`);
-        const data = await resp.json();
-
-        if (data && data.verified && data.spot) {
-          pendingVerifiedSpot = data.spot;
-          document.getElementById('verif-spot-name').innerText = data.spot.name;
-          document.getElementById('verif-spot-coords').innerText = `${data.spot.lat.toFixed(4)}, ${data.spot.lon.toFixed(4)}`;
-          document.getElementById('verif-spot-wind').innerText = `${data.spot.live_wind_kts} kts ${data.spot.live_direction} (Gusts: ${data.spot.live_gust_kts} kts)`;
-          document.getElementById('verif-spot-temp').innerText = `${data.spot.live_temp_c}°C (Feels ${data.spot.live_apparent_c}°C)`;
-          document.getElementById('verif-spot-model').innerText = `${data.spot.model_label} · Coast ${data.spot.beach_angle}°`;
-
-          if (vBox) vBox.classList.remove('hidden');
-          if (errBox) errBox.classList.add('hidden');
-        } else {
-          pendingVerifiedSpot = null;
-          if (errBox) {
-            errBox.classList.remove('hidden');
-            errText.innerText = (data && data.error) ? data.error : "Could not verify weather data for this spot.";
-          }
+        const res = await fetch('/api/spots/public');
+        const data = await res.json();
+        if (data && data.success && Array.isArray(data.spots)) {
+          data.spots.forEach(ps => {
+            const idx = GLOBAL_KITE_SPOTS.findIndex(s => s.id === ps.id || (Math.abs(s.lat - ps.lat) < 0.02 && Math.abs(s.lon - ps.lon) < 0.02));
+            if (idx >= 0) {
+              GLOBAL_KITE_SPOTS[idx] = ps;
+            } else {
+              GLOBAL_KITE_SPOTS.unshift(ps);
+            }
+          });
+          filterSpotsByRegion(activeSpotRegion);
         }
-      } catch (e) {
-        pendingVerifiedSpot = null;
-        if (errBox) {
-          errBox.classList.remove('hidden');
-          errText.innerText = "Verification request failed. Check internet connection.";
-        }
-      } finally {
-        if (btn) {
-          btn.disabled = false;
-          btn.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4"></i><span>Verify Live Wind & Forecast Coverage</span>`;
-          if (window.lucide) lucide.createIcons();
-        }
+      } catch(e) {
+        console.warn("Public spots fetch:", e);
       }
     }
 
-    function saveVerifiedSpotAction() {
-      if (!pendingVerifiedSpot) return;
+    // ==========================================
+    // INTUITIVE SPOT SEARCH & PUBLIC SHARING
+    // ==========================================
+    let spotSearchTimer = null;
+    function debounceSpotSearch() {
+      clearTimeout(spotSearchTimer);
+      spotSearchTimer = setTimeout(() => {
+        triggerSpotSearch();
+      }, 300);
+    }
 
-      // 1. Save into localStorage
-      let customSpots = [];
+    function openAddSpotModal(prefill = '') {
+      const modal = document.getElementById('modal-add-spot');
+      const input = document.getElementById('input-addspot-name');
+      if (input) input.value = prefill || '';
+      
+      // Auto-set country from current active spot if available
+      const selCountry = document.getElementById('select-addspot-country');
+      if (selCountry && state.spot && state.spot.name) {
+        const curName = state.spot.name.toLowerCase();
+        if (curName.includes('italy')) selCountry.value = 'IT';
+        else if (curName.includes('brazil')) selCountry.value = 'BR';
+        else if (curName.includes('spain')) selCountry.value = 'ES';
+        else if (curName.includes('portugal')) selCountry.value = 'PT';
+        else if (curName.includes('switzerland')) selCountry.value = 'CH';
+        else if (curName.includes('germany')) selCountry.value = 'DE';
+        else if (curName.includes('france')) selCountry.value = 'FR';
+        else if (curName.includes('egypt')) selCountry.value = 'EG';
+        else if (curName.includes('morocco')) selCountry.value = 'MA';
+      }
+
+      if (modal && modal.classList.contains('hidden')) {
+        toggleModal('modal-add-spot');
+      }
+      if (prefill) {
+        triggerSpotSearch();
+      }
+    }
+
+    async function triggerSpotSearch() {
+      const q = (document.getElementById('input-addspot-name')?.value || '').trim();
+      const country = document.getElementById('select-addspot-country')?.value || '';
+      const statusEl = document.getElementById('addspot-search-status');
+      const container = document.getElementById('addspot-results-container');
+      if (!container) return;
+
+      if (!q) {
+        container.innerHTML = '<div class="text-[11px] text-slate-500 text-center py-4">Type a spot or beach town name above to search worldwide kitesurf & weather data.</div>';
+        return;
+      }
+
+      if (statusEl) statusEl.classList.remove('hidden');
+
       try {
-        customSpots = JSON.parse(localStorage.getItem('kf_custom_spots') || '[]');
-      } catch (e) { customSpots = []; }
+        const res = await fetch(`/api/spots/search?q=${encodeURIComponent(q)}&country=${encodeURIComponent(country)}`);
+        const data = await res.json();
+        if (statusEl) statusEl.classList.add('hidden');
 
-      // Check if spot already exists
-      const existingIdx = customSpots.findIndex(s => s.id === pendingVerifiedSpot.id || (Math.abs(s.lat - pendingVerifiedSpot.lat) < 0.02 && Math.abs(s.lon - pendingVerifiedSpot.lon) < 0.02));
-      if (existingIdx >= 0) {
-        customSpots[existingIdx] = pendingVerifiedSpot;
-      } else {
-        customSpots.unshift(pendingVerifiedSpot);
+        if (!data.results || data.results.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-4 bg-slate-950/60 rounded-2xl border border-slate-800 p-3 space-y-2">
+              <p class="text-xs text-amber-300 font-medium">No spots found in ${country || 'selected country'}.</p>
+              <p class="text-[10px] text-slate-400">Try switching Country to "All Countries" or check spelling.</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = data.results.map(s => {
+          const isAlreadyAdded = GLOBAL_KITE_SPOTS.some(g => g.id === s.id);
+          const isFav = isFavoriteSpot(s.id);
+          const spotPayload = JSON.stringify(s).replace(/'/g, "&#39;");
+          return `
+            <div class="bg-slate-950/90 border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-3 transition flex items-center justify-between gap-2 shadow-sm">
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center space-x-1.5 truncate">
+                  <span class="text-base flex-shrink-0">${s.flag || '📍'}</span>
+                  <h4 class="font-bold text-white text-xs truncate">${s.name}</h4>
+                </div>
+                <div class="flex items-center space-x-2 text-[10px] text-slate-400 mt-1 flex-wrap">
+                  <span>${s.lat.toFixed(2)}°, ${s.lon.toFixed(2)}°</span>
+                  <span>·</span>
+                  <span class="text-sky-300 font-medium">${s.model_label || 'High-Res Wind Model'}</span>
+                  <span>·</span>
+                  <span>Coast ${s.beach_angle}°</span>
+                </div>
+              </div>
+              <button type="button" onclick='addAndSelectSpot(${spotPayload})' class="flex-shrink-0 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-md shadow-emerald-600/20 flex items-center space-x-1 active:scale-95 transition">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>${isAlreadyAdded ? 'Select Spot' : '+ Add & Ride'}</span>
+              </button>
+            </div>
+          `;
+        }).join('');
+        if (window.lucide) lucide.createIcons();
+      } catch (err) {
+        if (statusEl) statusEl.classList.add('hidden');
+        container.innerHTML = `<div class="text-[11px] text-rose-400 text-center py-3">Search error: ${err.message}</div>`;
       }
-      localStorage.setItem('kf_custom_spots', JSON.stringify(customSpots));
+    }
 
-      // 2. Add into runtime GLOBAL_KITE_SPOTS
-      const gIdx = GLOBAL_KITE_SPOTS.findIndex(s => s.id === pendingVerifiedSpot.id);
-      if (gIdx >= 0) {
-        GLOBAL_KITE_SPOTS[gIdx] = pendingVerifiedSpot;
-      } else {
-        GLOBAL_KITE_SPOTS.unshift(pendingVerifiedSpot);
+    async function addAndSelectSpot(spotData) {
+      try {
+        // 1. Post to /api/spots/add so it is public for everyone
+        const res = await fetch('/api/spots/add', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(spotData)
+        });
+        const data = await res.json();
+        const finalSpot = (data && data.success && data.spot) ? data.spot : spotData;
+
+        // 2. Add into runtime GLOBAL_KITE_SPOTS
+        const existingIdx = GLOBAL_KITE_SPOTS.findIndex(s => s.id === finalSpot.id || (Math.abs(s.lat - finalSpot.lat) < 0.02 && Math.abs(s.lon - finalSpot.lon) < 0.02));
+        if (existingIdx >= 0) {
+          GLOBAL_KITE_SPOTS[existingIdx] = finalSpot;
+        } else {
+          GLOBAL_KITE_SPOTS.unshift(finalSpot);
+        }
+
+        // 3. Add to favorite spots
+        if (!state.favorite_spots.includes(finalSpot.id)) {
+          state.favorite_spots.push(finalSpot.id);
+          localStorage.setItem('hg_favorite_spots', JSON.stringify(state.favorite_spots));
+          renderProfileFavorites();
+          syncUserDataQuiet();
+        }
+
+        // 4. Set as active spot
+        setSpot(finalSpot.name, finalSpot.lat, finalSpot.lon, finalSpot.timezone, finalSpot.beach_angle, finalSpot.model_label);
+
+        // 5. Close modals
+        toggleModal('modal-add-spot');
+        const spotModal = document.getElementById('modal-spot');
+        if (spotModal && !spotModal.classList.contains('hidden')) {
+          toggleModal('modal-spot');
+        }
+      } catch(e) {
+        alert("Error adding spot: " + e.message);
+      }
+    }
+
+    // ==========================================
+    // 7-DAY FORECAST VIEW RENDERER
+    // ==========================================
+    function renderWeeklyForecastView(f) {
+      const weekly = f.weekly_forecast || [];
+      const schedContainer = document.getElementById('schedule-cards-container');
+      if (!schedContainer) return;
+
+      if (weekly.length === 0) {
+        schedContainer.innerHTML = '<div class="text-xs text-slate-400 text-center py-4">7-day forecast data calculating...</div>';
+        return;
       }
 
-      // 3. Select spot and fetch forecast
-      setSpot(pendingVerifiedSpot.name, pendingVerifiedSpot.lat, pendingVerifiedSpot.lon, pendingVerifiedSpot.timezone, pendingVerifiedSpot.beach_angle, pendingVerifiedSpot.model_label);
+      schedContainer.innerHTML = weekly.map((d, dIdx) => {
+        const rec = recommendRigging(d.wind_peak_kts, d.gust_peak_kts, d.best_hour || 13);
+        const isSweet = rec.status === 'sweet';
+        const isCaipi = rec.text.includes('Caipirinha') || rec.text.includes('coffee') || rec.text.includes('Coffee');
+        const isLulls = rec.text.includes('Underpowered in lulls');
+        
+        const recColor = isSweet ? 'text-emerald-400 font-bold'
+          : isCaipi ? 'text-amber-300 font-bold'
+          : isLulls ? 'text-amber-300/90 font-medium'
+          : rec.status === 'overpowered' ? 'text-amber-400 font-bold'
+          : rec.status === 'danger' ? 'text-rose-400 font-bold'
+          : 'text-slate-300';
 
-      // Close modals
-      toggleModal('modal-add-spot');
-      const spotModal = document.getElementById('modal-spot');
-      if (spotModal && !spotModal.classList.contains('hidden')) {
-        toggleModal('modal-spot');
+        const dotColor = isSweet ? 'bg-emerald-400 shadow-sm shadow-emerald-400/50'
+          : isCaipi ? 'bg-amber-400 shadow-sm shadow-amber-400/50'
+          : isLulls ? 'bg-amber-400/80'
+          : rec.status === 'overpowered' ? 'bg-amber-400'
+          : 'bg-slate-700';
+
+        const shoreType = (d.shoreline && d.shoreline.type) || 'Sideshore';
+        const shoreBadgeClass = shoreType.includes('Side-On') || shoreType.includes('Sideshore')
+          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+          : shoreType.includes('Offshore')
+            ? 'bg-rose-500/20 text-rose-300 border-rose-500/30'
+            : 'bg-amber-500/20 text-amber-300 border-amber-500/30';
+
+        const hourlyHtml = (d.hourly && d.hourly.length > 0) ? `
+          <div id="week-day-hourly-${dIdx}" class="hidden mt-3 pt-2.5 border-t border-slate-800/80 space-y-1">
+            <div class="text-[10px] text-slate-400 font-semibold mb-1 uppercase tracking-wider flex items-center justify-between">
+              <span>Daylight Hourly Wind (07:00 – 19:00)</span>
+              <span class="text-sky-400 font-mono">${d.model_used}</span>
+            </div>
+            <div class="grid grid-cols-4 sm:grid-cols-7 gap-1">
+              ${d.hourly.filter((_, idx) => idx % 2 === 0).map(h => `
+                <div class="bg-slate-950 p-1.5 rounded-lg border border-slate-800 text-center">
+                  <span class="text-[9px] text-slate-400 block">${h.hour}</span>
+                  <span class="text-xs font-bold text-white font-mono">${Math.round(h.wind_kts)}</span>
+                  <span class="text-[8px] text-sky-400 block">${h.direction}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        ` : '';
+
+        return `
+          <div class="bg-slate-900/90 rounded-2xl p-3.5 border border-slate-800/80 shadow-md transition-all">
+            <div class="flex items-center justify-between cursor-pointer" onclick="toggleWeekDayHourly(${dIdx})">
+              <div class="flex items-center space-x-3 min-w-0 flex-1">
+                <div class="w-11 h-11 rounded-xl bg-slate-950 flex flex-col items-center justify-center border border-slate-800 text-slate-200 flex-shrink-0">
+                  <span class="text-xs font-black font-mono">${Math.round(d.wind_peak_kts)}</span>
+                  <span class="text-[9px] text-sky-400 font-bold -mt-0.5">kts peak</span>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center space-x-1.5 flex-wrap gap-y-1">
+                    <h4 class="text-xs font-bold text-white flex items-center space-x-1">
+                      <span>${d.weather_icon || '☀️'}</span>
+                      <span>${d.day_name}</span>
+                      <span class="text-slate-500 font-normal">(${d.date_display})</span>
+                    </h4>
+                    <span class="text-[10px] text-slate-400 font-medium">Gusts ${Math.round(d.gust_peak_kts)} kts · ${d.direction}</span>
+                    <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold border ${shoreBadgeClass}">${shoreType}</span>
+                    <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30 font-medium">${d.best_window || '12:00 – 16:00'}</span>
+                    <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30">${d.model_used}</span>
+                  </div>
+                  <p class="text-[11px] mt-1 ${recColor} truncate">
+                    ${rec.text}
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-2 flex-shrink-0 ml-2">
+                <span id="week-chevron-${dIdx}" class="text-slate-400 hover:text-white transition text-xs">▼</span>
+                <div class="w-2.5 h-2.5 rounded-full ${dotColor}"></div>
+              </div>
+            </div>
+            ${hourlyHtml}
+          </div>
+        `;
+      }).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function toggleWeekDayHourly(dIdx) {
+      const el = document.getElementById(`week-day-hourly-${dIdx}`);
+      const chev = document.getElementById(`week-chevron-${dIdx}`);
+      if (el) {
+        if (el.classList.contains('hidden')) {
+          el.classList.remove('hidden');
+          if (chev) chev.innerText = '▲';
+        } else {
+          el.classList.add('hidden');
+          if (chev) chev.innerText = '▼';
+        }
       }
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      loadPublicSpots();
+      renderProfileFavorites();
       setKiteType('tube');
       
       const rInput = document.getElementById('rider-name-input');
