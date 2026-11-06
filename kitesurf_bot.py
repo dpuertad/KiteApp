@@ -157,7 +157,7 @@ def approve_beta_rider(email: str):
     <div style="padding: 30px 24px; color: #f8fafc;">
       <h2 style="margin: 0 0 12px; font-size: 18px; color: #ffffff; font-weight: 700;">Aloha {rider_name},</h2>
       <p style="margin: 0 0 16px; font-size: 14px; line-height: 1.6; color: #94a3b8;">
-        Your application to become a HolyGust Beta Rider has been <strong>approved</strong> by Daniel!
+        Your application to become a HolyGust Beta Rider has been <strong>approved</strong> by the HolyGust team!
       </p>
       <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 14px; padding: 16px; margin: 20px 0; text-align: center;">
         <span style="display: inline-block; background: #f59e0b; color: #0f172a; font-weight: 800; font-size: 12px; padding: 4px 12px; border-radius: 20px; letter-spacing: 0.5px; text-transform: uppercase;">
@@ -173,7 +173,7 @@ def approve_beta_rider(email: str):
         </a>
       </div>
       <p style="margin: 20px 0 0; font-size: 12px; line-height: 1.5; color: #64748b; text-align: center;">
-        Use your registered email (<strong>{email_clean}</strong>) to log in. Got feedback or spot suggestions? Use the built-in feedback button to message Daniel directly!
+        Use your registered email (<strong>{email_clean}</strong>) to log in. Got feedback or spot suggestions? Reach out to our team directly via the feedback button in the app!
       </p>
     </div>
   </div>
@@ -1346,7 +1346,7 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
 
 def fetch_weather_metno(spot: dict) -> dict:
     url = f"https://api.met.no/weatherapi/locationforecast/2.0/compact?lat={spot['lat']}&lon={spot['lon']}"
-    req = urllib.request.Request(url, headers={"User-Agent": "KiteForecastBot/1.0 (daniel@kitesurf.dev)"})
+    req = urllib.request.Request(url, headers={"User-Agent": "KiteForecastBot/1.0 (team@holygust.com)"})
     with urllib.request.urlopen(req, context=SSL_CTX, timeout=10) as response:
         data = json.loads(response.read().decode("utf-8"))
 
@@ -2274,7 +2274,7 @@ def geocode_place_name(query: str, ref_lat: float = None, ref_lon: float = None)
 
     # 3. Fallback to OpenStreetMap Nominatim
     url = f"https://nominatim.openstreetmap.org/search?q={urllib.parse.quote(query)}&format=json&limit=1"
-    req = urllib.request.Request(url, headers={"User-Agent": "KiteForecastBot/1.0 (daniel@kitesurf.dev)"})
+    req = urllib.request.Request(url, headers={"User-Agent": "KiteForecastBot/1.0 (team@holygust.com)"})
     try:
         with urllib.request.urlopen(req, context=SSL_CTX, timeout=6) as resp:
             data = json.loads(resp.read().decode("utf-8"))
@@ -3813,7 +3813,7 @@ def start_embedded_http_server(port: int = 8080):
                     self.end_headers()
                     self.wfile.write(json.dumps({
                         "success": True,
-                        "message": "Application submitted! Daniel has received your request on Telegram."
+                        "message": "The HolyGust team has received your request. You will get an email once approved!"
                     }).encode("utf-8"))
                 except Exception as e:
                     self.send_response(500)
@@ -3871,7 +3871,7 @@ def start_embedded_http_server(port: int = 8080):
                     self.send_header("Content-Type", "application/json")
                     self._send_cors_headers()
                     self.end_headers()
-                    self.wfile.write(json.dumps({"success": True, "message": "Thank you! Daniel has received your feedback on Telegram."}).encode("utf-8"))
+                    self.wfile.write(json.dumps({"success": True, "message": "Thank you! The HolyGust team has received your feedback."}).encode("utf-8"))
                 except Exception as e:
                     self.send_response(500)
                     self.send_header("Content-Type", "application/json")

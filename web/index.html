@@ -448,7 +448,7 @@
         </div>
         <div>
           <h4 class="text-xs font-bold text-white">Got feedback, spots or ideas?</h4>
-          <p class="text-[11px] text-slate-400 mt-0.5">Help improve the app! Your comments go directly to Daniel on Telegram.</p>
+          <p class="text-[11px] text-slate-400 mt-0.5">Help improve the app! Your comments go directly to the HolyGust team.</p>
         </div>
       </div>
       <button onclick="toggleModal('modal-feedback')" class="px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold text-xs shadow-md shadow-amber-500/20 hover:from-amber-400 hover:to-orange-400 active:scale-95 transition whitespace-nowrap">
@@ -1032,7 +1032,7 @@
         </button>
       </div>
 
-      <p class="text-xs text-slate-400">Help shape the app! Any ideas, spots to add, or bug reports go directly to Daniel on Telegram.</p>
+      <p class="text-xs text-slate-400">Help shape the app! Any ideas, spots to add, or bug reports go directly to the HolyGust team.</p>
 
       <form onsubmit="onSubmitFeedback(event)" class="space-y-3 text-xs">
         <div>
@@ -1052,7 +1052,7 @@
 
         <button id="btn-submit-feedback" type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 active:scale-95 text-slate-950 font-bold text-xs shadow-lg shadow-amber-500/20 transition flex items-center justify-center space-x-1.5">
           <i data-lucide="send" class="w-3.5 h-3.5"></i>
-          <span>Send to Daniel</span>
+          <span>Send to HolyGust Team</span>
         </button>
       </form>
     </div>
@@ -1136,7 +1136,7 @@
         <form id="form-auth" onsubmit="handleAuthSubmit(event)" class="space-y-2.5">
           <div id="field-auth-name">
             <label class="block font-semibold text-slate-300 mb-1">Your Name / Nickname</label>
-            <input id="auth-input-name" type="text" placeholder="Daniel" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
+            <input id="auth-input-name" type="text" placeholder="Your Name" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
           </div>
           <div>
             <label class="block font-semibold text-slate-300 mb-1">Email Address</label>
@@ -3654,165 +3654,6 @@
       if (window.lucide) lucide.createIcons();
     }
 
-    // ==========================================
-    // BETA RIDER CREW & LAB LOGIC
-    // ==========================================
-    function renderBetaUI() {
-      const isBetaHost = window.location.hostname.startsWith('beta.') || 
-                         window.location.hostname.includes('-beta') || 
-                         window.location.port === '8991';
-      
-      // 1. Beta Lab Environment Tag in top header
-      const headerEnvBadge = document.getElementById('header-beta-env-badge');
-      if (headerEnvBadge) {
-        if (isBetaHost) {
-          headerEnvBadge.classList.remove('hidden');
-        } else {
-          headerEnvBadge.classList.add('hidden');
-        }
-      }
-
-      // 2. Rider Beta Badge (⚡ Beta Rider) in header & profile card
-      const headerRiderBadge = document.getElementById('header-beta-rider-badge');
-      const profileCardBadge = document.getElementById('profile-card-beta-badge');
-      const isBetaRider = authUser && (authUser.is_beta_rider === true || authUser.beta_status === 'approved');
-
-      if (headerRiderBadge) {
-        if (isBetaRider) {
-          headerRiderBadge.classList.remove('hidden');
-        } else {
-          headerRiderBadge.classList.add('hidden');
-        }
-      }
-
-      if (profileCardBadge) {
-        if (isBetaRider) {
-          profileCardBadge.classList.remove('hidden');
-        } else {
-          profileCardBadge.classList.add('hidden');
-        }
-      }
-
-      // 3. Render Beta Status Card inside modals
-      const authBetaCard = document.getElementById('auth-beta-card');
-      const settingsBetaCard = document.getElementById('settings-beta-card');
-      const cards = [authBetaCard, settingsBetaCard].filter(Boolean);
-
-      if (cards.length > 0) {
-        let cardContent = '';
-        if (isBetaRider) {
-          cardContent = `
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2.5">
-                <span class="text-xl">⚡</span>
-                <div>
-                  <div class="flex items-center space-x-1.5">
-                    <span class="text-xs font-bold text-amber-300">⚡ Beta Rider Active</span>
-                    <span class="px-1.5 py-0.2 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-400 text-slate-950 font-mono">PRO</span>
-                  </div>
-                  <p class="text-[10px] text-slate-400 mt-0.5">You have early access to cutting-edge wind models & dev features.</p>
-                </div>
-              </div>
-              <a href="https://beta.holygust.com" target="_blank" class="px-3 py-1.5 rounded-xl text-[10px] font-bold bg-amber-400 hover:bg-amber-300 text-slate-950 shadow transition flex-shrink-0">
-                Open Lab
-              </a>
-            </div>
-          `;
-        } else if (authUser && authUser.beta_status === 'pending') {
-          cardContent = `
-            <div class="text-center py-1 space-y-1">
-              <span class="text-xs font-bold text-amber-300 flex items-center justify-center space-x-1.5">
-                <span>⏳</span><span>Beta Application Under Review</span>
-              </span>
-              <p class="text-[10px] text-slate-400">Daniel received your request on Telegram. You will get an email the moment it is approved!</p>
-            </div>
-          `;
-        } else if (authUser && authUser.email) {
-          cardContent = `
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2.5 min-w-0 flex-1 pr-2">
-                <span class="text-xl flex-shrink-0">⚡</span>
-                <div class="truncate">
-                  <span class="text-xs font-bold text-amber-300 block truncate">Join HolyGust Beta Crew</span>
-                  <p class="text-[10px] text-slate-400 truncate">Early access to beta models & secret spots</p>
-                </div>
-              </div>
-              <button type="button" onclick="applyForBetaCrew()" id="btn-apply-beta" class="px-3 py-1.5 rounded-xl text-[10px] font-bold bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 shadow transition flex-shrink-0">
-                Apply ⚡
-              </button>
-            </div>
-          `;
-        } else {
-          cardContent = `
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2.5 min-w-0 flex-1 pr-2">
-                <span class="text-xl flex-shrink-0">⚡</span>
-                <div class="truncate">
-                  <span class="text-xs font-bold text-amber-300 block truncate">HolyGust Beta Crew</span>
-                  <p class="text-[10px] text-slate-400 truncate">Sign in to apply for ⚡ Beta Rider status</p>
-                </div>
-              </div>
-              <button type="button" onclick="openAuthModal('login')" class="px-3 py-1.5 rounded-xl text-[10px] font-bold bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 transition flex-shrink-0">
-                Sign In
-              </button>
-            </div>
-          `;
-        }
-
-        cards.forEach(c => {
-          c.innerHTML = cardContent;
-        });
-      }
-    }
-
-    async function applyForBetaCrew() {
-      if (!authUser || !authUser.email) {
-        openAuthModal('login');
-        return;
-      }
-      const btn = document.getElementById('btn-apply-beta');
-      if (btn) {
-        btn.disabled = true;
-        btn.innerText = "Sending...";
-      }
-
-      try {
-        const payload = {
-          email: authUser.email,
-          name: authUser.name || state.user.name || 'Rider',
-          spot: (state.spot && state.spot.name) ? state.spot.name : 'Cumbuco',
-          weight_kg: state.user.weight || 75.0,
-          level: state.user.level || 'intermediate',
-          board: state.user.board || 'Twintip'
-        };
-
-        const res = await fetch('https://holygust.com/api/beta/apply', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const data = await res.json();
-        if (res.ok && data.success) {
-          authUser.beta_status = 'pending';
-          localStorage.setItem('kf_auth_user', JSON.stringify(authUser));
-          renderBetaUI();
-          alert("⚡ Application sent! Daniel has received your request on Telegram with a 1-tap approval.");
-        } else {
-          alert("Application note: " + (data.error || "Could not submit right now."));
-          if (btn) {
-            btn.disabled = false;
-            btn.innerText = "Apply ⚡";
-          }
-        }
-      } catch (err) {
-        alert("Connection error: " + err.message);
-        if (btn) {
-          btn.disabled = false;
-          btn.innerText = "Apply ⚡";
-        }
-      }
-    }
-
     function handleAvatarClick() {
       if (authUser && authUser.email) {
         openAuthModal();
@@ -3902,167 +3743,7 @@
         submitBtn.innerText = "Sign In & Load Kites";
         hint.innerText = "Welcome back! Sign in to restore your registered kites and preferences.";
       }
-      renderBetaUI();
       if (window.lucide) lucide.createIcons();
-    }
-
-    // ==========================================
-    // BETA RIDER CREW & LAB LOGIC
-    // ==========================================
-    function renderBetaUI() {
-      const isBetaHost = window.location.hostname.startsWith('beta.') || 
-                         window.location.hostname.includes('-beta') || 
-                         window.location.port === '8991';
-      
-      // 1. Beta Lab Environment Tag in top header
-      const headerEnvBadge = document.getElementById('header-beta-env-badge');
-      if (headerEnvBadge) {
-        if (isBetaHost) {
-          headerEnvBadge.classList.remove('hidden');
-        } else {
-          headerEnvBadge.classList.add('hidden');
-        }
-      }
-
-      // 2. Rider Beta Badge (⚡ Beta Rider) in header & profile card
-      const headerRiderBadge = document.getElementById('header-beta-rider-badge');
-      const profileCardBadge = document.getElementById('profile-card-beta-badge');
-      const isBetaRider = authUser && (authUser.is_beta_rider === true || authUser.beta_status === 'approved');
-
-      if (headerRiderBadge) {
-        if (isBetaRider) {
-          headerRiderBadge.classList.remove('hidden');
-        } else {
-          headerRiderBadge.classList.add('hidden');
-        }
-      }
-
-      if (profileCardBadge) {
-        if (isBetaRider) {
-          profileCardBadge.classList.remove('hidden');
-        } else {
-          profileCardBadge.classList.add('hidden');
-        }
-      }
-
-      // 3. Render Beta Status Card inside modals
-      const authBetaCard = document.getElementById('auth-beta-card');
-      const settingsBetaCard = document.getElementById('settings-beta-card');
-      const cards = [authBetaCard, settingsBetaCard].filter(Boolean);
-
-      if (cards.length > 0) {
-        let cardContent = '';
-        if (isBetaRider) {
-          cardContent = `
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2.5">
-                <span class="text-xl">⚡</span>
-                <div>
-                  <div class="flex items-center space-x-1.5">
-                    <span class="text-xs font-bold text-amber-300">⚡ Beta Rider Active</span>
-                    <span class="px-1.5 py-0.2 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-400 text-slate-950 font-mono">PRO</span>
-                  </div>
-                  <p class="text-[10px] text-slate-400 mt-0.5">You have early access to cutting-edge wind models & dev features.</p>
-                </div>
-              </div>
-              <a href="https://beta.holygust.com" target="_blank" class="px-3 py-1.5 rounded-xl text-[10px] font-bold bg-amber-400 hover:bg-amber-300 text-slate-950 shadow transition flex-shrink-0">
-                Open Lab
-              </a>
-            </div>
-          `;
-        } else if (authUser && authUser.beta_status === 'pending') {
-          cardContent = `
-            <div class="text-center py-1 space-y-1">
-              <span class="text-xs font-bold text-amber-300 flex items-center justify-center space-x-1.5">
-                <span>⏳</span><span>Beta Application Under Review</span>
-              </span>
-              <p class="text-[10px] text-slate-400">Daniel received your request on Telegram. You will get an email the moment it is approved!</p>
-            </div>
-          `;
-        } else if (authUser && authUser.email) {
-          cardContent = `
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2.5 min-w-0 flex-1 pr-2">
-                <span class="text-xl flex-shrink-0">⚡</span>
-                <div class="truncate">
-                  <span class="text-xs font-bold text-amber-300 block truncate">Join HolyGust Beta Crew</span>
-                  <p class="text-[10px] text-slate-400 truncate">Early access to beta models & secret spots</p>
-                </div>
-              </div>
-              <button type="button" onclick="applyForBetaCrew()" id="btn-apply-beta" class="px-3 py-1.5 rounded-xl text-[10px] font-bold bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 shadow transition flex-shrink-0">
-                Apply ⚡
-              </button>
-            </div>
-          `;
-        } else {
-          cardContent = `
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2.5 min-w-0 flex-1 pr-2">
-                <span class="text-xl flex-shrink-0">⚡</span>
-                <div class="truncate">
-                  <span class="text-xs font-bold text-amber-300 block truncate">HolyGust Beta Crew</span>
-                  <p class="text-[10px] text-slate-400 truncate">Sign in to apply for ⚡ Beta Rider status</p>
-                </div>
-              </div>
-              <button type="button" onclick="openAuthModal('login')" class="px-3 py-1.5 rounded-xl text-[10px] font-bold bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 transition flex-shrink-0">
-                Sign In
-              </button>
-            </div>
-          `;
-        }
-
-        cards.forEach(c => {
-          c.innerHTML = cardContent;
-        });
-      }
-    }
-
-    async function applyForBetaCrew() {
-      if (!authUser || !authUser.email) {
-        openAuthModal('login');
-        return;
-      }
-      const btn = document.getElementById('btn-apply-beta');
-      if (btn) {
-        btn.disabled = true;
-        btn.innerText = "Sending...";
-      }
-
-      try {
-        const payload = {
-          email: authUser.email,
-          name: authUser.name || state.user.name || 'Rider',
-          spot: (state.spot && state.spot.name) ? state.spot.name : 'Cumbuco',
-          weight_kg: state.user.weight || 75.0,
-          level: state.user.level || 'intermediate',
-          board: state.user.board || 'Twintip'
-        };
-
-        const res = await fetch('https://holygust.com/api/beta/apply', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const data = await res.json();
-        if (res.ok && data.success) {
-          authUser.beta_status = 'pending';
-          localStorage.setItem('kf_auth_user', JSON.stringify(authUser));
-          renderBetaUI();
-          alert("⚡ Application sent! Daniel has received your request on Telegram with a 1-tap approval.");
-        } else {
-          alert("Application note: " + (data.error || "Could not submit right now."));
-          if (btn) {
-            btn.disabled = false;
-            btn.innerText = "Apply ⚡";
-          }
-        }
-      } catch (err) {
-        alert("Connection error: " + err.message);
-        if (btn) {
-          btn.disabled = false;
-          btn.innerText = "Apply ⚡";
-        }
-      }
     }
 
     async function handleForgotPasswordSubmit(e) {
@@ -4274,7 +3955,18 @@
           })
         });
         const data = await res.json();
+        if (res.ok && data.success && data.user) {
+          authUser = data.user;
+          localStorage.setItem('kf_auth_user', JSON.stringify(authUser));
+          updateAuthUI();
+        }
+        const data = await res.json();
         if (res.ok && data.success) {
+          if (data.user) {
+            authUser = data.user;
+            localStorage.setItem('kf_auth_user', JSON.stringify(authUser));
+            updateAuthUI();
+          }
           alert("✅ Your kites, favorite spots & profile are backed up to the cloud!");
         } else {
           alert("Sync issue: " + (data.error || "Could not complete cloud backup."));
@@ -4328,7 +4020,7 @@
       const btn = document.getElementById('btn-submit-feedback');
 
       statusBox.className = "text-xs py-1.5 px-2.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30";
-      statusBox.innerText = "Sending to Daniel...";
+      statusBox.innerText = "Sending to HolyGust team...";
       statusBox.classList.remove('hidden');
       btn.disabled = true;
 
@@ -4342,7 +4034,7 @@
         if (!res.ok) throw new Error(data.error || "Failed to send");
 
         statusBox.className = "text-xs py-1.5 px-2.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
-        statusBox.innerText = "✅ Sent directly to Daniel on Telegram!";
+        statusBox.innerText = "✅ Sent directly to the HolyGust team!";
         document.getElementById('feedback-message').value = "";
         setTimeout(() => {
           toggleModal('modal-feedback');
@@ -4422,12 +4114,200 @@
       toggleModal('modal-metric-detail');
     }
 
+    // ==========================================
+    // REFRESH & PROFILE CLOUD SYNC
+    // ==========================================
+    async function refreshUserProfile(silent = true) {
+      if (!authUser || !authUser.email) return;
+      try {
+        const res = await fetch('/api/auth/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: authUser.email })
+        });
+        const data = await res.json();
+        if (res.ok && data.success && data.user) {
+          authUser = data.user;
+          localStorage.setItem('kf_auth_user', JSON.stringify(authUser));
+          updateAuthUI();
+        }
+      } catch (e) {}
+    }
+
+    // ==========================================
+    // BETA RIDER CREW & LAB LOGIC
+    // ==========================================
+    function renderBetaUI() {
+      const isBetaHost = window.location.hostname.startsWith('beta.') || 
+                         window.location.hostname.includes('-beta') || 
+                         window.location.port === '8991';
+      
+      // 1. Beta Lab Environment Tag in top header
+      const headerEnvBadge = document.getElementById('header-beta-env-badge');
+      if (headerEnvBadge) {
+        if (isBetaHost) {
+          headerEnvBadge.classList.remove('hidden');
+        } else {
+          headerEnvBadge.classList.add('hidden');
+        }
+      }
+
+      // 2. Rider Beta Badge (⚡ Beta Rider) in header & profile card
+      const headerRiderBadge = document.getElementById('header-beta-rider-badge');
+      const profileCardBadge = document.getElementById('profile-card-beta-badge');
+      const isBetaRider = authUser && (authUser.is_beta_rider === true || authUser.beta_status === 'approved');
+
+      if (headerRiderBadge) {
+        if (isBetaRider) {
+          headerRiderBadge.classList.remove('hidden');
+        } else {
+          headerRiderBadge.classList.add('hidden');
+        }
+      }
+
+      if (profileCardBadge) {
+        if (isBetaRider) {
+          profileCardBadge.classList.remove('hidden');
+        } else {
+          profileCardBadge.classList.add('hidden');
+        }
+      }
+
+      // 3. Render Beta Status Card inside modals
+      const authBetaCard = document.getElementById('auth-beta-card');
+      const settingsBetaCard = document.getElementById('settings-beta-card');
+      const cards = [authBetaCard, settingsBetaCard].filter(Boolean);
+
+      if (cards.length > 0) {
+        let cardContent = '';
+        if (isBetaRider) {
+          cardContent = `
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2.5">
+                <span class="text-xl">⚡</span>
+                <div>
+                  <div class="flex items-center space-x-1.5">
+                    <span class="text-xs font-bold text-amber-300">⚡ Beta Rider Active</span>
+                    <span class="px-1.5 py-0.2 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-400 text-slate-950 font-mono">PRO</span>
+                  </div>
+                  <p class="text-[10px] text-slate-400 mt-0.5">You have early access to cutting-edge wind models & dev features.</p>
+                </div>
+              </div>
+              <a href="https://beta.holygust.com" target="_blank" class="px-3 py-1.5 rounded-xl text-[10px] font-bold bg-amber-400 hover:bg-amber-300 text-slate-950 shadow transition flex-shrink-0">
+                Open Lab
+              </a>
+            </div>
+          `;
+        } else if (authUser && authUser.beta_status === 'pending') {
+          cardContent = `
+            <div class="text-center py-1 space-y-1">
+              <span class="text-xs font-bold text-amber-300 flex items-center justify-center space-x-1.5">
+                <span>⏳</span><span>Beta Application Under Review</span>
+              </span>
+              <p class="text-[10px] text-slate-400">The HolyGust team has received your request. You will get an email once approved!</p>
+            </div>
+          `;
+        } else if (authUser && authUser.email) {
+          cardContent = `
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2.5 min-w-0 flex-1 pr-2">
+                <span class="text-xl flex-shrink-0">⚡</span>
+                <div class="truncate">
+                  <span class="text-xs font-bold text-amber-300 block truncate">Join HolyGust Beta Crew</span>
+                  <p class="text-[10px] text-slate-400 truncate">Early access to beta models & secret spots</p>
+                </div>
+              </div>
+              <button type="button" onclick="applyForBetaCrew()" id="btn-apply-beta" class="px-3 py-1.5 rounded-xl text-[10px] font-bold bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 shadow transition flex-shrink-0">
+                Apply ⚡
+              </button>
+            </div>
+          `;
+        } else {
+          cardContent = `
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2.5 min-w-0 flex-1 pr-2">
+                <span class="text-xl flex-shrink-0">⚡</span>
+                <div class="truncate">
+                  <span class="text-xs font-bold text-amber-300 block truncate">HolyGust Beta Crew</span>
+                  <p class="text-[10px] text-slate-400 truncate">Sign in to apply for ⚡ Beta Rider status</p>
+                </div>
+              </div>
+              <button type="button" onclick="openAuthModal('login')" class="px-3 py-1.5 rounded-xl text-[10px] font-bold bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 transition flex-shrink-0">
+                Sign In
+              </button>
+            </div>
+          `;
+        }
+
+        cards.forEach(c => {
+          c.innerHTML = cardContent;
+        });
+      }
+    }
+
+    async function applyForBetaCrew() {
+      if (!authUser || !authUser.email) {
+        openAuthModal('login');
+        return;
+      }
+      const btn = document.getElementById('btn-apply-beta');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerText = "Sending...";
+      }
+
+      try {
+        const payload = {
+          email: authUser.email,
+          name: authUser.name || state.user.name || 'Rider',
+          spot: (state.spot && state.spot.name) ? state.spot.name : 'Cumbuco',
+          weight_kg: state.user.weight || 75.0,
+          level: state.user.level || 'intermediate',
+          board: state.user.board || 'Twintip'
+        };
+
+        const res = await fetch('/api/beta/apply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          authUser.beta_status = 'pending';
+          localStorage.setItem('kf_auth_user', JSON.stringify(authUser));
+          renderBetaUI();
+          alert("⚡ Application sent! The HolyGust team has received your request. You will get an email once approved!");
+          
+          // Poll every 4 seconds so approval shows up automatically
+          const pollInt = setInterval(async () => {
+            await refreshUserProfile();
+            if (authUser && (authUser.is_beta_rider || authUser.beta_status === 'approved')) {
+              clearInterval(pollInt);
+            }
+          }, 4000);
+        } else {
+          alert("Application note: " + (data.error || "Could not submit right now."));
+          if (btn) {
+            btn.disabled = false;
+            btn.innerText = "Apply ⚡";
+          }
+        }
+      } catch (err) {
+        alert("Connection error: " + err.message);
+        if (btn) {
+          btn.disabled = false;
+          btn.innerText = "Apply ⚡";
+        }
+      }
+    }
+
     function toggleModal(id) {
       const el = document.getElementById(id);
       if (!el) return;
       el.classList.toggle('hidden');
       if (id === 'modal-profile' || id === 'modal-auth') {
         renderProfileFavorites();
+        refreshUserProfile();
       }
     }
 
@@ -4538,167 +4418,7 @@
           </div>
         `;
       }).join('');
-      renderBetaUI();
       if (window.lucide) lucide.createIcons();
-    }
-
-    // ==========================================
-    // BETA RIDER CREW & LAB LOGIC
-    // ==========================================
-    function renderBetaUI() {
-      const isBetaHost = window.location.hostname.startsWith('beta.') || 
-                         window.location.hostname.includes('-beta') || 
-                         window.location.port === '8991';
-      
-      // 1. Beta Lab Environment Tag in top header
-      const headerEnvBadge = document.getElementById('header-beta-env-badge');
-      if (headerEnvBadge) {
-        if (isBetaHost) {
-          headerEnvBadge.classList.remove('hidden');
-        } else {
-          headerEnvBadge.classList.add('hidden');
-        }
-      }
-
-      // 2. Rider Beta Badge (⚡ Beta Rider) in header & profile card
-      const headerRiderBadge = document.getElementById('header-beta-rider-badge');
-      const profileCardBadge = document.getElementById('profile-card-beta-badge');
-      const isBetaRider = authUser && (authUser.is_beta_rider === true || authUser.beta_status === 'approved');
-
-      if (headerRiderBadge) {
-        if (isBetaRider) {
-          headerRiderBadge.classList.remove('hidden');
-        } else {
-          headerRiderBadge.classList.add('hidden');
-        }
-      }
-
-      if (profileCardBadge) {
-        if (isBetaRider) {
-          profileCardBadge.classList.remove('hidden');
-        } else {
-          profileCardBadge.classList.add('hidden');
-        }
-      }
-
-      // 3. Render Beta Status Card inside modals
-      const authBetaCard = document.getElementById('auth-beta-card');
-      const settingsBetaCard = document.getElementById('settings-beta-card');
-      const cards = [authBetaCard, settingsBetaCard].filter(Boolean);
-
-      if (cards.length > 0) {
-        let cardContent = '';
-        if (isBetaRider) {
-          cardContent = `
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2.5">
-                <span class="text-xl">⚡</span>
-                <div>
-                  <div class="flex items-center space-x-1.5">
-                    <span class="text-xs font-bold text-amber-300">⚡ Beta Rider Active</span>
-                    <span class="px-1.5 py-0.2 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-400 text-slate-950 font-mono">PRO</span>
-                  </div>
-                  <p class="text-[10px] text-slate-400 mt-0.5">You have early access to cutting-edge wind models & dev features.</p>
-                </div>
-              </div>
-              <a href="https://beta.holygust.com" target="_blank" class="px-3 py-1.5 rounded-xl text-[10px] font-bold bg-amber-400 hover:bg-amber-300 text-slate-950 shadow transition flex-shrink-0">
-                Open Lab
-              </a>
-            </div>
-          `;
-        } else if (authUser && authUser.beta_status === 'pending') {
-          cardContent = `
-            <div class="text-center py-1 space-y-1">
-              <span class="text-xs font-bold text-amber-300 flex items-center justify-center space-x-1.5">
-                <span>⏳</span><span>Beta Application Under Review</span>
-              </span>
-              <p class="text-[10px] text-slate-400">Daniel received your request on Telegram. You will get an email the moment it is approved!</p>
-            </div>
-          `;
-        } else if (authUser && authUser.email) {
-          cardContent = `
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2.5 min-w-0 flex-1 pr-2">
-                <span class="text-xl flex-shrink-0">⚡</span>
-                <div class="truncate">
-                  <span class="text-xs font-bold text-amber-300 block truncate">Join HolyGust Beta Crew</span>
-                  <p class="text-[10px] text-slate-400 truncate">Early access to beta models & secret spots</p>
-                </div>
-              </div>
-              <button type="button" onclick="applyForBetaCrew()" id="btn-apply-beta" class="px-3 py-1.5 rounded-xl text-[10px] font-bold bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 shadow transition flex-shrink-0">
-                Apply ⚡
-              </button>
-            </div>
-          `;
-        } else {
-          cardContent = `
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2.5 min-w-0 flex-1 pr-2">
-                <span class="text-xl flex-shrink-0">⚡</span>
-                <div class="truncate">
-                  <span class="text-xs font-bold text-amber-300 block truncate">HolyGust Beta Crew</span>
-                  <p class="text-[10px] text-slate-400 truncate">Sign in to apply for ⚡ Beta Rider status</p>
-                </div>
-              </div>
-              <button type="button" onclick="openAuthModal('login')" class="px-3 py-1.5 rounded-xl text-[10px] font-bold bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 transition flex-shrink-0">
-                Sign In
-              </button>
-            </div>
-          `;
-        }
-
-        cards.forEach(c => {
-          c.innerHTML = cardContent;
-        });
-      }
-    }
-
-    async function applyForBetaCrew() {
-      if (!authUser || !authUser.email) {
-        openAuthModal('login');
-        return;
-      }
-      const btn = document.getElementById('btn-apply-beta');
-      if (btn) {
-        btn.disabled = true;
-        btn.innerText = "Sending...";
-      }
-
-      try {
-        const payload = {
-          email: authUser.email,
-          name: authUser.name || state.user.name || 'Rider',
-          spot: (state.spot && state.spot.name) ? state.spot.name : 'Cumbuco',
-          weight_kg: state.user.weight || 75.0,
-          level: state.user.level || 'intermediate',
-          board: state.user.board || 'Twintip'
-        };
-
-        const res = await fetch('https://holygust.com/api/beta/apply', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const data = await res.json();
-        if (res.ok && data.success) {
-          authUser.beta_status = 'pending';
-          localStorage.setItem('kf_auth_user', JSON.stringify(authUser));
-          renderBetaUI();
-          alert("⚡ Application sent! Daniel has received your request on Telegram with a 1-tap approval.");
-        } else {
-          alert("Application note: " + (data.error || "Could not submit right now."));
-          if (btn) {
-            btn.disabled = false;
-            btn.innerText = "Apply ⚡";
-          }
-        }
-      } catch (err) {
-        alert("Connection error: " + err.message);
-        if (btn) {
-          btn.disabled = false;
-          btn.innerText = "Apply ⚡";
-        }
-      }
     }
 
     function closeAllModals() {
@@ -4964,167 +4684,7 @@
         `;
       }).join('');
 
-      renderBetaUI();
       if (window.lucide) lucide.createIcons();
-    }
-
-    // ==========================================
-    // BETA RIDER CREW & LAB LOGIC
-    // ==========================================
-    function renderBetaUI() {
-      const isBetaHost = window.location.hostname.startsWith('beta.') || 
-                         window.location.hostname.includes('-beta') || 
-                         window.location.port === '8991';
-      
-      // 1. Beta Lab Environment Tag in top header
-      const headerEnvBadge = document.getElementById('header-beta-env-badge');
-      if (headerEnvBadge) {
-        if (isBetaHost) {
-          headerEnvBadge.classList.remove('hidden');
-        } else {
-          headerEnvBadge.classList.add('hidden');
-        }
-      }
-
-      // 2. Rider Beta Badge (⚡ Beta Rider) in header & profile card
-      const headerRiderBadge = document.getElementById('header-beta-rider-badge');
-      const profileCardBadge = document.getElementById('profile-card-beta-badge');
-      const isBetaRider = authUser && (authUser.is_beta_rider === true || authUser.beta_status === 'approved');
-
-      if (headerRiderBadge) {
-        if (isBetaRider) {
-          headerRiderBadge.classList.remove('hidden');
-        } else {
-          headerRiderBadge.classList.add('hidden');
-        }
-      }
-
-      if (profileCardBadge) {
-        if (isBetaRider) {
-          profileCardBadge.classList.remove('hidden');
-        } else {
-          profileCardBadge.classList.add('hidden');
-        }
-      }
-
-      // 3. Render Beta Status Card inside modals
-      const authBetaCard = document.getElementById('auth-beta-card');
-      const settingsBetaCard = document.getElementById('settings-beta-card');
-      const cards = [authBetaCard, settingsBetaCard].filter(Boolean);
-
-      if (cards.length > 0) {
-        let cardContent = '';
-        if (isBetaRider) {
-          cardContent = `
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2.5">
-                <span class="text-xl">⚡</span>
-                <div>
-                  <div class="flex items-center space-x-1.5">
-                    <span class="text-xs font-bold text-amber-300">⚡ Beta Rider Active</span>
-                    <span class="px-1.5 py-0.2 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-400 text-slate-950 font-mono">PRO</span>
-                  </div>
-                  <p class="text-[10px] text-slate-400 mt-0.5">You have early access to cutting-edge wind models & dev features.</p>
-                </div>
-              </div>
-              <a href="https://beta.holygust.com" target="_blank" class="px-3 py-1.5 rounded-xl text-[10px] font-bold bg-amber-400 hover:bg-amber-300 text-slate-950 shadow transition flex-shrink-0">
-                Open Lab
-              </a>
-            </div>
-          `;
-        } else if (authUser && authUser.beta_status === 'pending') {
-          cardContent = `
-            <div class="text-center py-1 space-y-1">
-              <span class="text-xs font-bold text-amber-300 flex items-center justify-center space-x-1.5">
-                <span>⏳</span><span>Beta Application Under Review</span>
-              </span>
-              <p class="text-[10px] text-slate-400">Daniel received your request on Telegram. You will get an email the moment it is approved!</p>
-            </div>
-          `;
-        } else if (authUser && authUser.email) {
-          cardContent = `
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2.5 min-w-0 flex-1 pr-2">
-                <span class="text-xl flex-shrink-0">⚡</span>
-                <div class="truncate">
-                  <span class="text-xs font-bold text-amber-300 block truncate">Join HolyGust Beta Crew</span>
-                  <p class="text-[10px] text-slate-400 truncate">Early access to beta models & secret spots</p>
-                </div>
-              </div>
-              <button type="button" onclick="applyForBetaCrew()" id="btn-apply-beta" class="px-3 py-1.5 rounded-xl text-[10px] font-bold bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 shadow transition flex-shrink-0">
-                Apply ⚡
-              </button>
-            </div>
-          `;
-        } else {
-          cardContent = `
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2.5 min-w-0 flex-1 pr-2">
-                <span class="text-xl flex-shrink-0">⚡</span>
-                <div class="truncate">
-                  <span class="text-xs font-bold text-amber-300 block truncate">HolyGust Beta Crew</span>
-                  <p class="text-[10px] text-slate-400 truncate">Sign in to apply for ⚡ Beta Rider status</p>
-                </div>
-              </div>
-              <button type="button" onclick="openAuthModal('login')" class="px-3 py-1.5 rounded-xl text-[10px] font-bold bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 transition flex-shrink-0">
-                Sign In
-              </button>
-            </div>
-          `;
-        }
-
-        cards.forEach(c => {
-          c.innerHTML = cardContent;
-        });
-      }
-    }
-
-    async function applyForBetaCrew() {
-      if (!authUser || !authUser.email) {
-        openAuthModal('login');
-        return;
-      }
-      const btn = document.getElementById('btn-apply-beta');
-      if (btn) {
-        btn.disabled = true;
-        btn.innerText = "Sending...";
-      }
-
-      try {
-        const payload = {
-          email: authUser.email,
-          name: authUser.name || state.user.name || 'Rider',
-          spot: (state.spot && state.spot.name) ? state.spot.name : 'Cumbuco',
-          weight_kg: state.user.weight || 75.0,
-          level: state.user.level || 'intermediate',
-          board: state.user.board || 'Twintip'
-        };
-
-        const res = await fetch('https://holygust.com/api/beta/apply', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const data = await res.json();
-        if (res.ok && data.success) {
-          authUser.beta_status = 'pending';
-          localStorage.setItem('kf_auth_user', JSON.stringify(authUser));
-          renderBetaUI();
-          alert("⚡ Application sent! Daniel has received your request on Telegram with a 1-tap approval.");
-        } else {
-          alert("Application note: " + (data.error || "Could not submit right now."));
-          if (btn) {
-            btn.disabled = false;
-            btn.innerText = "Apply ⚡";
-          }
-        }
-      } catch (err) {
-        alert("Connection error: " + err.message);
-        if (btn) {
-          btn.disabled = false;
-          btn.innerText = "Apply ⚡";
-        }
-      }
     }
 
     function toggleWeekDayHourly(dIdx) {
@@ -5158,6 +4718,17 @@
       }
       
       updateAuthUI();
+      refreshUserProfile();
+
+      // If application is pending, poll for approval automatically
+      if (authUser && authUser.beta_status === 'pending') {
+        const initPoll = setInterval(async () => {
+          await refreshUserProfile();
+          if (authUser && (authUser.is_beta_rider || authUser.beta_status === 'approved')) {
+            clearInterval(initPoll);
+          }
+        }, 5000);
+      }
 
       // Check for password reset token in URL (?reset_token=...)
       try {
