@@ -95,7 +95,7 @@ def hash_password(password: str, salt: str = None) -> tuple:
     h = hashlib.sha256((salt + password).encode("utf-8")).hexdigest()
     return h, salt
 
-def send_admin_telegram(text: str) -> bool:
+def send_admin_telegram(text: str, reply_markup: dict = None) -> bool:
     try:
         config = load_config()
         token = config.get("telegram_token") or os.getenv("TELEGRAM_BOT_TOKEN")
@@ -107,6 +107,8 @@ def send_admin_telegram(text: str) -> bool:
             "chat_id": admin_id,
             "text": text
         }
+        if reply_markup:
+            payload["reply_markup"] = reply_markup
         data = json.dumps(payload).encode("utf-8")
         req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
         with urllib.request.urlopen(req, context=SSL_CTX, timeout=10) as resp:
@@ -114,6 +116,146 @@ def send_admin_telegram(text: str) -> bool:
     except Exception as e:
         print(f"send_admin_telegram error: {e}")
         return False
+
+def get_beta_decision_token(email: str) -> str:
+    import hashlib
+    salt = "holygust_beta_secret_2026"
+    return hashlib.sha256(f"{email.lower().strip()}_{salt}".encode("utf-8")).hexdigest()[:16]
+
+def approve_beta_rider(email: str):
+    db = load_users_db()
+    from datetime import datetime, timezone
+    email_clean = email.strip().lower()
+    if email_clean not in db.get("users", {}):
+        db.setdefault("users", {})[email_clean] = {
+            "email": email_clean,
+            "name": email_clean.split("@")[0].title(),
+            "created_at": datetime.now(timezone.utc).isoformat() + "Z",
+            "gear": [],
+            "boards": [],
+            "weight_kg": 74.0,
+            "favorite_spots": []
+        }
+    user = db["users"][email_clean]
+    user["is_beta_rider"] = True
+    user["beta_status"] = "approved"
+    user["beta_approved_at"] = datetime.now(timezone.utc).isoformat() + "Z"
+    save_users_db(db)
+    rider_name = user.get("name") or email_clean.split("@")[0].title()
+    
+    # Send welcome email via Resend
+    html_welcome = f"""<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="margin: 0; padding: 24px 0; background-color: #0b1120; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <div style="max-width: 520px; margin: 0 auto; background: #0f172a; border-radius: 20px; overflow: hidden; border: 1px solid #1e293b; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+    <div style="padding: 26px 20px; text-align: center; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+      <div style="font-size: 32px; margin-bottom: 6px;">⚡</div>
+      <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 800; letter-spacing: -0.5px;">Welcome to the Beta Crew!</h1>
+      <p style="margin: 4px 0 0; color: rgba(255,255,255,0.9); font-size: 13px; font-weight: 600;">HolyGust Secret Dev Lab</p>
+    </div>
+    <div style="padding: 30px 24px; color: #f8fafc;">
+      <h2 style="margin: 0 0 12px; font-size: 18px; color: #ffffff; font-weight: 700;">Aloha {rider_name},</h2>
+      <p style="margin: 0 0 16px; font-size: 14px; line-height: 1.6; color: #94a3b8;">
+        Your application to become a HolyGust Beta Rider has been <strong>approved</strong> by Daniel!
+      </p>
+      <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 14px; padding: 16px; margin: 20px 0; text-align: center;">
+        <span style="display: inline-block; background: #f59e0b; color: #0f172a; font-weight: 800; font-size: 12px; padding: 4px 12px; border-radius: 20px; letter-spacing: 0.5px; text-transform: uppercase;">
+          ⚡ Beta Rider Badge Activated
+        </span>
+        <p style="margin: 10px 0 0; font-size: 13px; color: #fde68a;">
+          You now have exclusive early access to experimental wind models, prototype gear physics, and upcoming features before anyone else.
+        </p>
+      </div>
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="https://beta.holygust.com" style="display: inline-block; background: #f59e0b; color: #0f172a; font-weight: 800; font-size: 14px; padding: 13px 32px; border-radius: 12px; text-decoration: none; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);">
+          Launch Beta Lab (beta.holygust.com)
+        </a>
+      </div>
+      <p style="margin: 20px 0 0; font-size: 12px; line-height: 1.5; color: #64748b; text-align: center;">
+        Use your registered email (<strong>{email_clean}</strong>) to log in. Got feedback or spot suggestions? Use the built-in feedback button to message Daniel directly!
+      </p>
+    </div>
+  </div>
+</body>
+</html>"""
+    try:
+        send_email_via_resend(email_clean, "⚡ You're in! Welcome to HolyGust Beta Crew", html_welcome)
+    except Exception as e:
+        print(f"Error sending beta welcome email: {e}")
+    return True, rider_name
+
+def decline_beta_rider(email: str):
+    db = load_users_db()
+    email_clean = email.strip().lower()
+    if email_clean in db.get("users", {}):
+        db["users"][email_clean]["is_beta_rider"] = False
+        db["users"][email_clean]["beta_status"] = "declined"
+        save_users_db(db)
+    return True
+
+def handle_telegram_callback(cb: dict, token: str, config: dict):
+    try:
+        cb_id = cb.get("id")
+        cb_data = cb.get("data", "")
+        from_user = cb.get("from", {})
+        msg = cb.get("message", {})
+        chat_id = msg.get("chat", {}).get("id")
+        msg_id = msg.get("message_id")
+        
+        if cb_data.startswith("approve_beta:"):
+            email = cb_data.split("approve_beta:", 1)[1].strip().lower()
+            _, rider_name = approve_beta_rider(email)
+            
+            # Answer callback toast
+            ans_payload = {"callback_query_id": cb_id, "text": f"✅ {rider_name} approved as ⚡ Beta Rider!", "show_alert": True}
+            try:
+                req = urllib.request.Request(f"https://api.telegram.org/bot{token}/answerCallbackQuery", data=json.dumps(ans_payload).encode("utf-8"), headers={"Content-Type": "application/json"})
+                urllib.request.urlopen(req, context=SSL_CTX, timeout=8)
+            except Exception as e:
+                print(f"answerCallbackQuery error: {e}")
+            
+            # Edit original message
+            if chat_id and msg_id:
+                orig_text = msg.get("text", "")
+                edit_payload = {
+                    "chat_id": chat_id,
+                    "message_id": msg_id,
+                    "text": f"""{orig_text}\n\n✅ APPROVED by Daniel! ⚡ Beta Rider badge active & welcome email sent.""",
+                    "reply_markup": {"inline_keyboard": []}
+                }
+                try:
+                    req_edit = urllib.request.Request(f"https://api.telegram.org/bot{token}/editMessageText", data=json.dumps(edit_payload).encode("utf-8"), headers={"Content-Type": "application/json"})
+                    urllib.request.urlopen(req_edit, context=SSL_CTX, timeout=8)
+                except Exception as e:
+                    print(f"editMessageText error: {e}")
+                    
+        elif cb_data.startswith("decline_beta:"):
+            email = cb_data.split("decline_beta:", 1)[1].strip().lower()
+            decline_beta_rider(email)
+            
+            ans_payload = {"callback_query_id": cb_id, "text": f"❌ Declined beta request for {email}", "show_alert": False}
+            try:
+                req = urllib.request.Request(f"https://api.telegram.org/bot{token}/answerCallbackQuery", data=json.dumps(ans_payload).encode("utf-8"), headers={"Content-Type": "application/json"})
+                urllib.request.urlopen(req, context=SSL_CTX, timeout=8)
+            except Exception as e:
+                print(f"answerCallbackQuery error: {e}")
+                
+            if chat_id and msg_id:
+                orig_text = msg.get("text", "")
+                edit_payload = {
+                    "chat_id": chat_id,
+                    "message_id": msg_id,
+                    "text": f"""{orig_text}\n\n❌ DECLINED by Daniel.""",
+                    "reply_markup": {"inline_keyboard": []}
+                }
+                try:
+                    req_edit = urllib.request.Request(f"https://api.telegram.org/bot{token}/editMessageText", data=json.dumps(edit_payload).encode("utf-8"), headers={"Content-Type": "application/json"})
+                    urllib.request.urlopen(req_edit, context=SSL_CTX, timeout=8)
+                except Exception as e:
+                    print(f"editMessageText error: {e}")
+    except Exception as e:
+        print(f"handle_telegram_callback error: {e}")
 
 def notify_admin_telegram(text: str):
     send_admin_telegram(text)
@@ -2569,7 +2711,7 @@ def start_embedded_http_server(port: int = 8080):
 
             # CANONICAL REDIRECT: Redirect all old onrender.com domain traffic to https://holygust.com
             host = (self.headers.get("Host") or "").lower().split(":")[0]
-            if "onrender.com" in host:
+            if "onrender.com" in host and "beta" not in host:
                 target_url = f"https://holygust.com{self.path}"
                 self.send_response(301)
                 self.send_header("Location", target_url)
@@ -2587,6 +2729,47 @@ def start_embedded_http_server(port: int = 8080):
                 self._send_cors_headers()
                 self.end_headers()
                 self.wfile.write(b"OK\n")
+                return
+
+            # BETA: 1-Click Browser Decision (Telegram Link Fallback)
+            if path == "/api/beta/decision":
+                action = (params.get("action", [""])[0]).lower()
+                email = (params.get("email", [""])[0]).strip().lower()
+                token_val = params.get("token", [""])[0]
+                expected = get_beta_decision_token(email)
+                
+                if not token_val or token_val != expected:
+                    self.send_response(403)
+                    self.send_header("Content-Type", "text/html; charset=utf-8")
+                    self.end_headers()
+                    self.wfile.write(b"<h1>Invalid or expired beta decision link</h1>")
+                    return
+                
+                if action == "approve":
+                    _, r_name = approve_beta_rider(email)
+                    status_text = f"⚡ {r_name} ({email}) has been APPROVED as a HolyGust Beta Rider! Welcome email sent."
+                    badge_color = "#f59e0b"
+                else:
+                    decline_beta_rider(email)
+                    status_text = f"❌ Beta request for {email} was declined."
+                    badge_color = "#ef4444"
+                
+                html_resp = f"""<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>HolyGust Beta Administration</title></head>
+<body style="background:#0b1120; color:#f8fafc; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display:flex; align-items:center; justify-content:center; min-height:100vh; margin:0; padding:20px;">
+  <div style="background:#0f172a; padding:32px 24px; border-radius:24px; border:1px solid #1e293b; max-width:440px; text-align:center; box-shadow:0 20px 25px -5px rgba(0,0,0,0.5);">
+    <div style="font-size:36px; margin-bottom:12px;">⚡</div>
+    <h2 style="color:{badge_color}; margin:0 0 12px; font-size:20px; font-weight:800;">HolyGust Beta Administration</h2>
+    <p style="font-size:15px; line-height:1.6; color:#94a3b8; margin:0 0 24px;">{status_text}</p>
+    <a href="https://holygust.com" style="display:inline-block; background:#0284c7; color:#ffffff; font-weight:700; font-size:14px; padding:12px 28px; border-radius:12px; text-decoration:none;">Open HolyGust</a>
+  </div>
+</body>
+</html>"""
+                self.send_response(200)
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(html_resp.encode("utf-8"))
                 return
 
             # 2. API: Stats & User Count
@@ -3562,6 +3745,84 @@ def start_embedded_http_server(port: int = 8080):
                     self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
                 return
 
+            # BETA: Apply for Beta Rider Access
+            if parsed.path == "/api/beta/apply":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    data = json.loads(body)
+                    email = (data.get("email") or "").strip().lower()
+                    name = data.get("name") or email.split("@")[0].title()
+                    spot = data.get("spot") or "Cumbuco"
+                    weight_kg = data.get("weight_kg", 74.0)
+                    level = data.get("level", "intermediate")
+                    board = data.get("board", "Twintip")
+
+                    if not email or "@" not in email:
+                        self.send_response(400)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": "A valid email is required to apply."}).encode("utf-8"))
+                        return
+
+                    db = load_users_db()
+                    from datetime import datetime, timezone
+                    if email not in db.get("users", {}):
+                        db.setdefault("users", {})[email] = {
+                            "email": email,
+                            "name": name,
+                            "created_at": datetime.now(timezone.utc).isoformat() + "Z",
+                            "gear": [],
+                            "boards": [],
+                            "weight_kg": float(weight_kg),
+                            "level": level,
+                            "board": board,
+                            "favorite_spots": []
+                        }
+                    user = db["users"][email]
+                    user["beta_status"] = "pending"
+                    user["beta_applied_at"] = datetime.now(timezone.utc).isoformat() + "Z"
+                    save_users_db(db)
+
+                    # Send Telegram Alert with Inline Buttons for 1-Tap Approval
+                    tele_text = (
+                        f"⚡ NEW BETA RIDER APPLICATION!\n"
+                        f"━━━━━━━━━━━━━━━━━━━━━\n"
+                        f"👤 Rider: {name}\n"
+                        f"📧 Email: {email}\n"
+                        f"📍 Home Spot: {spot}\n"
+                        f"⚖️ Weight: {weight_kg} kg | Level: {level}\n"
+                        f"🏄 Board: {board}\n"
+                        f"━━━━━━━━━━━━━━━━━━━━━\n"
+                        f"Tap below to approve or decline instantly:"
+                    )
+                    reply_markup = {
+                        "inline_keyboard": [
+                            [
+                                {"text": "✅ Approve ⚡ Beta Rider", "callback_data": f"approve_beta:{email}"},
+                                {"text": "❌ Decline", "callback_data": f"decline_beta:{email}"}
+                            ]
+                        ]
+                    }
+                    send_admin_telegram(tele_text, reply_markup=reply_markup)
+
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({
+                        "success": True,
+                        "message": "Application submitted! Daniel has received your request on Telegram."
+                    }).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
             # FEEDBACK & SUGGESTIONS
             if parsed.path == "/api/feedback":
                 try:
@@ -3656,6 +3917,13 @@ def run_poll_listener():
             
             for update in data.get("result", []):
                 last_update_id = update["update_id"]
+                
+                # Check for Telegram inline button click (Callback Query)
+                cb = update.get("callback_query")
+                if cb:
+                    handle_telegram_callback(cb, token, config)
+                    continue
+
                 msg = update.get("message") or update.get("edited_message")
                 if not msg:
                     continue
