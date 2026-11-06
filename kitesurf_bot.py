@@ -72,14 +72,46 @@ def save_public_spots(spots: list):
 GUST_WARNING_THRESHOLD_KTS = 30
 SSL_CTX = ssl._create_unverified_context()
 
+APPROVED_BETA_FILE = "approved_beta_riders.json"
+DEFAULT_BETA_EMAILS = ["d_puerta@hotmail.com", "admin.holygust@gmail.com", "d.puertadiaz@gmail.com"]
+
+def load_approved_beta_emails() -> set:
+    emails = set(DEFAULT_BETA_EMAILS)
+    if os.path.exists(APPROVED_BETA_FILE):
+        try:
+            with open(APPROVED_BETA_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                if isinstance(data, list):
+                    emails.update(data)
+        except Exception:
+            pass
+    return emails
+
+def save_approved_beta_email(email: str):
+    emails = load_approved_beta_emails()
+    emails.add(email.strip().lower())
+    try:
+        with open(APPROVED_BETA_FILE, "w", encoding="utf-8") as f:
+            json.dump(list(emails), f, indent=2)
+    except Exception as e:
+        print(f"Error saving approved beta email: {e}")
+
 def load_users_db() -> dict:
+    db = {"users": {}, "feedback": []}
     if os.path.exists(USERS_DB_FILE):
         try:
             with open(USERS_DB_FILE, "r", encoding="utf-8") as f:
-                return json.load(f)
+                db = json.load(f)
         except Exception:
             pass
-    return {"users": {}, "feedback": []}
+    
+    # Auto-apply approved beta emails
+    approved_set = load_approved_beta_emails()
+    for em, u in db.get("users", {}).items():
+        if em in approved_set:
+            u["is_beta_rider"] = True
+            u["beta_status"] = "approved"
+    return db
 
 def save_users_db(db: dict):
     try:
@@ -140,6 +172,7 @@ def approve_beta_rider(email: str):
     user["is_beta_rider"] = True
     user["beta_status"] = "approved"
     user["beta_approved_at"] = datetime.now(timezone.utc).isoformat() + "Z"
+    save_approved_beta_email(email_clean)
     save_users_db(db)
     rider_name = user.get("name") or email_clean.split("@")[0].title()
     
@@ -3543,6 +3576,11 @@ def start_embedded_http_server(port: int = 8080):
                         user["spot"] = data["spot"]
                     if "favorite_spots" in data and isinstance(data["favorite_spots"], list):
                         user["favorite_spots"] = data["favorite_spots"]
+
+                    approved_set = load_approved_beta_emails()
+                    if email in approved_set:
+                        user["is_beta_rider"] = True
+                        user["beta_status"] = "approved"
 
                     user["last_sync"] = datetime.utcnow().isoformat() + "Z"
                     save_users_db(db)
