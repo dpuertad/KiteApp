@@ -164,27 +164,104 @@ def hash_password(password: str, salt: str = None) -> tuple:
     h = hashlib.sha256((salt + password).encode("utf-8")).hexdigest()
     return h, salt
 
-def send_admin_telegram(text: str, reply_markup: dict = None) -> bool:
+ADMIN_PUSH_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "admin_push_subscriptions.json")
+
+def load_admin_push_subscriptions() -> list:
+    if os.path.exists(ADMIN_PUSH_FILE):
+        try:
+            with open(ADMIN_PUSH_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return []
+
+def save_admin_push_subscriptions(subs: list):
     try:
-        config = load_config()
-        token = config.get("telegram_token") or os.getenv("TELEGRAM_BOT_TOKEN")
-        admin_id = str(config.get("admin_id", os.getenv("CHAT_ID", "7424865438")))
-        if not token or not admin_id:
-            return False
-        url = f"https://api.telegram.org/bot{token}/sendMessage"
-        payload = {
-            "chat_id": admin_id,
-            "text": text
-        }
-        if reply_markup:
-            payload["reply_markup"] = reply_markup
-        data = json.dumps(payload).encode("utf-8")
-        req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
-        with urllib.request.urlopen(req, context=SSL_CTX, timeout=10) as resp:
-            return resp.status == 200
+        with open(ADMIN_PUSH_FILE, "w", encoding="utf-8") as f:
+            json.dump(subs, f, indent=2)
     except Exception as e:
-        print(f"send_admin_telegram error: {e}")
+        print(f"Error saving admin push subscriptions: {e}")
+
+def register_admin_push(subscription: dict, email: str = None) -> bool:
+    if not subscription or not subscription.get("endpoint"):
         return False
+    subs = load_admin_push_subscriptions()
+    endpoint = subscription.get("endpoint")
+    found = False
+    for s in subs:
+        if s.get("subscription", {}).get("endpoint") == endpoint:
+            s["email"] = email or s.get("email")
+            s["updated_at"] = time.time()
+            found = True
+            break
+    if not found:
+        subs.append({
+            "subscription": subscription,
+            "email": email or "d_puerta@hotmail.com",
+            "created_at": time.time(),
+            "updated_at": time.time()
+        })
+    save_admin_push_subscriptions(subs)
+    print(f"[AdminPush] Registered admin push subscription for {email or 'admin'}")
+    return True
+
+def send_admin_push_notification(title: str, body: str, url: str = "/admin") -> int:
+    """Dispatches a real Web Push notification to all of Daniel's subscribed devices."""
+    try:
+        import spot_alerts
+        subs = load_admin_push_subscriptions()
+        
+        # Also include any push subscription found in users_db for Daniel's accounts
+        db = load_users_db()
+        for em in ["d_puerta@hotmail.com", "admin.holygust@gmail.com", "d.puertadiaz@gmail.com"]:
+            u = db.get("users", {}).get(em, {})
+            if u.get("push_subscription") and u["push_subscription"].get("endpoint"):
+                ep = u["push_subscription"]["endpoint"]
+                if not any(s.get("subscription", {}).get("endpoint") == ep for s in subs):
+                    subs.append({
+                        "subscription": u["push_subscription"],
+                        "email": em,
+                        "created_at": time.time()
+                    })
+
+        if not subs:
+            print(f"[AdminPush] Note: No admin device subscribed yet to receive '{title}'.")
+            return 0
+
+        payload = {
+            "title": title,
+            "body": body,
+            "url": url,
+            "icon": "/icon-192.png",
+            "badge": "/icon-192.png"
+        }
+
+        delivered = 0
+        valid_subs = []
+        for entry in subs:
+            sub = entry.get("subscription")
+            if not sub:
+                continue
+            ok, status = spot_alerts.send_web_push(sub, payload)
+            if ok:
+                delivered += 1
+                valid_subs.append(entry)
+            elif status == "expired":
+                print(f"[AdminPush] Expired subscription dropped.")
+            else:
+                valid_subs.append(entry)
+
+        if len(valid_subs) != len(subs):
+            save_admin_push_subscriptions(valid_subs)
+
+        print(f"[AdminPush] '{title}' delivered to {delivered}/{len(subs)} admin devices.")
+        return delivered
+    except Exception as e:
+        print(f"[AdminPush] Error sending admin push: {e}")
+        return 0
+def send_admin_telegram(text: str, reply_markup: dict = None) -> bool:
+    # Telegram notifications disabled by user preference in favor of native Admin Web Push
+    return True
 
 def get_beta_decision_token(email: str) -> str:
     import hashlib
@@ -297,7 +374,11 @@ def leave_beta_program(email: str) -> tuple:
         f"━━━━━━━━━━━━━━━━━━━━━\n"
         f"Rider has opted out of the Beta program and returned to the production version."
     )
-    send_admin_telegram(tele_text)
+    send_admin_push_notification(
+        title="👋 Rider Left Beta",
+        body=f"{rider_name} ({email}) has opted out of the Beta program.",
+        url="/admin"
+    )
     
     return True, rider_name
 
@@ -2440,21 +2521,8 @@ def geocode_place_name(query: str, ref_lat: float = None, ref_lon: float = None)
 
 
 def send_telegram(message: str, token: str, chat_id: str) -> bool:
-    url = f"https://api.telegram.org/bot{token}/sendMessage"
-    payload = {
-        "chat_id": chat_id,
-        "text": message,
-        "parse_mode": "Markdown",
-        "reply_markup": REPLY_KEYBOARD
-    }
-    data = json.dumps(payload).encode("utf-8")
-    req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
-    try:
-        with urllib.request.urlopen(req, context=SSL_CTX, timeout=10) as resp:
-            return resp.status == 200
-    except Exception as e:
-        print(f"Telegram error: {e}")
-        return False
+    # Telegram disabled by user preference
+    return True
 
 
 def send_photo_telegram(photo_url: str, caption: str, token: str, chat_id: str) -> bool:
@@ -3747,7 +3815,11 @@ def start_embedded_http_server(port: int = 8080):
                         f"{boards_summary}\n\n"
                         f"📊 Total HolyGust Riders: {total_count}"
                     )
-                    send_admin_telegram(notify_text)
+                    send_admin_push_notification(
+                        title="👤 New Rider Registered!",
+                        body=f"{new_user['name']} ({email}) joined HolyGust. Total riders: {total_count}",
+                        url="/admin"
+                    )
 
                     safe_user = {k: v for k, v in new_user.items() if not k.startswith("password_")}
                     self.send_response(200)
@@ -3871,6 +3943,12 @@ def start_embedded_http_server(port: int = 8080):
                         spots.insert(0, spot_data)
 
                     save_public_spots(spots)
+
+                    send_admin_push_notification(
+                        title="📍 New Kite Spot Added!",
+                        body=f"{spot_data.get('name')} ({spot_data.get('country')}) added to public catalog.",
+                        url="/admin"
+                    )
 
                     self.send_response(200)
                     self.send_header("Content-Type", "application/json")
@@ -4208,15 +4286,11 @@ def start_embedded_http_server(port: int = 8080):
                         f"━━━━━━━━━━━━━━━━━━━━━\n"
                         f"Tap below to approve or decline instantly:"
                     )
-                    reply_markup = {
-                        "inline_keyboard": [
-                            [
-                                {"text": "✅ Approve ⚡ Beta Rider", "callback_data": f"approve_beta:{email}"},
-                                {"text": "❌ Decline", "callback_data": f"decline_beta:{email}"}
-                            ]
-                        ]
-                    }
-                    send_admin_telegram(tele_text, reply_markup=reply_markup)
+                    send_admin_push_notification(
+                        title="🚀 New Beta Rider Application!",
+                        body=f"{name} ({email}) applied for Beta. Tap to review in Admin Console.",
+                        url="/admin"
+                    )
 
                     self.send_response(200)
                     self.send_header("Content-Type", "application/json")
@@ -4435,7 +4509,11 @@ def start_embedded_http_server(port: int = 8080):
                         f"💬 Message:\n\"{msg}\"\n\n"
                         f"📊 Total Feedback Received: {len(db['feedback'])}"
                     )
-                    send_admin_telegram(tele_text)
+                    send_admin_push_notification(
+                        title="💬 New Rider Feedback!",
+                        body=f"From {name} ({email}): {msg[:80]}",
+                        url="/admin"
+                    )
 
                     self.send_response(200)
                     self.send_header("Content-Type", "application/json")
@@ -4500,14 +4578,11 @@ def start_embedded_http_server(port: int = 8080):
 
                     save_users_db(db)
 
-                    # Notify Daniel on Telegram about alert subscription
                     try:
-                        send_admin_telegram(
-                            f"🔔 SPOT ALARM SUBSCRIBED\n"
-                            f"👤 Rider: {user.get('name', email)} ({email})\n"
-                            f"📍 Spots: {', '.join(spots) if spots else 'None'}\n"
-                            f"📲 Channels: Push={'Yes' if spot_alerts.get('enable_push') else 'No'}, Email={'Yes' if spot_alerts.get('enable_email') else 'No'}\n"
-                            f"📅 Weekend Only: {spot_alerts.get('weekend_only')}"
+                        send_admin_push_notification(
+                            title="🔔 Spot Wind Alarm Activated!",
+                            body=f"{user.get('name', email)} ({email}) set an alarm for {', '.join(spots) if spots else 'Favorites'}.",
+                            url="/admin"
                         )
                     except Exception:
                         pass
@@ -4541,7 +4616,11 @@ def start_embedded_http_server(port: int = 8080):
                     user = db.get("users", {}).get(email)
                     if user and "spot_alerts" in user:
                         if spot and "spots" in user["spot_alerts"]:
-                            user["spot_alerts"]["spots"] = [s for s in user["spot_alerts"]["spots"] if s != spot]
+                            clean_target = spot.lower().split(',')[0].strip()
+                            user["spot_alerts"]["spots"] = [
+                                s for s in user["spot_alerts"]["spots"]
+                                if not (s == spot or s.lower().split(',')[0].strip() == clean_target or clean_target in s.lower() or s.lower() in clean_target)
+                            ]
                         else:
                             user["spot_alerts"]["enabled"] = False
                         save_users_db(db)
@@ -4551,6 +4630,53 @@ def start_embedded_http_server(port: int = 8080):
                     self._send_cors_headers()
                     self.end_headers()
                     self.wfile.write(json.dumps({"success": True, "message": "Alert subscription updated"}).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # ADMIN: Push Notification Subscription for Admin Phone
+            if parsed.path == "/api/admin/push-subscribe":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    data = json.loads(body)
+                    sub = data.get("subscription")
+                    email = (data.get("email") or "d_puerta@hotmail.com").strip().lower()
+                    ok = register_admin_push(sub, email)
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"success": ok}).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # ADMIN: Push Notification Test Trigger
+            if parsed.path == "/api/admin/test-push":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8") if content_len else "{}"
+                    data = json.loads(body) if body else {}
+                    email = (data.get("email") or "d_puerta@hotmail.com").strip().lower()
+                    delivered = send_admin_push_notification(
+                        title="🔔 HolyGust Admin Push Working!",
+                        body="You will now receive native alerts whenever riders apply for Beta, register, or add spots! 🚀",
+                        url="/admin"
+                    )
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"success": True, "delivered_count": delivered}).encode("utf-8"))
                 except Exception as e:
                     self.send_response(500)
                     self.send_header("Content-Type", "application/json")
@@ -4648,55 +4774,20 @@ def start_embedded_http_server(port: int = 8080):
 
 
 def run_poll_listener():
-    config = load_config()
-    token = config["telegram_token"]
-    
-    # Start cloud health server for Render / Koyeb / Hugging Face free hosting
+    # Start cloud health server for Render
     cloud_port = int(os.getenv("PORT", "8080"))
     start_embedded_http_server(cloud_port)
 
-    print(f"🤖 Kitesurf Bot listener started for @KiteForecast_bot (Multi-User Cloud Mode)...")
-    print(f"Registered users: {len(config.get('users', {}))}")
+    print(f"🚀 HolyGust Cloud Server active on port {cloud_port}. Telegram polling disabled.")
     
-    last_update_id = 0
-    url = f"https://api.telegram.org/bot{token}/getUpdates"
-
+    # Background periodic loop: check Beta spot alarms every 5 minutes
+    import spot_alerts
     while True:
         try:
-            req_url = f"{url}?offset={last_update_id + 1}&timeout=30"
-            req = urllib.request.Request(req_url)
-            with urllib.request.urlopen(req, context=SSL_CTX, timeout=35) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
-            
-            for update in data.get("result", []):
-                last_update_id = update["update_id"]
-                
-                # Check for Telegram inline button click (Callback Query)
-                cb = update.get("callback_query")
-                if cb:
-                    handle_telegram_callback(cb, token, config)
-                    continue
-
-                msg = update.get("message") or update.get("edited_message")
-                if not msg:
-                    continue
-                
-                chat_id = str(msg.get("chat", {}).get("id"))
-                text = msg.get("text", "")
-                
-                reply = handle_telegram_command(text, msg, config)
-                if reply:
-                    send_telegram(reply, token, chat_id)
-                    print(f"Replied to {msg.get('from', {}).get('first_name', 'user')}: {text or 'Location'}")
-
+            time.sleep(300)
+            spot_alerts.run_all_beta_alerts_cycle()
         except Exception as e:
-            err_msg = str(e)
-            if "409" in err_msg or "Conflict" in err_msg:
-                print("Polling: HTTP 409 Conflict (waiting 5s for previous instance shutdown)...")
-                time.sleep(5)
-            else:
-                print(f"Polling loop error: {e}")
-                time.sleep(3)
+            time.sleep(60)
 
 
 def send_morning_briefing_to_all():

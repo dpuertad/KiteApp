@@ -214,24 +214,13 @@ def send_spot_alert_email(to_email: str, rider_name: str, alert: dict) -> bool:
 # ==============================================================================
 
 def notify_admin_spot_alert(rider_name: str, rider_email: str, spot_name: str, alert: dict, channels: List[str]) -> bool:
-    """Notifies Daniel via Telegram whenever a Spot Alarm is dispatched to a user."""
+    """Notifies Daniel via native Web Push whenever a Spot Alarm is dispatched to a user."""
     try:
-        from kitesurf_bot import send_admin_telegram
-        tele_text = (
-            f"🚨 BETA SPOT ALARM DISPATCHED!\n"
-            f"━━━━━━━━━━━━━━━━━━━━━\n"
-            f"👤 Rider: {rider_name} ({rider_email})\n"
-            f"📍 Spot: {spot_name}\n"
-            f"💨 Forecast: {alert.get('wind_kts')} kts (Gusts {alert.get('gust_kts')} kts)\n"
-            f"🪁 Quiver Match: {alert.get('kite_desc')}\n"
-            f"🏄 Board: {alert.get('board_desc')}\n"
-            f"⏰ Window: {alert.get('timing_display')}\n"
-            f"💡 Trigger: {alert.get('reason')}\n"
-            f"📡 Sent via: {', '.join(channels)}\n"
-            f"━━━━━━━━━━━━━━━━━━━━━\n"
-            f"HolyGust Wind Alarm Engine"
-        )
-        return send_admin_telegram(tele_text)
+        from kitesurf_bot import send_admin_push_notification
+        title = f"🚨 Spot Alarm Dispatched to {rider_name}!"
+        body = f"{spot_name}: {alert.get('wind_kts')} kts (Gusts {alert.get('gust_kts')} kts) · {alert.get('kite_desc')} · via {', '.join(channels)}"
+        delivered = send_admin_push_notification(title, body, url="/admin")
+        return delivered > 0
     except Exception as e:
         print(f"[SpotAlerts] notify_admin_spot_alert error: {e}")
         return False

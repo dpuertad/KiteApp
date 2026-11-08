@@ -1208,7 +1208,7 @@
             <div class="text-[10px] text-slate-400">12–48h advance forecast scanner</div>
           </div>
         </div>
-        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">Active</span>
+        <span id="alarm-spot-status-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">Active</span>
       </div>
 
       <!-- Quiver Matching Info -->
@@ -5288,11 +5288,14 @@
               </div>
             </div>
             <div class="flex items-center space-x-1 flex-shrink-0 ml-2">
-              ${(typeof isBetaUserActive === 'function' && isBetaUserActive()) ? `
-                <button type="button" onclick="event.stopPropagation(); openSpotAlarmModal('${s.name}'); closeAllModals();" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-sky-300 text-[11px] font-semibold transition" title="Spot Wind Alarm">
-                  🔔
-                </button>
-              ` : ''}
+              ${(typeof isBetaUserActive === 'function' && isBetaUserActive()) ? (() => {
+                const hasAlarm = isSpotAlarmActive(s.name) || isSpotAlarmActive(s.short_name) || isSpotAlarmActive(s.id);
+                return `
+                  <button type="button" onclick="event.stopPropagation(); openSpotAlarmModal('${s.name}'); closeAllModals();" class="px-2 py-1 rounded-lg ${hasAlarm ? 'bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40' : 'bg-slate-800/80 text-slate-500 hover:text-slate-300'} text-[11px] font-semibold transition" title="${hasAlarm ? 'Spot Wind Alarm Active (Click to edit or remove)' : 'Set Spot Wind Alarm'}">
+                    ${hasAlarm ? '🔔' : '🔕'}
+                  </button>
+                `;
+              })() : ''}
               <button type="button" onclick="selectSpotFromCatalog('${s.id}'); closeAllModals();" class="px-2.5 py-1 rounded-lg ${isCurrent ? 'bg-sky-600/30 text-sky-300 font-bold border border-sky-500/40' : 'bg-sky-600 hover:bg-sky-500 text-white font-medium'} text-[11px] transition">
                 ${isCurrent ? 'Active' : 'Ride Spot'}
               </button>
@@ -6401,7 +6404,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=19').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=20').then(reg => {
           reg.update();
         }).catch(err => console.log('SW register failed:', err));
       }
@@ -6461,7 +6464,18 @@
           applicationServerKey: appKey
         });
       }
-      return sub.toJSON ? sub.toJSON() : sub;
+      const subJson = sub.toJSON ? sub.toJSON() : sub;
+      const authUser = getAuthUser();
+      if (authUser && ['d_puerta@hotmail.com', 'admin.holygust@gmail.com', 'd.puertadiaz@gmail.com'].includes((authUser.email || '').toLowerCase().trim())) {
+        try {
+          fetch('/api/admin/push-subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ subscription: subJson, email: authUser.email })
+          });
+        } catch (e) {}
+      }
+      return subJson;
     }
 
     async function handleAlarmPushToggle() {
@@ -6561,6 +6575,30 @@
       } catch (e) {}
 
       updateAlarmQuiverSummary();
+
+      // Reflect current alarm status on badge & disable button
+      const isAlarmSet = isSpotAlarmActive(activeAlarmSpot);
+      const statusBadge = document.getElementById('alarm-spot-status-badge');
+      if (statusBadge) {
+        if (isAlarmSet) {
+          statusBadge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40";
+          statusBadge.innerText = "Alarm Active 🔔";
+        } else {
+          statusBadge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-400 border border-slate-700";
+          statusBadge.innerText = "No Alarm 🔕";
+        }
+      }
+      const btnRemove = document.getElementById('btn-remove-alarm');
+      if (btnRemove) {
+        if (isAlarmSet) {
+          btnRemove.classList.remove('opacity-40');
+          btnRemove.title = "Delete this wind alarm";
+        } else {
+          btnRemove.classList.add('opacity-40');
+          btnRemove.title = "Alarm not active for this spot";
+        }
+      }
+
       modal.classList.remove('hidden');
       if (window.lucide) lucide.createIcons();
     }
@@ -6745,11 +6783,17 @@
         if (raw) {
           let cfg = JSON.parse(raw);
           if (cfg.spots && activeAlarmSpot) {
-            cfg.spots = cfg.spots.filter(s => s !== activeAlarmSpot);
+            const cleanTarget = activeAlarmSpot.toLowerCase().split(',')[0].trim();
+            cfg.spots = cfg.spots.filter(s => {
+              const cleanS = s.toLowerCase().split(',')[0].trim();
+              return !(s === activeAlarmSpot || cleanS === cleanTarget || cleanS.includes(cleanTarget) || cleanTarget.includes(cleanS));
+            });
           }
           localStorage.setItem('hg_spot_alarms', JSON.stringify(cfg));
         }
-      } catch (e) {}
+      } catch (e) {
+        console.warn('removeSpotAlarm storage note:', e);
+      }
 
       if (email && activeAlarmSpot) {
         try {
@@ -6758,7 +6802,9 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: email, spot: activeAlarmSpot })
           });
-        } catch (e) {}
+        } catch (e) {
+          console.warn('removeSpotAlarm API note:', e);
+        }
       }
 
       renderSpotList();

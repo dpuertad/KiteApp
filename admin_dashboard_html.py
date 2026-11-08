@@ -36,6 +36,13 @@ def render_admin_dashboard(summary: dict) -> str:
         </a>
       </div>
       <div class="flex items-center space-x-2">
+        <button id="btn-admin-push" onclick="enableAdminPush()" class="px-2.5 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold flex items-center space-x-1.5 transition active:scale-95" title="Get real-time push alerts on this device whenever riders apply for Beta, register, or add spots">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+          <span>📲 Enable Phone Push</span>
+        </button>
+        <button onclick="triggerAdminTestPush()" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center space-x-1 transition active:scale-95" title="Test Web Push to registered admin devices">
+          <span>🔔 Test Push</span>
+        </button>
         <button onclick="fetchFreshData()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center space-x-1.5 transition">
           <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-sky-400"></i>
           <span>Live Refresh</span>
@@ -557,6 +564,75 @@ def render_admin_dashboard(summary: dict) -> str:
       }}
 
       if (window.lucide) lucide.createIcons();
+    }}
+
+    async function enableAdminPush() {{
+      if (!('serviceWorker' in navigator) || !('PushManager' in window)) {{
+        alert("Web Push is not supported in this browser. Please open on Chrome or Safari on iOS 16.4+ / Android.");
+        return;
+      }}
+      const btn = document.getElementById('btn-admin-push');
+      if (btn) btn.innerHTML = '<span>⏳ Activating...</span>';
+      try {{
+        const reg = await navigator.serviceWorker.register('/sw.js?v=20');
+        await navigator.serviceWorker.ready;
+        const keyRes = await fetch('/api/alerts/vapid-public-key');
+        const keyData = await keyRes.json();
+        if (!keyData.vapid_public_key) throw new Error("VAPID key unavailable");
+
+        const padding = '='.repeat((4 - keyData.vapid_public_key.length % 4) % 4);
+        const base64 = (keyData.vapid_public_key + padding).replace(/\-/g, '+').replace(/_/g, '/');
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+        for (let i = 0; i < rawData.length; ++i) {{
+          outputArray[i] = rawData.charCodeAt(i);
+        }}
+
+        let sub = await reg.pushManager.getSubscription();
+        if (!sub) {{
+          sub = await reg.pushManager.subscribe({{
+            userVisibleOnly: true,
+            applicationServerKey: outputArray
+          }});
+        }}
+
+        const res = await fetch('/api/admin/push-subscribe', {{
+          method: 'POST',
+          headers: {{ 'Content-Type': 'application/json' }},
+          body: JSON.stringify({{
+            subscription: sub.toJSON ? sub.toJSON() : sub,
+            email: 'd_puerta@hotmail.com'
+          }})
+        }});
+        const data = await res.json();
+        if (data.success) {{
+          if (btn) {{
+            btn.className = "px-2.5 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold flex items-center space-x-1.5";
+            btn.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400"></span><span>✅ Phone Push Active</span>';
+          }}
+          alert("✅ Admin Phone Push enabled! You will now receive instant push alerts when riders apply for Beta, register, or add spots.");
+        }} else {{
+          if (btn) btn.innerHTML = '<span>📲 Enable Phone Push</span>';
+          alert("⚠️ Could not register push: " + (data.error || 'Server error'));
+        }}
+      }} catch (err) {{
+        if (btn) btn.innerHTML = '<span>📲 Enable Phone Push</span>';
+        alert("Push activation failed: " + err.message);
+      }}
+    }}
+
+    async function triggerAdminTestPush() {{
+      try {{
+        const res = await fetch('/api/admin/test-push', {{ method: 'POST' }});
+        const data = await res.json();
+        if (data.success && data.delivered_count > 0) {{
+          alert(`🚀 Test push notification sent! (${{data.delivered_count}} device(s) notified) Check your phone screen!`);
+        }} else {{
+          alert("⚠️ Test push sent, but no active admin devices were registered yet. Tap 'Enable Phone Push' on this device first!");
+        }}
+      }} catch (e) {{
+        alert("Error sending test push: " + e.message);
+      }}
     }}
 
     async function fetchFreshData() {{
