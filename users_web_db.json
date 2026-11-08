@@ -52,7 +52,94 @@
       "is_beta_rider": true,
       "beta_status": "approved",
       "beta_approved_at": "2026-11-06T13:07:35.934278+00:00Z",
-      "nationality": "Spanish"
+      "nationality": "Spanish",
+      "registered_at": "2026-11-04T22:00:00Z",
+      "last_login": "2026-11-08T01:08:00Z"
+    },
+    "mailtobeat@gmail.com": {
+      "email": "mailtobeat@gmail.com",
+      "name": "Beat",
+      "nationality": "Swiss",
+      "registered_at": "2026-11-08T00:39:35.595561Z",
+      "last_login": "2026-11-08T01:00:39Z",
+      "gear": [
+        {
+          "id": "k_beat_1",
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Duotone",
+          "model": "Evo",
+          "size": 12,
+          "year": 2025,
+          "active": true
+        },
+        {
+          "id": "k_beat_2",
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Duotone",
+          "model": "Evo",
+          "size": 9,
+          "year": 2025,
+          "active": true
+        },
+        {
+          "id": "k_beat_3",
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Duotone",
+          "model": "Rebel",
+          "size": 7,
+          "year": 2024,
+          "active": true
+        }
+      ],
+      "boards": [
+        {
+          "id": "b_beat_1",
+          "type": "Twintip",
+          "brand": "Duotone",
+          "model": "Jaime",
+          "size": "139",
+          "carbon": true,
+          "active": true
+        }
+      ],
+      "weight_kg": 93.0,
+      "level": "advanced",
+      "board": "Twintip",
+      "favorite_spots": [
+        "Icaraí de Amontada (Icaraizinho), Brazil"
+      ],
+      "is_beta_rider": true,
+      "beta_status": "approved",
+      "spot": {
+        "name": "Icaraí de Amontada (Icaraizinho), Brazil",
+        "lat": -3.0232,
+        "lon": -39.6433
+      }
+    },
+    "lipp.spam@gmail.com": {
+      "email": "lipp.spam@gmail.com",
+      "name": "Seb",
+      "nationality": "German",
+      "registered_at": "2026-11-08T01:14:37.233220Z",
+      "last_login": "2026-11-08T01:14:37Z",
+      "gear": [],
+      "boards": [],
+      "weight_kg": 78.0,
+      "level": "intermediate",
+      "board": "Twintip",
+      "favorite_spots": [
+        "Icaraí de Amontada (Icaraizinho), Brazil"
+      ],
+      "is_beta_rider": false,
+      "beta_status": "none",
+      "spot": {
+        "name": "Icaraí de Amontada (Icaraizinho), Brazil",
+        "lat": -3.0232,
+        "lon": -39.6433
+      }
     }
   },
   "feedback": []

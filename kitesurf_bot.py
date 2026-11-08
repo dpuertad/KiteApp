@@ -105,6 +105,36 @@ def load_users_db() -> dict:
         except Exception:
             pass
     
+    # Auto-reconcile any riders seen in spot telemetry so no registered rider is ever lost across restarts/deploys
+    try:
+        telemetry_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "spot_telemetry_db.json")
+        if os.path.exists(telemetry_file):
+            with open(telemetry_file, "r", encoding="utf-8") as f:
+                t_data = json.load(f)
+            changed = False
+            for v in t_data.get("spot_views", []):
+                em = (v.get("email") or "").strip().lower()
+                if em and "@" in em and em != "anonymous":
+                    if em not in db.get("users", {}):
+                        db.setdefault("users", {})[em] = {
+                            "email": em,
+                            "name": v.get("rider_name") or em.split("@")[0].title(),
+                            "nationality": v.get("nationality") if v.get("nationality") != "Undefined" else "",
+                            "registered_at": v.get("timestamp"),
+                            "last_login": v.get("timestamp"),
+                            "gear": [],
+                            "boards": [],
+                            "weight_kg": 75.0,
+                            "level": "intermediate",
+                            "board": "Twintip",
+                            "spot": {"name": v.get("spot_name"), "lat": v.get("lat"), "lon": v.get("lon")}
+                        }
+                        changed = True
+            if changed:
+                save_users_db(db)
+    except Exception as e:
+        print(f"Error reconciling users from telemetry: {e}")
+
     # Auto-apply approved beta emails unless user opted out
     approved_set = load_approved_beta_emails()
     for em, u in db.get("users", {}).items():
@@ -3522,6 +3552,19 @@ def start_embedded_http_server(port: int = 8080):
                             if gear: user["gear"] = gear
                             if boards: user["boards"] = boards
                             save_users_db(db)
+                            # Notify Daniel on Telegram with true rider count!
+                            try:
+                                total_count = len(db["users"])
+                                send_admin_telegram(
+                                    f"🎉 HolyGust Rider Registered (Password Activated)!\n\n"
+                                    f"👤 Rider: {user.get('name')}\n"
+                                    f"🌍 Nationality: {user.get('nationality') or 'Not specified'}\n"
+                                    f"📧 Email: {email}\n"
+                                    f"⚖️ Setup: {user.get('weight_kg', 75)} kg · {(user.get('level') or 'intermediate').capitalize()}\n\n"
+                                    f"📊 Total HolyGust Riders: {total_count}"
+                                )
+                            except Exception:
+                                pass
                             safe_user = {k: v for k, v in user.items() if not k.startswith("password_")}
                             self.send_response(200)
                             self.send_header("Content-Type", "application/json")

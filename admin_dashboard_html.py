@@ -7,7 +7,7 @@ def render_admin_dashboard(summary: dict) -> str:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HolyGust · Spot Intelligence & Rider Demographics</title>
+  <title>HolyGust · Admin Intelligence & Registered Riders</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -20,7 +20,7 @@ def render_admin_dashboard(summary: dict) -> str:
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-sky-500 selection:text-white pb-12">
   <!-- Top Navigation -->
   <header class="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur sticky top-0 z-40 px-4 py-3 sm:px-6">
-    <div class="max-w-6xl mx-auto flex items-center justify-between">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
       <div class="flex items-center space-x-3">
         <a href="/" class="flex items-center space-x-2.5 group">
           <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-emerald-400 flex items-center justify-center text-slate-950 font-black shadow-md shadow-sky-500/20 group-hover:scale-105 transition">
@@ -31,7 +31,7 @@ def render_admin_dashboard(summary: dict) -> str:
               <span class="font-extrabold text-sm sm:text-base text-white tracking-tight">HolyGust</span>
               <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase font-mono bg-sky-500/20 text-sky-300 border border-sky-500/30">Admin Intelligence</span>
             </div>
-            <p class="text-[11px] text-slate-400">Rider Demographics, Spot Telemetry & Travel Leads</p>
+            <p class="text-[11px] text-slate-400">Registered Riders, Quivers, Demographics & Spot Telemetry</p>
           </div>
         </a>
       </div>
@@ -48,18 +48,43 @@ def render_admin_dashboard(summary: dict) -> str:
     </div>
   </header>
 
-  <main class="max-w-6xl w-full mx-auto px-4 sm:px-6 pt-6 space-y-6 flex-1">
-    <!-- Stat Cards -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+  <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 pt-6 space-y-6 flex-1">
+    <!-- Stat Cards (5 Core KPIs) -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+      <!-- 1. Registered Riders -->
+      <div class="bg-slate-900/90 border border-sky-500/30 rounded-2xl p-4 shadow-sm relative overflow-hidden">
+        <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-1">
+          <span class="text-sky-300 font-bold">Registered Riders</span>
+          <i data-lucide="users" class="w-4 h-4 text-sky-400"></i>
+        </div>
+        <div id="stat-registered-riders" class="text-2xl font-black text-sky-400 font-mono">-</div>
+        <p class="text-[10px] text-slate-400 mt-1">
+          <span id="stat-beta-riders-count" class="font-bold text-amber-400 font-mono">0</span> ⚡ Beta Riders
+        </p>
+        <div class="absolute -right-2 -bottom-2 w-12 h-12 bg-sky-500/5 rounded-full pointer-events-none"></div>
+      </div>
+
+      <!-- 2. Spot Checks -->
       <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-sm">
         <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-1">
-          <span>Total Spot Checks</span>
-          <i data-lucide="eye" class="w-4 h-4 text-sky-400"></i>
+          <span>Spot Checks</span>
+          <i data-lucide="eye" class="w-4 h-4 text-slate-400"></i>
         </div>
         <div id="stat-total-views" class="text-2xl font-black text-white font-mono">-</div>
         <p class="text-[10px] text-slate-500 mt-1">Live forecast queries tracked</p>
       </div>
 
+      <!-- 3. Watched Spots -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-sm">
+        <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-1">
+          <span>Active Spots</span>
+          <i data-lucide="map-pin" class="w-4 h-4 text-emerald-400"></i>
+        </div>
+        <div id="stat-total-spots" class="text-2xl font-black text-white font-mono">-</div>
+        <p class="text-[10px] text-slate-500 mt-1">Global beaches viewed</p>
+      </div>
+
+      <!-- 4. Travel Inquiries -->
       <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-sm">
         <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-1">
           <span>Travel Inquiries</span>
@@ -69,22 +94,47 @@ def render_admin_dashboard(summary: dict) -> str:
         <p class="text-[10px] text-slate-500 mt-1">Trip plans & quiver matches</p>
       </div>
 
+      <!-- 5. Nationalities -->
       <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-sm">
         <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-1">
-          <span>Active Watched Spots</span>
-          <i data-lucide="map-pin" class="w-4 h-4 text-emerald-400"></i>
-        </div>
-        <div id="stat-total-spots" class="text-2xl font-black text-white font-mono">-</div>
-        <p class="text-[10px] text-slate-500 mt-1">Global beaches viewed</p>
-      </div>
-
-      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-sm">
-        <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-1">
-          <span>Rider Nationalities</span>
+          <span>Nationalities</span>
           <i data-lucide="globe" class="w-4 h-4 text-cyan-400"></i>
         </div>
         <div id="stat-nationalities" class="text-2xl font-black text-white font-mono">-</div>
-        <p class="text-[10px] text-slate-500 mt-1">Distinct countries represented</p>
+        <p class="text-[10px] text-slate-500 mt-1">Countries represented</p>
+      </div>
+    </div>
+
+    <!-- 👥 REGISTERED RIDERS DIRECTORY SECTION -->
+    <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+        <div>
+          <div class="flex items-center space-x-2">
+            <i data-lucide="users" class="w-5 h-5 text-sky-400"></i>
+            <h3 class="font-extrabold text-base text-white tracking-tight">HolyGust Registered Riders Directory</h3>
+            <span id="stat-riders-badge" class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase font-mono bg-sky-500/20 text-sky-300 border border-sky-500/30">
+              0 Accounts
+            </span>
+          </div>
+          <p class="text-xs text-slate-400 mt-1">Full breakdown of registered riders, quiver setups, weight, riding level & activity status.</p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <div class="relative w-full sm:w-64">
+            <i data-lucide="search" class="w-3.5 h-3.5 text-slate-500 absolute left-3 top-2.5"></i>
+            <input 
+              type="text" 
+              id="rider-search-input" 
+              oninput="filterRiders(this.value)" 
+              placeholder="Search name, email, nationality..." 
+              class="w-full pl-9 pr-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition"
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Riders Cards Grid -->
+      <div id="registered-riders-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+        <!-- Dynamic riders inserted via JavaScript -->
       </div>
     </div>
 
@@ -131,7 +181,7 @@ def render_admin_dashboard(summary: dict) -> str:
       <!-- Recent Travel Leads Table -->
       <div class="pt-4 border-t border-slate-800/80 space-y-3">
         <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
-          <i data-lucide="users" class="w-3.5 h-3.5 text-sky-400"></i>
+          <i data-lucide="plane-takeoff" class="w-3.5 h-3.5 text-sky-400"></i>
           <span>Recent Traveler Inquiries & Gear Intent</span>
         </h4>
         <div id="travel-leads-container" class="space-y-2 max-h-[300px] overflow-y-auto pr-1">
@@ -199,12 +249,13 @@ def render_admin_dashboard(summary: dict) -> str:
 
   <script>
     let initialData = {summary_json};
+    let allRiders = (initialData.registered_riders || []);
 
     function timeAgo(isoStr) {{
       if (!isoStr) return '';
       try {{
         const diff = Math.floor((Date.now() - new Date(isoStr).getTime()) / 1000);
-        if (diff < 60) return `${{diff}}s ago`;
+        if (diff < 60) return `${{Math.max(1, diff)}}s ago`;
         if (diff < 3600) return `${{Math.floor(diff/60)}}m ago`;
         if (diff < 86400) return `${{Math.floor(diff/3600)}}h ago`;
         return `${{Math.floor(diff/86400)}}d ago`;
@@ -213,14 +264,158 @@ def render_admin_dashboard(summary: dict) -> str:
       }}
     }}
 
+    function getFlag(nat) {{
+      const n = (nat || '').toLowerCase();
+      if (n.includes('span')) return '🇪🇸';
+      if (n.includes('swis')) return '🇨🇭';
+      if (n.includes('germ')) return '🇩🇪';
+      if (n.includes('braz')) return '🇧🇷';
+      if (n.includes('ital')) return '🇮🇹';
+      if (n.includes('fren')) return '🇫🇷';
+      if (n.includes('brit') || n.includes('uk') || n.includes('eng')) return '🇬🇧';
+      if (n.includes('dutc') || n.includes('neth')) return '🇳🇱';
+      if (n.includes('austr')) return '🇦🇹';
+      if (n.includes('usa') || n.includes('amer')) return '🇺🇸';
+      if (n.includes('port')) return '🇵🇹';
+      if (n.includes('pola')) return '🇵🇱';
+      if (n.includes('denm') || n.includes('dani')) return '🇩🇰';
+      if (n.includes('swed')) return '🇸🇪';
+      if (n.includes('norw')) return '🇳🇴';
+      if (n.includes('argen')) return '🇦🇷';
+      return '🌍';
+    }}
+
+    function renderRidersList(riders) {{
+      const cont = document.getElementById('registered-riders-container');
+      if (!cont) return;
+
+      if (!riders || riders.length === 0) {{
+        cont.innerHTML = '<div class="col-span-full py-8 text-center text-xs text-slate-500 bg-slate-950/40 rounded-2xl border border-slate-800">No riders match search query.</div>';
+        return;
+      }}
+
+      cont.innerHTML = riders.map(r => {{
+        const isBeta = r.is_beta_rider;
+        const flag = getFlag(r.nationality);
+        const initial = (r.name || r.email || 'R')[0].toUpperCase();
+        
+        return `
+          <div class="p-4 rounded-2xl bg-slate-950/70 border ${{isBeta ? 'border-amber-500/30 shadow-sm shadow-amber-500/5' : 'border-slate-800/80'}} flex flex-col justify-between space-y-3 hover:border-sky-500/40 transition">
+            <!-- Top Row: Avatar & Rider Name -->
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex items-center space-x-3 min-w-0">
+                <div class="w-10 h-10 rounded-xl ${{isBeta ? 'bg-gradient-to-tr from-amber-500 to-amber-300 text-slate-950' : 'bg-gradient-to-tr from-sky-500 to-cyan-400 text-slate-950'}} font-black text-sm flex items-center justify-center flex-shrink-0 shadow-sm">
+                  ${{isBeta ? '⚡' : initial}}
+                </div>
+                <div class="min-w-0 truncate">
+                  <div class="flex items-center space-x-1.5 truncate">
+                    <h4 class="font-bold text-sm text-white truncate">${{r.name || 'Rider'}}</h4>
+                    ${{r.nationality && r.nationality !== 'Not specified' ? `<span class="text-xs" title="${{r.nationality}}">${{flag}}</span>` : ''}}
+                  </div>
+                  <p class="text-[11px] text-slate-400 font-mono truncate" title="${{r.email}}">${{r.email}}</p>
+                </div>
+              </div>
+
+              ${{isBeta ? 
+                `<span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40 flex-shrink-0">⚡ Beta</span>` : 
+                `<span class="px-2 py-0.5 rounded-full text-[9px] font-semibold bg-slate-800 text-slate-400 border border-slate-700/60 flex-shrink-0">Rider</span>`}}
+            </div>
+
+            <!-- Setup & Demographics Pills -->
+            <div class="flex flex-wrap items-center gap-1.5 text-[11px]">
+              <span class="px-2 py-0.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 font-medium">
+                ⚖️ <strong>${{r.weight_kg}} kg</strong>
+              </span>
+              <span class="px-2 py-0.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 font-medium">
+                🎯 ${{r.level}}
+              </span>
+              <span class="px-2 py-0.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 font-medium">
+                🏄 ${{r.board || 'Twintip'}}
+              </span>
+              ${{r.nationality && r.nationality !== 'Not specified' ? `
+                <span class="px-2 py-0.5 rounded-lg bg-slate-900 border border-slate-800 text-sky-300 font-medium">
+                  ${{flag}} ${{r.nationality}}
+                </span>` : ''}}
+            </div>
+
+            <!-- Stored Cloud Gear & Boards -->
+            <div class="bg-slate-900/60 rounded-xl p-2.5 border border-slate-800/80 space-y-1 text-[11px]">
+              <div class="flex items-center justify-between text-slate-300">
+                <span class="flex items-center space-x-1.5 font-semibold text-slate-200">
+                  <span>🪁</span>
+                  <span>Kites (${{r.gear_count}})</span>
+                </span>
+                <span class="text-[10px] text-slate-400 truncate max-w-[170px]" title="${{r.gear_summary}}">
+                  ${{r.gear_summary}}
+                </span>
+              </div>
+              <div class="flex items-center justify-between text-slate-300 border-t border-slate-800/50 pt-1">
+                <span class="flex items-center space-x-1.5 font-semibold text-slate-200">
+                  <span>🏄</span>
+                  <span>Boards (${{r.boards_count}})</span>
+                </span>
+                <span class="text-[10px] text-slate-400 truncate max-w-[170px]" title="${{r.boards_summary}}">
+                  ${{r.boards_summary}}
+                </span>
+              </div>
+            </div>
+
+            <!-- Footer: Last Spot & Timestamps -->
+            <div class="flex items-center justify-between text-[10px] text-slate-400 font-mono border-t border-slate-800/80 pt-2">
+              <span class="truncate max-w-[160px] text-slate-400" title="Last checked ${{r.last_spot}}">
+                📍 ${{r.last_spot || 'None'}}
+              </span>
+              <span class="text-slate-400 flex-shrink-0">
+                ${{r.last_active ? timeAgo(r.last_active) : timeAgo(r.registered_at)}}
+              </span>
+            </div>
+          </div>
+        `;
+      }}).join('');
+    }}
+
+    function filterRiders(query) {{
+      const q = (query || '').toLowerCase().trim();
+      if (!q) {{
+        renderRidersList(allRiders);
+        return;
+      }}
+      const filtered = allRiders.filter(r => {{
+        return (
+          (r.name && r.name.toLowerCase().includes(q)) ||
+          (r.email && r.email.toLowerCase().includes(q)) ||
+          (r.nationality && r.nationality.toLowerCase().includes(q)) ||
+          (r.level && r.level.toLowerCase().includes(q)) ||
+          (r.gear_summary && r.gear_summary.toLowerCase().includes(q)) ||
+          (r.last_spot && r.last_spot.toLowerCase().includes(q))
+        );
+      }});
+      renderRidersList(filtered);
+    }}
+
     function renderDashboard(d) {{
       const summary = d.summary || {{}};
+      allRiders = (d.registered_riders || []);
+
+      // 1. Core KPIs
+      const regRidersEl = document.getElementById('stat-registered-riders');
+      if (regRidersEl) regRidersEl.innerText = summary.total_registered_riders || allRiders.length || 0;
+
+      const betaCountEl = document.getElementById('stat-beta-riders-count');
+      if (betaCountEl) betaCountEl.innerText = summary.total_beta_riders || allRiders.filter(r => r.is_beta_rider).length || 0;
+
+      const badgeEl = document.getElementById('stat-riders-badge');
+      if (badgeEl) badgeEl.innerText = `${{summary.total_registered_riders || allRiders.length}} Verified Accounts`;
+
       document.getElementById('stat-total-views').innerText = summary.total_views || 0;
       document.getElementById('stat-total-spots').innerText = (d.top_spots || []).length;
       document.getElementById('stat-total-travel').innerText = summary.total_travel_inquiries || 0;
       document.getElementById('stat-nationalities').innerText = (d.top_nationalities || []).length;
 
-      // Top Spots
+      // 2. Render Riders Directory
+      renderRidersList(allRiders);
+
+      // 3. Top Spots Leaderboard
       const spotsCont = document.getElementById('top-spots-container');
       if (spotsCont) {{
         if (!d.top_spots || d.top_spots.length === 0) {{
@@ -249,7 +444,7 @@ def render_admin_dashboard(summary: dict) -> str:
         }}
       }}
 
-      // Nationalities
+      // 4. Nationalities
       const natsCont = document.getElementById('nationalities-container');
       if (natsCont) {{
         if (!d.top_nationalities || d.top_nationalities.length === 0) {{
@@ -258,8 +453,8 @@ def render_admin_dashboard(summary: dict) -> str:
           natsCont.innerHTML = d.top_nationalities.map(n => `
             <div class="space-y-1">
               <div class="flex justify-between text-xs font-semibold">
-                <span class="text-slate-200">${{n.nationality}}</span>
-                <span class="text-sky-400 font-mono">${{n.count}} riders (${{n.pct}}%)</span>
+                <span class="text-slate-200">${{getFlag(n.nationality)}} ${{n.nationality}}</span>
+                <span class="text-sky-400 font-mono">${{n.count}} spot checks (${{n.pct}}%)</span>
               </div>
               <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
                 <div class="bg-gradient-to-r from-sky-500 to-cyan-400 h-1.5 rounded-full" style="width: ${{Math.min(100, Math.max(8, n.pct))}}%"></div>
@@ -269,7 +464,7 @@ def render_admin_dashboard(summary: dict) -> str:
         }}
       }}
 
-      // Travel Intelligence
+      // 5. Travel Intelligence
       const travelIntel = d.travel_intelligence || {{}};
       const travelCountEl = document.getElementById('stat-travel-count');
       if (travelCountEl) {{
@@ -339,7 +534,7 @@ def render_admin_dashboard(summary: dict) -> str:
         }}
       }}
 
-      // Live Feed
+      // 6. Live Telemetry Feed
       const feedCont = document.getElementById('live-feed-container');
       if (feedCont) {{
         const acts = d.recent_views || [];
@@ -351,7 +546,7 @@ def render_admin_dashboard(summary: dict) -> str:
               <div class="min-w-0 flex-1 truncate">
                 <div class="flex items-center space-x-1.5 truncate">
                   <span class="font-bold text-slate-200">${{a.rider_name || 'Rider'}}</span>
-                  ${{a.nationality && a.nationality !== 'Not Specified' ? `<span class="px-1.5 py-0.2 rounded text-[9px] bg-slate-800 text-sky-300 font-medium">${{a.nationality}}</span>` : ''}}
+                  ${{a.nationality && a.nationality !== 'Not Specified' && a.nationality !== 'Undefined' ? `<span class="px-1.5 py-0.2 rounded text-[9px] bg-slate-800 text-sky-300 font-medium">${{getFlag(a.nationality)}} ${{a.nationality}}</span>` : ''}}
                 </div>
                 <p class="text-[11px] text-slate-400 truncate mt-0.5">Checked <strong>${{a.spot_name}}</strong></p>
               </div>
