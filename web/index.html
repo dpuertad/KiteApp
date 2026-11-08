@@ -2804,12 +2804,15 @@
                       : 'text-slate-400 bg-slate-900 border-slate-800'
                   }">${k.size}m</span>
                   <div class="min-w-0 flex-1">
-                    <h4 class="text-xs font-bold text-white truncate flex items-center">
+                    <div class="text-xs font-bold text-white flex items-center min-w-0 leading-tight">
                       ${iconSvg}
-                      <span class="truncate ml-1">${k.brand} ${k.model}</span>
-                      <span class="text-slate-400 font-normal ml-1 flex-shrink-0 text-[11px]">(${k.year || 2024})</span>
-                    </h4>
-                    <p class="text-[10px] text-slate-400 mt-0.5 truncate">${catLabel} · ${ev.material || 'Performance'}</p>
+                      <span class="font-extrabold text-slate-100 ml-1 truncate">${k.brand}</span>
+                      <span class="text-slate-400 font-normal text-[10px] ml-1.5 flex-shrink-0">(${k.year || 2024})</span>
+                    </div>
+                    <div class="text-xs font-semibold mt-0.5 flex items-center min-w-0 leading-tight">
+                      <span class="${isActive ? (isWing ? 'text-amber-300' : (isSoft ? 'text-cyan-300' : 'text-sky-300 font-bold')) : 'text-slate-400'} truncate">${k.model}</span>
+                      <span class="text-slate-400 font-medium text-[11px] ml-1 flex-shrink-0">· ${k.size}m</span>
+                    </div>
                   </div>
                 </div>
 
@@ -6401,7 +6404,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=18').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=19').then(reg => {
           reg.update();
         }).catch(err => console.log('SW register failed:', err));
       }
