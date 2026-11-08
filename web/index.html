@@ -2777,17 +2777,14 @@
           const isActive = k.active !== false;
           
           let iconSvg = GEAR_ICONS.kiteTube("w-4 h-4 text-sky-400 inline-block align-middle mr-1");
-          let catLabel = "Tube Kite (LEI)";
-          let ringColor = 'border-sky-500/70 shadow-sky-950/40 ring-sky-500/30';
+                    let ringColor = 'border-sky-500/70 shadow-sky-950/40 ring-sky-500/30';
 
           if (isWing) {
             iconSvg = GEAR_ICONS.wing("w-4 h-4 text-amber-400 inline-block align-middle mr-1");
-            catLabel = "Handheld Wing";
-            ringColor = 'border-amber-500/70 shadow-amber-950/40 ring-amber-500/30';
+                        ringColor = 'border-amber-500/70 shadow-amber-950/40 ring-amber-500/30';
           } else if (isSoft) {
             iconSvg = GEAR_ICONS.kiteSoft("w-4 h-4 text-cyan-400 inline-block align-middle mr-1");
-            catLabel = "Soft Kite (Mat)";
-            ringColor = 'border-cyan-500/70 shadow-cyan-950/40 ring-cyan-500/30';
+                        ringColor = 'border-cyan-500/70 shadow-cyan-950/40 ring-cyan-500/30';
           }
 
           return `
