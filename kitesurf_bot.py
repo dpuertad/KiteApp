@@ -144,6 +144,10 @@ def load_users_db() -> dict:
         if em in approved_set:
             u["is_beta_rider"] = True
             u["beta_status"] = "approved"
+        else:
+            u["is_beta_rider"] = False
+            if u.get("beta_status") == "approved":
+                u["beta_status"] = "pending"
     return db
 
 def save_users_db(db: dict):
@@ -3754,6 +3758,16 @@ def start_embedded_http_server(port: int = 8080):
 
                     from datetime import datetime
                     user["last_login"] = datetime.utcnow().isoformat() + "Z"
+                    approved_set = load_approved_beta_emails()
+                    if user.get("beta_status") == "left":
+                        user["is_beta_rider"] = False
+                    elif email in approved_set:
+                        user["is_beta_rider"] = True
+                        user["beta_status"] = "approved"
+                    else:
+                        user["is_beta_rider"] = False
+                        if user.get("beta_status") != "pending" and user.get("beta_status") != "declined":
+                            user["beta_status"] = "none"
                     save_users_db(db)
 
                     safe_user = {k: v for k, v in user.items() if not k.startswith("password_")}
@@ -3882,9 +3896,15 @@ def start_embedded_http_server(port: int = 8080):
                             user["favorite_spots"] = data["favorite_spots"]
 
                     approved_set = load_approved_beta_emails()
-                    if email in approved_set or user.get("is_beta_rider"):
+                    if user.get("beta_status") == "left":
+                        user["is_beta_rider"] = False
+                    elif email in approved_set:
                         user["is_beta_rider"] = True
                         user["beta_status"] = "approved"
+                    else:
+                        user["is_beta_rider"] = False
+                        if user.get("beta_status") != "pending" and user.get("beta_status") != "declined":
+                            user["beta_status"] = "none"
 
                     user["last_sync"] = datetime.utcnow().isoformat() + "Z"
                     save_users_db(db)
@@ -4189,7 +4209,13 @@ def start_embedded_http_server(port: int = 8080):
                     success, r_name = leave_beta_program(email)
                     db = load_users_db()
                     updated_user = db.get("users", {}).get(email, {})
+                    if "gear" in data and isinstance(data["gear"], list) and len(data["gear"]) > 0:
+                        updated_user["gear"] = data["gear"]
+                    if "boards" in data and isinstance(data["boards"], list) and len(data["boards"]) > 0:
+                        updated_user["boards"] = data["boards"]
+                    save_users_db(db)
 
+                    safe_user = {k: v for k, v in updated_user.items() if not k.startswith("password_")}
                     self.send_response(200)
                     self.send_header("Content-Type", "application/json")
                     self._send_cors_headers()
@@ -4197,7 +4223,7 @@ def start_embedded_http_server(port: int = 8080):
                     self.wfile.write(json.dumps({
                         "success": True,
                         "message": "You have left the Beta Rider crew and returned to standard production.",
-                        "user": updated_user
+                        "user": safe_user
                     }).encode("utf-8"))
                 except Exception as e:
                     self.send_response(500)

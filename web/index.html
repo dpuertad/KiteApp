@@ -693,7 +693,8 @@
         <div>
           <label class="block font-semibold text-slate-300 mb-1">Brand</label>
           <select id="board-select-brand" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-violet-500 text-xs">
-            <option value="Duotone" selected>Duotone</option>
+            <option value="" disabled selected>— Select Board Brand —</option>
+            <option value="Duotone">Duotone</option>
             <option value="Gong">GONG</option>
             <option value="F-One">F-One</option>
             <option value="North">North</option>
@@ -3487,7 +3488,7 @@
     function populateKiteBrands(type) {
       const brandSel = document.getElementById('kite-select-brand');
       if (!brandSel) return;
-      brandSel.innerHTML = '';
+      brandSel.innerHTML = '<option value="" disabled selected>— Select Kite Brand —</option>';
       const catalog = (type === 'soft') ? KITE_SOFT_CATALOG : KITE_TUBE_CATALOG;
       Object.keys(catalog).forEach(b => {
         const opt = document.createElement('option');
@@ -3495,16 +3496,29 @@
         opt.innerText = b === 'Gong' ? 'GONG' : (b === 'PLKB' ? 'PLKB (Peter Lynn)' : b);
         brandSel.appendChild(opt);
       });
-      onKiteBrandChange(brandSel.value);
+      brandSel.value = '';
+      onKiteBrandChange('');
     }
 
     function onKiteBrandChange(brand) {
       const modelSel = document.getElementById('kite-select-model');
       if (!modelSel) return;
       modelSel.innerHTML = '';
+      if (!brand) {
+        modelSel.innerHTML = '<option value="" disabled selected>— Select Brand First —</option>';
+        modelSel.disabled = true;
+        return;
+      }
+      modelSel.disabled = false;
       const type = document.getElementById('input-kite-type') ? document.getElementById('input-kite-type').value : 'tube';
       const catalog = (type === 'soft') ? KITE_SOFT_CATALOG : KITE_TUBE_CATALOG;
       const models = catalog[brand] || ["Standard Model"];
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.disabled = true;
+      placeholder.selected = true;
+      placeholder.innerText = '— Select Model —';
+      modelSel.appendChild(placeholder);
       models.forEach(m => {
         const opt = document.createElement('option');
         opt.value = m;
@@ -3533,7 +3547,15 @@
       e.preventDefault();
       const type = document.getElementById('input-kite-type') ? document.getElementById('input-kite-type').value : 'tube';
       const brand = document.getElementById('kite-select-brand').value;
-      const model = document.getElementById('kite-select-model').value || 'All-Round';
+      const model = document.getElementById('kite-select-model').value;
+      if (!brand) {
+        alert("Please select your kite brand.");
+        return;
+      }
+      if (!model) {
+        alert("Please select your kite model.");
+        return;
+      }
       const size = parseFloat(document.getElementById('kite-select-size').value) || (type === 'soft' ? 12 : 10);
       const year = parseInt(document.getElementById('kite-select-year').value) || 2024;
       const active = document.getElementById('kite-check-in-bag').checked;
@@ -3573,7 +3595,7 @@
     function populateWingBrands() {
       const brandSel = document.getElementById('wing-select-brand');
       if (!brandSel) return;
-      brandSel.innerHTML = '';
+      brandSel.innerHTML = '<option value="" disabled selected>— Select Wing Brand —</option>';
       const brands = Object.keys(WING_CATALOG);
       brands.forEach(b => {
         const opt = document.createElement('option');
@@ -3581,14 +3603,27 @@
         opt.innerText = b === 'Gong' ? 'GONG' : b;
         brandSel.appendChild(opt);
       });
-      onWingBrandChange(brandSel.value);
+      brandSel.value = '';
+      onWingBrandChange('');
     }
 
     function onWingBrandChange(brand) {
       const modelSel = document.getElementById('wing-select-model');
       if (!modelSel) return;
       modelSel.innerHTML = '';
+      if (!brand) {
+        modelSel.innerHTML = '<option value="" disabled selected>— Select Brand First —</option>';
+        modelSel.disabled = true;
+        return;
+      }
+      modelSel.disabled = false;
       const models = WING_CATALOG[brand] ? Object.keys(WING_CATALOG[brand]) : ["All-Round Wing"];
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.disabled = true;
+      placeholder.selected = true;
+      placeholder.innerText = '— Select Model —';
+      modelSel.appendChild(placeholder);
       models.forEach(m => {
         const opt = document.createElement('option');
         opt.value = m;
@@ -3600,7 +3635,15 @@
     function onAddWingFormSubmit(e) {
       e.preventDefault();
       const brand = document.getElementById('wing-select-brand').value;
-      const model = document.getElementById('wing-select-model').value || 'All-Round Wing';
+      const model = document.getElementById('wing-select-model').value;
+      if (!brand) {
+        alert("Please select your wing brand.");
+        return;
+      }
+      if (!model) {
+        alert("Please select your wing model.");
+        return;
+      }
       const size = parseFloat(document.getElementById('wing-select-size').value) || 5.0;
       const year = parseInt(document.getElementById('wing-select-year').value) || 2024;
       const active = document.getElementById('wing-check-in-bag').checked;
@@ -3789,7 +3832,11 @@
     function onAddBoardFormSubmit(e) {
       e.preventDefault();
       const type = document.getElementById('board-select-type').value || 'Twintip';
-      const brand = document.getElementById('board-select-brand').value || 'Duotone';
+      const brand = document.getElementById('board-select-brand').value;
+      if (!brand) {
+        alert("Please select your board brand.");
+        return;
+      }
       const model = document.getElementById('board-input-model').value.trim() || type;
       const size = document.getElementById('board-select-size').value || (type === 'Wingfoil' ? '1250' : (type === 'Hydrofoil' ? '1050' : (type === 'Strapless' ? "5'8\"" : '136')));
       const volume = (type === 'Wingfoil') ? (document.getElementById('board-select-volume').value || '85') : null;
@@ -4500,12 +4547,16 @@
           setRiderLevel(data.user.level);
         }
         if (data.user.gear && Array.isArray(data.user.gear) && data.user.gear.length > 0) {
-          state.inventory = data.user.gear;
-          localStorage.setItem('kf_inventory', JSON.stringify(state.inventory));
+          if (!state.inventory || state.inventory.length === 0) {
+            state.inventory = data.user.gear;
+            localStorage.setItem('kf_inventory', JSON.stringify(state.inventory));
+          }
         }
         if (data.user.boards && Array.isArray(data.user.boards) && data.user.boards.length > 0) {
-          state.boards = data.user.boards;
-          localStorage.setItem('kf_boards', JSON.stringify(state.boards));
+          if (!state.boards || state.boards.length === 0) {
+            state.boards = data.user.boards;
+            localStorage.setItem('kf_boards', JSON.stringify(state.boards));
+          }
         }
         if (data.user.favorite_spots && Array.isArray(data.user.favorite_spots) && data.user.favorite_spots.length > 0) {
           state.favorite_spots = data.user.favorite_spots;
@@ -4731,13 +4782,17 @@
           authUser = data.user;
           localStorage.setItem('kf_auth_user', JSON.stringify(authUser));
           if (data.user.gear && Array.isArray(data.user.gear) && data.user.gear.length > 0) {
-            state.inventory = data.user.gear;
-            localStorage.setItem('kf_inventory', JSON.stringify(state.inventory));
-            renderGearInventory();
+            if (!state.inventory || state.inventory.length === 0) {
+              state.inventory = data.user.gear;
+              localStorage.setItem('kf_inventory', JSON.stringify(state.inventory));
+              renderGearInventory();
+            }
           }
           if (data.user.boards && Array.isArray(data.user.boards) && data.user.boards.length > 0) {
-            state.boards = data.user.boards;
-            localStorage.setItem('kf_boards', JSON.stringify(state.boards));
+            if (!state.boards || state.boards.length === 0) {
+              state.boards = data.user.boards;
+              localStorage.setItem('kf_boards', JSON.stringify(state.boards));
+            }
           }
           if (data.user.favorite_spots && Array.isArray(data.user.favorite_spots) && data.user.favorite_spots.length > 0) {
             state.favorite_spots = data.user.favorite_spots;
@@ -4778,16 +4833,18 @@
                          window.location.port === '8991' ||
                          isLabActive;
       
-      // 1. Rider Beta Badge (⚡ Beta Rider) in profile card only
+      // 1. Rider Beta Badge (⚡ Beta Rider) in profile card only - ONLY if Daniel approved them!
       const profileCardBadge = document.getElementById('profile-card-beta-badge');
-      const isBetaRider = (authUser && (
+      const isApprovedBetaRider = authUser && (
         authUser.is_beta_rider === true || 
         authUser.beta_status === 'approved' ||
         (['d_puerta@hotmail.com', 'admin.holygust@gmail.com', 'd.puertadiaz@gmail.com'].includes((authUser.email || '').toLowerCase().trim()) && authUser.beta_status !== 'left')
-      ) && authUser.beta_status !== 'left') || isBetaHost || isLabActive;
+      ) && authUser.beta_status !== 'left';
+
+      const hasBetaAccess = isApprovedBetaRider || isBetaHost || isLabActive;
 
       if (profileCardBadge) {
-        if (isBetaRider) {
+        if (isApprovedBetaRider) {
           profileCardBadge.classList.remove('hidden');
         } else {
           profileCardBadge.classList.add('hidden');
@@ -4797,7 +4854,7 @@
       // 3. Header Buttons (Beta Features: Trip Advisor & Spot Wind Alarms)
       const headerTravelBtn = document.getElementById('header-travel-btn');
       const headerAlarmBtn = document.getElementById('header-alarm-btn');
-      if (isBetaRider || isBetaHost || isLabActive) {
+      if (hasBetaAccess) {
         if (headerTravelBtn) headerTravelBtn.classList.remove('hidden');
         if (headerAlarmBtn) headerAlarmBtn.classList.remove('hidden');
       } else {
@@ -4812,7 +4869,7 @@
 
       if (cards.length > 0) {
         let cardContent = '';
-        if (isBetaRider) {
+        if (isApprovedBetaRider) {
           cardContent = `
             <div class="space-y-2.5">
               <div class="flex items-center space-x-3">
@@ -4883,14 +4940,18 @@
 
     async function leaveBetaCrew() {
       if (!authUser || !authUser.email) return;
-      if (!confirm("Are you sure you want to leave the HolyGust Beta Rider program?\n\nYou will return to the standard production environment and your Beta Rider badge will be removed.")) {
+      if (!confirm("Are you sure you want to leave the HolyGust Beta Rider program?\n\nYou will return to standard rider status. Your kites, boards, and personal setup will remain 100% saved.")) {
         return;
       }
       try {
         const res = await fetch('/api/beta/leave', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: authUser.email })
+          body: JSON.stringify({
+            email: authUser.email,
+            gear: state.inventory,
+            boards: state.boards || []
+          })
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Could not leave beta");
@@ -4904,14 +4965,19 @@
         localStorage.setItem('kf_auth_user', JSON.stringify(authUser));
         localStorage.removeItem('hg_beta_mode');
 
+        // CRITICAL: Ensure local inventory and boards are NEVER wiped or altered
+        if (state.inventory && state.inventory.length > 0) {
+          localStorage.setItem('kf_inventory', JSON.stringify(state.inventory));
+        }
+        if (state.boards && state.boards.length > 0) {
+          localStorage.setItem('kf_boards', JSON.stringify(state.boards));
+        }
+
         updateAuthUI();
         renderBetaUI();
+        renderQuiver();
 
-        alert("You have left the Beta program and returned to standard production.");
-
-        if (window.location.hostname.startsWith('beta.') || window.location.hostname.includes('-beta')) {
-          window.location.href = "https://holygust.com";
-        }
+        alert("✅ You have left the Beta program. Your kites and settings are completely preserved.");
       } catch (err) {
         alert("Error leaving beta: " + err.message);
       }
@@ -6270,7 +6336,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=13').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=14').then(reg => {
           reg.update();
         }).catch(err => console.log('SW register failed:', err));
       }
