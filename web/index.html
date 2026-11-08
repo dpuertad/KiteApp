@@ -1874,16 +1874,27 @@
       }
     }
 
-    function calculateStabilityScore(windKts, gustKts) {
+    function calculateStabilityScore(windKts, gustKts, shoreType) {
       if (windKts <= 4) {
         return { score: 10, rating: "10/10", label: "Calm / Light", badgeColor: "sky", description: "Sub-planing breeze, ultra calm" };
       }
       const ratio = gustKts / Math.max(windKts, 1.0);
+      const isOffLand = shoreType === 'Side-Offshore' || shoreType === 'Offshore';
+
       if (ratio <= 1.15) {
+        if (isOffLand) {
+          return { score: 7, rating: "7/10", label: "Steady Off-Land", badgeColor: "teal", description: "Consistent off-land breeze, caution for terrain shadows" };
+        }
         return { score: 10, rating: "10/10", label: "Butter Smooth", badgeColor: "emerald", description: "Ultra smooth trade winds, steady pull" };
       } else if (ratio <= 1.25) {
+        if (isOffLand) {
+          return { score: 7, rating: "7/10", label: "Steady Off-Land", badgeColor: "teal", description: "Steady off-land breeze, minor inland turbulence" };
+        }
         return { score: 9, rating: "9/10", label: "Steady & Clean", badgeColor: "emerald", description: "Consistent steady wind with minimal gust variation" };
       } else if (ratio <= 1.35) {
+        if (isOffLand) {
+          return { score: 6, rating: "6/10", label: "Gusty Off-Land", badgeColor: "amber", description: "Side-offshore pulses with terrain turbulence" };
+        }
         return { score: 8, rating: "8/10", label: "Clean Breezes", badgeColor: "teal", description: "Comfortable steady wind, gentle predictable pulses" };
       } else if (ratio <= 1.45) {
         return { score: 6, rating: "6/10", label: "Moderate Gusts", badgeColor: "amber", description: "Noticeable gusts, standard bar sheeting adjustments" };
@@ -1931,7 +1942,7 @@
           riderIndex: riderIndex,
           advice: `Tropical warm water (${wDisplay}°C) & air (${aDisplay}°C) — No neoprene needed, wear rashguard & sunscreen.`
         };
-      } else if (riderIndex >= 20.5 && feelsLikeWet >= 19.0) {
+      } else if (riderIndex >= 21.0 && feelsLikeWet >= 19.5 && wTemp >= 21.0 && wSpeed < 22.0) {
         return {
           wetsuit: "2mm Shorty",
           tag: "🏄 2mm Shorty / Top",
@@ -1942,8 +1953,7 @@
           riderIndex: riderIndex,
           advice: `Pleasant water (${wDisplay}°C) & mild air (${aDisplay}°C) — 2mm shorty or top protects from mild breeze.`
         };
-      } else if (wTemp > 15.5 && riderIndex >= 15.5) {
-        // e.g. Tarifa in November: Water 20C, Wind Chill 14C -> Full 3/2mm suit required!
+      } else if (wTemp >= 20.0 && riderIndex >= 18.0 && wSpeed < 22.0) {
         return {
           wetsuit: "3/2mm Fullsuit",
           tag: "🏄 3/2mm Fullsuit",
@@ -1952,18 +1962,19 @@
           airTemp: aDisplay,
           windChill: chillDisplay,
           riderIndex: riderIndex,
-          advice: `Cool wind chill (feels ${chillDisplay}°C) & ${wDisplay}°C sea — 3/2mm full steamer required to prevent evaporative wind cooling.`
+          advice: `Mild water (${wDisplay}°C) & ${chillDisplay}°C chill — 3/2mm full steamer provides comfortable warmth.`
         };
-      } else if (riderIndex >= 11.5 || wTemp >= 13.5) {
+      } else if (riderIndex >= 12.0 || wTemp >= 14.0) {
+        // e.g. Tarifa in autumn/winter (water ~18-19.5°C, gusts 25-35 kts): 4/3mm Steamer recommended (3/2mm is borderline in high wind)
         return {
           wetsuit: "4/3mm Steamer",
-          tag: "❄️ 4/3mm Steamer",
+          tag: "🧥 4/3mm Steamer",
           badgeColor: "indigo",
           waterTemp: wDisplay,
           airTemp: aDisplay,
           windChill: chillDisplay,
           riderIndex: riderIndex,
-          advice: `Cold session (water ${wDisplay}°C, chill ${chillDisplay}°C) — 4/3mm sealed wetsuit recommended.`
+          advice: `Cool session (water ${wDisplay}°C, wind chill ${chillDisplay}°C, wind ${Math.round(wSpeed)} kts) — 4/3mm sealed steamer recommended (3/2mm is borderline in high wind).`
         };
       } else {
         return {
@@ -6336,7 +6347,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=15').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=16').then(reg => {
           reg.update();
         }).catch(err => console.log('SW register failed:', err));
       }

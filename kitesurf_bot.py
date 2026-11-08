@@ -703,8 +703,8 @@ def calculate_shoreline_status(wind_deg: float, beach_deg: float) -> dict:
         }
 
 
-def calculate_stability_score(wind_kts: float, gust_kts: float) -> dict:
-    """Calculates 1-10 wind punchiness / stability score comparing gusts to sustained wind."""
+def calculate_stability_score(wind_kts: float, gust_kts: float, shore_type: str = None) -> dict:
+    """Calculates 1-10 wind punchiness / stability score comparing gusts to sustained wind and coastline exposure."""
     if wind_kts <= 4:
         return {
             "score": 10,
@@ -715,7 +715,18 @@ def calculate_stability_score(wind_kts: float, gust_kts: float) -> dict:
             "description": "Sub-planing breeze, ultra calm"
         }
     ratio = gust_kts / max(wind_kts, 1.0)
+    is_off_land = shore_type in ["Side-Offshore", "Offshore"]
+
     if ratio <= 1.15:
+        if is_off_land:
+            return {
+                "score": 7,
+                "rating": "7/10",
+                "label": "Steady Off-Land",
+                "pill": "7/10 Off-Land",
+                "badge_color": "teal",
+                "description": "Consistent off-land breeze, caution for terrain shadows"
+            }
         return {
             "score": 10,
             "rating": "10/10",
@@ -725,6 +736,15 @@ def calculate_stability_score(wind_kts: float, gust_kts: float) -> dict:
             "description": "Ultra smooth laminar flow (trade winds), steady pull"
         }
     elif ratio <= 1.25:
+        if is_off_land:
+            return {
+                "score": 7,
+                "rating": "7/10",
+                "label": "Steady Off-Land",
+                "pill": "7/10 Off-Land",
+                "badge_color": "teal",
+                "description": "Steady off-land breeze, minor inland turbulence"
+            }
         return {
             "score": 9,
             "rating": "9/10",
@@ -734,6 +754,15 @@ def calculate_stability_score(wind_kts: float, gust_kts: float) -> dict:
             "description": "Consistent steady wind with minimal gust variation"
         }
     elif ratio <= 1.35:
+        if is_off_land:
+            return {
+                "score": 6,
+                "rating": "6/10",
+                "label": "Gusty Off-Land",
+                "pill": "6/10 Gusty",
+                "badge_color": "amber",
+                "description": "Side-offshore pulses with terrain turbulence"
+            }
         return {
             "score": 8,
             "rating": "8/10",
@@ -835,7 +864,7 @@ def calculate_wetsuit_guide(water_temp, air_temp, wind_kts=15.0, apparent_temp=N
             "limiting_factor": "warm",
             "advice": f"Tropical warm water ({w_display}°C) & air ({a_display}°C) — No neoprene needed, wear rashguard & sunscreen"
         }
-    elif rider_index >= 20.5 and feels_like_wet >= 19.0:
+    elif rider_index >= 21.0 and feels_like_wet >= 19.5 and w_temp >= 21.0 and w_speed < 22.0:
         return {
             "wetsuit": "2mm Shorty",
             "gear": "2mm Shorty / Neoprene Top",
@@ -850,12 +879,11 @@ def calculate_wetsuit_guide(water_temp, air_temp, wind_kts=15.0, apparent_temp=N
             "limiting_factor": "mild",
             "advice": f"Pleasant water ({w_display}°C) & mild air ({a_display}°C) — 2mm shorty or top protects from mild breeze"
         }
-    elif w_temp > 15.5 and rider_index >= 15.5:
-        # e.g. Tarifa in Nov: water 19.8C, chill 14.8C -> 3/2mm full steamer protects from wind chill
+    elif w_temp >= 20.0 and rider_index >= 18.0 and w_speed < 22.0:
         return {
             "wetsuit": "3/2mm Fullsuit",
             "gear": "3/2mm Full Wetsuit (Steamer)",
-            "icon": "🧥",
+            "icon": "🏄",
             "tag": "🏄 3/2mm Fullsuit",
             "pill": "3/2mm Fullsuit",
             "badge_color": "sky",
@@ -864,23 +892,23 @@ def calculate_wetsuit_guide(water_temp, air_temp, wind_kts=15.0, apparent_temp=N
             "wind_chill": chill_display,
             "rider_index": rider_index,
             "limiting_factor": "wind_chill" if feels_like_wet < w_temp else "water",
-            "advice": f"Cool wind chill (feels {chill_display}°C) & {w_display}°C sea — 3/2mm full steamer required to prevent evaporative wind cooling"
+            "advice": f"Mild water ({w_display}°C) & {chill_display}°C chill — 3/2mm full steamer provides comfortable warmth"
         }
-    elif rider_index >= 11.5 or w_temp >= 13.5:
-        # e.g. Cape Town: water 15C
+    elif rider_index >= 12.0 or w_temp >= 14.0:
+        # e.g. Tarifa in autumn/winter (water ~18-19.5°C, gusts 25-35 kts): 4/3mm Steamer recommended (3/2mm is borderline in strong wind)
         return {
             "wetsuit": "4/3mm Steamer",
             "gear": "4/3mm Sealed Steamer",
-            "icon": "❄️",
-            "tag": "❄️ 4/3mm Steamer",
+            "icon": "🧥",
+            "tag": "🧥 4/3mm Steamer",
             "pill": "4/3mm Steamer",
             "badge_color": "indigo",
             "water_temp": w_display,
             "air_temp": a_display,
             "wind_chill": chill_display,
             "rider_index": rider_index,
-            "limiting_factor": "cold_water" if w_temp < feels_like_wet else "cold_wind",
-            "advice": f"Cold session (water {w_display}°C, chill {chill_display}°C) — 4/3mm sealed wetsuit recommended"
+            "limiting_factor": "cold_wind" if feels_like_wet < w_temp else "water",
+            "advice": f"Cool session (water {w_display}°C, wind chill {chill_display}°C, wind {round_knots(w_speed)} kts) — 4/3mm sealed steamer recommended (3/2mm is borderline in high wind)"
         }
     else:
         return {
@@ -1036,9 +1064,9 @@ GLOBAL_THERMAL_SPOTS = {
     "barra grande": {"name": "Barra Grande", "boost_pct": 0.18, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Piauí flatwater thermal boost"},
     "atins": {"name": "Atins", "boost_pct": 0.18, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Lençóis Maranhenses dune heating"},
     # Europe
-    "tarifa": {"name": "Tarifa", "boost_pct": 0.20, "peak_start": 13, "peak_end": 18, "months": [4,5,6,7,8,9,10], "desc": "Strait of Gibraltar venturi + thermal Poniente"},
-    "lances": {"name": "Tarifa Los Lances", "boost_pct": 0.20, "peak_start": 13, "peak_end": 18, "months": [4,5,6,7,8,9,10], "desc": "Poniente thermal boost"},
-    "valdevaqueros": {"name": "Valdevaqueros", "boost_pct": 0.22, "peak_start": 13, "peak_end": 18, "months": [4,5,6,7,8,9,10], "desc": "Dune thermal acceleration + venturi"},
+    "tarifa": {"name": "Tarifa", "boost_pct": 0.22, "peak_start": 12, "peak_end": 17, "months": [1,2,3,4,5,6,7,8,9,10,11,12], "desc": "Strait of Gibraltar venturi & Levante thermal acceleration"},
+    "lances": {"name": "Tarifa Los Lances", "boost_pct": 0.22, "peak_start": 12, "peak_end": 17, "months": [1,2,3,4,5,6,7,8,9,10,11,12], "desc": "Strait of Gibraltar venturi & Levante thermal acceleration"},
+    "valdevaqueros": {"name": "Valdevaqueros", "boost_pct": 0.25, "peak_start": 12, "peak_end": 17, "months": [1,2,3,4,5,6,7,8,9,10,11,12], "desc": "Dune acceleration & Strait venturi"},
     "garda": {"name": "Lake Garda", "boost_pct": 0.25, "peak_start": 12, "peak_end": 17, "months": [4,5,6,7,8,9,10], "desc": "Ora afternoon alpine thermal wind"},
     "silvaplana": {"name": "Lake Silvaplana", "boost_pct": 0.30, "peak_start": 12, "peak_end": 16, "months": [5,6,7,8,9], "desc": "Maloja alpine thermal wind"},
     "prasonisi": {"name": "Prasonisi", "boost_pct": 0.20, "peak_start": 11, "peak_end": 17, "months": [5,6,7,8,9,10], "desc": "Meltemi thermal channel acceleration"},
@@ -1110,7 +1138,11 @@ def calculate_thermal_calibration(
                 is_active = True
 
     boosted_wind = round_knots(base_wind * (1.0 + boost_pct))
-    boosted_gust = round_knots(max(base_gust, boosted_wind * 1.18))
+    # In off-land or Levante winds (60-120 deg or side-offshore), gustiness is significantly higher
+    if shore_diff > 90.0:
+        boosted_gust = round_knots(max(base_gust, boosted_wind * 1.48, base_wind + 8.5))
+    else:
+        boosted_gust = round_knots(max(base_gust, boosted_wind * 1.25))
     boost_kts = round(boosted_wind - base_wind, 1)
 
     return {
@@ -1162,8 +1194,17 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
     }
     url = f"https://api.open-meteo.com/v1/forecast?{urllib.parse.urlencode(params)}"
     req = urllib.request.Request(url, headers={"User-Agent": "KiteForecastBot/1.0"})
-    with urllib.request.urlopen(req, context=SSL_CTX, timeout=10) as response:
-        data = json.loads(response.read().decode("utf-8"))
+    try:
+        with urllib.request.urlopen(req, context=SSL_CTX, timeout=6) as response:
+            data = json.loads(response.read().decode("utf-8"))
+    except Exception as e:
+        # Fast fallback: query single best_match model (super fast ~150ms, never times out)
+        fast_params = dict(params)
+        fast_params["models"] = "best_match"
+        fast_url = f"https://api.open-meteo.com/v1/forecast?{urllib.parse.urlencode(fast_params)}"
+        req_fast = urllib.request.Request(fast_url, headers={"User-Agent": "KiteForecastBot/1.0"})
+        with urllib.request.urlopen(req_fast, context=SSL_CTX, timeout=8) as response:
+            data = json.loads(response.read().decode("utf-8"))
     
     utc_offset = data.get("utc_offset_seconds")
     spot_tz = data.get("timezone", spot.get("timezone", "auto"))
@@ -1223,7 +1264,7 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
             "direction": degrees_to_cardinal(d_val),
             "degrees": d_val,
             "temp": t_val,
-            "stability": calculate_stability_score(w_calib, g_calib),
+            "stability": calculate_stability_score(w_calib, g_calib, shore.get("type")),
             "shoreline": shore,
             "consensus": calculate_model_consensus(e_calib, gf_val, ic_val),
             "thermal": calib
@@ -1287,7 +1328,7 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
     calib_gfs = gfs_speeds[cur_hr] if len(gfs_speeds) > cur_hr else cur_wind
     calib_icon = icon_speeds[cur_hr] if len(icon_speeds) > cur_hr else cur_wind
 
-    cur_stability = calculate_stability_score(cur_wind, cur_gust)
+    cur_stability = calculate_stability_score(cur_wind, cur_gust, cur_shore.get("type"))
     cur_consensus = calculate_model_consensus(calib_ecmwf, calib_gfs, calib_icon)
 
     today_temps = temps[:24] if len(temps) >= 24 else temps
@@ -1457,8 +1498,17 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
 def fetch_weather_metno(spot: dict) -> dict:
     url = f"https://api.met.no/weatherapi/locationforecast/2.0/compact?lat={spot['lat']}&lon={spot['lon']}"
     req = urllib.request.Request(url, headers={"User-Agent": "KiteForecastBot/1.0 (team@holygust.com)"})
-    with urllib.request.urlopen(req, context=SSL_CTX, timeout=10) as response:
-        data = json.loads(response.read().decode("utf-8"))
+    try:
+        with urllib.request.urlopen(req, context=SSL_CTX, timeout=6) as response:
+            data = json.loads(response.read().decode("utf-8"))
+    except Exception as e:
+        # Fast fallback: query single best_match model (super fast ~150ms, never times out)
+        fast_params = dict(params)
+        fast_params["models"] = "best_match"
+        fast_url = f"https://api.open-meteo.com/v1/forecast?{urllib.parse.urlencode(fast_params)}"
+        req_fast = urllib.request.Request(fast_url, headers={"User-Agent": "KiteForecastBot/1.0"})
+        with urllib.request.urlopen(req_fast, context=SSL_CTX, timeout=8) as response:
+            data = json.loads(response.read().decode("utf-8"))
 
     series = data.get("properties", {}).get("timeseries", [])
     if not series:
@@ -1472,7 +1522,7 @@ def fetch_weather_metno(spot: dict) -> dict:
     cur_dir = degrees_to_cardinal(cur_dir_deg)
 
     beach_angle = resolve_beach_angle(spot.get("name", ""), spot.get("beach_angle"))
-    cur_stability = calculate_stability_score(cur_wind, cur_gust)
+    cur_stability = calculate_stability_score(cur_wind, cur_gust, cur_shore.get("type"))
     cur_shoreline = calculate_shoreline_status(cur_dir_deg, beach_angle)
     cur_consensus = calculate_model_consensus(cur_wind, cur_wind + 1, cur_wind)
 
