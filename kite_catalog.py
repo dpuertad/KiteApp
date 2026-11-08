@@ -169,65 +169,80 @@ KITE_CATALOG = {
         }
     },
     "Harlem": {
-        "Thrive V1": {
-            "type": "3-Strut All-Round / Wave / Progression",
-            "material": "Brainchild PRO Weld / Eco Fabric",
+        "Force": {
+            "type": "5-Strut Extreme Big Air Powerhouse (Lorenzo Casati Weapon)",
+            "material": "Brainchild PRO Weld / Stiff Rigid Frame",
             "sizes": {
-                5: {"min": 24, "sweet": (28, 38), "max": 42},
-                6: {"min": 21, "sweet": (25, 35), "max": 40},
-                7: {"min": 19, "sweet": (22, 32), "max": 38},
-                8: {"min": 17, "sweet": (20, 30), "max": 36},
-                9: {"min": 15, "sweet": (18, 27), "max": 34},
-                10: {"min": 13.5, "sweet": (16, 25), "max": 32},
-                11: {"min": 12.5, "sweet": (15, 23), "max": 29},
-                12: {"min": 11.5, "sweet": (13.5, 21), "max": 27},
-                13: {"min": 10.5, "sweet": (12.5, 19), "max": 24},
-                15: {"min": 9.5, "sweet": (11, 17), "max": 22},
+                6: {"min": 22, "sweet": (26, 38), "max": 44},
+                7: {"min": 19.5, "sweet": (23.5, 35), "max": 42},
+                8: {"min": 17.5, "sweet": (21.5, 33), "max": 40},
+                9: {"min": 15.5, "sweet": (19.5, 30), "max": 37},
+                10: {"min": 14, "sweet": (17.5, 27.5), "max": 34},
+                11: {"min": 12.5, "sweet": (16, 25.5), "max": 31},
+                12: {"min": 11.5, "sweet": (14.5, 23.5), "max": 29},
             }
         },
         "Thrive": {
-            "type": "3-Strut All-Round / Wave / Progression",
+            "type": "3-Strut All-Round / Big Air / Loop (Hadlow & Grösel)",
+            "material": "Brainchild PRO Weld / Twincross FlyLite",
+            "sizes": {
+                6: {"min": 21, "sweet": (24.5, 33), "max": 39},
+                7: {"min": 19, "sweet": (22.5, 31.5), "max": 37},
+                8: {"min": 17, "sweet": (20.5, 29.5), "max": 35},
+                9: {"min": 15, "sweet": (18.5, 26.5), "max": 33},
+                10: {"min": 13.5, "sweet": (17, 25), "max": 31},
+                11: {"min": 12.5, "sweet": (15.5, 23), "max": 28},
+                12: {"min": 11.5, "sweet": (14.5, 21.5), "max": 26},
+                13: {"min": 10.5, "sweet": (13.5, 20), "max": 24},
+                15: {"min": 9.5, "sweet": (11.5, 17.5), "max": 21},
+            }
+        },
+        "Thrive V2": {
+            "type": "3-Strut Next-Gen ProWeld All-Rounder",
             "material": "Brainchild PRO Weld",
             "sizes": {
-                7: {"min": 19, "sweet": (22, 32), "max": 38},
-                8: {"min": 17, "sweet": (20, 30), "max": 36},
-                9: {"min": 15, "sweet": (18, 27), "max": 34},
-                10: {"min": 13.5, "sweet": (16, 25), "max": 32},
-                12: {"min": 11.5, "sweet": (13.5, 21), "max": 27},
-            }
-        },
-        "Force": {
-            "type": "3-Strut Big Air / Boop Machine",
-            "material": "PRO Titanium / Brainchild",
-            "sizes": {
-                6: {"min": 21, "sweet": (25, 36), "max": 42},
-                7: {"min": 18, "sweet": (22, 34), "max": 40},
-                8: {"min": 16, "sweet": (20, 32), "max": 38},
-                9: {"min": 14, "sweet": (18, 29), "max": 35},
-                10: {"min": 12.5, "sweet": (16, 26), "max": 32},
-                11: {"min": 11.5, "sweet": (14.5, 24), "max": 29},
-                12: {"min": 10.5, "sweet": (13, 22), "max": 27},
-            }
-        },
-        "Pace": {
-            "type": "3-Strut Freeride / Progression",
-            "material": "Brainchild Weld Tech",
-            "sizes": {
-                7: {"min": 19, "sweet": (22, 30), "max": 36},
-                8: {"min": 17, "sweet": (20, 28), "max": 34},
-                9: {"min": 15, "sweet": (18, 26), "max": 32},
-                10: {"min": 13.5, "sweet": (16, 24), "max": 30},
-                12: {"min": 11.5, "sweet": (13.5, 20), "max": 26},
-                14: {"min": 10, "sweet": (12, 17), "max": 22},
+                7: {"min": 19, "sweet": (22.5, 31.5), "max": 37},
+                8: {"min": 17, "sweet": (20.5, 29.5), "max": 35},
+                9: {"min": 15, "sweet": (18.5, 26.5), "max": 33},
+                10: {"min": 13.5, "sweet": (17, 25), "max": 31},
+                12: {"min": 11.5, "sweet": (14.5, 21.5), "max": 26},
             }
         },
         "Light": {
-            "type": "Light Wind Freeride / Foil",
+            "type": "1-Strut Light Wind & Hydrofoil Specialist",
             "material": "Ultra-light Brainchild Fabric",
             "sizes": {
                 13: {"min": 9.5, "sweet": (11.5, 17), "max": 22},
                 15: {"min": 8.5, "sweet": (10.5, 16), "max": 20},
                 17: {"min": 8, "sweet": (9.5, 14.5), "max": 18},
+            }
+        },
+        "Go": {
+            "type": "3-Strut Freeride / Progression",
+            "material": "Reinforced Dacron",
+            "sizes": {
+                7: {"min": 19, "sweet": (22, 30), "max": 36},
+                9: {"min": 15, "sweet": (18, 26), "max": 32},
+                12: {"min": 11.5, "sweet": (14, 21), "max": 26},
+            }
+        },
+        "Lead": {
+            "type": "3-Strut Wave / Drift",
+            "material": "Brainchild Weld Tech",
+            "sizes": {
+                6: {"min": 20, "sweet": (23.5, 33), "max": 38},
+                7: {"min": 18, "sweet": (21, 30), "max": 36},
+                8: {"min": 16, "sweet": (19, 27.5), "max": 34},
+                9: {"min": 14, "sweet": (17, 25), "max": 32},
+            }
+        },
+        "Sir": {
+            "type": "5-Strut Classic Big Air / High Wind",
+            "material": "High Tenacity Dacron",
+            "sizes": {
+                7: {"min": 20.5, "sweet": (24.5, 35), "max": 41},
+                9: {"min": 16.5, "sweet": (20.5, 29), "max": 35},
+                11: {"min": 13.5, "sweet": (17, 24.5), "max": 30},
             }
         }
     },

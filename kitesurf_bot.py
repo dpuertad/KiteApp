@@ -1443,7 +1443,10 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
         "weekly_forecast": weekly_forecast,
         "peak_session": peak_session,
         "tomorrow_peak_session": tomorrow_peak_session,
-        "thermal": thermal_meta
+        "thermal": thermal_meta,
+        "spot_type": spot.get("spot_type", "ocean"),
+        "elevation": spot.get("elevation", 0),
+        "is_lake": spot.get("spot_type") == "lake" or "lake" in spot.get("name", "").lower() or "reschensee" in spot.get("name", "").lower() or "silvaplana" in spot.get("name", "").lower()
     }
 
 

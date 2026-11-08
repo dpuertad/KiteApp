@@ -1,14 +1,10 @@
 """
 Comprehensive Global Kiteboarding & Wingfoil Spots Database
-Contains top international and regional kite spots with exact coordinates,
-coastline orientations, preferred regional high-res meteorological models,
-and coastal thermal venturi characteristics.
 """
 
 import math
 
 GLOBAL_KITE_SPOTS = [
-    # --- BRAZIL (CEARÁ & NORTHEAST TRADES) ---
     {
         "id": "cumbuco",
         "name": "Cumbuco, Brazil",
@@ -23,7 +19,13 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Thermal Venturi",
         "thermal_boost": 0.16,
-        "aliases": ["cumbuco", "duro beach", "caucaia"]
+        "aliases": [
+            "cumbuco",
+            "duro beach",
+            "caucaia"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "taiba",
@@ -39,7 +41,13 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Thermal Boost",
         "thermal_boost": 0.18,
-        "aliases": ["taiba", "lagoa da taiba", "secret spot taiba"]
+        "aliases": [
+            "taiba",
+            "lagoa da taiba",
+            "secret spot taiba"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "paracuru",
@@ -55,7 +63,12 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Coastal Reef Boost",
         "thermal_boost": 0.18,
-        "aliases": ["paracuru", "quebra mar"]
+        "aliases": [
+            "paracuru",
+            "quebra mar"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "lagoinha",
@@ -71,7 +84,12 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Dune Accel",
         "thermal_boost": 0.16,
-        "aliases": ["lagoinha", "paracuru lagoinha"]
+        "aliases": [
+            "lagoinha",
+            "paracuru lagoinha"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "flecheiras",
@@ -87,7 +105,15 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Reef Pass Boost",
         "thermal_boost": 0.18,
-        "aliases": ["flecheiras", "guajiru trairi", "trairi", "mundau", "mundaú"]
+        "aliases": [
+            "flecheiras",
+            "guajiru trairi",
+            "trairi",
+            "mundau",
+            "mundaú"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "moitas",
@@ -102,8 +128,16 @@ GLOBAL_KITE_SPOTS = [
         "beach_angle": 60.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Estuary Venturi",
-        "thermal_boost": 0.20,
-        "aliases": ["moitas", "rio aracatiacu", "aracatiacu", "moitas ceara", "praia de moitas"]
+        "thermal_boost": 0.2,
+        "aliases": [
+            "moitas",
+            "rio aracatiacu",
+            "aracatiacu",
+            "moitas ceara",
+            "praia de moitas"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "icaraizinho",
@@ -119,7 +153,14 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Bay Venturi",
         "thermal_boost": 0.18,
-        "aliases": ["icarai de amontada", "icaraizinho", "amontada", "canto das aguas"]
+        "aliases": [
+            "icarai de amontada",
+            "icaraizinho",
+            "amontada",
+            "canto das aguas"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "guajiru",
@@ -134,8 +175,14 @@ GLOBAL_KITE_SPOTS = [
         "beach_angle": 350.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Lagoon Chimney",
-        "thermal_boost": 0.20,
-        "aliases": ["ilha do guajiru", "itarema", "guajiru flat"]
+        "thermal_boost": 0.2,
+        "aliases": [
+            "ilha do guajiru",
+            "itarema",
+            "guajiru flat"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "prea",
@@ -150,8 +197,13 @@ GLOBAL_KITE_SPOTS = [
         "beach_angle": 340.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Prea Trade Venturi",
-        "thermal_boost": 0.20,
-        "aliases": ["prea", "praia do prea"]
+        "thermal_boost": 0.2,
+        "aliases": [
+            "prea",
+            "praia do prea"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "jericoacoara",
@@ -167,7 +219,13 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Sunset Dune Venturi",
         "thermal_boost": 0.22,
-        "aliases": ["jeri", "jericoacoara", "duna do por do sol"]
+        "aliases": [
+            "jeri",
+            "jericoacoara",
+            "duna do por do sol"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "macapa",
@@ -183,7 +241,12 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Delta Thermal",
         "thermal_boost": 0.18,
-        "aliases": ["macapa", "luis correia"]
+        "aliases": [
+            "macapa",
+            "luis correia"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "barra_grande",
@@ -192,14 +255,19 @@ GLOBAL_KITE_SPOTS = [
         "country": "Brazil",
         "region": "Piauí",
         "flag": "🇧🇷",
-        "lat": -2.9150,
-        "lon": -41.4420,
+        "lat": -2.915,
+        "lon": -41.442,
         "timezone": "America/Fortaleza",
         "beach_angle": 340.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Flatwater Thermal",
         "thermal_boost": 0.18,
-        "aliases": ["barra grande", "bg"]
+        "aliases": [
+            "barra grande",
+            "bg"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "atins",
@@ -215,7 +283,12 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Lençóis Heating",
         "thermal_boost": 0.18,
-        "aliases": ["atins", "lencois maranhenses"]
+        "aliases": [
+            "atins",
+            "lencois maranhenses"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "sao_miguel_gostoso",
@@ -231,7 +304,13 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Trade Accelerator",
         "thermal_boost": 0.15,
-        "aliases": ["gostoso", "sao miguel do gostoso", "ponta do santo cristo"]
+        "aliases": [
+            "gostoso",
+            "sao miguel do gostoso",
+            "ponta do santo cristo"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "pipa",
@@ -247,7 +326,13 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km)",
         "thermal_boost": 0.12,
-        "aliases": ["pipa", "tibau do sul", "madeiro"]
+        "aliases": [
+            "pipa",
+            "tibau do sul",
+            "madeiro"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "florianopolis",
@@ -262,8 +347,15 @@ GLOBAL_KITE_SPOTS = [
         "beach_angle": 110.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km)",
-        "thermal_boost": 0.10,
-        "aliases": ["florianopolis", "floripa", "campeche", "lagoa da conceicao"]
+        "thermal_boost": 0.1,
+        "aliases": [
+            "florianopolis",
+            "floripa",
+            "campeche",
+            "lagoa da conceicao"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "ibiraquera",
@@ -278,11 +370,15 @@ GLOBAL_KITE_SPOTS = [
         "beach_angle": 100.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Frontal Wave",
-        "thermal_boost": 0.10,
-        "aliases": ["ibiraquera", "barra de ibiraquera", "imbituba"]
+        "thermal_boost": 0.1,
+        "aliases": [
+            "ibiraquera",
+            "barra de ibiraquera",
+            "imbituba"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
-
-    # --- SPAIN & CANARY ISLANDS ---
     {
         "id": "tarifa",
         "name": "Tarifa (Los Lances), Spain",
@@ -296,8 +392,14 @@ GLOBAL_KITE_SPOTS = [
         "beach_angle": 220.0,
         "preferred_model": "icon_eu",
         "model_label": "ICON-EU (7km) / ECMWF + Strait Venturi",
-        "thermal_boost": 0.20,
-        "aliases": ["tarifa", "los lances", "cadiz"]
+        "thermal_boost": 0.2,
+        "aliases": [
+            "tarifa",
+            "los lances",
+            "cadiz"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "valdevaqueros",
@@ -313,7 +415,13 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "icon_eu",
         "model_label": "ICON-EU (7km) + Dune Acceleration",
         "thermal_boost": 0.22,
-        "aliases": ["valdevaqueros", "spin out", "tumbao"]
+        "aliases": [
+            "valdevaqueros",
+            "spin out",
+            "tumbao"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "sotavento",
@@ -328,8 +436,15 @@ GLOBAL_KITE_SPOTS = [
         "beach_angle": 110.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Valley Venturi",
-        "thermal_boost": 0.20,
-        "aliases": ["sotavento", "fuerteventura", "costa calma", "rene egli"]
+        "thermal_boost": 0.2,
+        "aliases": [
+            "sotavento",
+            "fuerteventura",
+            "costa calma",
+            "rene egli"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "el_cotillo",
@@ -345,7 +460,12 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Atlantic Swell",
         "thermal_boost": 0.12,
-        "aliases": ["el cotillo", "cotillo lagoons"]
+        "aliases": [
+            "el cotillo",
+            "cotillo lagoons"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "pozo",
@@ -360,8 +480,14 @@ GLOBAL_KITE_SPOTS = [
         "beach_angle": 90.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Trade Venturi",
-        "thermal_boost": 0.20,
-        "aliases": ["pozo", "pozo izquierdo", "gran canaria"]
+        "thermal_boost": 0.2,
+        "aliases": [
+            "pozo",
+            "pozo izquierdo",
+            "gran canaria"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "el_medano",
@@ -377,7 +503,13 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Teide Thermal",
         "thermal_boost": 0.18,
-        "aliases": ["el medano", "medano", "tenerife"]
+        "aliases": [
+            "el medano",
+            "medano",
+            "tenerife"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "famara",
@@ -387,13 +519,19 @@ GLOBAL_KITE_SPOTS = [
         "region": "Canary Islands",
         "flag": "🇪🇸",
         "lat": 29.1167,
-        "lon": -13.5500,
+        "lon": -13.55,
         "timezone": "Atlantic/Canary",
         "beach_angle": 320.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Cliff Venturi",
         "thermal_boost": 0.15,
-        "aliases": ["famara", "caleta de famara", "lanzarote"]
+        "aliases": [
+            "famara",
+            "caleta de famara",
+            "lanzarote"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "delta_ebro",
@@ -409,7 +547,13 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "icon_eu",
         "model_label": "ICON-EU (7km) + Mestral Boost",
         "thermal_boost": 0.18,
-        "aliases": ["delta de l'ebre", "riumar", "trabucador"]
+        "aliases": [
+            "delta de l'ebre",
+            "riumar",
+            "trabucador"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "roses",
@@ -424,11 +568,15 @@ GLOBAL_KITE_SPOTS = [
         "beach_angle": 80.0,
         "preferred_model": "icon_eu",
         "model_label": "ICON-EU (7km) + Garbí Thermal",
-        "thermal_boost": 0.20,
-        "aliases": ["roses", "sant pere pescador", "costa brava"]
+        "thermal_boost": 0.2,
+        "aliases": [
+            "roses",
+            "sant pere pescador",
+            "costa brava"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
-
-    # --- SWITZERLAND & ALPINE LAKES ---
     {
         "id": "silvaplana",
         "name": "Lake Silvaplana, Switzerland",
@@ -442,8 +590,15 @@ GLOBAL_KITE_SPOTS = [
         "beach_angle": 50.0,
         "preferred_model": "icon_d2",
         "model_label": "ICON-D2 (2km Swiss High-Res) + Maloja Thermal",
-        "thermal_boost": 0.30,
-        "aliases": ["silvaplana", "engadin", "st moritz", "maloja"]
+        "thermal_boost": 0.3,
+        "aliases": [
+            "silvaplana",
+            "engadin",
+            "st moritz",
+            "maloja"
+        ],
+        "spot_type": "lake",
+        "elevation": 1791
     },
     {
         "id": "lake_uri",
@@ -459,7 +614,14 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "icon_d2",
         "model_label": "ICON-D2 (2km Swiss High-Res) + Föhn Thermal",
         "thermal_boost": 0.25,
-        "aliases": ["lake uri", "urnersee", "fluelen", "isleten"]
+        "aliases": [
+            "lake uri",
+            "urnersee",
+            "fluelen",
+            "isleten"
+        ],
+        "spot_type": "lake",
+        "elevation": 434
     },
     {
         "id": "lake_neuchatel",
@@ -475,7 +637,14 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "icon_d2",
         "model_label": "ICON-D2 (2km High-Res) + Bise Boost",
         "thermal_boost": 0.15,
-        "aliases": ["yvonand", "neuchatel", "portalban", "saint blaise"]
+        "aliases": [
+            "yvonand",
+            "neuchatel",
+            "portalban",
+            "saint blaise"
+        ],
+        "spot_type": "lake",
+        "elevation": 200
     },
     {
         "id": "garda",
@@ -491,7 +660,14 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "icon_d2",
         "model_label": "ICON-D2 (2km Alpine High-Res) + Ora Thermal",
         "thermal_boost": 0.25,
-        "aliases": ["garda", "torbole", "malcesine", "riva del garda"]
+        "aliases": [
+            "garda",
+            "torbole",
+            "malcesine",
+            "riva del garda"
+        ],
+        "spot_type": "lake",
+        "elevation": 65
     },
     {
         "id": "lake_como",
@@ -507,10 +683,15 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "icon_d2",
         "model_label": "ICON-D2 (2km Alpine High-Res) + Breva Thermal",
         "thermal_boost": 0.25,
-        "aliases": ["como", "colico", "gera lario", "dervio"]
+        "aliases": [
+            "como",
+            "colico",
+            "gera lario",
+            "dervio"
+        ],
+        "spot_type": "lake",
+        "elevation": 198
     },
-
-    # --- FRANCE ---
     {
         "id": "leucate",
         "name": "Leucate / La Franqui, France",
@@ -525,7 +706,14 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "best_match",
         "model_label": "AROME (1.5km French High-Res) + Tramontana",
         "thermal_boost": 0.18,
-        "aliases": ["leucate", "la franqui", "plage des coussoules", "wesh center"]
+        "aliases": [
+            "leucate",
+            "la franqui",
+            "plage des coussoules",
+            "wesh center"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "almanarre",
@@ -540,11 +728,15 @@ GLOBAL_KITE_SPOTS = [
         "beach_angle": 270.0,
         "preferred_model": "best_match",
         "model_label": "AROME (1.5km) + Mistral Acceleration",
-        "thermal_boost": 0.20,
-        "aliases": ["hyeres", "almanarre", "presqu'ile de giens"]
+        "thermal_boost": 0.2,
+        "aliases": [
+            "hyeres",
+            "almanarre",
+            "presqu'ile de giens"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
-
-    # --- EGYPT & MOROCCO ---
     {
         "id": "dakhla",
         "name": "Dakhla (Lagoon), Morocco",
@@ -558,8 +750,16 @@ GLOBAL_KITE_SPOTS = [
         "beach_angle": 270.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Sahara Desert Thermal",
-        "thermal_boost": 0.20,
-        "aliases": ["dakhla", "pk25", "speed spot", "white dune", "dakhla attitude"]
+        "thermal_boost": 0.2,
+        "aliases": [
+            "dakhla",
+            "pk25",
+            "speed spot",
+            "white dune",
+            "dakhla attitude"
+        ],
+        "spot_type": "lagoon",
+        "elevation": 2
     },
     {
         "id": "essaouira",
@@ -569,13 +769,19 @@ GLOBAL_KITE_SPOTS = [
         "region": "Marrakech-Safi",
         "flag": "🇲🇦",
         "lat": 31.5125,
-        "lon": -9.7700,
+        "lon": -9.77,
         "timezone": "Africa/Casablanca",
         "beach_angle": 280.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Alizé Trade",
         "thermal_boost": 0.18,
-        "aliases": ["essaouira", "sidi kaouki", "moulay"]
+        "aliases": [
+            "essaouira",
+            "sidi kaouki",
+            "moulay"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "el_gouna",
@@ -591,7 +797,14 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Red Sea Channel",
         "thermal_boost": 0.18,
-        "aliases": ["el gouna", "mangroovy", "red sea zone", "sliders"]
+        "aliases": [
+            "el gouna",
+            "mangroovy",
+            "red sea zone",
+            "sliders"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "soma_bay",
@@ -600,17 +813,21 @@ GLOBAL_KITE_SPOTS = [
         "country": "Egypt",
         "region": "Red Sea",
         "flag": "🇪🇬",
-        "lat": 26.8500,
+        "lat": 26.85,
         "lon": 33.9833,
         "timezone": "Africa/Cairo",
         "beach_angle": 70.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Desert Thermal",
         "thermal_boost": 0.18,
-        "aliases": ["soma bay", "safaga", "7bft"]
+        "aliases": [
+            "soma bay",
+            "safaga",
+            "7bft"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
-
-    # --- GREECE & ITALY ---
     {
         "id": "prasonisi",
         "name": "Prasonisi (Rhodes), Greece",
@@ -624,8 +841,14 @@ GLOBAL_KITE_SPOTS = [
         "beach_angle": 130.0,
         "preferred_model": "icon_eu",
         "model_label": "ICON-EU / ECMWF + Meltemi Channel",
-        "thermal_boost": 0.20,
-        "aliases": ["prasonisi", "rhodes", "rodos"]
+        "thermal_boost": 0.2,
+        "aliases": [
+            "prasonisi",
+            "rhodes",
+            "rodos"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "paros",
@@ -641,7 +864,13 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "icon_eu",
         "model_label": "ICON-EU / ECMWF + Antiparos Strait",
         "thermal_boost": 0.22,
-        "aliases": ["paros", "pounda", "antiparos"]
+        "aliases": [
+            "paros",
+            "pounda",
+            "antiparos"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "lefkada",
@@ -657,7 +886,13 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "icon_eu",
         "model_label": "ICON-EU / ECMWF + Ionian Thermal",
         "thermal_boost": 0.22,
-        "aliases": ["lefkada", "agios ioannis", "milos beach"]
+        "aliases": [
+            "lefkada",
+            "agios ioannis",
+            "milos beach"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "stagnone",
@@ -672,8 +907,15 @@ GLOBAL_KITE_SPOTS = [
         "beach_angle": 270.0,
         "preferred_model": "icon_eu",
         "model_label": "ICON-EU / ECMWF + Shallow Basin Thermal",
-        "thermal_boost": 0.20,
-        "aliases": ["stagnone", "marsala", "sicily", "birgi"]
+        "thermal_boost": 0.2,
+        "aliases": [
+            "stagnone",
+            "marsala",
+            "sicily",
+            "birgi"
+        ],
+        "spot_type": "lagoon",
+        "elevation": 2
     },
     {
         "id": "porto_pollo",
@@ -689,10 +931,14 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "icon_eu",
         "model_label": "ICON-EU / ECMWF + Bonifacio Strait Venturi",
         "thermal_boost": 0.22,
-        "aliases": ["porto pollo", "sardinia", "palau"]
+        "aliases": [
+            "porto pollo",
+            "sardinia",
+            "palau"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
-
-    # --- SOUTH AFRICA ---
     {
         "id": "cape_town",
         "name": "Cape Town (Bloubergstrand), South Africa",
@@ -707,7 +953,16 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Cape Doctor Ridge Venturi",
         "thermal_boost": 0.22,
-        "aliases": ["cape town", "blouberg", "bloubergstrand", "dolphin beach", "big bay", "kitebeach ct"]
+        "aliases": [
+            "cape town",
+            "blouberg",
+            "bloubergstrand",
+            "dolphin beach",
+            "big bay",
+            "kitebeach ct"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "langebaan",
@@ -716,17 +971,21 @@ GLOBAL_KITE_SPOTS = [
         "country": "South Africa",
         "region": "Western Cape",
         "flag": "🇿🇦",
-        "lat": -33.0900,
+        "lat": -33.09,
         "lon": 18.0333,
         "timezone": "Africa/Johannesburg",
         "beach_angle": 240.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + West Coast Lagoon Thermal",
-        "thermal_boost": 0.20,
-        "aliases": ["langebaan", "shark bay", "main beach langebaan"]
+        "thermal_boost": 0.2,
+        "aliases": [
+            "langebaan",
+            "shark bay",
+            "main beach langebaan"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
-
-    # --- AMERICAS & CARIBBEAN ---
     {
         "id": "cabarete",
         "name": "Cabarete (Kite Beach), Dominican Republic",
@@ -741,7 +1000,13 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Atlantic Sea Breeze",
         "thermal_boost": 0.18,
-        "aliases": ["cabarete", "kite beach cabarete", "bozo beach"]
+        "aliases": [
+            "cabarete",
+            "kite beach cabarete",
+            "bozo beach"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "maui",
@@ -757,7 +1022,14 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "best_match",
         "model_label": "GFS (13km) + Haleakala Valley Venturi",
         "thermal_boost": 0.22,
-        "aliases": ["maui", "kanaha", "kite beach maui", "kahului"]
+        "aliases": [
+            "maui",
+            "kanaha",
+            "kite beach maui",
+            "kahului"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "hood_river",
@@ -772,8 +1044,15 @@ GLOBAL_KITE_SPOTS = [
         "beach_angle": 0.0,
         "preferred_model": "best_match",
         "model_label": "HRRR (3km High-Res) + Gorge Pressure Venturi",
-        "thermal_boost": 0.30,
-        "aliases": ["hood river", "the gorge", "columbia river gorge", "event site"]
+        "thermal_boost": 0.3,
+        "aliases": [
+            "hood river",
+            "the gorge",
+            "columbia river gorge",
+            "event site"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "la_ventana",
@@ -789,7 +1068,14 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "best_match",
         "model_label": "HRRR / GFS + Sea of Cortez Thermal",
         "thermal_boost": 0.25,
-        "aliases": ["la ventana", "baja", "los barriles", "el sargento"]
+        "aliases": [
+            "la ventana",
+            "baja",
+            "los barriles",
+            "el sargento"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "hatteras",
@@ -798,14 +1084,22 @@ GLOBAL_KITE_SPOTS = [
         "country": "United States",
         "region": "North Carolina",
         "flag": "🇺🇸",
-        "lat": 35.2500,
+        "lat": 35.25,
         "lon": -75.5333,
         "timezone": "America/New_York",
         "beach_angle": 120.0,
         "preferred_model": "best_match",
         "model_label": "HRRR (3km High-Res) + Pamlico Sound",
         "thermal_boost": 0.15,
-        "aliases": ["hatteras", "outer banks", "obx", "waves", "rodanthe"]
+        "aliases": [
+            "hatteras",
+            "outer banks",
+            "obx",
+            "waves",
+            "rodanthe"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "st_pete",
@@ -815,16 +1109,21 @@ GLOBAL_KITE_SPOTS = [
         "region": "Florida",
         "flag": "🇺🇸",
         "lat": 27.6333,
-        "lon": -82.6500,
+        "lon": -82.65,
         "timezone": "America/New_York",
         "beach_angle": 210.0,
         "preferred_model": "best_match",
         "model_label": "HRRR (3km High-Res) + Tampa Bay",
         "thermal_boost": 0.15,
-        "aliases": ["st pete", "skyway", "tampa bay", "fort de soto"]
+        "aliases": [
+            "st pete",
+            "skyway",
+            "tampa bay",
+            "fort de soto"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
-
-    # --- ASIA & INDIAN OCEAN ---
     {
         "id": "le_morne",
         "name": "Le Morne (Kite Lagoon), Mauritius",
@@ -832,14 +1131,21 @@ GLOBAL_KITE_SPOTS = [
         "country": "Mauritius",
         "region": "Black River",
         "flag": "🇲🇺",
-        "lat": -20.4500,
+        "lat": -20.45,
         "lon": 57.3167,
         "timezone": "Indian/Mauritius",
         "beach_angle": 240.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Brabant Mountain Venturi",
-        "thermal_boost": 0.20,
-        "aliases": ["le morne", "one eye", "kite lagoon", "mauritius"]
+        "thermal_boost": 0.2,
+        "aliases": [
+            "le morne",
+            "one eye",
+            "kite lagoon",
+            "mauritius"
+        ],
+        "spot_type": "lake",
+        "elevation": 434
     },
     {
         "id": "kalpitiya",
@@ -854,8 +1160,14 @@ GLOBAL_KITE_SPOTS = [
         "beach_angle": 270.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Monsoon Venturi",
-        "thermal_boost": 0.20,
-        "aliases": ["kalpitiya", "sri lanka", "kappalady"]
+        "thermal_boost": 0.2,
+        "aliases": [
+            "kalpitiya",
+            "sri lanka",
+            "kappalady"
+        ],
+        "spot_type": "lagoon",
+        "elevation": 2
     },
     {
         "id": "boracay",
@@ -871,7 +1183,13 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Amihan Trade",
         "thermal_boost": 0.15,
-        "aliases": ["boracay", "bulabog", "bulabog beach"]
+        "aliases": [
+            "boracay",
+            "bulabog",
+            "bulabog beach"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
         "id": "mui_ne",
@@ -887,600 +1205,1438 @@ GLOBAL_KITE_SPOTS = [
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Coastal Sand Venturi",
         "thermal_boost": 0.18,
-        "aliases": ["mui ne", "vietnam", "phan thiet"]
+        "aliases": [
+            "mui ne",
+            "vietnam",
+            "phan thiet"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'cauipe',
-        'name': "Lagoa do Cauípe (Cumbuco), Brazil",
-        'short_name': "Cauípe",
-        'country': "Brazil",
-        'region': "Ceará",
-        'flag': "🇧🇷",
-        'lat': -3.5936,
-        'lon': -38.7886,
-        'timezone': "America/Fortaleza",
-        'beach_angle': 40.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Lagoon Flat Venturi",
-        'thermal_boost': 0.16,
-        'aliases': ['cauipe', 'cauípe', 'lagoa do cauipe', 'cauipe lagoon', 'cumbuco cauipe']
+        "id": "cauipe",
+        "name": "Lagoa do Cauípe (Cumbuco), Brazil",
+        "short_name": "Cauípe",
+        "country": "Brazil",
+        "region": "Ceará",
+        "flag": "🇧🇷",
+        "lat": -3.5936,
+        "lon": -38.7886,
+        "timezone": "America/Fortaleza",
+        "beach_angle": 40.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Lagoon Flat Venturi",
+        "thermal_boost": 0.16,
+        "aliases": [
+            "cauipe",
+            "cauípe",
+            "lagoa do cauipe",
+            "cauipe lagoon",
+            "cumbuco cauipe"
+        ],
+        "spot_type": "lagoon",
+        "elevation": 2
     },
     {
-        'id': 'tabuba',
-        'name': "Tabuba (Caucaia), Brazil",
-        'short_name': "Tabuba",
-        'country': "Brazil",
-        'region': "Ceará",
-        'flag': "🇧🇷",
-        'lat': -3.6558,
-        'lon': -38.68,
-        'timezone': "America/Fortaleza",
-        'beach_angle': 40.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Shorebreak Wave",
-        'thermal_boost': 0.15,
-        'aliases': ['tabuba', 'praia da tabuba', 'caucaia tabuba']
+        "id": "tabuba",
+        "name": "Tabuba (Caucaia), Brazil",
+        "short_name": "Tabuba",
+        "country": "Brazil",
+        "region": "Ceará",
+        "flag": "🇧🇷",
+        "lat": -3.6558,
+        "lon": -38.68,
+        "timezone": "America/Fortaleza",
+        "beach_angle": 40.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Shorebreak Wave",
+        "thermal_boost": 0.15,
+        "aliases": [
+            "tabuba",
+            "praia da tabuba",
+            "caucaia tabuba"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'pecem',
-        'name': "Pecém, Brazil",
-        'short_name': "Pecém",
-        'country': "Brazil",
-        'region': "Ceará",
-        'flag': "🇧🇷",
-        'lat': -3.5486,
-        'lon': -38.8258,
-        'timezone': "America/Fortaleza",
-        'beach_angle': 40.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Coastal Pier Venturi",
-        'thermal_boost': 0.16,
-        'aliases': ['pecem', 'pecém', 'porto do pecem']
+        "id": "pecem",
+        "name": "Pecém, Brazil",
+        "short_name": "Pecém",
+        "country": "Brazil",
+        "region": "Ceará",
+        "flag": "🇧🇷",
+        "lat": -3.5486,
+        "lon": -38.8258,
+        "timezone": "America/Fortaleza",
+        "beach_angle": 40.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Coastal Pier Venturi",
+        "thermal_boost": 0.16,
+        "aliases": [
+            "pecem",
+            "pecém",
+            "porto do pecem"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'baleia',
-        'name': "Baleia (Itapipoca), Brazil",
-        'short_name': "Baleia",
-        'country': "Brazil",
-        'region': "Ceará",
-        'flag': "🇧🇷",
-        'lat': -3.1467,
-        'lon': -39.445,
-        'timezone': "America/Fortaleza",
-        'beach_angle': 55.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Reef Pass Boost",
-        'thermal_boost': 0.18,
-        'aliases': ['baleia', 'itapipoca baleia', 'praia da baleia']
+        "id": "baleia",
+        "name": "Baleia (Itapipoca), Brazil",
+        "short_name": "Baleia",
+        "country": "Brazil",
+        "region": "Ceará",
+        "flag": "🇧🇷",
+        "lat": -3.1467,
+        "lon": -39.445,
+        "timezone": "America/Fortaleza",
+        "beach_angle": 55.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Reef Pass Boost",
+        "thermal_boost": 0.18,
+        "aliases": [
+            "baleia",
+            "itapipoca baleia",
+            "praia da baleia"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'guriu',
-        'name': "Guriú (Camocim / Jeri), Brazil",
-        'short_name': "Guriú",
-        'country': "Brazil",
-        'region': "Ceará",
-        'flag': "🇧🇷",
-        'lat': -2.825,
-        'lon': -40.59,
-        'timezone': "America/Fortaleza",
-        'beach_angle': 340.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Mangrove Flat",
-        'thermal_boost': 0.22,
-        'aliases': ['guriu', 'guriú', 'mangue seco jeri', 'rio guriu']
+        "id": "guriu",
+        "name": "Guriú (Camocim / Jeri), Brazil",
+        "short_name": "Guriú",
+        "country": "Brazil",
+        "region": "Ceará",
+        "flag": "🇧🇷",
+        "lat": -2.825,
+        "lon": -40.59,
+        "timezone": "America/Fortaleza",
+        "beach_angle": 340.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Mangrove Flat",
+        "thermal_boost": 0.22,
+        "aliases": [
+            "guriu",
+            "guriú",
+            "mangue seco jeri",
+            "rio guriu"
+        ],
+        "spot_type": "lake",
+        "elevation": 434
     },
     {
-        'id': 'tatajuba',
-        'name': "Tatajuba (Camocim), Brazil",
-        'short_name': "Tatajuba",
-        'country': "Brazil",
-        'region': "Ceará",
-        'flag': "🇧🇷",
-        'lat': -2.8595,
-        'lon': -40.6948,
-        'timezone': "America/Fortaleza",
-        'beach_angle': 330.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Dune Estuary Venturi",
-        'thermal_boost': 0.22,
-        'aliases': ['tatajuba', 'camocim tatajuba', 'lagoa da torta', 'lagoa da tatajuba', 'praia de tatajuba']
+        "id": "tatajuba",
+        "name": "Tatajuba (Camocim), Brazil",
+        "short_name": "Tatajuba",
+        "country": "Brazil",
+        "region": "Ceará",
+        "flag": "🇧🇷",
+        "lat": -2.8595,
+        "lon": -40.6948,
+        "timezone": "America/Fortaleza",
+        "beach_angle": 330.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Dune Estuary Venturi",
+        "thermal_boost": 0.22,
+        "aliases": [
+            "tatajuba",
+            "camocim tatajuba",
+            "lagoa da torta",
+            "lagoa da tatajuba",
+            "praia de tatajuba"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'maceio_camocim',
-        'name': "Praia de Maceió (Camocim), Brazil",
-        'short_name': "Maceió (Camocim)",
-        'country': "Brazil",
-        'region': "Ceará",
-        'flag': "🇧🇷",
-        'lat': -2.88,
-        'lon': -40.83,
-        'timezone': "America/Fortaleza",
-        'beach_angle': 340.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Outer Reef Trade",
-        'thermal_boost': 0.2,
-        'aliases': ['maceio camocim', 'maceió camocim', 'camocim maceio', 'praia de maceio']
+        "id": "maceio_camocim",
+        "name": "Praia de Maceió (Camocim), Brazil",
+        "short_name": "Maceió (Camocim)",
+        "country": "Brazil",
+        "region": "Ceará",
+        "flag": "🇧🇷",
+        "lat": -2.88,
+        "lon": -40.83,
+        "timezone": "America/Fortaleza",
+        "beach_angle": 340.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Outer Reef Trade",
+        "thermal_boost": 0.2,
+        "aliases": [
+            "maceio camocim",
+            "maceió camocim",
+            "camocim maceio",
+            "praia de maceio"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'barra_nova',
-        'name': "Barra Nova (Cascavel), Brazil",
-        'short_name': "Barra Nova",
-        'country': "Brazil",
-        'region': "Ceará",
-        'flag': "🇧🇷",
-        'lat': -4.1611,
-        'lon': -38.2014,
-        'timezone': "America/Fortaleza",
-        'beach_angle': 50.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + River Mouth Sandspit",
-        'thermal_boost': 0.16,
-        'aliases': ['barra nova', 'cascavel', 'lagoa de barra nova', 'rio choró']
+        "id": "barra_nova",
+        "name": "Barra Nova (Cascavel), Brazil",
+        "short_name": "Barra Nova",
+        "country": "Brazil",
+        "region": "Ceará",
+        "flag": "🇧🇷",
+        "lat": -4.1611,
+        "lon": -38.2014,
+        "timezone": "America/Fortaleza",
+        "beach_angle": 50.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + River Mouth Sandspit",
+        "thermal_boost": 0.16,
+        "aliases": [
+            "barra nova",
+            "cascavel",
+            "lagoa de barra nova",
+            "rio choró"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'ururau',
-        'name': "Uruaú (Beberibe), Brazil",
-        'short_name': "Uruaú",
-        'country': "Brazil",
-        'region': "Ceará",
-        'flag': "🇧🇷",
-        'lat': -4.3314,
-        'lon': -38.0772,
-        'timezone': "America/Fortaleza",
-        'beach_angle': 50.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Dune Stream",
-        'thermal_boost': 0.16,
-        'aliases': ['uruau', 'uruaú', 'lagoa do uruau', 'beberibe']
+        "id": "ururau",
+        "name": "Uruaú (Beberibe), Brazil",
+        "short_name": "Uruaú",
+        "country": "Brazil",
+        "region": "Ceará",
+        "flag": "🇧🇷",
+        "lat": -4.3314,
+        "lon": -38.0772,
+        "timezone": "America/Fortaleza",
+        "beach_angle": 50.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Dune Stream",
+        "thermal_boost": 0.16,
+        "aliases": [
+            "uruau",
+            "uruaú",
+            "lagoa do uruau",
+            "beberibe"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'parajuru',
-        'name': "Parajuru (Praia das Almas), Brazil",
-        'short_name': "Parajuru",
-        'country': "Brazil",
-        'region': "Ceará",
-        'flag': "🇧🇷",
-        'lat': -4.2889,
-        'lon': -37.9556,
-        'timezone': "America/Fortaleza",
-        'beach_angle': 55.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + River Mouth Sandbar",
-        'thermal_boost': 0.16,
-        'aliases': ['parajuru', 'praia das almas', 'beberibe parajuru']
+        "id": "parajuru",
+        "name": "Parajuru (Praia das Almas), Brazil",
+        "short_name": "Parajuru",
+        "country": "Brazil",
+        "region": "Ceará",
+        "flag": "🇧🇷",
+        "lat": -4.2889,
+        "lon": -37.9556,
+        "timezone": "America/Fortaleza",
+        "beach_angle": 55.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + River Mouth Sandbar",
+        "thermal_boost": 0.16,
+        "aliases": [
+            "parajuru",
+            "praia das almas",
+            "beberibe parajuru"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'fortim',
-        'name': "Fortim (Rio Jaguaribe), Brazil",
-        'short_name': "Fortim",
-        'country': "Brazil",
-        'region': "Ceará",
-        'flag': "🇧🇷",
-        'lat': -4.425,
-        'lon': -37.798,
-        'timezone': "America/Fortaleza",
-        'beach_angle': 50.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + River Mouth Flat",
-        'thermal_boost': 0.16,
-        'aliases': ['fortim', 'pontal de maceio', 'pontal de maceió', 'rio jaguaribe']
+        "id": "fortim",
+        "name": "Fortim (Rio Jaguaribe), Brazil",
+        "short_name": "Fortim",
+        "country": "Brazil",
+        "region": "Ceará",
+        "flag": "🇧🇷",
+        "lat": -4.425,
+        "lon": -37.798,
+        "timezone": "America/Fortaleza",
+        "beach_angle": 50.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + River Mouth Flat",
+        "thermal_boost": 0.16,
+        "aliases": [
+            "fortim",
+            "pontal de maceio",
+            "pontal de maceió",
+            "rio jaguaribe"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'galinhos',
-        'name': "Galinhos, Brazil",
-        'short_name': "Galinhos",
-        'country': "Brazil",
-        'region': "Rio Grande do Norte",
-        'flag': "🇧🇷",
-        'lat': -5.0906,
-        'lon': -36.2758,
-        'timezone': "America/Fortaleza",
-        'beach_angle': 340.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Salt Flat Venturi",
-        'thermal_boost': 0.18,
-        'aliases': ['galinhos', 'peninsula de galinhos', 'dunas de galinhos']
+        "id": "galinhos",
+        "name": "Galinhos, Brazil",
+        "short_name": "Galinhos",
+        "country": "Brazil",
+        "region": "Rio Grande do Norte",
+        "flag": "🇧🇷",
+        "lat": -5.0906,
+        "lon": -36.2758,
+        "timezone": "America/Fortaleza",
+        "beach_angle": 340.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Salt Flat Venturi",
+        "thermal_boost": 0.18,
+        "aliases": [
+            "galinhos",
+            "peninsula de galinhos",
+            "dunas de galinhos"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'araruama',
-        'name': "Lagoa de Araruama, Brazil",
-        'short_name': "Araruama",
-        'country': "Brazil",
-        'region': "Rio de Janeiro",
-        'flag': "🇧🇷",
-        'lat': -22.8683,
-        'lon': -42.3428,
-        'timezone': "America/Sao_Paulo",
-        'beach_angle': 180.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Salt Lagoon Thermal",
-        'thermal_boost': 0.15,
-        'aliases': ['araruama', 'saquarema', 'cabo frio', 'praia seca', 'lagoa de araruama']
+        "id": "araruama",
+        "name": "Lagoa de Araruama, Brazil",
+        "short_name": "Araruama",
+        "country": "Brazil",
+        "region": "Rio de Janeiro",
+        "flag": "🇧🇷",
+        "lat": -22.8683,
+        "lon": -42.3428,
+        "timezone": "America/Sao_Paulo",
+        "beach_angle": 180.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Salt Lagoon Thermal",
+        "thermal_boost": 0.15,
+        "aliases": [
+            "araruama",
+            "saquarema",
+            "cabo frio",
+            "praia seca",
+            "lagoa de araruama"
+        ],
+        "spot_type": "lagoon",
+        "elevation": 2
     },
     {
-        'id': 'guincho',
-        'name': "Guincho (Cascais), Portugal",
-        'short_name': "Guincho",
-        'country': "Portugal",
-        'region': "Lisbon Coast",
-        'flag': "🇵🇹",
-        'lat': 38.7322,
-        'lon': -9.4731,
-        'timezone': "Europe/Lisbon",
-        'beach_angle': 270.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Sintra Mountain Nortada",
-        'thermal_boost': 0.2,
-        'aliases': ['guincho', 'cascais', 'praia do guincho', 'lisboa']
+        "id": "guincho",
+        "name": "Guincho (Cascais), Portugal",
+        "short_name": "Guincho",
+        "country": "Portugal",
+        "region": "Lisbon Coast",
+        "flag": "🇵🇹",
+        "lat": 38.7322,
+        "lon": -9.4731,
+        "timezone": "Europe/Lisbon",
+        "beach_angle": 270.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Sintra Mountain Nortada",
+        "thermal_boost": 0.2,
+        "aliases": [
+            "guincho",
+            "cascais",
+            "praia do guincho",
+            "lisboa"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'esposende',
-        'name': "Esposende (Ofir), Portugal",
-        'short_name': "Esposende",
-        'country': "Portugal",
-        'region': "Northern Coast",
-        'flag': "🇵🇹",
-        'lat': 41.5333,
-        'lon': -8.7833,
-        'timezone': "Europe/Lisbon",
-        'beach_angle': 270.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Atlantic Nortada",
-        'thermal_boost': 0.15,
-        'aliases': ['esposende', 'ofir', 'rio cavado', 'porto']
+        "id": "esposende",
+        "name": "Esposende (Ofir), Portugal",
+        "short_name": "Esposende",
+        "country": "Portugal",
+        "region": "Northern Coast",
+        "flag": "🇵🇹",
+        "lat": 41.5333,
+        "lon": -8.7833,
+        "timezone": "Europe/Lisbon",
+        "beach_angle": 270.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Atlantic Nortada",
+        "thermal_boost": 0.15,
+        "aliases": [
+            "esposende",
+            "ofir",
+            "rio cavado",
+            "porto"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'viana_do_castelo',
-        'name': "Viana do Castelo (Cabedelo), Portugal",
-        'short_name': "Viana do Castelo",
-        'country': "Portugal",
-        'region': "Northern Coast",
-        'flag': "🇵🇹",
-        'lat': 41.6833,
-        'lon': -8.8333,
-        'timezone': "Europe/Lisbon",
-        'beach_angle': 260.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Cabedelo Breakwater",
-        'thermal_boost': 0.15,
-        'aliases': ['viana do castelo', 'cabedelo', 'viana', 'praia do cabedelo']
+        "id": "viana_do_castelo",
+        "name": "Viana do Castelo (Cabedelo), Portugal",
+        "short_name": "Viana do Castelo",
+        "country": "Portugal",
+        "region": "Northern Coast",
+        "flag": "🇵🇹",
+        "lat": 41.6833,
+        "lon": -8.8333,
+        "timezone": "Europe/Lisbon",
+        "beach_angle": 260.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Cabedelo Breakwater",
+        "thermal_boost": 0.15,
+        "aliases": [
+            "viana do castelo",
+            "cabedelo",
+            "viana",
+            "praia do cabedelo"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'alvor_lagoon',
-        'name': "Alvor Lagoon (Lagos / Algarve), Portugal",
-        'short_name': "Alvor Lagoon",
-        'country': "Portugal",
-        'region': "Algarve",
-        'flag': "🇵🇹",
-        'lat': 37.1267,
-        'lon': -8.6083,
-        'timezone': "Europe/Lisbon",
-        'beach_angle': 200.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Monchique Nortada Thermal",
-        'thermal_boost': 0.15,
-        'aliases': ['alvor', 'alvor lagoon', 'lagos', 'algarve', 'ria de alvor']
+        "id": "alvor_lagoon",
+        "name": "Alvor Lagoon (Lagos / Algarve), Portugal",
+        "short_name": "Alvor Lagoon",
+        "country": "Portugal",
+        "region": "Algarve",
+        "flag": "🇵🇹",
+        "lat": 37.1267,
+        "lon": -8.6083,
+        "timezone": "Europe/Lisbon",
+        "beach_angle": 200.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Monchique Nortada Thermal",
+        "thermal_boost": 0.15,
+        "aliases": [
+            "alvor",
+            "alvor lagoon",
+            "lagos",
+            "algarve",
+            "ria de alvor"
+        ],
+        "spot_type": "lagoon",
+        "elevation": 2
     },
     {
-        'id': 'mallorca_pollensa',
-        'name': "Bahía de Pollensa (Mallorca), Spain",
-        'short_name': "Pollensa (Mallorca)",
-        'country': "Spain",
-        'region': "Balearic Islands",
-        'flag': "🇪🇸",
-        'lat': 39.8833,
-        'lon': 3.0833,
-        'timezone': "Europe/Madrid",
-        'beach_angle': 90.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Tramuntana / Embat",
-        'thermal_boost': 0.15,
-        'aliases': ['pollensa', 'mallorca', 'puerto pollensa', 'badia de pollenca', 'alcudia']
+        "id": "mallorca_pollensa",
+        "name": "Bahía de Pollensa (Mallorca), Spain",
+        "short_name": "Pollensa (Mallorca)",
+        "country": "Spain",
+        "region": "Balearic Islands",
+        "flag": "🇪🇸",
+        "lat": 39.8833,
+        "lon": 3.0833,
+        "timezone": "Europe/Madrid",
+        "beach_angle": 90.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Tramuntana / Embat",
+        "thermal_boost": 0.15,
+        "aliases": [
+            "pollensa",
+            "mallorca",
+            "puerto pollensa",
+            "badia de pollenca",
+            "alcudia"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'corralejo',
-        'name': "Corralejo (Flag Beach, Fuerteventura), Spain",
-        'short_name': "Flag Beach (Corralejo)",
-        'country': "Spain",
-        'region': "Canary Islands",
-        'flag': "🇪🇸",
-        'lat': 28.7167,
-        'lon': -13.85,
-        'timezone': "Atlantic/Canary",
-        'beach_angle': 60.0,
-        'preferred_model': 'best_match',
-        'model_label': "ICON-Canaries (2km) + Isla de Lobos Venturi",
-        'thermal_boost': 0.16,
-        'aliases': ['corralejo', 'flag beach', 'fuerteventura norte']
+        "id": "corralejo",
+        "name": "Corralejo (Flag Beach, Fuerteventura), Spain",
+        "short_name": "Flag Beach (Corralejo)",
+        "country": "Spain",
+        "region": "Canary Islands",
+        "flag": "🇪🇸",
+        "lat": 28.7167,
+        "lon": -13.85,
+        "timezone": "Atlantic/Canary",
+        "beach_angle": 60.0,
+        "preferred_model": "best_match",
+        "model_label": "ICON-Canaries (2km) + Isla de Lobos Venturi",
+        "thermal_boost": 0.16,
+        "aliases": [
+            "corralejo",
+            "flag beach",
+            "fuerteventura norte"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'punta_trettu',
-        'name': "Punta Trettu (Sardinia), Italy",
-        'short_name': "Punta Trettu",
-        'country': "Italy",
-        'region': "Sardinia",
-        'flag': "🇮🇹",
-        'lat': 39.1,
-        'lon': 8.4333,
-        'timezone': "Europe/Rome",
-        'beach_angle': 220.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Mistral Flatwater",
-        'thermal_boost': 0.18,
-        'aliases': ['punta trettu', 'sardinia', "sant'antioco", 'matzaccara']
+        "id": "punta_trettu",
+        "name": "Punta Trettu (Sardinia), Italy",
+        "short_name": "Punta Trettu",
+        "country": "Italy",
+        "region": "Sardinia",
+        "flag": "🇮🇹",
+        "lat": 39.1,
+        "lon": 8.4333,
+        "timezone": "Europe/Rome",
+        "beach_angle": 220.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Mistral Flatwater",
+        "thermal_boost": 0.18,
+        "aliases": [
+            "punta trettu",
+            "sardinia",
+            "sant'antioco",
+            "matzaccara"
+        ],
+        "spot_type": "lagoon",
+        "elevation": 2
     },
     {
-        'id': 'naxos_mikri_vigla',
-        'name': "Mikri Vigla (Naxos), Greece",
-        'short_name': "Mikri Vigla (Naxos)",
-        'country': "Greece",
-        'region': "Cyclades",
-        'flag': "🇬🇷",
-        'lat': 37.0333,
-        'lon': 25.3667,
-        'timezone': "Europe/Athens",
-        'beach_angle': 340.0,
-        'preferred_model': 'best_match',
-        'model_label': "ICON-EU (7km) + Meltemi Jet Channel",
-        'thermal_boost': 0.2,
-        'aliases': ['mikri vigla', 'naxos', 'cyclades', 'parthena']
+        "id": "naxos_mikri_vigla",
+        "name": "Mikri Vigla (Naxos), Greece",
+        "short_name": "Mikri Vigla (Naxos)",
+        "country": "Greece",
+        "region": "Cyclades",
+        "flag": "🇬🇷",
+        "lat": 37.0333,
+        "lon": 25.3667,
+        "timezone": "Europe/Athens",
+        "beach_angle": 340.0,
+        "preferred_model": "best_match",
+        "model_label": "ICON-EU (7km) + Meltemi Jet Channel",
+        "thermal_boost": 0.2,
+        "aliases": [
+            "mikri vigla",
+            "naxos",
+            "cyclades",
+            "parthena"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'brouwersdam',
-        'name': "Brouwersdam, Netherlands",
-        'short_name': "Brouwersdam",
-        'country': "Netherlands",
-        'region': "Zeeland",
-        'flag': "🇳🇱",
-        'lat': 51.7583,
-        'lon': 3.8583,
-        'timezone': "Europe/Amsterdam",
-        'beach_angle': 270.0,
-        'preferred_model': 'best_match',
-        'model_label': "HARMONIE (2.5km) / ECMWF + North Sea Front",
-        'thermal_boost': 0.12,
-        'aliases': ['brouwersdam', 'zeeland', 'holland', 'ouddorp']
+        "id": "brouwersdam",
+        "name": "Brouwersdam, Netherlands",
+        "short_name": "Brouwersdam",
+        "country": "Netherlands",
+        "region": "Zeeland",
+        "flag": "🇳🇱",
+        "lat": 51.7583,
+        "lon": 3.8583,
+        "timezone": "Europe/Amsterdam",
+        "beach_angle": 270.0,
+        "preferred_model": "best_match",
+        "model_label": "HARMONIE (2.5km) / ECMWF + North Sea Front",
+        "thermal_boost": 0.12,
+        "aliases": [
+            "brouwersdam",
+            "zeeland",
+            "holland",
+            "ouddorp"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'fehmarn_gold',
-        'name': "Fehmarn (Gold), Germany",
-        'short_name': "Fehmarn (Gold)",
-        'country': "Germany",
-        'region': "Baltic Sea",
-        'flag': "🇩🇪",
-        'lat': 54.4333,
-        'lon': 11.1,
-        'timezone': "Europe/Berlin",
-        'beach_angle': 200.0,
-        'preferred_model': 'best_match',
-        'model_label': "ICON-D2 (2km) + Baltic Venturi",
-        'thermal_boost': 0.12,
-        'aliases': ['fehmarn', 'gold fehmarn', 'ostsee', 'gruner brink']
+        "id": "fehmarn_gold",
+        "name": "Fehmarn (Gold), Germany",
+        "short_name": "Fehmarn (Gold)",
+        "country": "Germany",
+        "region": "Baltic Sea",
+        "flag": "🇩🇪",
+        "lat": 54.4333,
+        "lon": 11.1,
+        "timezone": "Europe/Berlin",
+        "beach_angle": 200.0,
+        "preferred_model": "best_match",
+        "model_label": "ICON-D2 (2km) + Baltic Venturi",
+        "thermal_boost": 0.12,
+        "aliases": [
+            "fehmarn",
+            "gold fehmarn",
+            "ostsee",
+            "gruner brink"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'dakhla_whitedune',
-        'name': "Dakhla (White Dune / Dune Blanche), Morocco",
-        'short_name': "White Dune (Dakhla)",
-        'country': "Morocco",
-        'region': "Western Sahara",
-        'flag': "🇲🇦",
-        'lat': 23.85,
-        'lon': -15.7833,
-        'timezone': "Africa/Casablanca",
-        'beach_angle': 270.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Desert Thermal Flat",
-        'thermal_boost': 0.18,
-        'aliases': ['white dune', 'dune blanche', 'dakhla dune']
+        "id": "dakhla_whitedune",
+        "name": "Dakhla (White Dune / Dune Blanche), Morocco",
+        "short_name": "White Dune (Dakhla)",
+        "country": "Morocco",
+        "region": "Western Sahara",
+        "flag": "🇲🇦",
+        "lat": 23.85,
+        "lon": -15.7833,
+        "timezone": "Africa/Casablanca",
+        "beach_angle": 270.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Desert Thermal Flat",
+        "thermal_boost": 0.18,
+        "aliases": [
+            "white dune",
+            "dune blanche",
+            "dakhla dune"
+        ],
+        "spot_type": "lagoon",
+        "elevation": 2
     },
     {
-        'id': 'dakhla_speed',
-        'name': "Dakhla (Speed Spot), Morocco",
-        'short_name': "Speed Spot (Dakhla)",
-        'country': "Morocco",
-        'region': "Western Sahara",
-        'flag': "🇲🇦",
-        'lat': 23.75,
-        'lon': -15.8667,
-        'timezone': "Africa/Casablanca",
-        'beach_angle': 270.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Offshore Flatwater Speed",
-        'thermal_boost': 0.18,
-        'aliases': ['speed spot', 'dakhla speed spot', 'speed spot dakhla']
+        "id": "dakhla_speed",
+        "name": "Dakhla (Speed Spot), Morocco",
+        "short_name": "Speed Spot (Dakhla)",
+        "country": "Morocco",
+        "region": "Western Sahara",
+        "flag": "🇲🇦",
+        "lat": 23.75,
+        "lon": -15.8667,
+        "timezone": "Africa/Casablanca",
+        "beach_angle": 270.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Offshore Flatwater Speed",
+        "thermal_boost": 0.18,
+        "aliases": [
+            "speed spot",
+            "dakhla speed spot",
+            "speed spot dakhla"
+        ],
+        "spot_type": "lagoon",
+        "elevation": 2
     },
     {
-        'id': 'dakhla_lassarga',
-        'name': "Dakhla (Lassarga Ocean Wave), Morocco",
-        'short_name': "Lassarga (Dakhla)",
-        'country': "Morocco",
-        'region': "Western Sahara",
-        'flag': "🇲🇦",
-        'lat': 23.6333,
-        'lon': -15.95,
-        'timezone': "Africa/Casablanca",
-        'beach_angle': 200.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Ocean Pointbreak Wave",
-        'thermal_boost': 0.16,
-        'aliases': ['lassarga', 'dakhla lassarga', 'ocean point dakhla']
+        "id": "dakhla_lassarga",
+        "name": "Dakhla (Lassarga Ocean Wave), Morocco",
+        "short_name": "Lassarga (Dakhla)",
+        "country": "Morocco",
+        "region": "Western Sahara",
+        "flag": "🇲🇦",
+        "lat": 23.6333,
+        "lon": -15.95,
+        "timezone": "Africa/Casablanca",
+        "beach_angle": 200.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Ocean Pointbreak Wave",
+        "thermal_boost": 0.16,
+        "aliases": [
+            "lassarga",
+            "dakhla lassarga",
+            "ocean point dakhla"
+        ],
+        "spot_type": "lagoon",
+        "elevation": 2
     },
     {
-        'id': 'sal_kitebeach',
-        'name': "Kite Beach (Sal), Cape Verde",
-        'short_name': "Kite Beach (Sal)",
-        'country': "Cape Verde",
-        'region': "Sal Island",
-        'flag': "🇨🇻",
-        'lat': 16.6,
-        'lon': -22.9,
-        'timezone': "Atlantic/Cape_Verde",
-        'beach_angle': 90.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Harmattan Trade Venturi",
-        'thermal_boost': 0.18,
-        'aliases': ['sal', 'santa maria', 'cape verde', 'ponta preta', 'kite beach sal']
+        "id": "sal_kitebeach",
+        "name": "Kite Beach (Sal), Cape Verde",
+        "short_name": "Kite Beach (Sal)",
+        "country": "Cape Verde",
+        "region": "Sal Island",
+        "flag": "🇨🇻",
+        "lat": 16.6,
+        "lon": -22.9,
+        "timezone": "Atlantic/Cape_Verde",
+        "beach_angle": 90.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Harmattan Trade Venturi",
+        "thermal_boost": 0.18,
+        "aliases": [
+            "sal",
+            "santa maria",
+            "cape verde",
+            "ponta preta",
+            "kite beach sal"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'bonaire_atlantis',
-        'name': "Atlantis Beach (Bonaire), Caribbean",
-        'short_name': "Atlantis (Bonaire)",
-        'country': "Caribbean",
-        'region': "Bonaire",
-        'flag': "🇧🇶",
-        'lat': 12.0667,
-        'lon': -68.2667,
-        'timezone': "America/Kralendijk",
-        'beach_angle': 260.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Trade Accelerator",
-        'thermal_boost': 0.15,
-        'aliases': ['bonaire', 'atlantis bonaire', 'kralendijk', 'atlantis beach']
+        "id": "bonaire_atlantis",
+        "name": "Atlantis Beach (Bonaire), Caribbean",
+        "short_name": "Atlantis (Bonaire)",
+        "country": "Caribbean",
+        "region": "Bonaire",
+        "flag": "🇧🇶",
+        "lat": 12.0667,
+        "lon": -68.2667,
+        "timezone": "America/Kralendijk",
+        "beach_angle": 260.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Trade Accelerator",
+        "thermal_boost": 0.15,
+        "aliases": [
+            "bonaire",
+            "atlantis bonaire",
+            "kralendijk",
+            "atlantis beach"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'aruba_fisherman',
-        'name': "Fisherman's Huts (Aruba), Caribbean",
-        'short_name': "Fisherman's Huts (Aruba)",
-        'country': "Caribbean",
-        'region': "Aruba",
-        'flag': "🇦🇼",
-        'lat': 12.5833,
-        'lon': -70.05,
-        'timezone': "America/Aruba",
-        'beach_angle': 270.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Flatwater Trade",
-        'thermal_boost': 0.15,
-        'aliases': ['aruba', 'fisherman huts', 'boca grandi', 'hadicurari']
+        "id": "aruba_fisherman",
+        "name": "Fisherman's Huts (Aruba), Caribbean",
+        "short_name": "Fisherman's Huts (Aruba)",
+        "country": "Caribbean",
+        "region": "Aruba",
+        "flag": "🇦🇼",
+        "lat": 12.5833,
+        "lon": -70.05,
+        "timezone": "America/Aruba",
+        "beach_angle": 270.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Flatwater Trade",
+        "thermal_boost": 0.15,
+        "aliases": [
+            "aruba",
+            "fisherman huts",
+            "boca grandi",
+            "hadicurari"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'turks_longbay',
-        'name': "Long Bay (Providenciales), Turks & Caicos",
-        'short_name': "Long Bay (Provo)",
-        'country': "Caribbean",
-        'region': "Turks & Caicos",
-        'flag': "🇹🇨",
-        'lat': 21.7833,
-        'lon': -72.2167,
-        'timezone': "America/Grand_Turk",
-        'beach_angle': 120.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Shallow Bay Trades",
-        'thermal_boost': 0.15,
-        'aliases': ['long bay', 'turks and caicos', 'provo', 'providenciales']
+        "id": "turks_longbay",
+        "name": "Long Bay (Providenciales), Turks & Caicos",
+        "short_name": "Long Bay (Provo)",
+        "country": "Caribbean",
+        "region": "Turks & Caicos",
+        "flag": "🇹🇨",
+        "lat": 21.7833,
+        "lon": -72.2167,
+        "timezone": "America/Grand_Turk",
+        "beach_angle": 120.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Shallow Bay Trades",
+        "thermal_boost": 0.15,
+        "aliases": [
+            "long bay",
+            "turks and caicos",
+            "provo",
+            "providenciales"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'salinas_del_rey',
-        'name': "Salinas del Rey (Santa Verónica), Colombia",
-        'short_name': "Salinas del Rey",
-        'country': "Colombia",
-        'region': "Atlántico",
-        'flag': "🇨🇴",
-        'lat': 10.9,
-        'lon': -75.0833,
-        'timezone': "America/Bogota",
-        'beach_angle': 310.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Caribbean Coastal Jet",
-        'thermal_boost': 0.18,
-        'aliases': ['salinas del rey', 'santa veronica', 'barranquilla', 'colombia kite']
+        "id": "salinas_del_rey",
+        "name": "Salinas del Rey (Santa Verónica), Colombia",
+        "short_name": "Salinas del Rey",
+        "country": "Colombia",
+        "region": "Atlántico",
+        "flag": "🇨🇴",
+        "lat": 10.9,
+        "lon": -75.0833,
+        "timezone": "America/Bogota",
+        "beach_angle": 310.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Caribbean Coastal Jet",
+        "thermal_boost": 0.18,
+        "aliases": [
+            "salinas del rey",
+            "santa veronica",
+            "barranquilla",
+            "colombia kite"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'paracas',
-        'name': "Paracas Bay, Peru",
-        'short_name': "Paracas",
-        'country': "Peru",
-        'region': "Ica",
-        'flag': "🇵🇪",
-        'lat': -13.8333,
-        'lon': -76.25,
-        'timezone': "America/Lima",
-        'beach_angle': 270.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Paracas Desert Thermal",
-        'thermal_boost': 0.22,
-        'aliases': ['paracas', 'paracas bay', 'pisco', 'peru kite']
+        "id": "paracas",
+        "name": "Paracas Bay, Peru",
+        "short_name": "Paracas",
+        "country": "Peru",
+        "region": "Ica",
+        "flag": "🇵🇪",
+        "lat": -13.8333,
+        "lon": -76.25,
+        "timezone": "America/Lima",
+        "beach_angle": 270.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Paracas Desert Thermal",
+        "thermal_boost": 0.22,
+        "aliases": [
+            "paracas",
+            "paracas bay",
+            "pisco",
+            "peru kite"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'south_padre',
-        'name': "South Padre Island (Laguna Madre), Texas, USA",
-        'short_name': "South Padre (SPI)",
-        'country': "United States",
-        'region': "Texas",
-        'flag': "🇺🇸",
-        'lat': 26.1119,
-        'lon': -97.1681,
-        'timezone': "America/Chicago",
-        'beach_angle': 90.0,
-        'preferred_model': 'best_match',
-        'model_label': "GFS / ECMWF + Laguna Madre Thermal",
-        'thermal_boost': 0.15,
-        'aliases': ['south padre island', 'spi', 'laguna madre', 'texas kite']
+        "id": "south_padre",
+        "name": "South Padre Island (Laguna Madre), Texas, USA",
+        "short_name": "South Padre (SPI)",
+        "country": "United States",
+        "region": "Texas",
+        "flag": "🇺🇸",
+        "lat": 26.1119,
+        "lon": -97.1681,
+        "timezone": "America/Chicago",
+        "beach_angle": 90.0,
+        "preferred_model": "best_match",
+        "model_label": "GFS / ECMWF + Laguna Madre Thermal",
+        "thermal_boost": 0.15,
+        "aliases": [
+            "south padre island",
+            "spi",
+            "laguna madre",
+            "texas kite"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'miami_crandon',
-        'name': "Crandon Park (Miami), Florida, USA",
-        'short_name': "Crandon Park (Miami)",
-        'country': "United States",
-        'region': "Florida",
-        'flag': "🇺🇸",
-        'lat': 25.7167,
-        'lon': -80.15,
-        'timezone': "America/New_York",
-        'beach_angle': 90.0,
-        'preferred_model': 'best_match',
-        'model_label': "GFS / ECMWF + Biscayne Bay",
-        'thermal_boost': 0.14,
-        'aliases': ['crandon park', 'miami kite', 'biscayne bay', 'key biscayne']
+        "id": "miami_crandon",
+        "name": "Crandon Park (Miami), Florida, USA",
+        "short_name": "Crandon Park (Miami)",
+        "country": "United States",
+        "region": "Florida",
+        "flag": "🇺🇸",
+        "lat": 25.7167,
+        "lon": -80.15,
+        "timezone": "America/New_York",
+        "beach_angle": 90.0,
+        "preferred_model": "best_match",
+        "model_label": "GFS / ECMWF + Biscayne Bay",
+        "thermal_boost": 0.14,
+        "aliases": [
+            "crandon park",
+            "miami kite",
+            "biscayne bay",
+            "key biscayne"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'san_francisco_crissy',
-        'name': "Crissy Field (San Francisco), California, USA",
-        'short_name': "Crissy Field (SF)",
-        'country': "United States",
-        'region': "California",
-        'flag': "🇺🇸",
-        'lat': 37.805,
-        'lon': -122.465,
-        'timezone': "America/Los_Angeles",
-        'beach_angle': 340.0,
-        'preferred_model': 'best_match',
-        'model_label': "HRRR (3km) / ECMWF + Golden Gate Venturi",
-        'thermal_boost': 0.22,
-        'aliases': ['crissy field', 'san francisco', 'golden gate', 'sf bay', 'sherman island']
+        "id": "san_francisco_crissy",
+        "name": "Crissy Field (San Francisco), California, USA",
+        "short_name": "Crissy Field (SF)",
+        "country": "United States",
+        "region": "California",
+        "flag": "🇺🇸",
+        "lat": 37.805,
+        "lon": -122.465,
+        "timezone": "America/Los_Angeles",
+        "beach_angle": 340.0,
+        "preferred_model": "best_match",
+        "model_label": "HRRR (3km) / ECMWF + Golden Gate Venturi",
+        "thermal_boost": 0.22,
+        "aliases": [
+            "crissy field",
+            "san francisco",
+            "golden gate",
+            "sf bay",
+            "sherman island"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'perth_woodman',
-        'name': "Woodman Point / Safety Bay (Perth), Australia",
-        'short_name': "Perth (Woodman Point)",
-        'country': "Australia",
-        'region': "Western Australia",
-        'flag': "🇦🇺",
-        'lat': -32.1333,
-        'lon': 115.7667,
-        'timezone': "Australia/Perth",
-        'beach_angle': 270.0,
-        'preferred_model': 'best_match',
-        'model_label': "ACCESS / ECMWF + Fremantle Doctor Thermal",
-        'thermal_boost': 0.2,
-        'aliases': ['perth', 'safety bay', 'woodman point', 'fremantle', 'peli point']
+        "id": "perth_woodman",
+        "name": "Woodman Point / Safety Bay (Perth), Australia",
+        "short_name": "Perth (Woodman Point)",
+        "country": "Australia",
+        "region": "Western Australia",
+        "flag": "🇦🇺",
+        "lat": -32.1333,
+        "lon": 115.7667,
+        "timezone": "Australia/Perth",
+        "beach_angle": 270.0,
+        "preferred_model": "best_match",
+        "model_label": "ACCESS / ECMWF + Fremantle Doctor Thermal",
+        "thermal_boost": 0.2,
+        "aliases": [
+            "perth",
+            "safety bay",
+            "woodman point",
+            "fremantle",
+            "peli point"
+        ],
+        "spot_type": "ocean",
+        "elevation": 0
     },
     {
-        'id': 'phan_rang',
-        'name': "Phan Rang (My Hoa Lagoon), Vietnam",
-        'short_name': "Phan Rang (My Hoa)",
-        'country': "Vietnam",
-        'region': "Ninh Thuan",
-        'flag': "🇻🇳",
-        'lat': 11.6,
-        'lon': 109.1167,
-        'timezone': "Asia/Ho_Chi_Minh",
-        'beach_angle': 90.0,
-        'preferred_model': 'best_match',
-        'model_label': "ECMWF (9km) + Winter Monsoon Reef",
-        'thermal_boost': 0.22,
-        'aliases': ['phan rang', 'my hoa', 'my hoa lagoon', 'vietnam kite']
+        "id": "phan_rang",
+        "name": "Phan Rang (My Hoa Lagoon), Vietnam",
+        "short_name": "Phan Rang (My Hoa)",
+        "country": "Vietnam",
+        "region": "Ninh Thuan",
+        "flag": "🇻🇳",
+        "lat": 11.6,
+        "lon": 109.1167,
+        "timezone": "Asia/Ho_Chi_Minh",
+        "beach_angle": 90.0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Winter Monsoon Reef",
+        "thermal_boost": 0.22,
+        "aliases": [
+            "phan rang",
+            "my hoa",
+            "my hoa lagoon",
+            "vietnam kite"
+        ],
+        "spot_type": "lagoon",
+        "elevation": 2
     },
+    {
+        "id": "patos_ceara",
+        "name": "Patos (Itarema), Brazil",
+        "short_name": "Patos (Itarema)",
+        "country": "Brazil",
+        "region": "Ceará",
+        "flag": "🇧🇷",
+        "lat": -3.0055,
+        "lon": -39.7486,
+        "timezone": "America/Fortaleza",
+        "beach_angle": 45.0,
+        "spot_type": "lagoon",
+        "elevation": 2,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Flatwater Sandbar Venturi",
+        "thermal_boost": 0.2,
+        "aliases": [
+            "patos",
+            "praia dos patos",
+            "patos itarema",
+            "lagoa dos patos ceara",
+            "itarema"
+        ]
+    },
+    {
+        "id": "portalban",
+        "name": "Portalban (Lake Neuchâtel), Switzerland",
+        "short_name": "Portalban (Neuchâtel)",
+        "country": "Switzerland",
+        "region": "Fribourg / Romandie",
+        "flag": "🇨🇭",
+        "lat": 46.9175,
+        "lon": 6.9492,
+        "timezone": "Europe/Zurich",
+        "beach_angle": 315.0,
+        "spot_type": "lake",
+        "elevation": 429,
+        "preferred_model": "icon_d2",
+        "model_label": "ICON-D2 (2km) + Swiss Bise Thermal",
+        "thermal_boost": 0.16,
+        "aliases": [
+            "portalban",
+            "lake neuchatel",
+            "lac de neuchatel"
+        ]
+    },
+    {
+        "id": "saint_blaise",
+        "name": "Saint-Blaise (Lake Neuchâtel), Switzerland",
+        "short_name": "Saint-Blaise",
+        "country": "Switzerland",
+        "region": "Neuchâtel",
+        "flag": "🇨🇭",
+        "lat": 47.009,
+        "lon": 6.985,
+        "timezone": "Europe/Zurich",
+        "beach_angle": 150.0,
+        "spot_type": "lake",
+        "elevation": 429,
+        "preferred_model": "icon_d2",
+        "model_label": "ICON-D2 (2km) + Swiss SW Model",
+        "thermal_boost": 0.14,
+        "aliases": [
+            "saint-blaise",
+            "st blaise"
+        ]
+    },
+    {
+        "id": "lac_leman",
+        "name": "St-Prex (Lake Geneva), Switzerland",
+        "short_name": "Lake Geneva (St-Prex)",
+        "country": "Switzerland",
+        "region": "Vaud / Lac Léman",
+        "flag": "🇨🇭",
+        "lat": 46.4795,
+        "lon": 6.459,
+        "timezone": "Europe/Zurich",
+        "beach_angle": 60.0,
+        "spot_type": "lake",
+        "elevation": 372,
+        "preferred_model": "icon_d2",
+        "model_label": "ICON-D2 (2km) + Bise Léman Model",
+        "thermal_boost": 0.14,
+        "aliases": [
+            "st prex",
+            "lac leman",
+            "lake geneva",
+            "geneva",
+            "saint-prex"
+        ]
+    },
+    {
+        "id": "campione_garda",
+        "name": "Campione (Lake Garda), Italy",
+        "short_name": "Campione (Garda)",
+        "country": "Italy",
+        "region": "Brescia / Lake Garda",
+        "flag": "🇮🇹",
+        "lat": 45.7548,
+        "lon": 10.748,
+        "timezone": "Europe/Rome",
+        "beach_angle": 90.0,
+        "spot_type": "lake",
+        "elevation": 65,
+        "preferred_model": "icon_d2",
+        "model_label": "ICON-D2 (2km) + Pelèr & Ora Thermal",
+        "thermal_boost": 0.22,
+        "aliases": [
+            "campione",
+            "campione del garda",
+            "peler",
+            "garda"
+        ]
+    },
+    {
+        "id": "malcesine_garda",
+        "name": "Malcesine / Navene (Lake Garda), Italy",
+        "short_name": "Malcesine (Garda)",
+        "country": "Italy",
+        "region": "Verona / Lake Garda",
+        "flag": "🇮🇹",
+        "lat": 45.795,
+        "lon": 10.825,
+        "timezone": "Europe/Rome",
+        "beach_angle": 20.0,
+        "spot_type": "lake",
+        "elevation": 65,
+        "preferred_model": "icon_d2",
+        "model_label": "ICON-D2 (2km) + Pelèr Morning Thermal",
+        "thermal_boost": 0.22,
+        "aliases": [
+            "malcesine",
+            "navene",
+            "lake garda"
+        ]
+    },
+    {
+        "id": "gera_lario",
+        "name": "Gera Lario (Lake Como), Italy",
+        "short_name": "Gera Lario (Como)",
+        "country": "Italy",
+        "region": "Lombardy / Lake Como",
+        "flag": "🇮🇹",
+        "lat": 46.168,
+        "lon": 9.371,
+        "timezone": "Europe/Rome",
+        "beach_angle": 180.0,
+        "spot_type": "lake",
+        "elevation": 198,
+        "preferred_model": "icon_d2",
+        "model_label": "ICON-D2 (2km) + Breva Thermal Venturi",
+        "thermal_boost": 0.24,
+        "aliases": [
+            "gera lario",
+            "alto lario",
+            "lake como",
+            "como"
+        ]
+    },
+    {
+        "id": "reschensee",
+        "name": "Reschensee (Lake Reschen), Italy",
+        "short_name": "Reschensee",
+        "country": "Italy",
+        "region": "South Tyrol / Alps",
+        "flag": "🇮🇹",
+        "lat": 46.7972,
+        "lon": 10.5186,
+        "timezone": "Europe/Rome",
+        "beach_angle": 170.0,
+        "spot_type": "lake",
+        "elevation": 1498,
+        "preferred_model": "icon_d2",
+        "model_label": "ICON-D2 (2km) + Alpine Lake Thermal",
+        "thermal_boost": 0.22,
+        "aliases": [
+            "reschensee",
+            "lake reschen",
+            "curon",
+            "graun",
+            "val venosta"
+        ]
+    },
+    {
+        "id": "santa_croce",
+        "name": "Lake Santa Croce (Farra d'Alpago), Italy",
+        "short_name": "Lake Santa Croce",
+        "country": "Italy",
+        "region": "Veneto / Dolomites",
+        "flag": "🇮🇹",
+        "lat": 46.126,
+        "lon": 12.339,
+        "timezone": "Europe/Rome",
+        "beach_angle": 160.0,
+        "spot_type": "lake",
+        "elevation": 386,
+        "preferred_model": "icon_d2",
+        "model_label": "ICON-D2 (2km) + Alpine Thermal Funnel",
+        "thermal_boost": 0.25,
+        "aliases": [
+            "santa croce",
+            "lago di santa croce",
+            "alpago",
+            "belluno"
+        ]
+    },
+    {
+        "id": "lake_iseo",
+        "name": "Vello (Lake Iseo), Italy",
+        "short_name": "Lake Iseo (Vello)",
+        "country": "Italy",
+        "region": "Lombardy / Alps",
+        "flag": "🇮🇹",
+        "lat": 45.748,
+        "lon": 10.088,
+        "timezone": "Europe/Rome",
+        "beach_angle": 180.0,
+        "spot_type": "lake",
+        "elevation": 185,
+        "preferred_model": "icon_d2",
+        "model_label": "ICON-D2 (2km) + Ora del Sebino Thermal",
+        "thermal_boost": 0.18,
+        "aliases": [
+            "iseo",
+            "lake iseo",
+            "vello",
+            "marone"
+        ]
+    },
+    {
+        "id": "gizzeria",
+        "name": "Gizzeria Lido (Hang Loose Beach), Italy",
+        "short_name": "Gizzeria Lido",
+        "country": "Italy",
+        "region": "Calabria",
+        "flag": "🇮🇹",
+        "lat": 38.922,
+        "lon": 16.208,
+        "timezone": "Europe/Rome",
+        "beach_angle": 270.0,
+        "spot_type": "ocean",
+        "elevation": 0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Calabrian Thermal Venturi",
+        "thermal_boost": 0.28,
+        "aliases": [
+            "gizzeria",
+            "hang loose beach",
+            "lamezia terme",
+            "calabria"
+        ]
+    },
+    {
+        "id": "tarifa_balneario",
+        "name": "Tarifa (Balneario), Spain",
+        "short_name": "Tarifa (Balneario)",
+        "country": "Spain",
+        "region": "Andalusia / Cádiz",
+        "flag": "🇪🇸",
+        "lat": 36.008,
+        "lon": -5.607,
+        "timezone": "Europe/Madrid",
+        "beach_angle": 230.0,
+        "spot_type": "ocean",
+        "elevation": 0,
+        "preferred_model": "icon_eu",
+        "model_label": "ICON-EU (7km) + Extreme Levante Strait Funnel",
+        "thermal_boost": 0.26,
+        "aliases": [
+            "balneario",
+            "tarifa balneario",
+            "playa chica"
+        ]
+    },
+    {
+        "id": "mar_menor",
+        "name": "Mar Menor (Los Alcázares), Spain",
+        "short_name": "Mar Menor (Los Alcázares)",
+        "country": "Spain",
+        "region": "Murcia",
+        "flag": "🇪🇸",
+        "lat": 37.742,
+        "lon": -0.849,
+        "timezone": "Europe/Madrid",
+        "beach_angle": 90.0,
+        "spot_type": "lagoon",
+        "elevation": 1,
+        "preferred_model": "icon_eu",
+        "model_label": "ICON-EU (7km) + Thermal Lebeche & Garbí",
+        "thermal_boost": 0.18,
+        "aliases": [
+            "mar menor",
+            "los alcazares",
+            "la manga",
+            "los narejos"
+        ]
+    },
+    {
+        "id": "mar_menor_paraiso",
+        "name": "Mar Menor (Playa Paraíso), Spain",
+        "short_name": "Mar Menor (Playa Paraíso)",
+        "country": "Spain",
+        "region": "Murcia",
+        "flag": "🇪🇸",
+        "lat": 37.641,
+        "lon": -0.739,
+        "timezone": "Europe/Madrid",
+        "beach_angle": 350.0,
+        "spot_type": "lagoon",
+        "elevation": 1,
+        "preferred_model": "icon_eu",
+        "model_label": "ICON-EU (7km) + Mar Menor Flat Water Mirror",
+        "thermal_boost": 0.16,
+        "aliases": [
+            "playa paraiso",
+            "la manga del mar menor",
+            "playa honda"
+        ]
+    },
+    {
+        "id": "almeria_roquetas",
+        "name": "Roquetas de Mar (Playa Serena), Spain",
+        "short_name": "Roquetas de Mar",
+        "country": "Spain",
+        "region": "Andalusia / Almería",
+        "flag": "🇪🇸",
+        "lat": 36.726,
+        "lon": -2.625,
+        "timezone": "Europe/Madrid",
+        "beach_angle": 140.0,
+        "spot_type": "ocean",
+        "elevation": 0,
+        "preferred_model": "icon_eu",
+        "model_label": "ICON-EU (7km) + Poniente Venturi",
+        "thermal_boost": 0.2,
+        "aliases": [
+            "roquetas de mar",
+            "playa serena",
+            "almeria",
+            "almerimar"
+        ]
+    },
+    {
+        "id": "santa_pola",
+        "name": "Santa Pola (Playa Lisa), Spain",
+        "short_name": "Santa Pola",
+        "country": "Spain",
+        "region": "Alicante / Costa Blanca",
+        "flag": "🇪🇸",
+        "lat": 38.188,
+        "lon": -0.575,
+        "timezone": "Europe/Madrid",
+        "beach_angle": 160.0,
+        "spot_type": "ocean",
+        "elevation": 0,
+        "preferred_model": "icon_eu",
+        "model_label": "ICON-EU (7km) + Garbí Thermal Breeze",
+        "thermal_boost": 0.2,
+        "aliases": [
+            "santa pola",
+            "playa lisa",
+            "alicante"
+        ]
+    },
+    {
+        "id": "denia_deveses",
+        "name": "Dénia (Les Deveses), Spain",
+        "short_name": "Dénia (Les Deveses)",
+        "country": "Spain",
+        "region": "Alicante / Valencia",
+        "flag": "🇪🇸",
+        "lat": 38.892,
+        "lon": -0.019,
+        "timezone": "Europe/Madrid",
+        "beach_angle": 40.0,
+        "spot_type": "ocean",
+        "elevation": 0,
+        "preferred_model": "icon_eu",
+        "model_label": "ICON-EU (7km) + Garbí Thermal Highway",
+        "thermal_boost": 0.22,
+        "aliases": [
+            "denia",
+            "les deveses",
+            "oliva",
+            "marina alta"
+        ]
+    },
+    {
+        "id": "valencia_el_saler",
+        "name": "Valencia (El Saler), Spain",
+        "short_name": "Valencia (El Saler)",
+        "country": "Spain",
+        "region": "Valencia",
+        "flag": "🇪🇸",
+        "lat": 39.382,
+        "lon": -0.328,
+        "timezone": "Europe/Madrid",
+        "beach_angle": 80.0,
+        "spot_type": "ocean",
+        "elevation": 0,
+        "preferred_model": "icon_eu",
+        "model_label": "ICON-EU (7km) + Garbí Thermal Sea Breeze",
+        "thermal_boost": 0.18,
+        "aliases": [
+            "valencia",
+            "el saler",
+            "cullera",
+            "playa del saler"
+        ]
+    },
+    {
+        "id": "delta_ebro_trabucador",
+        "name": "Delta del Ebro (El Trabucador), Spain",
+        "short_name": "Trabucador (Delta)",
+        "country": "Spain",
+        "region": "Catalonia / Tarragona",
+        "flag": "🇪🇸",
+        "lat": 40.612,
+        "lon": 0.728,
+        "timezone": "Europe/Madrid",
+        "beach_angle": 90.0,
+        "spot_type": "lagoon",
+        "elevation": 1,
+        "preferred_model": "icon_eu",
+        "model_label": "ICON-EU (7km) + Mestral & Garbí Flat Water Mirror",
+        "thermal_boost": 0.22,
+        "aliases": [
+            "trabucador",
+            "el trabucador",
+            "delta ebro",
+            "sant carles de la rapita",
+            "badia dels alfacs"
+        ]
+    },
+    {
+        "id": "castelldefels",
+        "name": "Castelldefels (Barcelona), Spain",
+        "short_name": "Castelldefels",
+        "country": "Spain",
+        "region": "Catalonia / Barcelona",
+        "flag": "🇪🇸",
+        "lat": 41.265,
+        "lon": 1.996,
+        "timezone": "Europe/Madrid",
+        "beach_angle": 170.0,
+        "spot_type": "ocean",
+        "elevation": 0,
+        "preferred_model": "icon_eu",
+        "model_label": "ICON-EU (7km) + Garbí Thermal & Levantades",
+        "thermal_boost": 0.16,
+        "aliases": [
+            "castelldefels",
+            "barcelona",
+            "gava",
+            "playa de castelldefels"
+        ]
+    },
+    {
+        "id": "cesantes_galicia",
+        "name": "Cesantes (Ría de Vigo), Spain",
+        "short_name": "Cesantes (Galicia)",
+        "country": "Spain",
+        "region": "Galicia / Pontevedra",
+        "flag": "🇪🇸",
+        "lat": 42.321,
+        "lon": -8.618,
+        "timezone": "Europe/Madrid",
+        "beach_angle": 250.0,
+        "spot_type": "lagoon",
+        "elevation": 2,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Ría Fjord Thermal Venturi",
+        "thermal_boost": 0.24,
+        "aliases": [
+            "cesantes",
+            "redondela",
+            "ria de vigo",
+            "vigo",
+            "galicia",
+            "ensenada de san simon"
+        ]
+    },
+    {
+        "id": "somo_cantabria",
+        "name": "Somo (Santander), Spain",
+        "short_name": "Somo (Santander)",
+        "country": "Spain",
+        "region": "Cantabria",
+        "flag": "🇪🇸",
+        "lat": 43.456,
+        "lon": -3.743,
+        "timezone": "Europe/Madrid",
+        "beach_angle": 0.0,
+        "spot_type": "ocean",
+        "elevation": 0,
+        "preferred_model": "best_match",
+        "model_label": "ECMWF (9km) + Cantabrian Wave & Nordeste",
+        "thermal_boost": 0.15,
+        "aliases": [
+            "somo",
+            "santander",
+            "playa de somo",
+            "loredo"
+        ]
+    },
+    {
+        "id": "isla_canela",
+        "name": "Isla Canela (Huelva), Spain",
+        "short_name": "Isla Canela",
+        "country": "Spain",
+        "region": "Andalusia / Huelva",
+        "flag": "🇪🇸",
+        "lat": 37.178,
+        "lon": -7.375,
+        "timezone": "Europe/Madrid",
+        "beach_angle": 190.0,
+        "spot_type": "ocean",
+        "elevation": 0,
+        "preferred_model": "icon_eu",
+        "model_label": "ICON-EU (7km) + Atlantic Thermal & Poniente",
+        "thermal_boost": 0.18,
+        "aliases": [
+            "isla canela",
+            "ayamonte",
+            "huelva",
+            "punta umbria"
+        ]
+    },
+    {
+        "id": "mallorca_muro",
+        "name": "Playa de Muro (Mallorca), Spain",
+        "short_name": "Playa de Muro",
+        "country": "Spain",
+        "region": "Balearic Islands",
+        "flag": "🇪🇸",
+        "lat": 39.805,
+        "lon": 3.12,
+        "timezone": "Europe/Madrid",
+        "beach_angle": 50.0,
+        "spot_type": "ocean",
+        "elevation": 0,
+        "preferred_model": "icon_eu",
+        "model_label": "ICON-EU (7km) + Embat Thermal Breeze",
+        "thermal_boost": 0.2,
+        "aliases": [
+            "playa de muro",
+            "muro",
+            "can picafort",
+            "mallorca",
+            "alcudia"
+        ]
+    },
+    {
+        "id": "ibiza_martina",
+        "name": "Cala Martina (Ibiza), Spain",
+        "short_name": "Cala Martina (Ibiza)",
+        "country": "Spain",
+        "region": "Balearic Islands",
+        "flag": "🇪🇸",
+        "lat": 38.995,
+        "lon": 1.564,
+        "timezone": "Europe/Madrid",
+        "beach_angle": 120.0,
+        "spot_type": "ocean",
+        "elevation": 0,
+        "preferred_model": "icon_eu",
+        "model_label": "ICON-EU (7km) + Balearic Thermal Breeze",
+        "thermal_boost": 0.16,
+        "aliases": [
+            "cala martina",
+            "ibiza",
+            "santa eulalia"
+        ]
+    }
 ]
 
 
