@@ -139,7 +139,7 @@
                 <span>⚡</span><span>Beta Rider</span>
               </span>
             </div>
-            <p id="backpack-count-badge" class="text-[11px] text-slate-400 truncate">🎒 0 packed with me · 0 at home</p>
+            <p id="backpack-count-badge" class="text-[11px] text-slate-400 font-medium truncate">Manage packed gear in profile</p>
           </div>
         </div>
       </div>
@@ -2387,14 +2387,22 @@
     function updateLevelButtonsUI() {
       const lvl = state.user.level || 'intermediate';
       ['beginner', 'intermediate', 'advanced'].forEach(l => {
-        [document.getElementById(`btn-level-${l}`), document.getElementById(`modal-btn-level-${l}`)].forEach(btn => {
-          if (!btn) return;
+        const mainBtn = document.getElementById(`btn-level-${l}`);
+        if (mainBtn) {
           if (l === lvl) {
-            btn.className = "flex-1 py-1.5 rounded-lg text-[11px] font-bold transition bg-sky-600 text-white shadow-sm";
+            mainBtn.className = "px-2.5 py-1 rounded-lg font-semibold transition text-[11px] bg-sky-600 text-white shadow-sm";
           } else {
-            btn.className = "flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition text-slate-400 hover:text-white";
+            mainBtn.className = "px-2.5 py-1 rounded-lg font-semibold transition text-[11px] text-slate-400 hover:text-white";
           }
-        });
+        }
+        const modalBtn = document.getElementById(`modal-btn-level-${l}`);
+        if (modalBtn) {
+          if (l === lvl) {
+            modalBtn.className = "flex-1 py-1.5 rounded-lg text-[11px] font-bold transition bg-sky-600 text-white shadow-sm";
+          } else {
+            modalBtn.className = "flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition text-slate-400 hover:text-white";
+          }
+        }
       });
     }
 
@@ -2835,9 +2843,11 @@
       const badgeCountEl = document.getElementById('backpack-count-badge');
       if (badgeCountEl) {
         if (isBeta) {
-          badgeCountEl.innerHTML = `<button type="button" onclick="openProfileGearTab('kites')" class="text-sky-400 hover:text-sky-300 font-semibold cursor-pointer transition flex items-center space-x-1 text-[11px] group"><span>🎒 ${totalPacked} packed · Manage Gear in your profile ➔</span></button>`;
+          badgeCountEl.innerText = "Manage packed gear in profile";
+          badgeCountEl.className = "text-[11px] text-slate-400 font-medium truncate";
         } else {
           badgeCountEl.innerText = `🎒 ${totalPacked} gear packed · ${totalHome} at home`;
+          badgeCountEl.className = "text-[11px] text-slate-400 truncate";
         }
       }
 
@@ -4572,10 +4582,15 @@
     }
 
     function handleBadgeClick() {
-      if (authUser && authUser.email) {
-        openAuthModal();
+      const isBeta = (typeof isBetaUserActive === 'function' && isBetaUserActive());
+      if (isBeta) {
+        openProfileGearTab('specs');
       } else {
-        openAuthModal('login');
+        if (authUser && authUser.email) {
+          openAuthModal();
+        } else {
+          openAuthModal('login');
+        }
       }
     }
 
@@ -6635,7 +6650,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=22').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=23').then(reg => {
           reg.update();
         }).catch(err => console.log('SW register failed:', err));
       }
