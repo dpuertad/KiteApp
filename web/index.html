@@ -1611,6 +1611,50 @@
 
   <!-- JAVASCRIPT APP LOGIC -->
   <script>
+    // Global User & Beta Scope Helpers (Declared at top to guarantee availability across all components)
+    function getAuthUser() {
+      if (typeof authUser !== 'undefined' && authUser) return authUser;
+      try {
+        const raw = localStorage.getItem('kf_auth_user');
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+    window.getAuthUser = getAuthUser;
+
+    function isBetaUserActive() {
+      const isLabActive = localStorage.getItem('hg_beta_mode') === 'true';
+      const isBetaHost = window.location.hostname.startsWith('beta.') || 
+                         window.location.hostname.includes('-beta') || 
+                         window.location.search.includes('beta=1') ||
+                         window.location.port === '8991' ||
+                         isLabActive;
+      const authUser = getAuthUser();
+      return Boolean((authUser && (
+        authUser.is_beta_rider === true || 
+        authUser.beta_status === 'approved' ||
+        (['d_puerta@hotmail.com', 'admin.holygust@gmail.com', 'd.puertadiaz@gmail.com'].includes((authUser.email || '').toLowerCase().trim()) && authUser.beta_status !== 'left')
+      ) && authUser.beta_status !== 'left') || isBetaHost || isLabActive);
+    }
+    window.isBetaUserActive = isBetaUserActive;
+
+    function isSpotAlarmActive(spotName) {
+      if (!spotName) return false;
+      try {
+        const raw = localStorage.getItem('hg_spot_alarms');
+        if (!raw) return false;
+        const config = JSON.parse(raw);
+        if (config.enabled === false) return false;
+        const spots = (config && config.spots) || [];
+        const cleanTarget = spotName.toLowerCase().split(',')[0].trim();
+        return spots.some(s => s.toLowerCase().includes(cleanTarget) || cleanTarget.includes(s.toLowerCase().split(',')[0].trim()));
+      } catch (e) {
+        return false;
+      }
+    }
+    window.isSpotAlarmActive = isSpotAlarmActive;
+
     // REAL VECTOR GEAR ICONS (NO TOY EMOJIS)
     const GEAR_ICONS = {
       kiteTube: (cls="w-4 h-4 text-sky-400 inline-block") => `
@@ -3948,13 +3992,13 @@
           (Math.abs(state.spot.lat - s.lat) < 0.05 && Math.abs(state.spot.lon - s.lon) < 0.05)
         );
         const isFav = isFavoriteSpot(s.id);
-        const hasAlarm = isSpotAlarmActive(s.name || s.short_name);
+        const hasAlarm = (typeof isSpotAlarmActive === 'function') && isSpotAlarmActive(s.name || s.short_name);
         const starBtn = `
           <button type="button" onclick="event.stopPropagation(); toggleFavoriteSpot('${s.id}')" class="p-1 rounded-lg hover:bg-slate-800 transition ${isFav ? 'text-amber-400 font-bold' : 'text-slate-600 hover:text-amber-300'}" title="${isFav ? 'Remove from favorites' : 'Add to favorites'}">
             <span class="text-sm">${isFav ? '★' : '☆'}</span>
           </button>
         `;
-        const alarmBtn = isBetaUserActive() ? `
+        const alarmBtn = (typeof isBetaUserActive === 'function' && isBetaUserActive()) ? `
           <button type="button" onclick="event.stopPropagation(); openSpotAlarmModal('${s.name}')" class="p-1 rounded-lg hover:bg-slate-800 transition ${hasAlarm ? 'text-amber-400 font-bold' : 'text-slate-600 hover:text-sky-300'}" title="${hasAlarm ? 'Spot Wind Alarm Active' : 'Set Spot Wind Alarm'}">
             <span class="text-sm">${hasAlarm ? '🔔' : '🔕'}</span>
           </button>
@@ -5242,7 +5286,7 @@
               </div>
             </div>
             <div class="flex items-center space-x-1 flex-shrink-0 ml-2">
-              ${isBetaUserActive() ? `
+              ${(typeof isBetaUserActive === 'function' && isBetaUserActive()) ? `
                 <button type="button" onclick="event.stopPropagation(); openSpotAlarmModal('${s.name}'); closeAllModals();" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-sky-300 text-[11px] font-semibold transition" title="Spot Wind Alarm">
                   🔔
                 </button>
@@ -5414,8 +5458,16 @@
         if (!state.favorite_spots.includes(finalSpot.id)) {
           state.favorite_spots.push(finalSpot.id);
           localStorage.setItem('hg_favorite_spots', JSON.stringify(state.favorite_spots));
-          renderProfileFavorites();
-          syncUserDataQuiet();
+          try {
+            renderProfileFavorites();
+          } catch (e1) {
+            console.warn("renderProfileFavorites non-blocking:", e1);
+          }
+          try {
+            syncUserDataQuiet();
+          } catch (e2) {
+            console.warn("syncUserDataQuiet non-blocking:", e2);
+          }
         }
 
         // 4. Set as active spot
@@ -6347,7 +6399,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=16').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=17').then(reg => {
           reg.update();
         }).catch(err => console.log('SW register failed:', err));
       }
@@ -6356,50 +6408,8 @@
     // ==============================================================================
     // 🔔 BETA SPOT WIND ALARMS & PWA WEB PUSH ENGINE
     // ==============================================================================
-    function getAuthUser() {
-      if (typeof authUser !== 'undefined' && authUser) return authUser;
-      try {
-        const raw = localStorage.getItem('kf_auth_user');
-        return raw ? JSON.parse(raw) : null;
-      } catch (e) {
-        return null;
-      }
-    }
-    window.getAuthUser = getAuthUser;
-
     let activeAlarmSpot = null;
     let cachedVapidPublicKey = null;
-
-    function isBetaUserActive() {
-      const isLabActive = localStorage.getItem('hg_beta_mode') === 'true';
-      const isBetaHost = window.location.hostname.startsWith('beta.') || 
-                         window.location.hostname.includes('-beta') || 
-                         window.location.search.includes('beta=1') ||
-                         window.location.port === '8991' ||
-                         isLabActive;
-      const authUser = getAuthUser();
-      return Boolean((authUser && (
-        authUser.is_beta_rider === true || 
-        authUser.beta_status === 'approved' ||
-        (['d_puerta@hotmail.com', 'admin.holygust@gmail.com', 'd.puertadiaz@gmail.com'].includes((authUser.email || '').toLowerCase().trim()) && authUser.beta_status !== 'left')
-      ) && authUser.beta_status !== 'left') || isBetaHost || isLabActive);
-    }
-    window.isBetaUserActive = isBetaUserActive;
-
-    function isSpotAlarmActive(spotName) {
-      if (!spotName) return false;
-      try {
-        const raw = localStorage.getItem('hg_spot_alarms');
-        if (!raw) return false;
-        const config = JSON.parse(raw);
-        if (config.enabled === false) return false;
-        const spots = (config && config.spots) || [];
-        const cleanTarget = spotName.toLowerCase().split(',')[0].trim();
-        return spots.some(s => s.toLowerCase().includes(cleanTarget) || cleanTarget.includes(s.toLowerCase().split(',')[0].trim()));
-      } catch (e) {
-        return false;
-      }
-    }
 
     async function getVapidPublicKey() {
       if (cachedVapidPublicKey) return cachedVapidPublicKey;
