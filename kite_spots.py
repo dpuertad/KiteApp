@@ -382,7 +382,7 @@ GLOBAL_KITE_SPOTS = [
     {
         "id": "tarifa",
         "name": "Tarifa (Los Lances), Spain",
-        "short_name": "Tarifa",
+        "short_name": "Tarifa (Los Lances)",
         "country": "Spain",
         "region": "Andalusia",
         "flag": "🇪🇸",
