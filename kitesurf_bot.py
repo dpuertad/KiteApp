@@ -1860,7 +1860,7 @@ def recommend_from_available_quiver(
 ) -> str:
     if not active_inventory:
         if all_inventory:
-            return "🎒 No kites packed in backpack today! Type `/take all` or enjoy a Caipirinha 🍹"
+            return "🎒 No kites packed in backpack today! Select your gear or use `/take all`."
         return "⚠️ No kites registered yet! (type `/kite 1 <Brand> <Model> <Size>`)"
 
     evaluated = [evaluate_active_kite(k, weight_kg, wind_kts, gust_kts, level=level, board=board) for k in active_inventory]
@@ -1904,7 +1904,7 @@ def recommend_from_available_quiver(
         yr_str = f" ({home_kite['year']})" if home_kite.get("year") else ""
         home_tip = f" 💡 Pack your {home_kite['brand']} {home_kite['model']}{yr_str} {home_kite['size']}m: `/take all`"
 
-    # 3. Wind too light (< min of active quiver): Caipirinha Time!
+    # 3. Wind too light (< min of active quiver): Light Wind
     if wind_kts < min(mins):
         biggest = max(evaluated, key=lambda k: k["size"])
         # Check if heavy gusts make it rideable in spikes
@@ -1928,9 +1928,7 @@ def recommend_from_available_quiver(
             b_yr = f" ({b_home['year']})" if b_home.get("year") else ""
             bigger_home_tip = f" 💡 Pack your {b_home['brand']} {b_home['model']}{b_yr} {b_home['size']}m from home: `/take all`"
 
-        if slot_hour is not None and slot_hour < 12:
-            return f"☕ Too early for Caipi time, enjoy a beach coffee :) Wind ({w_kts_rounded} kts) is too light for your {kite_desc} (min ~{min_k_rounded} kts) — enjoy the morning ocean view! ☕🥐{bigger_home_tip}"
-        return f"🍹 Caipirinha Time! Wind ({w_kts_rounded} kts) is too light for your {kite_desc} (min ~{min_k_rounded} kts) — none of your gear fits, time to chill at the beach bar! 🏖️🍹{bigger_home_tip}"
+        return f"💨 Not enough wind for your gear. Wind ({w_kts_rounded} kts) is below your minimum (~{min_k_rounded} kts for {kite_desc}).{bigger_home_tip}"
 
     # 4. Wind above max of active quiver
     if wind_kts > max(maxs):
@@ -1940,11 +1938,7 @@ def recommend_from_available_quiver(
         elif wind_kts <= smallest["max_k"] + 8:
             return f"{smallest['display_name']} (🚨 Heavily Overpowered — max ~{max_k_rounded} kts!){home_tip}"
         else:
-            if slot_hour is not None and slot_hour < 12:
-                return f"☕ Holy Storm Coffee Time! Nuking at {round_knots(wind_kts)} kts — too wild for your {smallest['display_name']} (max ~{max_k_rounded} kts). Grab a hot brew and watch the show safely from the beach cafe! ☕⚡{home_tip}"
-            if home_tip:
-                return f"🍹 Double Caipirinha Time! Nuking at {round_knots(wind_kts)} kts — too wild for your {smallest['display_name']} (max ~{max_k_rounded} kts). Watch from the beach bar! 🍹🔥{home_tip}"
-            return f"🍹 Double Caipirinha Time! Nuking at {round_knots(wind_kts)} kts — too wild for your {smallest['display_name']} (max ~{max_k_rounded} kts). Enjoy a cocktail and watch the big air show! 🍹🔥"
+            return f"⚠️ Wind too strong for your gear. Nuking at {round_knots(wind_kts)} kts — exceeds maximum safe limit (~{max_k_rounded} kts for {smallest['display_name']}).{home_tip}"
 
     nearest = min(evaluated, key=lambda k: k["dist_to_sweet"])
     return f"{nearest['display_name']} (Marginal)"
