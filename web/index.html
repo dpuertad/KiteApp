@@ -425,7 +425,7 @@
     </section>
 
     <!-- GEAR INVENTORY SECTION -->
-    <section class="bg-slate-900/80 rounded-3xl p-5 border border-slate-800 shadow-xl space-y-4">
+    <section id="section-gear-inventory" class="bg-slate-900/80 rounded-3xl p-5 border border-slate-800 shadow-xl space-y-4">
       <div class="flex items-center justify-between">
         <div>
           <h2 class="text-sm font-bold text-white flex items-center space-x-2">
@@ -1305,74 +1305,178 @@
   </div>
 
   <!-- RIDER SETUP MODAL -->
-  <div id="modal-profile" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <h3 class="font-bold text-sm text-white flex items-center space-x-2">
-          <span>👤 Rider Profile Settings</span>
-        </h3>
-        <button onclick="toggleModal('modal-profile')" class="text-slate-400 hover:text-white p-1">
+  <div id="modal-profile" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-slate-800 px-5 py-3.5 flex-shrink-0">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 rounded-full bg-sky-500/20 border border-sky-500/40 flex items-center justify-center text-sky-400">
+            <i data-lucide="user" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-sm text-white flex items-center space-x-1.5">
+              <span>Rider Profile</span>
+            </h3>
+            <p id="profile-modal-email-sub" class="text-[10px] text-slate-400 font-mono truncate max-w-[200px] sm:max-w-xs"></p>
+          </div>
+        </div>
+        <button type="button" onclick="toggleModal('modal-profile')" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
-      <div class="space-y-3.5 text-xs">
-        <div>
-          <label class="block font-semibold text-slate-300 mb-1">Your Name</label>
-          <input id="modal-rider-name" type="text" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
+      <!-- Profile Tab Navigation Bar (Visible in Beta) -->
+      <div id="profile-modal-tabs-bar" class="px-5 pt-3 pb-2 flex-shrink-0 border-b border-slate-800/80 bg-slate-900/90">
+        <div class="flex items-center space-x-1 bg-slate-950 p-1 rounded-2xl border border-slate-800">
+          <button type="button" id="tab-btn-profile-specs" onclick="switchProfileTab('specs')" class="flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-sky-600 text-white shadow-sm">
+            <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+            <span>Rider Specs</span>
+          </button>
+          <button type="button" id="tab-btn-profile-kites" onclick="switchProfileTab('kites')" class="flex-1 py-1.5 px-2 rounded-xl text-xs font-medium transition flex items-center justify-center space-x-1 text-slate-400 hover:text-white">
+            <span class="text-sm">🪁</span>
+            <span>Kites & Wings</span>
+            <span id="badge-tab-kites-count" class="ml-1 text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300 font-mono">0</span>
+          </button>
+          <button type="button" id="tab-btn-profile-boards" onclick="switchProfileTab('boards')" class="flex-1 py-1.5 px-2 rounded-xl text-xs font-medium transition flex items-center justify-center space-x-1 text-slate-400 hover:text-white">
+            <span class="text-sm">🏄</span>
+            <span>Boards & Foils</span>
+            <span id="badge-tab-boards-count" class="ml-1 text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300 font-mono">0</span>
+          </button>
         </div>
+      </div>
 
-        <div>
-          <label class="block font-semibold text-slate-300 mb-1 flex items-center justify-between">
-            <span>Rider Nationality</span>
-            <span class="text-[10px] text-slate-400 font-normal">Passport / Country</span>
-          </label>
-          <input id="modal-rider-nationality" type="text" placeholder="e.g. Italian, Spanish, German, Brazilian, Swiss..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
-        </div>
-
-        <div>
-          <div class="flex justify-between items-center mb-1">
-            <label class="font-semibold text-slate-300">Rider Weight (kg)</label>
-            <span id="modal-weight-val" class="text-sky-400 font-bold">75 kg</span>
+      <!-- Tab Content Area -->
+      <div class="flex-1 overflow-y-auto p-5 space-y-4 custom-scrollbar text-xs">
+        
+        <!-- ============================================== -->
+        <!-- TAB 1: RIDER SPECS -->
+        <!-- ============================================== -->
+        <div id="profile-tab-specs" class="space-y-3.5">
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">Your Name</label>
+            <input id="modal-rider-name" type="text" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
           </div>
-          <input id="modal-rider-weight" type="range" min="45" max="120" step="1" oninput="document.getElementById('modal-weight-val').innerText = this.value + ' kg'" class="w-full accent-sky-500">
-        </div>
 
-        <div>
-          <label class="block font-semibold text-slate-300 mb-1">Board Discipline</label>
-          <select id="modal-board-type" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
-            <option value="Twintip">Twintip (Standard Freeride / Big Air)</option>
-            <option value="Surf / Strapless">Surfboard / Strapless Wave</option>
-            <option value="Foil">Hydrofoil</option>
-          </select>
-        </div>
-
-        <!-- ⚡ Beta Rider Status Card -->
-        <div id="settings-beta-card" class="p-3 rounded-2xl border border-slate-800 bg-slate-950/60 transition">
-          <!-- Injected dynamically -->
-        </div>
-
-        <!-- ⭐ My Favorite Spots -->
-        <div class="pt-3 border-t border-slate-800 space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-slate-200 flex items-center space-x-1.5">
-              <span class="text-amber-400">⭐</span>
-              <span>My Favorite Spots</span>
-            </span>
-            <span id="profile-fav-count" class="text-[10px] text-slate-400 font-mono">0 spots</span>
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1 flex items-center justify-between">
+              <span>Rider Nationality</span>
+              <span class="text-[10px] text-slate-400 font-normal">Passport / Country</span>
+            </label>
+            <input id="modal-rider-nationality" type="text" placeholder="e.g. Italian, Spanish, German, Brazilian, Swiss..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
           </div>
-          <div id="profile-favorites-list" class="space-y-1.5 max-h-[140px] overflow-y-auto pr-0.5 custom-scrollbar">
+
+          <!-- Quick Weight Control -->
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="font-semibold text-slate-300">Rider Weight (kg)</label>
+              <span id="modal-weight-val" class="text-sky-400 font-bold">75.0 kg</span>
+            </div>
+            <input id="modal-rider-weight" type="range" min="45" max="120" step="1" oninput="onModalWeightSlider(this.value)" class="w-full accent-sky-500 cursor-pointer">
+          </div>
+
+          <!-- Rider Level Selector -->
+          <div class="p-3 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label class="font-semibold text-slate-300 flex items-center space-x-1.5">
+                <i data-lucide="gauge" class="w-3.5 h-3.5 text-sky-400"></i>
+                <span>Skill Level</span>
+              </label>
+            </div>
+            <div class="flex items-center space-x-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
+              <button type="button" id="modal-btn-level-beginner" onclick="setRiderLevel('beginner')" class="flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition text-slate-400 hover:text-white">Beginner</button>
+              <button type="button" id="modal-btn-level-intermediate" onclick="setRiderLevel('intermediate')" class="flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition bg-sky-600 text-white shadow-sm">Medium</button>
+              <button type="button" id="modal-btn-level-advanced" onclick="setRiderLevel('advanced')" class="flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition text-slate-400 hover:text-white">Advanced</button>
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">Preferred Board Discipline</label>
+            <select id="modal-board-type" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
+              <option value="Twintip">Twintip (Standard Freeride / Big Air)</option>
+              <option value="Surf / Strapless">Surfboard / Strapless Wave</option>
+              <option value="Foil">Hydrofoil</option>
+              <option value="Wingfoil">Wingfoil</option>
+            </select>
+          </div>
+
+          <!-- ⚡ Beta Rider Status Card -->
+          <div id="settings-beta-card" class="p-3 rounded-2xl border border-slate-800 bg-slate-950/60 transition">
+            <!-- Injected dynamically -->
+          </div>
+
+          <!-- ⭐ My Favorite Spots -->
+          <div class="pt-3 border-t border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-200 flex items-center space-x-1.5">
+                <span class="text-amber-400">⭐</span>
+                <span>My Favorite Spots</span>
+              </span>
+              <span id="profile-fav-count" class="text-[10px] text-slate-400 font-mono">0 spots</span>
+            </div>
+            <div id="profile-favorites-list" class="space-y-1.5 max-h-[140px] overflow-y-auto pr-0.5 custom-scrollbar">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <button onclick="saveModalProfile()" class="w-full py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-95 text-white font-bold text-xs shadow-lg shadow-sky-500/25 transition">
+            Save Settings
+          </button>
+
+          <button onclick="resetProfileAll()" class="w-full py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 font-semibold text-xs border border-rose-500/30 transition">
+            🗑️ Reset Profile & Clear Gear
+          </button>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 2: KITES & WINGS -->
+        <!-- ============================================== -->
+        <div id="profile-tab-kites" class="space-y-3 hidden">
+          <div class="flex items-center justify-between bg-slate-950/80 p-3 rounded-2xl border border-slate-800">
+            <div>
+              <h4 class="font-bold text-white text-xs flex items-center space-x-1.5">
+                <span>🪁 Kites & Wings</span>
+              </h4>
+              <p id="modal-kites-sub-badge" class="text-[10px] text-slate-400 mt-0.5">0 packed · 0 at home</p>
+            </div>
+            <div class="flex items-center space-x-1.5">
+              <button onclick="openAddKiteModal()" class="px-3 py-1.5 rounded-xl bg-sky-500/20 text-sky-400 text-xs font-bold border border-sky-500/30 hover:bg-sky-500/30 flex items-center space-x-1 active:scale-95 transition">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>+ Kite</span>
+              </button>
+              <button onclick="openAddWingModal()" class="px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-500/30 hover:bg-amber-500/30 flex items-center space-x-1 active:scale-95 transition">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>+ Wing</span>
+              </button>
+            </div>
+          </div>
+          <p class="text-[11px] text-slate-400 font-normal">Click 🎒 icon to mark the material that is with you at the beach</p>
+          <div id="modal-quiver-list" class="space-y-2.5">
             <!-- Rendered dynamically -->
           </div>
         </div>
 
-        <button onclick="saveModalProfile()" class="w-full py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-95 text-white font-bold text-xs shadow-lg shadow-sky-500/25 transition">
-          Save Settings
-        </button>
+        <!-- ============================================== -->
+        <!-- TAB 3: BOARDS & FOILS -->
+        <!-- ============================================== -->
+        <div id="profile-tab-boards" class="space-y-3 hidden">
+          <div class="flex items-center justify-between bg-slate-950/80 p-3 rounded-2xl border border-slate-800">
+            <div>
+              <h4 class="font-bold text-white text-xs flex items-center space-x-1.5">
+                <span>🏄 Boards & Hydrofoils</span>
+              </h4>
+              <p id="modal-boards-sub-badge" class="text-[10px] text-slate-400 mt-0.5">0 packed · 0 at home</p>
+            </div>
+            <button onclick="openAddBoardModal()" class="px-3 py-1.5 rounded-xl bg-violet-500/20 text-violet-300 text-xs font-bold border border-violet-500/30 hover:bg-violet-500/30 flex items-center space-x-1 active:scale-95 transition">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+              <span>+ Board</span>
+            </button>
+          </div>
+          <p class="text-[11px] text-slate-400 font-normal">Click 🎒 icon to mark the board that is with you at the beach</p>
+          <div id="modal-boards-list" class="space-y-2.5">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
 
-        <button onclick="resetProfileAll()" class="w-full py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 font-semibold text-xs border border-rose-500/30 transition">
-          🗑️ Reset Profile & Clear Gear
-        </button>
       </div>
     </div>
   </div>
@@ -2283,13 +2387,14 @@
     function updateLevelButtonsUI() {
       const lvl = state.user.level || 'intermediate';
       ['beginner', 'intermediate', 'advanced'].forEach(l => {
-        const btn = document.getElementById(`btn-level-${l}`);
-        if (!btn) return;
-        if (l === lvl) {
-          btn.className = "px-2.5 py-1 rounded-lg font-semibold transition text-[11px] bg-sky-600 text-white shadow-sm";
-        } else {
-          btn.className = "px-2.5 py-1 rounded-lg font-semibold transition text-[11px] text-slate-400 hover:text-white";
-        }
+        [document.getElementById(`btn-level-${l}`), document.getElementById(`modal-btn-level-${l}`)].forEach(btn => {
+          if (!btn) return;
+          if (l === lvl) {
+            btn.className = "flex-1 py-1.5 rounded-lg text-[11px] font-bold transition bg-sky-600 text-white shadow-sm";
+          } else {
+            btn.className = "flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition text-slate-400 hover:text-white";
+          }
+        });
       });
     }
 
@@ -2700,6 +2805,8 @@
     function renderGearInventory() {
       const tractionContainer = document.getElementById('quiver-list');
       const boardContainer = document.getElementById('boards-list');
+      const modalTractionContainer = document.getElementById('modal-quiver-list');
+      const modalBoardContainer = document.getElementById('modal-boards-list');
 
       // Update Subheaders with Real SVGs (Kites & Wings header is kept clean without icons)
       const hdrB = document.getElementById('hdr-boards-icon');
@@ -2713,25 +2820,55 @@
       const activeBoards = (state.boards || []).filter(b => b.active !== false).length;
       const homeBoards = (state.boards || []).length - activeBoards;
 
+      const isBeta = (typeof isBetaUserActive === 'function' && isBetaUserActive());
+      const sectionGear = document.getElementById('section-gear-inventory');
+      if (sectionGear) {
+        if (isBeta) {
+          sectionGear.classList.add('hidden');
+        } else {
+          sectionGear.classList.remove('hidden');
+        }
+      }
+
+      const totalPacked = activeTraction + activeBoards;
+      const totalHome = homeTraction + homeBoards;
       const badgeCountEl = document.getElementById('backpack-count-badge');
       if (badgeCountEl) {
-        badgeCountEl.innerText = `🎒 ${activeTraction + activeBoards} gear packed · ${homeTraction + homeBoards} at home`;
+        if (isBeta) {
+          badgeCountEl.innerHTML = `<button type="button" onclick="openProfileGearTab('kites')" class="text-sky-400 hover:text-sky-300 font-semibold cursor-pointer transition flex items-center space-x-1 text-[11px] group"><span>🎒 ${totalPacked} packed · Manage Gear in your profile ➔</span></button>`;
+        } else {
+          badgeCountEl.innerText = `🎒 ${totalPacked} gear packed · ${totalHome} at home`;
+        }
       }
 
       const kitesSubBadge = document.getElementById('kites-sub-badge');
       if (kitesSubBadge) {
         kitesSubBadge.innerText = `${activeTraction} packed · ${homeTraction} at home`;
       }
+      const modalKitesSub = document.getElementById('modal-kites-sub-badge');
+      if (modalKitesSub) {
+        modalKitesSub.innerText = `${activeTraction} packed · ${homeTraction} at home`;
+      }
 
       const boardSubBadge = document.getElementById('boards-sub-badge');
       if (boardSubBadge) {
         boardSubBadge.innerText = `${activeBoards} packed · ${homeBoards} at home`;
       }
+      const modalBoardSub = document.getElementById('modal-boards-sub-badge');
+      if (modalBoardSub) {
+        modalBoardSub.innerText = `${activeBoards} packed · ${homeBoards} at home`;
+      }
+
+      const tabKitesCount = document.getElementById('badge-tab-kites-count');
+      if (tabKitesCount) tabKitesCount.innerText = state.inventory.length;
+
+      const tabBoardsCount = document.getElementById('badge-tab-boards-count');
+      if (tabBoardsCount) tabBoardsCount.innerText = (state.boards || []).length;
 
       // 1. RENDER KITES & WINGS
       if (state.inventory.length === 0) {
         if (!authUser || !authUser.email) {
-          tractionContainer.innerHTML = `
+          const emptyTractionGuest = `
             <div class="bg-slate-950/60 rounded-2xl p-4 border border-dashed border-sky-500/30 text-center space-y-2">
               <div class="flex items-center justify-center space-x-1.5 text-sky-400 font-bold text-xs">
                 <i data-lucide="lock" class="w-3.5 h-3.5"></i>
@@ -2748,8 +2885,10 @@
               </div>
             </div>
           `;
+          if (tractionContainer) tractionContainer.innerHTML = emptyTractionGuest;
+          if (modalTractionContainer) modalTractionContainer.innerHTML = emptyTractionGuest;
         } else {
-          tractionContainer.innerHTML = `
+          const emptyTractionUser = `
             <div class="bg-slate-950/60 rounded-2xl p-4 border border-dashed border-slate-800 text-center space-y-2">
               <p class="text-xs font-bold text-amber-400">⚠️ No kites or wings registered yet!</p>
               <p class="text-[11px] text-slate-400">Add your kites and handheld wings above to unlock smart multi-discipline sizing.</p>
@@ -2765,9 +2904,11 @@
               </div>
             </div>
           `;
+          if (tractionContainer) tractionContainer.innerHTML = emptyTractionUser;
+          if (modalTractionContainer) modalTractionContainer.innerHTML = emptyTractionUser;
         }
       } else {
-        tractionContainer.innerHTML = state.inventory.map((k, idx) => {
+        const populatedTraction = state.inventory.map((k, idx) => {
           const isWing = (k.category === 'wing');
           const isSoft = (k.kite_type === 'soft');
           const matchingBoard = (state.boards && state.boards.length > 0)
@@ -2843,13 +2984,15 @@
             </div>
           `;
         }).join('');
+        if (tractionContainer) tractionContainer.innerHTML = populatedTraction;
+        if (modalTractionContainer) modalTractionContainer.innerHTML = populatedTraction;
       }
 
       // 2. RENDER BOARDS
       if (boardContainer) {
         if (!state.boards || state.boards.length === 0) {
           if (!authUser || !authUser.email) {
-            boardContainer.innerHTML = `
+            const emptyBoardGuest = `
               <div class="bg-slate-950/60 rounded-2xl p-4 border border-dashed border-violet-500/30 text-center space-y-2">
                 <div class="flex items-center justify-center space-x-1.5 text-violet-400 font-bold text-xs">
                   <i data-lucide="lock" class="w-3.5 h-3.5"></i>
@@ -2866,8 +3009,10 @@
                 </div>
               </div>
             `;
+            if (boardContainer) boardContainer.innerHTML = emptyBoardGuest;
+            if (modalBoardContainer) modalBoardContainer.innerHTML = emptyBoardGuest;
           } else {
-            boardContainer.innerHTML = `
+            const emptyBoardUser = `
               <div class="bg-slate-950/60 rounded-2xl p-4 border border-dashed border-slate-800 text-center space-y-2">
                 <p class="text-xs font-bold text-amber-400">⚠️ No boards registered yet!</p>
                 <p class="text-[11px] text-slate-400">Add your boards (Twintip, Wingfoil, Hydrofoil, Strapless) to enable smart pairing.</p>
@@ -2877,9 +3022,11 @@
                 </button>
               </div>
             `;
+            if (boardContainer) boardContainer.innerHTML = emptyBoardUser;
+            if (modalBoardContainer) modalBoardContainer.innerHTML = emptyBoardUser;
           }
         } else {
-          boardContainer.innerHTML = state.boards.map((b, idx) => {
+          const populatedBoards = state.boards.map((b, idx) => {
             const isActive = b.active !== false;
             const isWingfoil = (b.type === 'Wingfoil');
             
@@ -2945,6 +3092,8 @@
               </div>
             `;
           }).join('');
+          if (boardContainer) boardContainer.innerHTML = populatedBoards;
+          if (modalBoardContainer) modalBoardContainer.innerHTML = populatedBoards;
         }
       }
 
@@ -2953,6 +3102,57 @@
       }
     }
     const renderQuiver = renderGearInventory;
+    // ==========================================
+    // RIDER PROFILE MODAL TAB CONTROLLER (SPECS, KITES, BOARDS)
+    // ==========================================
+    let activeProfileTab = 'specs';
+    function switchProfileTab(tab) {
+      activeProfileTab = tab;
+      const tabSpecs = document.getElementById('profile-tab-specs');
+      const tabKites = document.getElementById('profile-tab-kites');
+      const tabBoards = document.getElementById('profile-tab-boards');
+
+      const btnSpecs = document.getElementById('tab-btn-profile-specs');
+      const btnKites = document.getElementById('tab-btn-profile-kites');
+      const btnBoards = document.getElementById('tab-btn-profile-boards');
+
+      if (tabSpecs) tabSpecs.classList.toggle('hidden', tab !== 'specs');
+      if (tabKites) tabKites.classList.toggle('hidden', tab !== 'kites');
+      if (tabBoards) tabBoards.classList.toggle('hidden', tab !== 'boards');
+
+      const activeClass = "flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-sky-600 text-white shadow-sm";
+      const inactiveClass = "flex-1 py-1.5 px-2 rounded-xl text-xs font-medium transition flex items-center justify-center space-x-1 text-slate-400 hover:text-white";
+
+      if (btnSpecs) btnSpecs.className = tab === 'specs' ? activeClass : inactiveClass;
+      if (btnKites) btnKites.className = tab === 'kites' ? activeClass : inactiveClass;
+      if (btnBoards) btnBoards.className = tab === 'boards' ? activeClass : inactiveClass;
+
+      renderGearInventory();
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function openProfileGearTab(tab = 'kites') {
+      switchProfileTab(tab);
+      const modal = document.getElementById('modal-profile');
+      if (modal && modal.classList.contains('hidden')) {
+        toggleModal('modal-profile');
+      }
+    }
+
+    function onModalWeightSlider(val) {
+      const w = parseFloat(val);
+      state.user.weight = w;
+      localStorage.setItem('kf_weight', w);
+      const disp = document.getElementById('profile-weight-display');
+      if (disp) disp.innerText = `${w.toFixed(1)} kg`;
+      const mVal = document.getElementById('modal-weight-val');
+      if (mVal) mVal.innerText = `${w.toFixed(1)} kg`;
+      const sliderMain = document.getElementById('slider-weight');
+      if (sliderMain) sliderMain.value = w;
+      renderQuiver();
+      renderForecast();
+    }
+
 
     function updateLiveSpotClock() {
       const el = document.getElementById('live-time-str');
@@ -3935,9 +4135,15 @@
     }
 
     function onWeightSlider(val) {
-      state.user.weight = parseFloat(val);
-      localStorage.setItem('kf_weight', state.user.weight);
-      document.getElementById('profile-weight-display').innerText = `${state.user.weight.toFixed(1)} kg`;
+      const w = parseFloat(val);
+      state.user.weight = w;
+      localStorage.setItem('kf_weight', w);
+      const disp = document.getElementById('profile-weight-display');
+      if (disp) disp.innerText = `${w.toFixed(1)} kg`;
+      const mVal = document.getElementById('modal-weight-val');
+      if (mVal) mVal.innerText = `${w.toFixed(1)} kg`;
+      const modalSlider = document.getElementById('modal-rider-weight');
+      if (modalSlider) modalSlider.value = w;
       renderQuiver();
       renderForecast();
     }
@@ -4353,10 +4559,15 @@
     }
 
     function handleAvatarClick() {
-      if (authUser && authUser.email) {
-        openAuthModal();
+      const isBeta = (typeof isBetaUserActive === 'function' && isBetaUserActive());
+      if (isBeta) {
+        openProfileGearTab('specs');
       } else {
-        openAuthModal('login');
+        if (authUser && authUser.email) {
+          openAuthModal();
+        } else {
+          openAuthModal('login');
+        }
       }
     }
 
@@ -6424,7 +6635,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=21').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=22').then(reg => {
           reg.update();
         }).catch(err => console.log('SW register failed:', err));
       }
