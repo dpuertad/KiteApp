@@ -1,0 +1,5 @@
+{
+  "public_key": "BEmy1-mNSt0r8sI3x-mV57UOz1IFvfvoRMK9TJ1-IYQITQH_fbo3O1okraHvyKh_E75d9Da6c1gyrNpLKzohnzk",
+  "private_pem_file": "C:\\Users\\dpuer\\Desktop\\Code Dev\\Automated Kitesurf Morning Briefing Assistant\\vapid_private.pem",
+  "private_key_pem": "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg9emDBMLYR09cdfMb\n6WDpRb4WAaU3f5eXNJJydXpIJYihRANCAARJstfpjUrdK/LCN8fplee1Ds9SBb37\n6ETCvUydfiGECE0B/326NztaJK2h78iofxO+XfQ2unNYMqzaSys6IZ85\n-----END PRIVATE KEY-----\n"
+}

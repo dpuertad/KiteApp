@@ -3357,6 +3357,51 @@ def start_embedded_http_server(port: int = 8080):
                     self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
                 return
 
+            # BETA: Spot Wind Alarms VAPID Public Key
+            if path == "/api/alerts/vapid-public-key":
+                try:
+                    import spot_alerts
+                    pub_key = spot_alerts.get_vapid_public_key()
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"public_key": pub_key}).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # BETA: Spot Wind Alarms User Configuration & Status
+            if path == "/api/alerts/config":
+                try:
+                    import spot_alerts
+                    email = (params.get("email", [""])[0]).strip().lower()
+                    pub_key = spot_alerts.get_vapid_public_key()
+                    db = load_users_db()
+                    user = db.get("users", {}).get(email, {})
+                    spot_alerts_config = user.get("spot_alerts", {})
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({
+                        "public_key": pub_key,
+                        "spot_alerts": spot_alerts_config,
+                        "has_push_subscription": bool(user.get("push_subscription")),
+                        "is_beta_rider": bool(user.get("is_beta_rider") or user.get("beta_status") == "approved")
+                    }).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
             # 8. API: Kite Travel Explore by Month & Style
             if path == "/api/travel/explore":
                 try:
@@ -4332,6 +4377,175 @@ def start_embedded_http_server(port: int = 8080):
                     self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
                 return
 
+            # BETA: Spot Wind Alarms Subscribe / Update Settings
+            if parsed.path == "/api/alerts/subscribe":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    data = json.loads(body)
+                    email = (data.get("email") or "").strip().lower()
+                    if not email:
+                        self.send_response(400)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": "Email is required"}).encode("utf-8"))
+                        return
+
+                    db = load_users_db()
+                    if email not in db.get("users", {}):
+                        from datetime import datetime
+                        db["users"][email] = {
+                            "email": email,
+                            "name": data.get("name") or email.split("@")[0].title(),
+                            "created_at": datetime.utcnow().isoformat() + "Z",
+                            "gear": [],
+                            "boards": [],
+                            "favorite_spots": []
+                        }
+                    user = db["users"][email]
+
+                    # Update push subscription if provided
+                    if "push_subscription" in data and data["push_subscription"]:
+                        user["push_subscription"] = data["push_subscription"]
+
+                    # Update spot alerts config
+                    spot_alerts = user.get("spot_alerts", {})
+                    spot = data.get("spot")
+                    spots = spot_alerts.get("spots", [])
+                    if spot and spot not in spots:
+                        spots.append(spot)
+                    elif "spots" in data and isinstance(data["spots"], list):
+                        spots = data["spots"]
+
+                    spot_alerts["enabled"] = data.get("enabled", True)
+                    spot_alerts["enable_push"] = data.get("enable_push", True)
+                    spot_alerts["enable_email"] = data.get("enable_email", True)
+                    spot_alerts["weekend_only"] = data.get("weekend_only", False)
+                    spot_alerts["spots"] = spots
+                    user["spot_alerts"] = spot_alerts
+
+                    save_users_db(db)
+
+                    # Notify Daniel on Telegram about alert subscription
+                    try:
+                        send_admin_telegram(
+                            f"🔔 SPOT ALARM SUBSCRIBED\n"
+                            f"👤 Rider: {user.get('name', email)} ({email})\n"
+                            f"📍 Spots: {', '.join(spots) if spots else 'None'}\n"
+                            f"📲 Channels: Push={'Yes' if spot_alerts.get('enable_push') else 'No'}, Email={'Yes' if spot_alerts.get('enable_email') else 'No'}\n"
+                            f"📅 Weekend Only: {spot_alerts.get('weekend_only')}"
+                        )
+                    except Exception:
+                        pass
+
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({
+                        "success": True,
+                        "message": "Spot alarm settings saved successfully.",
+                        "spot_alerts": spot_alerts
+                    }).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # BETA: Spot Wind Alarms Unsubscribe
+            if parsed.path == "/api/alerts/unsubscribe":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    data = json.loads(body)
+                    email = (data.get("email") or "").strip().lower()
+                    spot = data.get("spot")
+                    db = load_users_db()
+                    user = db.get("users", {}).get(email)
+                    if user and "spot_alerts" in user:
+                        if spot and "spots" in user["spot_alerts"]:
+                            user["spot_alerts"]["spots"] = [s for s in user["spot_alerts"]["spots"] if s != spot]
+                        else:
+                            user["spot_alerts"]["enabled"] = False
+                        save_users_db(db)
+
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"success": True, "message": "Alert subscription updated"}).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # BETA: Spot Wind Alarms Test Trigger
+            if parsed.path == "/api/alerts/test":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    data = json.loads(body)
+                    email = (data.get("email") or "").strip().lower()
+                    spot = data.get("spot")
+                    if not email:
+                        self.send_response(400)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": "Email required for test alert"}).encode("utf-8"))
+                        return
+
+                    db = load_users_db()
+                    user = db.get("users", {}).get(email)
+                    if not user:
+                        from datetime import datetime
+                        user = {
+                            "email": email,
+                            "name": data.get("name") or email.split("@")[0].title(),
+                            "created_at": datetime.utcnow().isoformat() + "Z",
+                            "gear": data.get("gear", []),
+                            "boards": data.get("boards", []),
+                            "favorite_spots": []
+                        }
+                        db["users"][email] = user
+
+                    if "push_subscription" in data and data["push_subscription"]:
+                        user["push_subscription"] = data["push_subscription"]
+
+                    s_alerts = user.get("spot_alerts", {})
+                    if spot:
+                        s_alerts["spots"] = list(set(s_alerts.get("spots", []) + [spot]))
+                    if "enable_push" in data:
+                        s_alerts["enable_push"] = data["enable_push"]
+                    if "enable_email" in data:
+                        s_alerts["enable_email"] = data["enable_email"]
+                    user["spot_alerts"] = s_alerts
+
+                    save_users_db(db)
+
+                    import spot_alerts
+                    res = spot_alerts.check_and_dispatch_alerts_for_user(email, force_test=True)
+
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps(res).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
             self.send_response(404)
             self.end_headers()
 
@@ -4342,6 +4556,20 @@ def start_embedded_http_server(port: int = 8080):
         server = HTTPServer(("0.0.0.0", port), AppServerHandler)
         threading.Thread(target=server.serve_forever, daemon=True).start()
         print(f"🌐 Cloud App & Health Server listening on 0.0.0.0:{port} (PWA + API Enabled)...")
+        # Background Spot Wind Alarms worker for Beta Riders
+        if not globals().get("_ALERTS_WORKER_STARTED"):
+            globals()["_ALERTS_WORKER_STARTED"] = True
+            def _alerts_worker():
+                import time
+                time.sleep(30)
+                while True:
+                    try:
+                        import spot_alerts
+                        spot_alerts.run_all_beta_alerts_cycle()
+                    except Exception as ex:
+                        print(f"[SpotAlerts Worker Error]: {ex}")
+                    time.sleep(3 * 3600)
+            threading.Thread(target=_alerts_worker, daemon=True).start()
     except Exception as e:
         print(f"Cloud health server note: {e}")
 

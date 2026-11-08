@@ -1,2 +1,4 @@
-# KiteForecast Bot requires Python 3.9+ with built-in libraries (urllib, json, ssl, zoneinfo, math)
-# Zero external package dependencies needed!
+# HolyGust Engine Dependencies
+pywebpush>=2.0.0
+cryptography>=40.0.0
+requests>=2.28.0

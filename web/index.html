@@ -101,11 +101,17 @@
           </button>
         </div>
 
-        <!-- Row 2: Travelling? Trip Advisor Button (Inside Pink Circled Header Area) -->
-        <button id="header-travel-btn" onclick="openTravelModal()" title="Kite Travel Advisor & Quiver Matcher" class="w-full flex items-center justify-center space-x-1.5 px-2 py-1 rounded-xl bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/20 hover:from-amber-500/30 hover:to-orange-500/30 active:scale-95 text-amber-300 hover:text-white border border-amber-500/40 text-[11px] font-bold transition shadow-sm hidden">
-          <span>✈️</span>
-          <span>Travelling? Trip Advisor</span>
-        </button>
+        <!-- Row 2: Travelling? Trip Advisor & Spot Wind Alarm (Beta Features) -->
+        <div class="w-full flex items-center space-x-1">
+          <button id="header-travel-btn" onclick="openTravelModal()" title="Kite Travel Advisor & Quiver Matcher" class="flex-1 flex items-center justify-center space-x-1 px-2 py-1 rounded-xl bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/20 hover:from-amber-500/30 hover:to-orange-500/30 active:scale-95 text-amber-300 hover:text-white border border-amber-500/40 text-[10px] font-bold transition shadow-sm hidden">
+            <span>✈️</span>
+            <span class="truncate">Trip Advisor</span>
+          </button>
+          <button id="header-alarm-btn" onclick="openCurrentSpotAlarmModal()" title="Spot Wind Alarms" class="flex items-center justify-center space-x-1 px-2 py-1 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 active:scale-95 text-sky-300 hover:text-white border border-sky-500/40 text-[10px] font-bold transition shadow-sm hidden">
+            <span>🔔</span>
+            <span class="truncate">Alarm</span>
+          </button>
+        </div>
       </div>
     </div>
   </header>
@@ -1165,6 +1171,130 @@
             <!-- Injected dynamically -->
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⚡ BETA SPOT WIND ALARM MODAL -->
+  <div id="modal-spot-alarm" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center space-x-2">
+          <span class="text-xl">🔔</span>
+          <div>
+            <h3 class="font-bold text-sm text-white flex items-center space-x-1.5">
+              <span>Spot Wind Alarm</span>
+              <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-amber-400/20 text-amber-300 border border-amber-400/40">Beta Lab</span>
+            </h3>
+            <p id="alarm-spot-subtext" class="text-[10px] text-sky-400 font-medium">Smart gear-matched wind alerts</p>
+          </div>
+        </div>
+        <button onclick="closeSpotAlarmModal()" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Selected Spot Banner -->
+      <div class="p-3 rounded-2xl bg-slate-950/80 border border-slate-800 flex items-center justify-between">
+        <div class="flex items-center space-x-2.5">
+          <span class="text-xl" id="alarm-spot-flag">📍</span>
+          <div>
+            <div class="text-xs font-bold text-white" id="alarm-spot-name">Cumbuco, Brazil</div>
+            <div class="text-[10px] text-slate-400">12–48h advance forecast scanner</div>
+          </div>
+        </div>
+        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">Active</span>
+      </div>
+
+      <!-- Quiver Matching Info -->
+      <div class="p-3 rounded-2xl bg-sky-950/30 border border-sky-500/30 space-y-1.5 text-xs">
+        <div class="flex items-center space-x-1.5 font-bold text-sky-300">
+          <span>🎯</span>
+          <span>Personalized To Your Quiver</span>
+        </div>
+        <p class="text-[11px] text-slate-300 leading-relaxed" id="alarm-quiver-summary">
+          HolyGust analyzes your weight and quiver so you only get alerted when the wind enters your powered sweet spot (no slogging).
+        </p>
+      </div>
+
+      <!-- Notification Channels -->
+      <div class="space-y-2.5 text-xs">
+        <div class="font-bold text-slate-300 flex items-center space-x-1">
+          <span>📡 Delivery Channels</span>
+        </div>
+
+        <!-- PWA Push Toggle -->
+        <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between">
+          <div class="flex items-center space-x-2.5">
+            <span class="text-lg">📲</span>
+            <div>
+              <div class="font-semibold text-white">Device Web Push</div>
+              <div class="text-[10px] text-slate-400" id="alarm-push-status">Lock screen notifications</div>
+            </div>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="alarm-toggle-push" checked class="sr-only peer" onchange="handleAlarmPushToggle()">
+            <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-sky-500"></div>
+          </label>
+        </div>
+
+        <!-- Email Toggle -->
+        <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2.5">
+              <span class="text-lg">📧</span>
+              <div>
+                <div class="font-semibold text-white">Email Briefing</div>
+                <div class="text-[10px] text-slate-400">High-detail forecast card</div>
+              </div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="alarm-toggle-email" checked class="sr-only peer">
+              <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-sky-500"></div>
+            </label>
+          </div>
+          <input type="email" id="alarm-input-email" placeholder="Your briefing email address" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500">
+        </div>
+      </div>
+
+      <!-- Trigger Rules -->
+      <div class="space-y-2 text-xs">
+        <label class="block font-semibold text-slate-300">Trigger Frequency</label>
+        <div class="grid grid-cols-2 gap-2">
+          <label class="p-2.5 rounded-xl border border-slate-800 bg-slate-950/60 cursor-pointer flex flex-col space-y-1 hover:border-sky-500/50 transition">
+            <div class="flex items-center space-x-1.5">
+              <input type="radio" name="alarm-trigger-freq" value="weekend" id="alarm-radio-weekend" checked class="accent-sky-500">
+              <span class="font-bold text-white text-[11px]">Weekend Only</span>
+            </div>
+            <span class="text-[10px] text-slate-400">Alerts for Sat / Sun sessions 12–48h ahead</span>
+          </label>
+          <label class="p-2.5 rounded-xl border border-slate-800 bg-slate-950/60 cursor-pointer flex flex-col space-y-1 hover:border-sky-500/50 transition">
+            <div class="flex items-center space-x-1.5">
+              <input type="radio" name="alarm-trigger-freq" value="all" id="alarm-radio-all" class="accent-sky-500">
+              <span class="font-bold text-white text-[11px]">Any Day Window</span>
+            </div>
+            <span class="text-[10px] text-slate-400">When wind jumps +3 kts into sweet spot</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Test Dispatcher Button & Feedback -->
+      <div class="pt-1">
+        <button type="button" onclick="triggerTestSpotAlarm()" id="btn-test-alarm" class="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-amber-300 font-semibold text-xs border border-amber-500/30 transition flex items-center justify-center space-x-1.5">
+          <span>🧪</span>
+          <span>Send Test Alert to My Device</span>
+        </button>
+        <p id="alarm-test-feedback" class="text-[11px] text-center mt-1.5 hidden font-medium"></p>
+      </div>
+
+      <!-- Save / Cancel Buttons -->
+      <div class="flex items-center space-x-2 pt-2 border-t border-slate-800">
+        <button type="button" onclick="saveSpotAlarmSettings()" id="btn-save-alarm" class="flex-1 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-95 text-white font-bold text-xs shadow-lg shadow-sky-500/25 transition">
+          💾 Save Alarm
+        </button>
+        <button type="button" onclick="removeSpotAlarm()" id="btn-remove-alarm" class="py-2.5 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-semibold transition" title="Delete Alarm">
+          🔕 Disable
+        </button>
       </div>
     </div>
   </div>
@@ -3749,11 +3879,17 @@
           (Math.abs(state.spot.lat - s.lat) < 0.05 && Math.abs(state.spot.lon - s.lon) < 0.05)
         );
         const isFav = isFavoriteSpot(s.id);
+        const hasAlarm = isSpotAlarmActive(s.name || s.short_name);
         const starBtn = `
           <button type="button" onclick="event.stopPropagation(); toggleFavoriteSpot('${s.id}')" class="p-1 rounded-lg hover:bg-slate-800 transition ${isFav ? 'text-amber-400 font-bold' : 'text-slate-600 hover:text-amber-300'}" title="${isFav ? 'Remove from favorites' : 'Add to favorites'}">
             <span class="text-sm">${isFav ? '★' : '☆'}</span>
           </button>
         `;
+        const alarmBtn = isBetaUserActive() ? `
+          <button type="button" onclick="event.stopPropagation(); openSpotAlarmModal('${s.name}')" class="p-1 rounded-lg hover:bg-slate-800 transition ${hasAlarm ? 'text-amber-400 font-bold' : 'text-slate-600 hover:text-sky-300'}" title="${hasAlarm ? 'Spot Wind Alarm Active' : 'Set Spot Wind Alarm'}">
+            <span class="text-sm">${hasAlarm ? '🔔' : '🔕'}</span>
+          </button>
+        ` : '';
         const distBadge = s.dist_km !== undefined ? `
           <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${s.dist_km <= 60 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-slate-800 text-slate-400 border border-slate-700'}">
             📍 ${s.dist_km < 1 ? '<1' : Math.round(s.dist_km)} km away
@@ -3781,6 +3917,7 @@
             </div>
             <div class="flex items-center space-x-1.5">
               ${distBadge}
+              ${alarmBtn}
               ${starBtn}
               <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500"></i>
             </div>
@@ -4637,14 +4774,15 @@
         }
       }
 
-      // 3. Header Travelling? Trip Advisor Button (Beta Feature - visible for Beta Riders, ?beta=1, or Beta Lab)
+      // 3. Header Buttons (Beta Features: Trip Advisor & Spot Wind Alarms)
       const headerTravelBtn = document.getElementById('header-travel-btn');
-      if (headerTravelBtn) {
-        if (isBetaRider || isBetaHost || isLabActive) {
-          headerTravelBtn.classList.remove('hidden');
-        } else {
-          headerTravelBtn.classList.add('hidden');
-        }
+      const headerAlarmBtn = document.getElementById('header-alarm-btn');
+      if (isBetaRider || isBetaHost || isLabActive) {
+        if (headerTravelBtn) headerTravelBtn.classList.remove('hidden');
+        if (headerAlarmBtn) headerAlarmBtn.classList.remove('hidden');
+      } else {
+        if (headerTravelBtn) headerTravelBtn.classList.add('hidden');
+        if (headerAlarmBtn) headerAlarmBtn.classList.add('hidden');
       }
 
       // 4. Render Beta Status Card inside modals
@@ -5007,6 +5145,11 @@
               </div>
             </div>
             <div class="flex items-center space-x-1 flex-shrink-0 ml-2">
+              ${isBetaUserActive() ? `
+                <button type="button" onclick="event.stopPropagation(); openSpotAlarmModal('${s.name}'); closeAllModals();" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-sky-300 text-[11px] font-semibold transition" title="Spot Wind Alarm">
+                  🔔
+                </button>
+              ` : ''}
               <button type="button" onclick="selectSpotFromCatalog('${s.id}'); closeAllModals();" class="px-2.5 py-1 rounded-lg ${isCurrent ? 'bg-sky-600/30 text-sky-300 font-bold border border-sky-500/40' : 'bg-sky-600 hover:bg-sky-500 text-white font-medium'} text-[11px] transition">
                 ${isCurrent ? 'Active' : 'Ride Spot'}
               </button>
@@ -6107,10 +6250,401 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=12').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=13').then(reg => {
           reg.update();
         }).catch(err => console.log('SW register failed:', err));
       }
+
+    // ==============================================================================
+    // 🔔 BETA SPOT WIND ALARMS & PWA WEB PUSH ENGINE
+    // ==============================================================================
+    let activeAlarmSpot = null;
+    let cachedVapidPublicKey = null;
+
+    function isBetaUserActive() {
+      const isLabActive = localStorage.getItem('hg_beta_mode') === 'true';
+      const isBetaHost = window.location.hostname.startsWith('beta.') || 
+                         window.location.hostname.includes('-beta') || 
+                         window.location.search.includes('beta=1') ||
+                         window.location.port === '8991' ||
+                         isLabActive;
+      const authUser = getAuthUser();
+      return Boolean((authUser && (
+        authUser.is_beta_rider === true || 
+        authUser.beta_status === 'approved' ||
+        (['d_puerta@hotmail.com', 'admin.holygust@gmail.com', 'd.puertadiaz@gmail.com'].includes((authUser.email || '').toLowerCase().trim()) && authUser.beta_status !== 'left')
+      ) && authUser.beta_status !== 'left') || isBetaHost || isLabActive);
+    }
+
+    function isSpotAlarmActive(spotName) {
+      if (!spotName) return false;
+      try {
+        const raw = localStorage.getItem('hg_spot_alarms');
+        if (!raw) return false;
+        const config = JSON.parse(raw);
+        if (config.enabled === false) return false;
+        const spots = (config && config.spots) || [];
+        const cleanTarget = spotName.toLowerCase().split(',')[0].trim();
+        return spots.some(s => s.toLowerCase().includes(cleanTarget) || cleanTarget.includes(s.toLowerCase().split(',')[0].trim()));
+      } catch (e) {
+        return false;
+      }
+    }
+
+    async function getVapidPublicKey() {
+      if (cachedVapidPublicKey) return cachedVapidPublicKey;
+      try {
+        const res = await fetch('/api/alerts/vapid-public-key');
+        const data = await res.json();
+        cachedVapidPublicKey = data.public_key;
+        return cachedVapidPublicKey;
+      } catch (e) {
+        console.error('Failed to get VAPID key:', e);
+        return null;
+      }
+    }
+
+    function urlBase64ToUint8Array(base64String) {
+      const padding = '='.repeat((4 - base64String.length % 4) % 4);
+      const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+      const rawData = window.atob(base64);
+      const outputArray = new Uint8Array(rawData.length);
+      for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+      }
+      return outputArray;
+    }
+
+    async function subscribeToPushNotifications() {
+      if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+        throw new Error('Web Push notifications are not supported in this browser.');
+      }
+
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') {
+        throw new Error('Notification permission was denied. Please allow notifications in site settings.');
+      }
+
+      const vapidKey = await getVapidPublicKey();
+      if (!vapidKey) {
+        throw new Error('Could not retrieve VAPID encryption key from HolyGust server.');
+      }
+
+      const reg = await navigator.serviceWorker.ready;
+      let sub = await reg.pushManager.getSubscription();
+      if (!sub) {
+        const appKey = urlBase64ToUint8Array(vapidKey);
+        sub = await reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: appKey
+        });
+      }
+      return sub.toJSON ? sub.toJSON() : sub;
+    }
+
+    async function handleAlarmPushToggle() {
+      const toggle = document.getElementById('alarm-toggle-push');
+      const statusEl = document.getElementById('alarm-push-status');
+      if (!toggle || !statusEl) return;
+
+      if (toggle.checked) {
+        if ('Notification' in window && Notification.permission !== 'granted') {
+          statusEl.innerText = 'Requesting device permission...';
+          try {
+            await subscribeToPushNotifications();
+            statusEl.innerText = '✅ Lock screen push active on this device';
+          } catch (e) {
+            statusEl.innerText = '⚠️ Permission required for lock screen push';
+          }
+        } else {
+          statusEl.innerText = 'Lock screen notifications';
+        }
+      } else {
+        statusEl.innerText = 'Push disabled';
+      }
+    }
+
+    function updateAlarmQuiverSummary() {
+      const summaryEl = document.getElementById('alarm-quiver-summary');
+      if (!summaryEl) return;
+      const weight = state.weight_kg || 74;
+      const board = state.board || 'Twintip';
+      const kites = (state.gear || []).filter(g => (g.type || 'kite') === 'kite' || g.size);
+      if (kites.length === 0) {
+        summaryEl.innerHTML = `⚠️ <strong>No kites registered:</strong> HolyGust calculates optimal wind for your gear. Add your kites below to unlock precision sweet-spot alerts.`;
+      } else {
+        const kiteSizes = kites.map(k => `${k.size}m ${k.model || k.brand || ''}`.trim()).join(', ');
+        summaryEl.innerHTML = `<strong>Rider:</strong> ${weight} kg · ${board}<br><strong>Active Quiver:</strong> ${kiteSizes}<br><span class="text-emerald-400 font-semibold">✓ Smart sweet-spot filtering active: only alerted when rideable for your gear (no slogging).</span>`;
+      }
+    }
+
+    function openCurrentSpotAlarmModal() {
+      const spotName = (state.spot && state.spot.name) ? state.spot.name : 'Cumbuco, Brazil';
+      openSpotAlarmModal(spotName);
+    }
+
+    function openSpotAlarmModal(spotName) {
+      activeAlarmSpot = spotName || (state.spot && state.spot.name) || 'Cumbuco, Brazil';
+
+      const modal = document.getElementById('modal-spot-alarm');
+      if (!modal) return;
+
+      const nameEl = document.getElementById('alarm-spot-name');
+      const flagEl = document.getElementById('alarm-spot-flag');
+      const emailInput = document.getElementById('alarm-input-email');
+      const feedbackEl = document.getElementById('alarm-test-feedback');
+      const pushStatus = document.getElementById('alarm-push-status');
+
+      if (feedbackEl) feedbackEl.classList.add('hidden');
+      if (nameEl) nameEl.innerText = activeAlarmSpot;
+
+      // Find spot flag
+      const foundSpot = GLOBAL_KITE_SPOTS.find(s => s.name === activeAlarmSpot || activeAlarmSpot.includes(s.short_name));
+      if (flagEl) flagEl.innerText = foundSpot ? foundSpot.flag : '📍';
+
+      // Prefill email
+      const authUser = getAuthUser();
+      const userEmail = (authUser && authUser.email) || localStorage.getItem('kf_user_email') || '';
+      if (emailInput) {
+        emailInput.value = userEmail;
+      }
+
+      // Check Push status
+      if (pushStatus) {
+        if ('Notification' in window && Notification.permission === 'granted') {
+          pushStatus.innerText = '✅ Lock screen push ready on this device';
+        } else {
+          pushStatus.innerText = 'Lock screen notifications';
+        }
+      }
+
+      // Load stored preferences
+      try {
+        const raw = localStorage.getItem('hg_spot_alarms');
+        if (raw) {
+          const cfg = JSON.parse(raw);
+          const pushToggle = document.getElementById('alarm-toggle-push');
+          const emailToggle = document.getElementById('alarm-toggle-email');
+          const radWeekend = document.getElementById('alarm-radio-weekend');
+          const radAll = document.getElementById('alarm-radio-all');
+
+          if (pushToggle && cfg.enable_push !== undefined) pushToggle.checked = cfg.enable_push;
+          if (emailToggle && cfg.enable_email !== undefined) emailToggle.checked = cfg.enable_email;
+          if (cfg.weekend_only === false && radAll) {
+            radAll.checked = true;
+          } else if (radWeekend) {
+            radWeekend.checked = true;
+          }
+        }
+      } catch (e) {}
+
+      updateAlarmQuiverSummary();
+      modal.classList.remove('hidden');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closeSpotAlarmModal() {
+      const modal = document.getElementById('modal-spot-alarm');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    async function triggerTestSpotAlarm() {
+      const btn = document.getElementById('btn-test-alarm');
+      const feedbackEl = document.getElementById('alarm-test-feedback');
+      const emailInput = document.getElementById('alarm-input-email');
+      const pushToggle = document.getElementById('alarm-toggle-push');
+      const emailToggle = document.getElementById('alarm-toggle-email');
+
+      const email = (emailInput?.value || '').trim();
+      const pushEnabled = pushToggle ? pushToggle.checked : true;
+      const emailEnabled = emailToggle ? emailToggle.checked : true;
+
+      if (!email && emailEnabled) {
+        alert('Please enter your email address to receive the test briefing.');
+        if (emailInput) emailInput.focus();
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span>⏳</span><span>Sending Test Alert...</span>';
+      }
+      if (feedbackEl) {
+        feedbackEl.classList.remove('hidden');
+        feedbackEl.className = 'text-[11px] text-center mt-1.5 font-medium text-sky-400';
+        feedbackEl.innerText = 'Connecting to notification servers...';
+      }
+
+      let pushSub = null;
+      if (pushEnabled) {
+        try {
+          pushSub = await subscribeToPushNotifications();
+        } catch (e) {
+          console.warn('Push sub note:', e);
+        }
+      }
+
+      try {
+        const payload = {
+          email: email || (getAuthUser()?.email) || 'guest@holygust.com',
+          name: state.user_name || 'Rider',
+          spot: activeAlarmSpot || 'Cumbuco, Brazil',
+          enable_push: pushEnabled,
+          enable_email: emailEnabled,
+          push_subscription: pushSub,
+          gear: state.gear || [],
+          board: state.board || 'Twintip',
+          weight_kg: state.weight_kg || 74
+        };
+
+        const res = await fetch('/api/alerts/test', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          const channels = (data.results && data.results[0] && data.results[0].channels) || [];
+          const sentVia = channels.length > 0 ? channels.join(' & ') : 'Email Briefing';
+          if (feedbackEl) {
+            feedbackEl.className = 'text-[11px] text-center mt-1.5 font-bold text-emerald-400';
+            feedbackEl.innerText = `✅ Test alert sent via ${sentVia}! Check your device.`;
+          }
+        } else {
+          if (feedbackEl) {
+            feedbackEl.className = 'text-[11px] text-center mt-1.5 font-bold text-rose-400';
+            feedbackEl.innerText = `⚠️ ${data.error || 'Failed to dispatch test alert'}`;
+          }
+        }
+      } catch (err) {
+        if (feedbackEl) {
+          feedbackEl.className = 'text-[11px] text-center mt-1.5 font-bold text-rose-400';
+          feedbackEl.innerText = `⚠️ Network error: ${err.message}`;
+        }
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<span>🧪</span><span>Send Test Alert to My Device</span>';
+        }
+      }
+    }
+
+    async function saveSpotAlarmSettings() {
+      const btn = document.getElementById('btn-save-alarm');
+      const emailInput = document.getElementById('alarm-input-email');
+      const pushToggle = document.getElementById('alarm-toggle-push');
+      const emailToggle = document.getElementById('alarm-toggle-email');
+      const radWeekend = document.getElementById('alarm-radio-weekend');
+
+      const email = (emailInput?.value || '').trim();
+      const pushEnabled = pushToggle ? pushToggle.checked : true;
+      const emailEnabled = emailToggle ? emailToggle.checked : true;
+      const weekendOnly = radWeekend ? radWeekend.checked : true;
+
+      if (!email && emailEnabled) {
+        alert('Please enter your email address for wind briefings.');
+        if (emailInput) emailInput.focus();
+        return;
+      }
+
+      if (email) {
+        localStorage.setItem('kf_user_email', email);
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerText = 'Saving...';
+      }
+
+      let pushSub = null;
+      if (pushEnabled) {
+        try {
+          pushSub = await subscribeToPushNotifications();
+        } catch (e) {
+          console.warn('Could not register push:', e);
+        }
+      }
+
+      // Update local storage
+      let localAlarms = { enabled: true, spots: [], enable_push: pushEnabled, enable_email: emailEnabled, weekend_only: weekendOnly };
+      try {
+        const raw = localStorage.getItem('hg_spot_alarms');
+        if (raw) localAlarms = Object.assign(localAlarms, JSON.parse(raw));
+      } catch (e) {}
+
+      if (activeAlarmSpot && !localAlarms.spots.includes(activeAlarmSpot)) {
+        localAlarms.spots.push(activeAlarmSpot);
+      }
+      localAlarms.enable_push = pushEnabled;
+      localAlarms.enable_email = emailEnabled;
+      localAlarms.weekend_only = weekendOnly;
+      localAlarms.enabled = true;
+      localStorage.setItem('hg_spot_alarms', JSON.stringify(localAlarms));
+
+      try {
+        const payload = {
+          email: email || (getAuthUser()?.email) || 'guest@holygust.com',
+          name: state.user_name || 'Rider',
+          spot: activeAlarmSpot,
+          spots: localAlarms.spots,
+          enable_push: pushEnabled,
+          enable_email: emailEnabled,
+          weekend_only: weekendOnly,
+          push_subscription: pushSub
+        };
+
+        await fetch('/api/alerts/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch (e) {
+        console.warn('Sync alarm preference note:', e);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerText = '💾 Save Alarm';
+        }
+      }
+
+      renderSpotList();
+      renderProfileFavorites();
+      closeSpotAlarmModal();
+      alert(`🔔 Wind Alarm activated for ${activeAlarmSpot}! HolyGust will scan forecasts 12–48h ahead and alert you when your sweet-spot wind arrives.`);
+    }
+
+    async function removeSpotAlarm() {
+      const emailInput = document.getElementById('alarm-input-email');
+      const email = (emailInput?.value || '').trim() || (getAuthUser()?.email) || '';
+
+      try {
+        const raw = localStorage.getItem('hg_spot_alarms');
+        if (raw) {
+          let cfg = JSON.parse(raw);
+          if (cfg.spots && activeAlarmSpot) {
+            cfg.spots = cfg.spots.filter(s => s !== activeAlarmSpot);
+          }
+          localStorage.setItem('hg_spot_alarms', JSON.stringify(cfg));
+        }
+      } catch (e) {}
+
+      if (email && activeAlarmSpot) {
+        try {
+          await fetch('/api/alerts/unsubscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email, spot: activeAlarmSpot })
+          });
+        } catch (e) {}
+      }
+
+      renderSpotList();
+      renderProfileFavorites();
+      closeSpotAlarmModal();
+      alert(`🔕 Wind Alarm removed for ${activeAlarmSpot}.`);
+    }
+
     });
   </script>
 </body>

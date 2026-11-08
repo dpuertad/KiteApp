@@ -19,3 +19,6 @@ spot_telemetry_db.json
 
 # Scratch and test files
 scratch/
+
+spot_alerts_history.json
+spot_wind_snapshots.json
