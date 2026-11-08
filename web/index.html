@@ -6336,14 +6336,26 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=14').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=15').then(reg => {
           reg.update();
         }).catch(err => console.log('SW register failed:', err));
       }
+    });
 
     // ==============================================================================
     // 🔔 BETA SPOT WIND ALARMS & PWA WEB PUSH ENGINE
     // ==============================================================================
+    function getAuthUser() {
+      if (typeof authUser !== 'undefined' && authUser) return authUser;
+      try {
+        const raw = localStorage.getItem('kf_auth_user');
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+    window.getAuthUser = getAuthUser;
+
     let activeAlarmSpot = null;
     let cachedVapidPublicKey = null;
 
@@ -6361,6 +6373,7 @@
         (['d_puerta@hotmail.com', 'admin.holygust@gmail.com', 'd.puertadiaz@gmail.com'].includes((authUser.email || '').toLowerCase().trim()) && authUser.beta_status !== 'left')
       ) && authUser.beta_status !== 'left') || isBetaHost || isLabActive);
     }
+    window.isBetaUserActive = isBetaUserActive;
 
     function isSpotAlarmActive(spotName) {
       if (!spotName) return false;
@@ -6731,7 +6744,12 @@
       alert(`🔕 Wind Alarm removed for ${activeAlarmSpot}.`);
     }
 
-    });
+    window.isSpotAlarmActive = isSpotAlarmActive;
+    window.openSpotAlarmModal = openSpotAlarmModal;
+    window.closeSpotAlarmModal = closeSpotAlarmModal;
+    window.toggleSpotAlertsEnabled = toggleSpotAlertsEnabled;
+    window.saveSpotAlarmSettings = saveSpotAlarmSettings;
+    window.removeSpotAlarm = removeSpotAlarm;
   </script>
 </body>
 </html>
