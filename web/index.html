@@ -1332,7 +1332,7 @@
             <p class="text-[10px] text-slate-400">Calculate real tacking distance, stern angle & hazards</p>
           </div>
         </div>
-        <button type="button" onclick="toggleModal('modal-downwind')" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition">
+        <button type="button" onclick="closeDownwindModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
@@ -1443,7 +1443,7 @@
       <!-- Modal Footer -->
       <div class="border-t border-slate-800 px-5 py-3 bg-slate-900/90 flex items-center justify-between">
         <span class="text-[10px] text-slate-400 font-mono">HolyGust Ocean Dynamics · DTM v1.0</span>
-        <button type="button" onclick="toggleModal('modal-downwind')" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition">
+        <button type="button" onclick="closeDownwindModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition">
           Close
         </button>
       </div>
@@ -7531,7 +7531,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=39').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=40').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
@@ -7978,7 +7978,6 @@
     window.toggleMetricCardText = toggleMetricCardText;
     window.openSpotAlarmModal = openSpotAlarmModal;
     window.closeSpotAlarmModal = closeSpotAlarmModal;
-    window.toggleSpotAlertsEnabled = toggleSpotAlertsEnabled;
     window.saveSpotAlarmSettings = saveSpotAlarmSettings;
     window.removeSpotAlarm = removeSpotAlarm;
 
@@ -8348,39 +8347,51 @@
       }
     }
 
+    function closeDownwindModal() {
+      const modal = document.getElementById('modal-downwind');
+      if (modal) modal.classList.add('hidden');
+    }
+
     function openDownwindModal() {
-      populateDownwindSelects();
-      renderDownwindPresets();
+      try {
+        populateDownwindSelects();
+        renderDownwindPresets();
 
-      // Read current live wind degrees from forecast data
-      let liveWind = 95;
-      if (state.forecastData && state.forecastData.current && typeof state.forecastData.current.degrees === 'number') {
-        liveWind = state.forecastData.current.degrees;
-      }
-      activeDownwindWindDeg = liveWind;
+        // Read current live wind degrees from forecast data
+        let liveWind = 95;
+        if (state.forecastData && state.forecastData.current && typeof state.forecastData.current.degrees === 'number') {
+          liveWind = state.forecastData.current.degrees;
+        }
+        activeDownwindWindDeg = liveWind;
 
-      const inputEl = document.getElementById('downwind-wind-input');
-      const badgeEl = document.getElementById('downwind-live-wind-badge');
-      if (inputEl) inputEl.value = liveWind;
-      if (badgeEl) badgeEl.innerText = `${liveWind}° ${getCompassSector(liveWind)}`;
+        const inputEl = document.getElementById('downwind-wind-input');
+        const badgeEl = document.getElementById('downwind-live-wind-badge');
+        if (inputEl) inputEl.value = liveWind;
+        if (badgeEl) badgeEl.innerText = `${liveWind}° ${getCompassSector(liveWind)}`;
 
-      // Default selection based on current spot
-      const currentSpotId = state.spot ? state.spot.id : '';
-      const matchingPreset = CLASSIC_DOWNWIND_ROUTES.find(r => r.start === currentSpotId);
-      if (matchingPreset) {
-        selectDownwindPreset(matchingPreset.id);
-      } else {
-        selectDownwindPreset('cumbuco-taiba');
+        // Default selection based on current spot
+        const currentSpotId = state.spot ? state.spot.id : '';
+        const matchingPreset = CLASSIC_DOWNWIND_ROUTES.find(r => r.start === currentSpotId);
+        if (matchingPreset) {
+          selectDownwindPreset(matchingPreset.id);
+        } else {
+          selectDownwindPreset('cumbuco-taiba');
+        }
+      } catch (err) {
+        console.error('Error configuring Downwind modal:', err);
       }
 
       const modal = document.getElementById('modal-downwind');
       if (modal) {
         modal.classList.remove('hidden');
-        if (window.lucide) lucide.createIcons();
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+          window.lucide.createIcons();
+        }
       }
     }
 
     window.openDownwindModal = openDownwindModal;
+    window.closeDownwindModal = closeDownwindModal;
     window.selectDownwindPreset = selectDownwindPreset;
     window.onDownwindPointsChanged = onDownwindPointsChanged;
     window.onDownwindWindChanged = onDownwindWindChanged;
