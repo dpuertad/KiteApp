@@ -191,19 +191,50 @@ def get_spot_analytics_summary() -> dict:
         gear_items = u.get("gear", [])
         boards_items = u.get("boards", [])
         gear_desc = []
+        gear_list = []
         for g in gear_items:
             b = g.get("brand", "")
             m = g.get("model", "")
             sz = g.get("size", "")
+            yr = g.get("year", "")
+            cat = g.get("category", "kite")
+            ktype = g.get("kite_type", "tube")
+            act = g.get("active", True) is not False
             gear_desc.append(f"{b} {m} {sz}m".strip())
+            gear_list.append({
+                "brand": b,
+                "model": m,
+                "size": sz,
+                "year": yr,
+                "category": cat,
+                "kite_type": ktype,
+                "active": act,
+                "label": f"{b} {m} {sz}m".strip()
+            })
             
         boards_desc = []
+        boards_list = []
         for b in boards_items:
             bt = b.get("type", "Twintip")
             bb = b.get("brand", "")
             bm = b.get("model", "")
             bsz = b.get("size", "")
+            bvol = b.get("volume")
+            bmast = b.get("mast")
+            bcarb = bool(b.get("carbon"))
+            bact = b.get("active", True) is not False
             boards_desc.append(f"{bt} {bb} {bm} {bsz}".strip())
+            boards_list.append({
+                "type": bt,
+                "brand": bb,
+                "model": bm,
+                "size": bsz,
+                "volume": bvol,
+                "mast": bmast,
+                "carbon": bcarb,
+                "active": bact,
+                "label": f"{bt} · {bb} {bm} {bsz}".strip()
+            })
 
         is_beta = bool(u.get("is_beta_rider") or u.get("beta_status") == "approved")
         b_status = u.get("beta_status") or ("approved" if is_beta else "none")
@@ -221,6 +252,8 @@ def get_spot_analytics_summary() -> dict:
             "board": u.get("board", "Twintip"),
             "gear_count": len(gear_items),
             "boards_count": len(boards_items),
+            "gear_list": gear_list,
+            "boards_list": boards_list,
             "gear_summary": ", ".join(gear_desc[:5]) if gear_desc else "No kites registered yet",
             "boards_summary": ", ".join(boards_desc[:4]) if boards_desc else "No boards registered yet",
             "is_beta_rider": is_beta,

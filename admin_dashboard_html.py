@@ -257,13 +257,30 @@ def render_admin_dashboard(summary: dict) -> str:
     function timeAgo(isoStr) {{
       if (!isoStr) return '';
       try {{
-        const diff = Math.floor((Date.now() - new Date(isoStr).getTime()) / 1000);
+        const cleanIso = String(isoStr).replace('+00:00Z', 'Z').replace('+00:00', 'Z');
+        const ts = new Date(cleanIso).getTime();
+        if (isNaN(ts)) return '';
+        const diff = Math.floor((Date.now() - ts) / 1000);
         if (diff < 60) return `${{Math.max(1, diff)}}s ago`;
         if (diff < 3600) return `${{Math.floor(diff/60)}}m ago`;
         if (diff < 86400) return `${{Math.floor(diff/3600)}}h ago`;
         return `${{Math.floor(diff/86400)}}d ago`;
       }} catch(e) {{
         return '';
+      }}
+    }}
+
+    function toggleRiderQuiver(riderIdx, kind) {{
+      const el = document.getElementById(`rider-${{kind}}-panel-${{riderIdx}}`);
+      const chev = document.getElementById(`rider-${{kind}}-chev-${{riderIdx}}`);
+      if (!el) return;
+      const isHidden = el.classList.contains('hidden');
+      if (isHidden) {{
+        el.classList.remove('hidden');
+        if (chev) chev.style.transform = 'rotate(180deg)';
+      }} else {{
+        el.classList.add('hidden');
+        if (chev) chev.style.transform = 'rotate(0deg)';
       }}
     }}
 
@@ -297,7 +314,7 @@ def render_admin_dashboard(summary: dict) -> str:
         return;
       }}
 
-      cont.innerHTML = riders.map(r => {{
+      cont.innerHTML = riders.map((r, rIdx) => {{
         const isBeta = r.is_beta_rider;
         const flag = getFlag(r.nationality);
         const initial = (r.name || r.email || 'R')[0].toUpperCase();
@@ -343,25 +360,75 @@ def render_admin_dashboard(summary: dict) -> str:
                 </span>` : ''}}
             </div>
 
-            <!-- Stored Cloud Gear & Boards -->
-            <div class="bg-slate-900/60 rounded-xl p-2.5 border border-slate-800/80 space-y-1 text-[11px]">
-              <div class="flex items-center justify-between text-slate-300">
-                <span class="flex items-center space-x-1.5 font-semibold text-slate-200">
-                  <span>🪁</span>
-                  <span>Kites (${{r.gear_count}})</span>
-                </span>
-                <span class="text-[10px] text-slate-400 truncate max-w-[170px]" title="${{r.gear_summary}}">
-                  ${{r.gear_summary}}
-                </span>
+            <!-- Stored Cloud Gear & Boards (Expandable Dropdowns) -->
+            <div class="bg-slate-900/60 rounded-xl p-2 border border-slate-800/80 space-y-1.5 text-[11px]">
+              <!-- Kites Accordion -->
+              <div>
+                <button type="button" onclick="${{r.gear_count > 0 ? `toggleRiderQuiver(${{rIdx}}, 'kites')` : ''}}" class="w-full flex items-center justify-between text-left py-1 px-1.5 rounded-lg ${{r.gear_count > 0 ? 'hover:bg-slate-800/70 active:scale-[0.99] cursor-pointer' : 'cursor-default'}} transition">
+                  <span class="flex items-center space-x-1.5 font-bold text-slate-200 flex-shrink-0">
+                    <span>🪁</span>
+                    <span>${{r.gear_count}} ${{r.gear_count === 1 ? 'Kite' : 'Kites'}}</span>
+                  </span>
+                  ${{r.gear_count > 0 ? `
+                    <span class="flex items-center space-x-1.5 min-w-0 ml-2">
+                      <span class="text-[10px] text-sky-400 font-semibold truncate max-w-[145px]">${{r.gear_summary}}</span>
+                      <span id="rider-kites-chev-${{rIdx}}" class="text-[10px] text-sky-400 font-bold transition-transform duration-200 flex-shrink-0 px-1.5 py-0.5 rounded bg-sky-500/15 border border-sky-500/30">▼</span>
+                    </span>
+                  ` : `
+                    <span class="text-[10px] text-slate-500">No kites yet</span>
+                  `}}
+                </button>
+                ${{r.gear_count > 0 ? `
+                  <div id="rider-kites-panel-${{rIdx}}" class="hidden mt-1.5 pt-1.5 border-t border-slate-800/80 space-y-1 px-1">
+                    ${{(r.gear_list || []).map(g => `
+                      <div class="flex items-center justify-between py-1 px-2 rounded-lg bg-slate-950/90 border border-slate-800/90 text-[11px]">
+                        <div class="flex items-center space-x-2 min-w-0">
+                          <span class="px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30 font-mono font-black text-[10px] flex-shrink-0">${{g.size}}m</span>
+                          <span class="font-bold text-white truncate">${{g.brand}} ${{g.model}}</span>
+                        </div>
+                        <div class="flex items-center space-x-1.5 flex-shrink-0 ml-2">
+                          ${{g.year ? `<span class="text-[10px] text-slate-400 font-mono">${{g.year}}</span>` : ''}}
+                          <span class="text-[10px]" title="${{g.active !== false ? 'Packed in bag' : 'At home'}}">${{g.active !== false ? '🎒' : '🏠'}}</span>
+                        </div>
+                      </div>
+                    `).join('')}}
+                  </div>
+                ` : ''}}
               </div>
-              <div class="flex items-center justify-between text-slate-300 border-t border-slate-800/50 pt-1">
-                <span class="flex items-center space-x-1.5 font-semibold text-slate-200">
-                  <span>🏄</span>
-                  <span>Boards (${{r.boards_count}})</span>
-                </span>
-                <span class="text-[10px] text-slate-400 truncate max-w-[170px]" title="${{r.boards_summary}}">
-                  ${{r.boards_summary}}
-                </span>
+
+              <!-- Boards Accordion -->
+              <div class="border-t border-slate-800/60 pt-1">
+                <button type="button" onclick="${{r.boards_count > 0 ? `toggleRiderQuiver(${{rIdx}}, 'boards')` : ''}}" class="w-full flex items-center justify-between text-left py-1 px-1.5 rounded-lg ${{r.boards_count > 0 ? 'hover:bg-slate-800/70 active:scale-[0.99] cursor-pointer' : 'cursor-default'}} transition">
+                  <span class="flex items-center space-x-1.5 font-bold text-slate-200 flex-shrink-0">
+                    <span>🏄</span>
+                    <span>${{r.boards_count}} ${{r.boards_count === 1 ? 'Board' : 'Boards'}}</span>
+                  </span>
+                  ${{r.boards_count > 0 ? `
+                    <span class="flex items-center space-x-1.5 min-w-0 ml-2">
+                      <span class="text-[10px] text-violet-300 font-semibold truncate max-w-[145px]">${{r.boards_summary}}</span>
+                      <span id="rider-boards-chev-${{rIdx}}" class="text-[10px] text-violet-300 font-bold transition-transform duration-200 flex-shrink-0 px-1.5 py-0.5 rounded bg-violet-500/15 border border-violet-500/30">▼</span>
+                    </span>
+                  ` : `
+                    <span class="text-[10px] text-slate-500">No boards yet</span>
+                  `}}
+                </button>
+                ${{r.boards_count > 0 ? `
+                  <div id="rider-boards-panel-${{rIdx}}" class="hidden mt-1.5 pt-1.5 border-t border-slate-800/80 space-y-1 px-1">
+                    ${{(r.boards_list || []).map(b => `
+                      <div class="flex items-center justify-between py-1 px-2 rounded-lg bg-slate-950/90 border border-slate-800/90 text-[11px]">
+                        <div class="flex items-center space-x-2 min-w-0">
+                          <span class="px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 border border-violet-500/30 font-mono font-black text-[10px] flex-shrink-0">${{b.size}}${{String(b.size).includes("'") ? '' : 'cm'}}</span>
+                          <span class="font-bold text-white truncate">${{b.brand}} ${{b.model}}</span>
+                        </div>
+                        <div class="flex items-center space-x-1.5 flex-shrink-0 ml-2">
+                          <span class="text-[10px] text-slate-400">${{b.type}}</span>
+                          ${{b.carbon ? `<span class="text-[10px] text-amber-300 font-bold" title="Carbon / SLS">⚡</span>` : ''}}
+                          <span class="text-[10px]" title="${{b.active !== false ? 'Packed in bag' : 'At home'}}">${{b.active !== false ? '🎒' : '🏠'}}</span>
+                        </div>
+                      </div>
+                    `).join('')}}
+                  </div>
+                ` : ''}}
               </div>
             </div>
 

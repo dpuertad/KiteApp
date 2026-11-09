@@ -46,7 +46,7 @@
         }
       ],
       "weight_kg": 74.0,
-      "level": "advanced",
+      "level": "intermediate",
       "board": "Twintip",
       "favorite_spots": [],
       "is_beta_rider": true,
@@ -54,7 +54,7 @@
       "beta_approved_at": "2026-11-06T13:07:35.934278+00:00Z",
       "nationality": "Spanish",
       "registered_at": "2026-11-04T22:00:00Z",
-      "last_login": "2026-11-09T11:45:00Z",
+      "last_login": "2026-11-09T12:24:08.748785+00:00Z",
       "spot_alerts": {
         "enabled": true,
         "enable_push": true,
@@ -63,7 +63,13 @@
         "spots": [
           "Cumbuco, Brazil"
         ]
-      }
+      },
+      "spot": {
+        "name": "Icaraí de Amontada (Icaraizinho), Brazil",
+        "lat": -3.0232,
+        "lon": -39.6433
+      },
+      "last_sync": "2026-11-09T12:23:32.416398Z"
     },
     "mailtobeat@gmail.com": {
       "email": "mailtobeat@gmail.com",
@@ -89,13 +95,62 @@
     },
     "lipp.spam@gmail.com": {
       "email": "lipp.spam@gmail.com",
-      "name": "Sebastian",
+      "name": "Seb",
       "nationality": "German",
       "registered_at": "2026-11-07T09:29:00Z",
-      "last_login": "2026-11-08T01:14:37Z",
-      "gear": [],
-      "boards": [],
-      "weight_kg": 78.0,
+      "last_login": "2026-11-09T12:19:14.510756+00:00Z",
+      "gear": [
+        {
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Cabrinha",
+          "model": "Switchblade",
+          "size": 12,
+          "year": 2025,
+          "active": true
+        },
+        {
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Cabrinha",
+          "model": "Switchblade",
+          "size": 9,
+          "year": 2025,
+          "active": true
+        },
+        {
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Gong",
+          "model": "Ayto",
+          "size": 9,
+          "year": 2024,
+          "active": true
+        },
+        {
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Gong",
+          "model": "Vertigo",
+          "size": 7,
+          "year": 2026,
+          "active": true
+        }
+      ],
+      "boards": [
+        {
+          "id": "b_1793979062075",
+          "type": "Twintip",
+          "brand": "Cabrinha",
+          "model": "Ace Hybrid",
+          "size": "138",
+          "volume": null,
+          "mast": null,
+          "carbon": true,
+          "active": true
+        }
+      ],
+      "weight_kg": 76.0,
       "level": "intermediate",
       "board": "Twintip",
       "favorite_spots": [
@@ -106,8 +161,12 @@
       "spot": {
         "name": "Icaraí de Amontada (Icaraizinho), Brazil",
         "lat": -3.0232,
-        "lon": -39.6433
-      }
+        "lon": -39.6433,
+        "timezone": "America/Fortaleza",
+        "beach_angle": 55,
+        "model_label": "ECMWF (9km) + Bay Venturi"
+      },
+      "last_sync": "2026-11-09T12:19:15.939608Z"
     },
     "maja.jan@gmx.de": {
       "email": "maja.jan@gmx.de",
@@ -211,10 +270,38 @@
       "name": "Banana Gorilla",
       "nationality": "Swiss",
       "registered_at": "2026-11-08T08:44:00Z",
-      "last_login": "2026-11-09T11:45:32Z",
-      "gear": [],
+      "last_login": "2026-11-09T12:22:41.871796+00:00Z",
+      "gear": [
+        {
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "North",
+          "model": "Orbit Pro",
+          "size": 10,
+          "year": 2024,
+          "active": true
+        },
+        {
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "North",
+          "model": "Orbit Pro",
+          "size": 8,
+          "year": 2024,
+          "active": true
+        },
+        {
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "North",
+          "model": "Orbit",
+          "size": 12,
+          "year": 2025,
+          "active": true
+        }
+      ],
       "boards": [],
-      "weight_kg": 75.0,
+      "weight_kg": 95.0,
       "level": "intermediate",
       "board": "Twintip",
       "favorite_spots": [
@@ -225,31 +312,92 @@
       "beta_status": "none",
       "spot": {
         "name": "Praia de Maceió (Camocim), Brazil",
-        "lat": -2.8935,
-        "lon": -40.8654
-      }
+        "lat": -2.88,
+        "lon": -40.83,
+        "timezone": "America/Fortaleza",
+        "beach_angle": 340,
+        "model_label": "ECMWF (9km) + Outer Reef Trade"
+      },
+      "last_sync": "2026-11-09T12:22:44.000576Z"
     },
     "benjaminadler@web.de": {
       "email": "benjaminadler@web.de",
       "name": "Benny",
       "nationality": "Swiss",
       "registered_at": "2026-11-08T08:46:00Z",
-      "last_login": "2026-11-08T08:46:00Z",
-      "gear": [],
-      "boards": [],
+      "last_login": "2026-11-09T12:23:41.473682+00:00Z",
+      "gear": [
+        {
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Duotone",
+          "model": "Evo SLS",
+          "size": 12,
+          "year": 2024,
+          "active": true
+        },
+        {
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Duotone",
+          "model": "Evo",
+          "size": 9,
+          "year": 2023,
+          "active": true
+        },
+        {
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Duotone",
+          "model": "Dice",
+          "size": 6,
+          "year": 2020,
+          "active": true
+        }
+      ],
+      "boards": [
+        {
+          "id": "b_1794138485106",
+          "type": "Twintip",
+          "brand": "Duotone",
+          "model": "Select",
+          "size": "136",
+          "volume": null,
+          "mast": null,
+          "carbon": false,
+          "active": true
+        },
+        {
+          "id": "b_1794138833458",
+          "type": "Strapless",
+          "brand": "F-One",
+          "model": "Slice",
+          "size": "5'2\"",
+          "volume": null,
+          "mast": null,
+          "carbon": false,
+          "active": true
+        }
+      ],
       "weight_kg": 79.0,
-      "level": "intermediate",
+      "level": "advanced",
       "board": "Twintip",
       "favorite_spots": [
         "Icaraí de Amontada (Icaraizinho), Brazil"
       ],
-      "is_beta_rider": false,
-      "beta_status": "none",
+      "is_beta_rider": true,
+      "beta_status": "approved",
       "spot": {
         "name": "Icaraí de Amontada (Icaraizinho), Brazil",
         "lat": -3.0232,
-        "lon": -39.6433
-      }
+        "lon": -39.6433,
+        "timezone": "America/Fortaleza",
+        "beach_angle": 55,
+        "model_label": "ECMWF (9km) + Bay Venturi"
+      },
+      "last_sync": "2026-11-09T12:23:42.967570Z",
+      "beta_applied_at": "2026-11-09T12:18:52.523990+00:00Z",
+      "beta_approved_at": "2026-11-09T12:19:29.432071+00:00Z"
     }
   },
   "feedback": [
