@@ -1329,18 +1329,21 @@
         </button>
       </div>
 
-      <!-- Profile Tab Navigation Bar (Kites/Wings & Boards for User, + Admin for Admin, No Icons) -->
-      <div id="profile-modal-tabs-bar" class="px-4 sm:px-5 pt-3 pb-2.5 flex-shrink-0 border-b border-slate-800/80 bg-slate-900/90">
-        <div class="flex items-center gap-1.5 bg-slate-950 p-1 rounded-2xl border border-slate-800">
-          <button type="button" id="tab-btn-profile-kites" onclick="switchProfileTab('kites')" class="flex-1 py-2 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-sky-600 text-white shadow-sm whitespace-nowrap">
-            <span>Kites/Wings</span>
-            <span id="badge-tab-kites-count" class="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-900/70 text-white font-mono">0</span>
+      <!-- Profile Tab Navigation Bar (Rider, Kite/Wings, Boards for User, + Admin for Admin, No Icons) -->
+      <div id="profile-modal-tabs-bar" class="px-2.5 sm:px-4 pt-2.5 pb-2 flex-shrink-0 border-b border-slate-800/80 bg-slate-900/90">
+        <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-2xl border border-slate-800">
+          <button type="button" id="tab-btn-profile-specs" onclick="switchProfileTab('specs')" class="flex-1 py-2 px-1 sm:px-2 rounded-xl text-[11px] sm:text-xs font-bold transition flex items-center justify-center gap-1 bg-sky-600 text-white shadow-sm whitespace-nowrap">
+            <span>Rider</span>
           </button>
-          <button type="button" id="tab-btn-profile-boards" onclick="switchProfileTab('boards')" class="flex-1 py-2 px-2 rounded-xl text-xs font-medium transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-white whitespace-nowrap">
+          <button type="button" id="tab-btn-profile-kites" onclick="switchProfileTab('kites')" class="flex-1 py-2 px-1 sm:px-2 rounded-xl text-[11px] sm:text-xs font-medium transition flex items-center justify-center gap-1 text-slate-400 hover:text-white whitespace-nowrap">
+            <span>Kite/Wings</span>
+            <span id="badge-tab-kites-count" class="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300 font-mono">0</span>
+          </button>
+          <button type="button" id="tab-btn-profile-boards" onclick="switchProfileTab('boards')" class="flex-1 py-2 px-1 sm:px-2 rounded-xl text-[11px] sm:text-xs font-medium transition flex items-center justify-center gap-1 text-slate-400 hover:text-white whitespace-nowrap">
             <span>Boards</span>
             <span id="badge-tab-boards-count" class="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300 font-mono">0</span>
           </button>
-          <button type="button" id="tab-btn-profile-admin" onclick="switchProfileTab('admin')" class="hidden flex-1 py-2 px-2 rounded-xl text-xs font-medium transition flex items-center justify-center gap-1.5 text-amber-400 hover:text-white whitespace-nowrap">
+          <button type="button" id="tab-btn-profile-admin" onclick="switchProfileTab('admin')" class="hidden flex-1 py-2 px-1 sm:px-2 rounded-xl text-[11px] sm:text-xs font-medium transition flex items-center justify-center gap-1 text-amber-400 hover:text-white whitespace-nowrap">
             <span>Admin</span>
             <span id="badge-tab-admin-pending" class="hidden text-[10px] px-1.5 py-0.2 rounded-full bg-amber-500 text-slate-950 font-black font-mono">0</span>
           </button>
@@ -1351,9 +1354,87 @@
       <div class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 custom-scrollbar text-xs">
 
         <!-- ============================================== -->
-        <!-- TAB 1: KITES & WINGS (Default Active Tab) -->
+        <!-- TAB 1: RIDER SPECS & ACCOUNT SETTINGS -->
         <!-- ============================================== -->
-        <div id="profile-tab-kites" class="space-y-3">
+        <div id="profile-tab-specs" class="space-y-3.5">
+          <h4 class="font-bold text-slate-200 text-xs uppercase tracking-wider">Rider Specs & Account</h4>
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">Your Name</label>
+            <input id="modal-rider-name" type="text" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
+          </div>
+
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1 flex items-center justify-between">
+              <span>Rider Nationality</span>
+              <span class="text-[10px] text-slate-400 font-normal">Passport / Country</span>
+            </label>
+            <input id="modal-rider-nationality" type="text" placeholder="e.g. Italian, Spanish, German, Brazilian, Swiss..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
+          </div>
+
+          <!-- Quick Weight Control -->
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="font-semibold text-slate-300">Rider Weight (kg)</label>
+              <span id="modal-weight-val" class="text-sky-400 font-bold">75.0 kg</span>
+            </div>
+            <input id="modal-rider-weight" type="range" min="45" max="120" step="1" oninput="onModalWeightSlider(this.value)" class="w-full accent-sky-500 cursor-pointer">
+          </div>
+
+          <!-- Rider Level Selector -->
+          <div class="p-3 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label class="font-semibold text-slate-300">Skill Level</label>
+            </div>
+            <div class="flex items-center space-x-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
+              <button type="button" id="modal-btn-level-beginner" onclick="setRiderLevel('beginner')" class="flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition text-slate-400 hover:text-white">Beginner</button>
+              <button type="button" id="modal-btn-level-intermediate" onclick="setRiderLevel('intermediate')" class="flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition bg-sky-600 text-white shadow-sm">Medium</button>
+              <button type="button" id="modal-btn-level-advanced" onclick="setRiderLevel('advanced')" class="flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition text-slate-400 hover:text-white">Advanced</button>
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">Preferred Board Discipline</label>
+            <select id="modal-board-type" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
+              <option value="Twintip">Twintip (Standard Freeride / Big Air)</option>
+              <option value="Surf / Strapless">Surfboard / Strapless Wave</option>
+              <option value="Foil">Hydrofoil</option>
+              <option value="Wingfoil">Wingfoil</option>
+            </select>
+          </div>
+
+          <!-- ⚡ Beta Rider Status Card -->
+          <div id="settings-beta-card" class="p-3 rounded-2xl border border-slate-800 bg-slate-950/60 transition">
+            <!-- Injected dynamically -->
+          </div>
+
+          <!-- ⭐ My Favorite Spots -->
+          <div class="pt-3 border-t border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-200">My Favorite Spots</span>
+              <span id="profile-fav-count" class="text-[10px] text-slate-400 font-mono">0 spots</span>
+            </div>
+            <div id="profile-favorites-list" class="space-y-1.5 max-h-[140px] overflow-y-auto pr-0.5 custom-scrollbar">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 pt-1">
+            <button onclick="saveModalProfile()" class="flex-1 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-95 text-white font-bold text-xs shadow-lg shadow-sky-500/25 transition">
+              Save Settings
+            </button>
+            <button onclick="logoutUser()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-rose-500/20 active:scale-95 text-slate-300 hover:text-rose-300 border border-slate-700 hover:border-rose-500/30 font-bold text-xs transition whitespace-nowrap">
+              Log Out
+            </button>
+          </div>
+
+          <button onclick="resetProfileAll()" class="w-full py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 font-semibold text-xs border border-rose-500/30 transition">
+            Reset Profile & Clear Gear
+          </button>
+        </div>
+
+        <!-- TAB 2: KITES & WINGS -->
+        <!-- ============================================== -->
+        <div id="profile-tab-kites" class="space-y-3 hidden">
           <div class="flex items-center justify-between gap-2 bg-slate-950/80 p-3 rounded-2xl border border-slate-800">
             <div class="min-w-0">
               <h4 class="font-bold text-white text-xs">Kites & Wings</h4>
@@ -1448,85 +1529,6 @@
               </div>
             </div>
           </div>
-        </div>
-
-        <!-- ============================================== -->
-        <!-- ALWAYS VISIBLE: RIDER SPECS & ACCOUNT SETTINGS -->
-        <!-- ============================================== -->
-        <div id="profile-tab-specs" class="space-y-3.5 pt-4 border-t border-slate-800">
-          <h4 class="font-bold text-slate-200 text-xs uppercase tracking-wider">Rider Specs & Account</h4>
-          <div>
-            <label class="block font-semibold text-slate-300 mb-1">Your Name</label>
-            <input id="modal-rider-name" type="text" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
-          </div>
-
-          <div>
-            <label class="block font-semibold text-slate-300 mb-1 flex items-center justify-between">
-              <span>Rider Nationality</span>
-              <span class="text-[10px] text-slate-400 font-normal">Passport / Country</span>
-            </label>
-            <input id="modal-rider-nationality" type="text" placeholder="e.g. Italian, Spanish, German, Brazilian, Swiss..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500 text-xs">
-          </div>
-
-          <!-- Quick Weight Control -->
-          <div>
-            <div class="flex justify-between items-center mb-1">
-              <label class="font-semibold text-slate-300">Rider Weight (kg)</label>
-              <span id="modal-weight-val" class="text-sky-400 font-bold">75.0 kg</span>
-            </div>
-            <input id="modal-rider-weight" type="range" min="45" max="120" step="1" oninput="onModalWeightSlider(this.value)" class="w-full accent-sky-500 cursor-pointer">
-          </div>
-
-          <!-- Rider Level Selector -->
-          <div class="p-3 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1.5">
-            <div class="flex items-center justify-between">
-              <label class="font-semibold text-slate-300">Skill Level</label>
-            </div>
-            <div class="flex items-center space-x-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
-              <button type="button" id="modal-btn-level-beginner" onclick="setRiderLevel('beginner')" class="flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition text-slate-400 hover:text-white">Beginner</button>
-              <button type="button" id="modal-btn-level-intermediate" onclick="setRiderLevel('intermediate')" class="flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition bg-sky-600 text-white shadow-sm">Medium</button>
-              <button type="button" id="modal-btn-level-advanced" onclick="setRiderLevel('advanced')" class="flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition text-slate-400 hover:text-white">Advanced</button>
-            </div>
-          </div>
-
-          <div>
-            <label class="block font-semibold text-slate-300 mb-1">Preferred Board Discipline</label>
-            <select id="modal-board-type" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
-              <option value="Twintip">Twintip (Standard Freeride / Big Air)</option>
-              <option value="Surf / Strapless">Surfboard / Strapless Wave</option>
-              <option value="Foil">Hydrofoil</option>
-              <option value="Wingfoil">Wingfoil</option>
-            </select>
-          </div>
-
-          <!-- ⚡ Beta Rider Status Card -->
-          <div id="settings-beta-card" class="p-3 rounded-2xl border border-slate-800 bg-slate-950/60 transition">
-            <!-- Injected dynamically -->
-          </div>
-
-          <!-- ⭐ My Favorite Spots -->
-          <div class="pt-3 border-t border-slate-800 space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="font-bold text-slate-200">My Favorite Spots</span>
-              <span id="profile-fav-count" class="text-[10px] text-slate-400 font-mono">0 spots</span>
-            </div>
-            <div id="profile-favorites-list" class="space-y-1.5 max-h-[140px] overflow-y-auto pr-0.5 custom-scrollbar">
-              <!-- Rendered dynamically -->
-            </div>
-          </div>
-
-          <div class="flex items-center gap-2 pt-1">
-            <button onclick="saveModalProfile()" class="flex-1 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-95 text-white font-bold text-xs shadow-lg shadow-sky-500/25 transition">
-              Save Settings
-            </button>
-            <button onclick="logoutUser()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-rose-500/20 active:scale-95 text-slate-300 hover:text-rose-300 border border-slate-700 hover:border-rose-500/30 font-bold text-xs transition whitespace-nowrap">
-              Log Out
-            </button>
-          </div>
-
-          <button onclick="resetProfileAll()" class="w-full py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 font-semibold text-xs border border-rose-500/30 transition">
-            Reset Profile & Clear Gear
-          </button>
         </div>
 
       </div>
@@ -3165,32 +3167,33 @@
     }
     const renderQuiver = renderGearInventory;
     // ==========================================
-    // RIDER PROFILE MODAL TAB CONTROLLER (KITES/WINGS, BOARDS, ADMIN; SPECS ALWAYS VISIBLE)
+    // RIDER PROFILE MODAL TAB CONTROLLER (RIDER, KITE/WINGS, BOARDS, ADMIN)
     // ==========================================
-    let activeProfileTab = 'kites';
+    let activeProfileTab = 'specs';
     function switchProfileTab(tab) {
-      if (!tab || tab === 'specs') tab = 'kites';
+      if (!tab) tab = 'specs';
       activeProfileTab = tab;
       const tabSpecs = document.getElementById('profile-tab-specs');
       const tabKites = document.getElementById('profile-tab-kites');
       const tabBoards = document.getElementById('profile-tab-boards');
       const tabAdmin = document.getElementById('profile-tab-admin');
 
+      const btnSpecs = document.getElementById('tab-btn-profile-specs');
       const btnKites = document.getElementById('tab-btn-profile-kites');
       const btnBoards = document.getElementById('tab-btn-profile-boards');
       const btnAdmin = document.getElementById('tab-btn-profile-admin');
 
-      // Rider Specs section is always shown
-      if (tabSpecs) tabSpecs.classList.remove('hidden');
+      if (tabSpecs) tabSpecs.classList.toggle('hidden', tab !== 'specs');
       if (tabKites) tabKites.classList.toggle('hidden', tab !== 'kites');
       if (tabBoards) tabBoards.classList.toggle('hidden', tab !== 'boards');
       if (tabAdmin) tabAdmin.classList.toggle('hidden', tab !== 'admin');
 
-      const activeClass = "flex-1 py-2 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-sky-600 text-white shadow-sm whitespace-nowrap";
-      const inactiveClass = "flex-1 py-2 px-2 rounded-xl text-xs font-medium transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-white whitespace-nowrap";
-      const activeAdminClass = "flex-1 py-2 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md shadow-amber-500/20 whitespace-nowrap";
-      const inactiveAdminClass = "flex-1 py-2 px-2 rounded-xl text-xs font-medium transition flex items-center justify-center gap-1.5 text-amber-400 hover:text-white whitespace-nowrap";
+      const activeClass = "flex-1 py-2 px-1 sm:px-2 rounded-xl text-[11px] sm:text-xs font-bold transition flex items-center justify-center gap-1 bg-sky-600 text-white shadow-sm whitespace-nowrap";
+      const inactiveClass = "flex-1 py-2 px-1 sm:px-2 rounded-xl text-[11px] sm:text-xs font-medium transition flex items-center justify-center gap-1 text-slate-400 hover:text-white whitespace-nowrap";
+      const activeAdminClass = "flex-1 py-2 px-1 sm:px-2 rounded-xl text-[11px] sm:text-xs font-bold transition flex items-center justify-center gap-1 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md shadow-amber-500/20 whitespace-nowrap";
+      const inactiveAdminClass = "flex-1 py-2 px-1 sm:px-2 rounded-xl text-[11px] sm:text-xs font-medium transition flex items-center justify-center gap-1 text-amber-400 hover:text-white whitespace-nowrap";
 
+      if (btnSpecs) btnSpecs.className = tab === 'specs' ? activeClass : inactiveClass;
       if (btnKites) btnKites.className = tab === 'kites' ? activeClass : inactiveClass;
       if (btnBoards) btnBoards.className = tab === 'boards' ? activeClass : inactiveClass;
       if (btnAdmin) {
@@ -3200,14 +3203,13 @@
 
       if (tab === 'admin') {
         loadAdminTabOverview();
-      } else {
+      } else if (tab === 'kites' || tab === 'boards') {
         renderGearInventory();
       }
       if (window.lucide) lucide.createIcons();
     }
 
-    function openProfileGearTab(tab = 'kites') {
-      if (!tab || tab === 'specs') tab = 'kites';
+    function openProfileGearTab(tab = 'specs') {
       switchProfileTab(tab);
       const modal = document.getElementById('modal-profile');
       if (modal && modal.classList.contains('hidden')) {
@@ -4656,7 +4658,7 @@
 
     function handleAvatarClick() {
       if (authUser && authUser.email) {
-        openProfileGearTab('kites');
+        openProfileGearTab('specs');
       } else {
         openAuthModal('login');
       }
@@ -4664,7 +4666,7 @@
 
     function handleBadgeClick() {
       if (authUser && authUser.email) {
-        openProfileGearTab('kites');
+        openProfileGearTab('specs');
       } else {
         openAuthModal('login');
       }
@@ -7184,7 +7186,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=34').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=35').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));

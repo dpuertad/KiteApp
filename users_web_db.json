@@ -45,8 +45,8 @@
           "active": true
         }
       ],
-      "weight_kg": 74.0,
-      "level": "intermediate",
+      "weight_kg": 62.0,
+      "level": "advanced",
       "board": "Twintip",
       "favorite_spots": [],
       "is_beta_rider": true,
@@ -54,7 +54,7 @@
       "beta_approved_at": "2026-11-06T13:07:35.934278+00:00Z",
       "nationality": "Spanish",
       "registered_at": "2026-11-04T22:00:00Z",
-      "last_login": "2026-11-09T13:24:09.040982+00:00Z",
+      "last_login": "2026-11-09T16:56:24.510660+00:00Z",
       "spot_alerts": {
         "enabled": true,
         "enable_push": true,
@@ -68,9 +68,12 @@
       "spot": {
         "name": "Icaraí de Amontada (Icaraizinho), Brazil",
         "lat": -3.0232,
-        "lon": -39.6433
+        "lon": -39.6433,
+        "timezone": "America/Fortaleza",
+        "beach_angle": 55,
+        "model_label": "ECMWF (9km) + Bay Venturi"
       },
-      "last_sync": "2026-11-09T13:04:45.979062Z",
+      "last_sync": "2026-11-09T16:56:24.843773Z",
       "push_subscription": {
         "endpoint": "https://fcm.googleapis.com/fcm/send/e0Fy5K6O5Vo:APA91bGmmQKIvrzVpkGdJWfL3WEDYogQFk3svGSd0rSD7VkzBM6dve3bpZx3pi6nXMxqCRxxjdCQP9YRSjuedc8KvHWcoNP6mvrlt8IXYEx4vHZebkPFjvCt8K6LE4sZt1LH7XCBfIO6",
         "expirationTime": null,
@@ -395,8 +398,8 @@
       "favorite_spots": [
         "Icaraí de Amontada (Icaraizinho), Brazil"
       ],
-      "is_beta_rider": false,
-      "beta_status": "none",
+      "is_beta_rider": true,
+      "beta_status": "approved",
       "spot": {
         "name": "Icaraí de Amontada (Icaraizinho), Brazil",
         "lat": -3.0232,
@@ -407,7 +410,7 @@
       },
       "last_sync": "2026-11-09T12:30:26.621995Z",
       "beta_applied_at": "2026-11-09T12:18:52.523990+00:00Z",
-      "beta_approved_at": "2026-11-09T12:19:29.432071+00:00Z"
+      "beta_approved_at": "2026-11-09T16:38:17.076524+00:00Z"
     }
   },
   "feedback": [
