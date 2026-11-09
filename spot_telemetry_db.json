@@ -1,8 +1,107 @@
 {
   "spot_views": [
     {
+      "timestamp": "2026-11-09T20:15:31.502699+00:00Z",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
+      "lat": -3.0232,
+      "lon": -39.6433,
+      "email": "d_puerta@hotmail.com",
+      "rider_name": "Dani",
+      "nationality": "Spanish",
+      "ip_hash": "84533244",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-09T20:15:25.289954+00:00Z",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
+      "lat": -3.0232,
+      "lon": -39.6433,
+      "email": "d_puerta@hotmail.com",
+      "rider_name": "Dani",
+      "nationality": "Spanish",
+      "ip_hash": "84533244",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-09T20:15:15.508598+00:00Z",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
+      "lat": -3.0232,
+      "lon": -39.6433,
+      "email": "d_puerta@hotmail.com",
+      "rider_name": "Dani",
+      "nationality": "Spanish",
+      "ip_hash": "84533244",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-09T20:15:10.791453+00:00Z",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
+      "lat": -3.0232,
+      "lon": -39.6433,
+      "email": "d_puerta@hotmail.com",
+      "rider_name": "Dani",
+      "nationality": "Spanish",
+      "ip_hash": "84533244",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-09T20:14:48.760383+00:00Z",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
+      "lat": -3.0232,
+      "lon": -39.6433,
+      "email": "d_puerta@hotmail.com",
+      "rider_name": "Dani",
+      "nationality": "Spanish",
+      "ip_hash": "84533244",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-09T20:14:44.606872+00:00Z",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
+      "lat": -3.0232,
+      "lon": -39.6433,
+      "email": "d_puerta@hotmail.com",
+      "rider_name": "Dani",
+      "nationality": "Spanish",
+      "ip_hash": "84533244",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-09T20:12:06.581939+00:00Z",
+      "spot_name": "Pozo Izquierdo (Gran Canaria), Spain",
+      "lat": 27.8184,
+      "lon": -15.4243,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "84533244",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-09T20:12:05.581909+00:00Z",
+      "spot_name": "Mar Menor (Los Alc\u00e1zares), Spain",
+      "lat": 37.742,
+      "lon": -0.849,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "84533244",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-09T20:11:49.827884+00:00Z",
+      "spot_name": "Mar Menor (Los Alc\u00e1zares), Spain",
+      "lat": 37.742,
+      "lon": -0.849,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "84533244",
+      "action": "view_forecast"
+    },
+    {
       "timestamp": "2026-11-09T19:46:37.237097+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "lipp.spam@gmail.com",
@@ -13,7 +112,7 @@
     },
     {
       "timestamp": "2026-11-09T16:56:24.510660+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "d_puerta@hotmail.com",
@@ -24,7 +123,7 @@
     },
     {
       "timestamp": "2026-11-09T16:56:16.344736+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "d_puerta@hotmail.com",
@@ -35,7 +134,7 @@
     },
     {
       "timestamp": "2026-11-09T16:55:55.112493+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "d_puerta@hotmail.com",
@@ -46,7 +145,7 @@
     },
     {
       "timestamp": "2026-11-09T16:38:58.336312+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "d_puerta@hotmail.com",
@@ -57,7 +156,7 @@
     },
     {
       "timestamp": "2026-11-09T16:38:06.051025+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "d_puerta@hotmail.com",
@@ -68,7 +167,7 @@
     },
     {
       "timestamp": "2026-11-09T16:38:02.124329+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "d_puerta@hotmail.com",
@@ -79,7 +178,7 @@
     },
     {
       "timestamp": "2026-11-09T13:24:09.040982+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "d_puerta@hotmail.com",
@@ -90,7 +189,7 @@
     },
     {
       "timestamp": "2026-11-09T13:19:08.811519+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "d_puerta@hotmail.com",
@@ -101,7 +200,7 @@
     },
     {
       "timestamp": "2026-11-09T13:09:09.159554+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "d_puerta@hotmail.com",
@@ -112,7 +211,7 @@
     },
     {
       "timestamp": "2026-11-09T13:07:35.705828+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "lipp.spam@gmail.com",
@@ -123,7 +222,7 @@
     },
     {
       "timestamp": "2026-11-09T13:04:43.918097+00:00Z",
-      "spot_name": "Praia de Maceió (Camocim), Brazil",
+      "spot_name": "Praia de Macei\u00f3 (Camocim), Brazil",
       "lat": -2.88,
       "lon": -40.83,
       "email": "d_puerta@hotmail.com",
@@ -134,7 +233,7 @@
     },
     {
       "timestamp": "2026-11-09T13:04:40.910199+00:00Z",
-      "spot_name": "Praia de Maceió (Camocim), Brazil",
+      "spot_name": "Praia de Macei\u00f3 (Camocim), Brazil",
       "lat": -2.88,
       "lon": -40.83,
       "email": "d_puerta@hotmail.com",
@@ -145,7 +244,7 @@
     },
     {
       "timestamp": "2026-11-09T13:04:08.911332+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "d_puerta@hotmail.com",
@@ -156,7 +255,7 @@
     },
     {
       "timestamp": "2026-11-09T12:59:08.833699+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "d_puerta@hotmail.com",
@@ -167,7 +266,7 @@
     },
     {
       "timestamp": "2026-11-09T12:54:08.869904+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "d_puerta@hotmail.com",
@@ -178,7 +277,7 @@
     },
     {
       "timestamp": "2026-11-09T12:53:49.657102+00:00Z",
-      "spot_name": "Praia de Maceió (Camocim), Brazil",
+      "spot_name": "Praia de Macei\u00f3 (Camocim), Brazil",
       "lat": -2.88,
       "lon": -40.83,
       "email": "d_puerta@hotmail.com",
@@ -189,7 +288,7 @@
     },
     {
       "timestamp": "2026-11-09T12:53:22.835487+00:00Z",
-      "spot_name": "Praia de Maceió (Camocim), Brazil",
+      "spot_name": "Praia de Macei\u00f3 (Camocim), Brazil",
       "lat": -2.88,
       "lon": -40.83,
       "email": "d_puerta@hotmail.com",
@@ -200,7 +299,7 @@
     },
     {
       "timestamp": "2026-11-09T12:49:08.902939+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "d_puerta@hotmail.com",
@@ -211,7 +310,7 @@
     },
     {
       "timestamp": "2026-11-09T12:44:08.827985+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "d_puerta@hotmail.com",
@@ -222,7 +321,7 @@
     },
     {
       "timestamp": "2026-11-09T12:39:09.017130+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "d_puerta@hotmail.com",
@@ -233,7 +332,7 @@
     },
     {
       "timestamp": "2026-11-09T12:34:08.759117+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "d_puerta@hotmail.com",
@@ -244,7 +343,7 @@
     },
     {
       "timestamp": "2026-11-09T12:30:25.120705+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "benjaminadler@web.de",
@@ -255,7 +354,7 @@
     },
     {
       "timestamp": "2026-11-09T12:29:08.902321+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "d_puerta@hotmail.com",
@@ -266,7 +365,7 @@
     },
     {
       "timestamp": "2026-11-09T12:24:08.748785+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "d_puerta@hotmail.com",
@@ -277,7 +376,7 @@
     },
     {
       "timestamp": "2026-11-09T12:23:41.473682+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "benjaminadler@web.de",
@@ -288,7 +387,7 @@
     },
     {
       "timestamp": "2026-11-09T12:23:30.956947+00:00Z",
-      "spot_name": "Praia de Maceió (Camocim), Brazil",
+      "spot_name": "Praia de Macei\u00f3 (Camocim), Brazil",
       "lat": -2.88,
       "lon": -40.83,
       "email": "d_puerta@hotmail.com",
@@ -299,7 +398,7 @@
     },
     {
       "timestamp": "2026-11-09T12:22:41.871796+00:00Z",
-      "spot_name": "Praia de Maceió (Camocim), Brazil",
+      "spot_name": "Praia de Macei\u00f3 (Camocim), Brazil",
       "lat": -2.88,
       "lon": -40.83,
       "email": "tot3030@gmail.com",
@@ -310,7 +409,7 @@
     },
     {
       "timestamp": "2026-11-09T12:22:39.809150+00:00Z",
-      "spot_name": "Praia de Maceió (Camocim), Brazil",
+      "spot_name": "Praia de Macei\u00f3 (Camocim), Brazil",
       "lat": -2.88,
       "lon": -40.83,
       "email": "d_puerta@hotmail.com",
@@ -321,7 +420,7 @@
     },
     {
       "timestamp": "2026-11-09T12:19:14.510756+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "lipp.spam@gmail.com",
@@ -332,7 +431,7 @@
     },
     {
       "timestamp": "2026-11-09T12:19:12.575358+00:00Z",
-      "spot_name": "Praia de Maceió (Camocim), Brazil",
+      "spot_name": "Praia de Macei\u00f3 (Camocim), Brazil",
       "lat": -2.88,
       "lon": -40.83,
       "email": "d_puerta@hotmail.com",
@@ -343,7 +442,7 @@
     },
     {
       "timestamp": "2026-11-09T12:19:09.031625+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "d_puerta@hotmail.com",
@@ -354,7 +453,7 @@
     },
     {
       "timestamp": "2026-11-09T12:18:38.155860+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "benjaminadler@web.de",
@@ -365,7 +464,7 @@
     },
     {
       "timestamp": "2026-11-09T11:45:32.333817+00:00Z",
-      "spot_name": "Praia de Maceió (Camocim), Brazil",
+      "spot_name": "Praia de Macei\u00f3 (Camocim), Brazil",
       "lat": -2.8935,
       "lon": -40.8654,
       "email": "tot3030@gmail.com",
@@ -376,7 +475,7 @@
     },
     {
       "timestamp": "2026-11-09T11:44:55.128940+00:00Z",
-      "spot_name": "Praia de Maceió (Camocim), Brazil",
+      "spot_name": "Praia de Macei\u00f3 (Camocim), Brazil",
       "lat": -2.8935,
       "lon": -40.8654,
       "email": "raphael.joss@gmail.com",
@@ -387,7 +486,7 @@
     },
     {
       "timestamp": "2026-11-08T01:14:37.233220+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "lipp.spam@gmail.com",
@@ -398,7 +497,7 @@
     },
     {
       "timestamp": "2026-11-08T01:08:09.522697+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "d_puerta@hotmail.com",
@@ -409,7 +508,7 @@
     },
     {
       "timestamp": "2026-11-08T01:00:39.756406+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "mailtobeat@gmail.com",
@@ -420,7 +519,7 @@
     },
     {
       "timestamp": "2026-11-08T00:47:29.123623+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "mailtobeat@gmail.com",
@@ -431,7 +530,7 @@
     },
     {
       "timestamp": "2026-11-08T00:46:21.687313+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "mailtobeat@gmail.com",
@@ -442,7 +541,7 @@
     },
     {
       "timestamp": "2026-11-08T00:45:02.041548+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "mailtobeat@gmail.com",
@@ -453,7 +552,7 @@
     },
     {
       "timestamp": "2026-11-08T00:44:05.441710+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "mailtobeat@gmail.com",
@@ -464,7 +563,7 @@
     },
     {
       "timestamp": "2026-11-08T00:43:36.791012+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "mailtobeat@gmail.com",
@@ -475,7 +574,7 @@
     },
     {
       "timestamp": "2026-11-08T00:43:32.311337+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "mailtobeat@gmail.com",
@@ -486,7 +585,7 @@
     },
     {
       "timestamp": "2026-11-08T00:43:31.188722+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "mailtobeat@gmail.com",
@@ -497,7 +596,7 @@
     },
     {
       "timestamp": "2026-11-08T00:42:08.095214+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "d_puerta@hotmail.com",
@@ -508,7 +607,7 @@
     },
     {
       "timestamp": "2026-11-08T00:41:53.937256+00:00Z",
-      "spot_name": "Preá, Brazil",
+      "spot_name": "Pre\u00e1, Brazil",
       "lat": -2.8139,
       "lon": -40.4189,
       "email": "d_puerta@hotmail.com",
@@ -519,7 +618,7 @@
     },
     {
       "timestamp": "2026-11-08T00:41:03.880310+00:00Z",
-      "spot_name": "Preá, Brazil",
+      "spot_name": "Pre\u00e1, Brazil",
       "lat": -2.8139,
       "lon": -40.4189,
       "email": "d_puerta@hotmail.com",
@@ -530,7 +629,7 @@
     },
     {
       "timestamp": "2026-11-08T00:40:02.658813+00:00Z",
-      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot_name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
       "lon": -39.6433,
       "email": "mailtobeat@gmail.com",
@@ -541,27 +640,29 @@
     }
   ],
   "spot_totals": {
-    "Icaraí de Amontada (Icaraizinho), Brazil": 37,
-    "Preá, Brazil": 2,
-    "Praia de Maceió (Camocim), Brazil": 10
+    "Icara\u00ed de Amontada (Icaraizinho), Brazil": 43,
+    "Pre\u00e1, Brazil": 2,
+    "Praia de Macei\u00f3 (Camocim), Brazil": 10,
+    "Mar Menor (Los Alc\u00e1zares), Spain": 2,
+    "Pozo Izquierdo (Gran Canaria), Spain": 1
   },
   "nationality_totals": {
     "Swiss": 15,
-    "Spanish": 30,
+    "Spanish": 36,
     "German": 4
   },
   "spot_by_nationality": {
     "Swiss": {
-      "Icaraí de Amontada (Icaraizinho), Brazil": 12,
-      "Praia de Maceió (Camocim), Brazil": 3
+      "Icara\u00ed de Amontada (Icaraizinho), Brazil": 12,
+      "Praia de Macei\u00f3 (Camocim), Brazil": 3
     },
     "Spanish": {
-      "Preá, Brazil": 2,
-      "Icaraí de Amontada (Icaraizinho), Brazil": 21,
-      "Praia de Maceió (Camocim), Brazil": 7
+      "Pre\u00e1, Brazil": 2,
+      "Icara\u00ed de Amontada (Icaraizinho), Brazil": 27,
+      "Praia de Macei\u00f3 (Camocim), Brazil": 7
     },
     "German": {
-      "Icaraí de Amontada (Icaraizinho), Brazil": 4
+      "Icara\u00ed de Amontada (Icaraizinho), Brazil": 4
     }
   },
   "searches": [],

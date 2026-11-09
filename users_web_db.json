@@ -45,7 +45,7 @@
           "active": true
         }
       ],
-      "weight_kg": 62.0,
+      "weight_kg": 112.0,
       "level": "advanced",
       "board": "Twintip",
       "favorite_spots": [],
@@ -54,7 +54,7 @@
       "beta_approved_at": "2026-11-06T13:07:35.934278+00:00Z",
       "nationality": "Spanish",
       "registered_at": "2026-11-04T22:00:00Z",
-      "last_login": "2026-11-09T16:56:24.510660+00:00Z",
+      "last_login": "2026-11-09T20:15:31.502699+00:00Z",
       "spot_alerts": {
         "enabled": true,
         "enable_push": true,
@@ -62,18 +62,18 @@
         "weekend_only": false,
         "spots": [
           "Cumbuco, Brazil",
-          "Praia de Maceió (Camocim), Brazil"
+          "Praia de Macei\u00f3 (Camocim), Brazil"
         ]
       },
       "spot": {
-        "name": "Icaraí de Amontada (Icaraizinho), Brazil",
+        "name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
         "lat": -3.0232,
         "lon": -39.6433,
         "timezone": "America/Fortaleza",
         "beach_angle": 55,
         "model_label": "ECMWF (9km) + Bay Venturi"
       },
-      "last_sync": "2026-11-09T16:56:24.843773Z",
+      "last_sync": "2026-11-09T20:16:11.358069Z",
       "push_subscription": {
         "endpoint": "https://fcm.googleapis.com/fcm/send/e0Fy5K6O5Vo:APA91bGmmQKIvrzVpkGdJWfL3WEDYogQFk3svGSd0rSD7VkzBM6dve3bpZx3pi6nXMxqCRxxjdCQP9YRSjuedc8KvHWcoNP6mvrlt8IXYEx4vHZebkPFjvCt8K6LE4sZt1LH7XCBfIO6",
         "expirationTime": null,
@@ -95,12 +95,12 @@
       "level": "advanced",
       "board": "Twintip",
       "favorite_spots": [
-        "Icaraí de Amontada (Icaraizinho), Brazil"
+        "Icara\u00ed de Amontada (Icaraizinho), Brazil"
       ],
       "is_beta_rider": false,
       "beta_status": "none",
       "spot": {
-        "name": "Icaraí de Amontada (Icaraizinho), Brazil",
+        "name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
         "lat": -3.0232,
         "lon": -39.6433
       }
@@ -166,12 +166,12 @@
       "level": "intermediate",
       "board": "Twintip",
       "favorite_spots": [
-        "Icaraí de Amontada (Icaraizinho), Brazil"
+        "Icara\u00ed de Amontada (Icaraizinho), Brazil"
       ],
       "is_beta_rider": false,
       "beta_status": "none",
       "spot": {
-        "name": "Icaraí de Amontada (Icaraizinho), Brazil",
+        "name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
         "lat": -3.0232,
         "lon": -39.6433,
         "timezone": "America/Fortaleza",
@@ -229,7 +229,7 @@
       "is_beta_rider": false,
       "beta_status": "none",
       "spot": {
-        "name": "Icaraí de Amontada (Icaraizinho), Brazil",
+        "name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
         "lat": -3.0232,
         "lon": -39.6433
       }
@@ -249,7 +249,7 @@
       "is_beta_rider": false,
       "beta_status": "none",
       "spot": {
-        "name": "Icaraí de Amontada (Icaraizinho), Brazil",
+        "name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
         "lat": -3.0232,
         "lon": -39.6433
       }
@@ -266,13 +266,13 @@
       "level": "intermediate",
       "board": "Twintip",
       "favorite_spots": [
-        "Icaraí de Amontada (Icaraizinho), Brazil",
-        "Praia de Maceió (Camocim), Brazil"
+        "Icara\u00ed de Amontada (Icaraizinho), Brazil",
+        "Praia de Macei\u00f3 (Camocim), Brazil"
       ],
       "is_beta_rider": false,
       "beta_status": "none",
       "spot": {
-        "name": "Praia de Maceió (Camocim), Brazil",
+        "name": "Praia de Macei\u00f3 (Camocim), Brazil",
         "lat": -2.8935,
         "lon": -40.8654,
         "beach_angle": 25.0
@@ -319,12 +319,12 @@
       "board": "Twintip",
       "favorite_spots": [
         "Tatajuba (Camocim), Brazil",
-        "Praia de Maceió (Camocim), Brazil"
+        "Praia de Macei\u00f3 (Camocim), Brazil"
       ],
       "is_beta_rider": false,
       "beta_status": "none",
       "spot": {
-        "name": "Praia de Maceió (Camocim), Brazil",
+        "name": "Praia de Macei\u00f3 (Camocim), Brazil",
         "lat": -2.88,
         "lon": -40.83,
         "timezone": "America/Fortaleza",
@@ -396,12 +396,12 @@
       "level": "advanced",
       "board": "Twintip",
       "favorite_spots": [
-        "Icaraí de Amontada (Icaraizinho), Brazil"
+        "Icara\u00ed de Amontada (Icaraizinho), Brazil"
       ],
       "is_beta_rider": true,
       "beta_status": "approved",
       "spot": {
-        "name": "Icaraí de Amontada (Icaraizinho), Brazil",
+        "name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
         "lat": -3.0232,
         "lon": -39.6433,
         "timezone": "America/Fortaleza",
@@ -417,14 +417,14 @@
     {
       "name": "Sebastian",
       "email": "lipp.spam@gmail.com",
-      "spot": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "feedback": "Looks really professional.",
       "timestamp": "2026-11-07T09:29:00Z"
     },
     {
       "name": "Raphi",
       "email": "raphael.joss@gmail.com",
-      "spot": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "feedback": "My kite model is missing: Harlem Thrive v1",
       "timestamp": "2026-11-08T08:41:00Z"
     },
@@ -438,7 +438,7 @@
     {
       "name": "Raphi",
       "email": "raphael.joss@gmail.com",
-      "spot": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "spot": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
       "feedback": "My board type is missing: Harlem Aspect",
       "timestamp": "2026-11-08T08:46:00Z"
     }

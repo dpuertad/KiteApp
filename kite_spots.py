@@ -4274,3 +4274,64 @@ def get_spot_conditions(spot: dict) -> dict:
         ]
     }
 
+def calculate_bearing(lat1, lon1, lat2, lon2):
+    """Calculates initial compass bearing from (lat1, lon1) to (lat2, lon2) in degrees (0-360)."""
+    p1 = math.radians(lat1)
+    p2 = math.radians(lat2)
+    dl = math.radians(lon2 - lon1)
+    y = math.sin(dl) * math.cos(p2)
+    x = math.cos(p1) * math.sin(p2) - math.sin(p1) * math.cos(p2) * math.cos(dl)
+    return (math.degrees(math.atan2(y, x)) + 360.0) % 360.0
+
+
+def calculate_downwind_route(start_lat, start_lon, end_lat, end_lon, wind_deg=95.0, start_id='', end_id=''):
+    """
+    Computes direct coast corridor distance, Downwind Tack Multiplier (DTM),
+    and true physical GPS water track distance based on rider tacking physics.
+    """
+    direct_km = haversine_distance_km(start_lat, start_lon, end_lat, end_lon)
+
+    # Detour logic for known geographic obstacles
+    detour_km = 0.0
+    if start_id in ['cumbuco', 'tabuba', 'cauipe'] and end_id in ['taiba', 'paracuru', 'lagoinha']:
+        detour_km = 4.5  # Pecém 2.4km conveyor pier offshore detour
+
+    corridor_km = direct_km + detour_km
+    course_deg = calculate_bearing(start_lat, start_lon, end_lat, end_lon)
+    wind_blows_to = (wind_deg + 180.0) % 360.0
+    stern_angle = abs((course_deg - wind_blows_to + 180.0) % 360.0 - 180.0)
+
+    # DTM mapping
+    if stern_angle <= 25.0:
+        dtm = 1.40
+        reach_type = 'Deep Downwind (S-Curves)'
+        reach_desc = 'Wind directly from behind. Aggressive S-turns needed to maintain kite speed and line tension.'
+    elif stern_angle <= 65.0:
+        dtm = 1.22
+        reach_type = 'Ideal Broad Reach'
+        reach_desc = 'Optimal cruising angle (40°-60°). Effortless wave carving with sustained line tension.'
+    elif stern_angle <= 95.0:
+        dtm = 1.12
+        reach_type = 'Beam Reach (Crosswind)'
+        reach_desc = 'Side-onshore cruising. High speed, minimal downwind carving needed.'
+    else:
+        dtm = 1.85
+        reach_type = 'Upwind Direction (Caution)'
+        reach_desc = 'Course heads into the wind. Requires intense upwind tacking; not recommended for downwinders.'
+
+    riding_km = round(corridor_km * dtm, 1)
+    est_time_min = round((riding_km / 22.0) * 60)
+
+    return {
+        'direct_km': round(direct_km, 1),
+        'detour_km': detour_km,
+        'corridor_km': round(corridor_km, 1),
+        'course_deg': round(course_deg, 1),
+        'stern_angle': round(stern_angle, 1),
+        'dtm': dtm,
+        'reach_type': reach_type,
+        'reach_desc': reach_desc,
+        'riding_km': riding_km,
+        'est_time_min': est_time_min
+    }
+

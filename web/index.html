@@ -105,11 +105,15 @@
           </button>
         </div>
 
-        <!-- Row 2: Travelling? Trip Advisor & Spot Wind Alarm (Beta Features) -->
+        <!-- Row 2: Travelling? Trip Advisor, Downwinder & Spot Wind Alarm (Beta Features) -->
         <div class="w-full flex items-center space-x-1">
           <button id="header-travel-btn" onclick="openTravelModal()" title="Kite Travel Advisor & Quiver Matcher" class="flex-1 flex items-center justify-center space-x-1 px-2 py-1 rounded-xl bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/20 hover:from-amber-500/30 hover:to-orange-500/30 active:scale-95 text-amber-300 hover:text-white border border-amber-500/40 text-[10px] font-bold transition shadow-sm hidden">
             <span>✈️</span>
             <span class="truncate">Trip Advisor</span>
+          </button>
+          <button id="header-downwind-btn" onclick="openDownwindModal()" title="Beta Downwind Route Planner" class="flex-1 flex items-center justify-center space-x-1 px-2 py-1 rounded-xl bg-gradient-to-r from-cyan-500/20 via-teal-500/20 to-cyan-500/20 hover:from-cyan-500/30 hover:to-teal-500/30 active:scale-95 text-cyan-300 hover:text-white border border-cyan-500/40 text-[10px] font-bold transition shadow-sm hidden">
+            <span>🏄</span>
+            <span class="truncate">Downwinder</span>
           </button>
           <button id="header-alarm-btn" onclick="openCurrentSpotAlarmModal()" title="Spot Wind Alarms" class="flex items-center justify-center space-x-1 px-2 py-1 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 active:scale-95 text-sky-300 hover:text-white border border-sky-500/40 text-[10px] font-bold transition shadow-sm hidden">
             <span>🔔</span>
@@ -1305,6 +1309,141 @@
         </button>
         <button type="button" onclick="removeSpotAlarm()" id="btn-remove-alarm" class="py-2.5 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-semibold transition" title="Delete Alarm">
           🔕 Disable
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOWNWIND ROUTE PLANNER (BETA) -->
+  <div id="modal-downwind" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-slate-800 px-5 py-3.5 flex-shrink-0 bg-slate-900/90">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 rounded-full bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold text-base">
+            🏄
+          </div>
+          <div>
+            <h3 class="font-bold text-sm text-white flex items-center space-x-1.5">
+              <span>Downwind Route Planner</span>
+              <span class="px-1.5 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-500/40 text-[9px] text-cyan-300 font-mono font-bold uppercase">Beta DTM</span>
+            </h3>
+            <p class="text-[10px] text-slate-400">Calculate real tacking distance, stern angle & hazards</p>
+          </div>
+        </div>
+        <button type="button" onclick="toggleModal('modal-downwind')" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 custom-scrollbar text-xs">
+        
+        <!-- Classic Downwind Presets -->
+        <div class="space-y-1.5">
+          <label class="block font-semibold text-slate-300 text-[11px] uppercase tracking-wider">Classic Downwind Routes</label>
+          <div class="flex flex-wrap gap-1.5" id="downwind-presets-container">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+        <!-- Custom Departure & Arrival Selectors -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1 text-[11px]">🚀 Departure Point</label>
+            <select id="downwind-start-select" onchange="onDownwindPointsChanged()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-cyan-500">
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1 text-[11px]">🏁 Arrival Spot</label>
+            <select id="downwind-end-select" onchange="onDownwindPointsChanged()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-cyan-500">
+            </select>
+          </div>
+        </div>
+
+        <!-- Live Wind Angle Fine Tuning -->
+        <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 flex items-center justify-between text-[11px]">
+          <div class="flex items-center space-x-2">
+            <span class="text-slate-400">💨 Wind Direction:</span>
+            <span id="downwind-live-wind-badge" class="font-bold text-sky-400 font-mono">95° E</span>
+          </div>
+          <div class="flex items-center space-x-1.5">
+            <span class="text-[10px] text-slate-500">Tune (°):</span>
+            <input type="number" id="downwind-wind-input" min="0" max="360" step="5" value="95" oninput="onDownwindWindChanged(this.value)" class="w-16 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-center font-mono text-xs text-white focus:outline-none focus:border-cyan-500">
+          </div>
+        </div>
+
+        <!-- Calculation Results Card -->
+        <div id="downwind-results-card" class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-3.5">
+          <!-- Distance Comparison (Direct vs DTM Riding) -->
+          <div class="grid grid-cols-2 gap-2.5">
+            <div class="bg-slate-900/80 border border-slate-800/80 rounded-xl p-3 flex flex-col">
+              <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wide">Direct Coast Distance</span>
+              <div class="flex items-baseline space-x-1 mt-1">
+                <span id="downwind-direct-distance" class="text-xl sm:text-2xl font-black text-slate-200">--</span>
+                <span class="text-xs text-slate-400 font-semibold">km</span>
+              </div>
+              <span id="downwind-detour-note" class="text-[10px] text-slate-500 mt-0.5">Straight coastal corridor</span>
+            </div>
+
+            <div class="bg-gradient-to-br from-cyan-950/40 to-slate-900/90 border border-cyan-500/30 rounded-xl p-3 flex flex-col relative overflow-hidden">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] text-cyan-300 font-bold uppercase tracking-wide">Est. Riding Track (DTM)</span>
+                <span id="downwind-dtm-badge" class="px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[9px] font-bold">1.22×</span>
+              </div>
+              <div class="flex items-baseline space-x-1 mt-1">
+                <span id="downwind-riding-distance" class="text-xl sm:text-2xl font-black text-cyan-300">--</span>
+                <span class="text-xs text-cyan-400 font-semibold">km</span>
+              </div>
+              <span class="text-[10px] text-cyan-400/80 mt-0.5">Real GPS tacking track</span>
+            </div>
+          </div>
+
+          <!-- Wind Angle & Reach Indicator -->
+          <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+            <div class="flex items-center space-x-2.5">
+              <div id="downwind-reach-icon" class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-bold text-sm">
+                🏄
+              </div>
+              <div>
+                <div class="flex items-center space-x-2">
+                  <span id="downwind-reach-type" class="font-bold text-xs text-emerald-300">Ideal Broad Reach</span>
+                  <span id="downwind-stern-angle" class="text-[10px] text-slate-400 font-mono">31° off stern</span>
+                </div>
+                <p id="downwind-reach-desc" class="text-[10px] text-slate-400">Optimal angle (40°–60°). Effortless wave carving with sustained line tension.</p>
+              </div>
+            </div>
+            <div class="text-right flex-shrink-0">
+              <span class="text-[10px] text-slate-400 block font-semibold">Est. Duration</span>
+              <span id="downwind-est-time" class="text-xs font-bold text-white font-mono">~1h 30m</span>
+            </div>
+          </div>
+
+          <!-- Quiver & Gear Tuning Tip -->
+          <div class="p-3 rounded-xl bg-sky-950/30 border border-sky-800/40 flex items-start space-x-2.5 text-[11px] text-sky-200">
+            <span class="text-base flex-shrink-0">🎒</span>
+            <div class="space-y-0.5">
+              <span class="font-bold text-sky-300 block">Downwind Quiver Recommendation</span>
+              <p class="text-slate-300 text-[10.5px] leading-relaxed">
+                Riding with the wind reduces apparent wind over your kite. We recommend sizing up +1m (e.g. 10m instead of 9m) to maintain power and prevent kite stalls during wave carves.
+              </p>
+            </div>
+          </div>
+
+          <!-- Dynamic Hazards & Obstacles Container -->
+          <div id="downwind-hazard-container" class="space-y-2">
+            <!-- Injected dynamically via JS based on route -->
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="border-t border-slate-800 px-5 py-3 bg-slate-900/90 flex items-center justify-between">
+        <span class="text-[10px] text-slate-400 font-mono">HolyGust Ocean Dynamics · DTM v1.0</span>
+        <button type="button" onclick="toggleModal('modal-downwind')" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition">
+          Close
         </button>
       </div>
     </div>
@@ -5414,14 +5553,17 @@
         }
       }
 
-      // 3. Header Buttons (Beta Features: Trip Advisor & Spot Wind Alarms)
+      // 3. Header Buttons (Beta Features: Trip Advisor, Downwinder & Spot Wind Alarms)
       const headerTravelBtn = document.getElementById('header-travel-btn');
+      const headerDownwindBtn = document.getElementById('header-downwind-btn');
       const headerAlarmBtn = document.getElementById('header-alarm-btn');
       if (hasBetaAccess) {
         if (headerTravelBtn) headerTravelBtn.classList.remove('hidden');
+        if (headerDownwindBtn) headerDownwindBtn.classList.remove('hidden');
         if (headerAlarmBtn) headerAlarmBtn.classList.remove('hidden');
       } else {
         if (headerTravelBtn) headerTravelBtn.classList.add('hidden');
+        if (headerDownwindBtn) headerDownwindBtn.classList.add('hidden');
         if (headerAlarmBtn) headerAlarmBtn.classList.add('hidden');
       }
 
@@ -7332,7 +7474,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=36').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=37').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
@@ -7782,6 +7924,411 @@
     window.toggleSpotAlertsEnabled = toggleSpotAlertsEnabled;
     window.saveSpotAlarmSettings = saveSpotAlarmSettings;
     window.removeSpotAlarm = removeSpotAlarm;
+
+    // ==========================================
+    // DOWNWIND ROUTE PLANNER & DTM CALCULATOR (BETA)
+    // ==========================================
+    const CLASSIC_DOWNWIND_ROUTES = [
+      {
+        id: 'cumbuco-taiba',
+        name: 'Cumbuco ➔ Taíba',
+        region: 'Ceará, Brazil',
+        start: 'cumbuco',
+        end: 'taiba',
+        extraDetourKm: 4.5,
+        hazards: [
+          { type: 'detour', icon: '⚠️', title: 'Pecém Pier Detour (+4.5 km)', desc: 'The 2.4 km industrial conveyor pier extends deep into the ocean. Riders must round the pier head 500m offshore to avoid cargo ship wakes and concrete pylons.' },
+          { type: 'rock', icon: '🪨', title: 'Taíba Low-Tide Reef Hazard', desc: 'Taíba secret spot and slabs have razor-sharp flat rock reefs at low tide (< 0.8m). Stay 300m offshore or plan arrival around mid-to-high tide.' }
+        ]
+      },
+      {
+        id: 'taiba-paracuru',
+        name: 'Taíba ➔ Paracuru',
+        region: 'Ceará, Brazil',
+        start: 'taiba',
+        end: 'paracuru',
+        extraDetourKm: 0,
+        hazards: [
+          { type: 'reef', icon: '🌊', title: 'Quebra Mar Barrier Reef', desc: 'Outside barrier reef breaks big surf; the inside flat pool is safe, but watch for exposed coral reef at low tide.' }
+        ]
+      },
+      {
+        id: 'prea-jeri',
+        name: 'Preá ➔ Jericoacoara',
+        region: 'Ceará, Brazil',
+        start: 'prea',
+        end: 'jericoacoara',
+        extraDetourKm: 0,
+        hazards: [
+          { type: 'wind', icon: '💨', title: 'Sunset Dune Wind Shadow', desc: 'Wind drops dramatically within 150m of the village beach behind Duna do Pôr do Sol. Land before the dune at Praia da Malhada or keep kite at 12 o'clock.' }
+        ]
+      },
+      {
+        id: 'jeri-tatajuba',
+        name: 'Jeri ➔ Tatajuba',
+        region: 'Ceará, Brazil',
+        start: 'jericoacoara',
+        end: 'tatajuba',
+        extraDetourKm: 0,
+        hazards: [
+          { type: 'current', icon: '🚤', title: 'Guriú River Mouth Rips', desc: 'Strong tidal currents and mangrove sandbars crossing Guriú river mouth. Cross 200m offshore.' }
+        ]
+      },
+      {
+        id: 'tatajuba-maceio',
+        name: 'Tatajuba ➔ Praia do Maceió',
+        region: 'Ceará, Brazil',
+        start: 'tatajuba',
+        end: 'maceio_camocim',
+        extraDetourKm: 0,
+        hazards: [
+          { type: 'obstacle', icon: '🐟', title: 'Artisanal Wooden Fishing Traps', desc: 'Wooden stakes (currais) line the shallow flats near Maceió at low tide. Maintain good visibility and stay in deep water channels.' }
+        ]
+      },
+      {
+        id: 'icaraizinho-moitas',
+        name: 'Icaraí ➔ Moitas',
+        region: 'Ceará, Brazil',
+        start: 'icaraizinho',
+        end: 'moitas',
+        extraDetourKm: 0,
+        hazards: [
+          { type: 'current', icon: '🚤', title: 'Rio Aracatiaçu River Current', desc: 'Fast water rushing out of the river mouth at outgoing tide. Flat water lagoon inside.' }
+        ]
+      },
+      {
+        id: 'tarifa-valdevaqueros',
+        name: 'Tarifa ➔ Valdevaqueros',
+        region: 'Spain',
+        start: 'tarifa',
+        end: 'valdevaqueros',
+        extraDetourKm: 0,
+        hazards: [
+          { type: 'wind', icon: '💨', title: 'Levante Offshore Alert', desc: 'In easterly Levante, wind accelerates into the bay. Rescue boat operates in season; in winter stay close to shore.' }
+        ]
+      },
+      {
+        id: 'dakhla-whitedune',
+        name: 'Dakhla ➔ White Dune',
+        region: 'Morocco',
+        start: 'dakhla',
+        end: 'dakhla_whitedune',
+        extraDetourKm: 0,
+        hazards: [
+          { type: 'desert', icon: '🐪', title: 'Desert Pick-up Required', desc: 'Remote lagoon spot at Dune Blanche. Pre-arrange a 4x4 return transfer with your kite camp before departure.' }
+        ]
+      }
+    ];
+
+    let activeDownwindWindDeg = 95;
+    let selectedDownwindPresetId = 'cumbuco-taiba';
+
+    function calculateBearingDeg(lat1, lon1, lat2, lon2) {
+      const phi1 = lat1 * Math.PI / 180.0;
+      const phi2 = lat2 * Math.PI / 180.0;
+      const dl = (lon2 - lon1) * Math.PI / 180.0;
+      const y = Math.sin(dl) * Math.cos(phi2);
+      const x = Math.cos(phi1) * Math.sin(phi2) - Math.sin(phi1) * Math.cos(phi2) * Math.cos(dl);
+      const theta = Math.atan2(y, x);
+      return (theta * 180.0 / Math.PI + 360.0) % 360.0;
+    }
+
+    function populateDownwindSelects() {
+      const startSel = document.getElementById('downwind-start-select');
+      const endSel = document.getElementById('downwind-end-select');
+      if (!startSel || !endSel) return;
+
+      const currentStart = startSel.value;
+      const currentEnd = endSel.value;
+
+      // Group spots by country
+      const spotsByCountry = {};
+      GLOBAL_KITE_SPOTS.forEach(s => {
+        const c = s.country || 'Other';
+        if (!spotsByCountry[c]) spotsByCountry[c] = [];
+        spotsByCountry[c].push(s);
+      });
+
+      let optionsHtml = '';
+      Object.keys(spotsByCountry).sort().forEach(country => {
+        optionsHtml += `<optgroup label="${country}">`;
+        spotsByCountry[country].forEach(s => {
+          optionsHtml += `<option value="${s.id}">${s.flag || '📍'} ${s.name.split(',')[0]}</option>`;
+        });
+        optionsHtml += `</optgroup>`;
+      });
+
+      startSel.innerHTML = optionsHtml;
+      endSel.innerHTML = optionsHtml;
+
+      if (currentStart) startSel.value = currentStart;
+      if (currentEnd) endSel.value = currentEnd;
+    }
+
+    function renderDownwindPresets() {
+      const container = document.getElementById('downwind-presets-container');
+      if (!container) return;
+
+      container.innerHTML = CLASSIC_DOWNWIND_ROUTES.map(route => {
+        const isSelected = route.id === selectedDownwindPresetId;
+        const activeClass = isSelected 
+          ? 'bg-cyan-500 text-slate-950 font-bold border-cyan-400 shadow-md shadow-cyan-500/20' 
+          : 'bg-slate-950 text-slate-300 hover:text-white hover:bg-slate-800 border-slate-800';
+        return `
+          <button type="button" onclick="selectDownwindPreset('${route.id}')" class="px-2.5 py-1 rounded-lg border text-[11px] transition active:scale-95 whitespace-nowrap ${activeClass}">
+            ${route.name}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectDownwindPreset(presetId) {
+      selectedDownwindPresetId = presetId;
+      const route = CLASSIC_DOWNWIND_ROUTES.find(r => r.id === presetId);
+      if (route) {
+        const startSel = document.getElementById('downwind-start-select');
+        const endSel = document.getElementById('downwind-end-select');
+        if (startSel) startSel.value = route.start;
+        if (endSel) endSel.value = route.end;
+      }
+      renderDownwindPresets();
+      calculateDownwind();
+    }
+
+    function onDownwindPointsChanged() {
+      selectedDownwindPresetId = '';
+      renderDownwindPresets();
+      calculateDownwind();
+    }
+
+    function onDownwindWindChanged(val) {
+      const deg = parseInt(val, 10);
+      if (!isNaN(deg)) {
+        activeDownwindWindDeg = ((deg % 360) + 360) % 360;
+        const badge = document.getElementById('downwind-live-wind-badge');
+        if (badge) badge.innerText = `${activeDownwindWindDeg}° ${getCompassSector(activeDownwindWindDeg)}`;
+        calculateDownwind();
+      }
+    }
+
+    function getCompassSector(deg) {
+      const sectors = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+      const idx = Math.round(deg / 22.5) % 16;
+      return sectors[idx];
+    }
+
+    function calculateDownwind() {
+      const startSel = document.getElementById('downwind-start-select');
+      const endSel = document.getElementById('downwind-end-select');
+      if (!startSel || !endSel) return;
+
+      const startId = startSel.value;
+      const endId = endSel.value;
+
+      const startSpot = GLOBAL_KITE_SPOTS.find(s => s.id === startId);
+      const endSpot = GLOBAL_KITE_SPOTS.find(s => s.id === endId);
+
+      if (!startSpot || !endSpot) return;
+
+      // 1. Direct Coast Distance
+      const directKm = calculateDistanceKm(startSpot.lat, startSpot.lon, endSpot.lat, endSpot.lon);
+
+      // 2. Obstacle Detour Logic
+      let detourKm = 0;
+      let detourNote = 'Straight coastal corridor';
+      if ((startId === 'cumbuco' || startId === 'tabuba' || startId === 'cauipe') &&
+          (endId === 'taiba' || endId === 'paracuru' || endId === 'lagoinha')) {
+        detourKm = 4.5;
+        detourNote = '+4.5 km Pecém conveyor offshore detour';
+      }
+
+      const corridorKm = directKm + detourKm;
+
+      // 3. Compass Bearing & Stern Angle
+      const courseDeg = calculateBearingDeg(startSpot.lat, startSpot.lon, endSpot.lat, endSpot.lon);
+      const windBlowsTo = (activeDownwindWindDeg + 180.0) % 360.0;
+      const sternAngle = Math.abs((courseDeg - windBlowsTo + 180.0) % 360.0 - 180.0);
+
+      // 4. Downwind Tack Multiplier (DTM)
+      let dtm = 1.22;
+      let reachType = 'Ideal Broad Reach';
+      let reachDesc = 'Optimal angle (40°–60°). Effortless wave carving with sustained line tension.';
+      let pillColor = 'emerald';
+      let icon = '🏄';
+
+      if (sternAngle <= 25.0) {
+        dtm = 1.40;
+        reachType = 'Deep Downwind (S-Curves)';
+        reachDesc = 'Wind directly from behind. Aggressive S-turns required to maintain kite speed and line tension.';
+        pillColor = 'amber';
+        icon = '⚡';
+      } else if (sternAngle <= 65.0) {
+        dtm = 1.22;
+        reachType = 'Ideal Broad Reach';
+        reachDesc = 'Optimal angle (40°–60°). Effortless wave carving with sustained line tension.';
+        pillColor = 'emerald';
+        icon = '✨';
+      } else if (sternAngle <= 95.0) {
+        dtm = 1.12;
+        reachType = 'Beam Reach (Crosswind)';
+        reachDesc = 'Side-onshore cruising. High speed, minimal downwind carving needed.';
+        pillColor = 'sky';
+        icon = '💨';
+      } else {
+        dtm = 1.85;
+        reachType = 'Upwind Direction (Caution)';
+        reachDesc = 'Course heads into the wind. Requires intense upwind tacking; not recommended for downwinders.';
+        pillColor = 'rose';
+        icon = '⚠️';
+      }
+
+      const ridingKm = Math.round(corridorKm * dtm * 10) / 10;
+      const estMinutes = Math.round((ridingKm / 22.0) * 60);
+      const hours = Math.floor(estMinutes / 60);
+      const mins = estMinutes % 60;
+      const timeStr = hours > 0 ? `~${hours}h ${mins}m` : `~${mins} min`;
+
+      // 5. Update UI Elements
+      const directEl = document.getElementById('downwind-direct-distance');
+      const detourNoteEl = document.getElementById('downwind-detour-note');
+      const ridingEl = document.getElementById('downwind-riding-distance');
+      const dtmBadgeEl = document.getElementById('downwind-dtm-badge');
+      const reachTypeEl = document.getElementById('downwind-reach-type');
+      const sternAngleEl = document.getElementById('downwind-stern-angle');
+      const reachDescEl = document.getElementById('downwind-reach-desc');
+      const estTimeEl = document.getElementById('downwind-est-time');
+      const reachIconEl = document.getElementById('downwind-reach-icon');
+
+      if (directEl) directEl.innerText = directKm.toFixed(1);
+      if (detourNoteEl) detourNoteEl.innerText = detourNote;
+      if (ridingEl) ridingEl.innerText = ridingKm.toFixed(1);
+      if (dtmBadgeEl) dtmBadgeEl.innerText = `${dtm.toFixed(2)}× DTM`;
+      if (reachTypeEl) {
+        reachTypeEl.innerText = reachType;
+        reachTypeEl.className = `font-bold text-xs ${pillColor === 'emerald' ? 'text-emerald-300' : pillColor === 'amber' ? 'text-amber-300' : pillColor === 'sky' ? 'text-sky-300' : 'text-rose-300'}`;
+      }
+      if (sternAngleEl) sternAngleEl.innerText = `${Math.round(sternAngle)}° off stern (bearing ${Math.round(courseDeg)}°)`;
+      if (reachDescEl) reachDescEl.innerText = reachDesc;
+      if (estTimeEl) estTimeEl.innerText = timeStr;
+      if (reachIconEl) {
+        reachIconEl.innerText = icon;
+        reachIconEl.className = `w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${pillColor === 'emerald' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : pillColor === 'amber' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : pillColor === 'sky' ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'}`;
+      }
+
+      // 6. Hazards & Obstacles
+      const hazardContainer = document.getElementById('downwind-hazard-container');
+      if (hazardContainer) {
+        const hazards = [];
+
+        // Check active preset hazards first
+        const preset = CLASSIC_DOWNWIND_ROUTES.find(r => r.start === startId && r.end === endId);
+        if (preset && preset.hazards) {
+          hazards.push(...preset.hazards);
+        } else {
+          // Dynamic hazard checks
+          if (detourKm > 0) {
+            hazards.push({
+              type: 'detour',
+              icon: '⚠️',
+              title: 'Pecém Pier Detour (+4.5 km)',
+              desc: 'The 2.4 km industrial conveyor pier extends deep into the ocean. Riders must round the pier head 500m offshore to avoid cargo ship wakes and concrete pylons.'
+            });
+          }
+          if (endId === 'taiba') {
+            hazards.push({
+              type: 'rock',
+              icon: '🪨',
+              title: 'Taíba Low-Tide Reef Hazard',
+              desc: 'Taíba secret spot and slabs have razor-sharp flat rock reefs at low tide (< 0.8m). Stay 300m offshore or plan arrival around mid-to-high tide.'
+            });
+          }
+          if (endId === 'jericoacoara') {
+            hazards.push({
+              type: 'wind',
+              icon: '💨',
+              title: 'Sunset Dune Wind Shadow',
+              desc: 'Wind drops dramatically within 150m of the village beach behind Duna do Pôr do Sol. Land before the dune at Praia da Malhada or keep kite at 12 o'clock.'
+            });
+          }
+          if (endId === 'paracuru') {
+            hazards.push({
+              type: 'reef',
+              icon: '🌊',
+              title: 'Quebra Mar Barrier Reef',
+              desc: 'Outside barrier reef breaks big surf; the inside flat pool is safe, but watch for exposed coral reef at low tide.'
+            });
+          }
+          if (endId === 'maceio_camocim') {
+            hazards.push({
+              type: 'obstacle',
+              icon: '🐟',
+              title: 'Artisanal Wooden Fishing Traps',
+              desc: 'Wooden stakes (currais) line the shallow flats near Maceió at low tide. Maintain good visibility and stay in deep water channels.'
+            });
+          }
+        }
+
+        if (hazards.length > 0) {
+          hazardContainer.innerHTML = hazards.map(h => `
+            <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/25 text-amber-300 text-[11px] flex items-start space-x-2">
+              <span class="text-base flex-shrink-0">${h.icon}</span>
+              <div class="space-y-0.5">
+                <span class="font-bold text-amber-200 block">${h.title}</span>
+                <p class="text-slate-300 text-[10.5px] leading-relaxed">${h.desc}</p>
+              </div>
+            </div>
+          `).join('');
+          hazardContainer.classList.remove('hidden');
+        } else {
+          hazardContainer.innerHTML = `
+            <div class="p-2.5 rounded-xl bg-slate-900/60 border border-slate-800 text-slate-400 text-[10.5px] flex items-center space-x-2">
+              <span>🟢</span>
+              <span>Open ocean coastal route. Maintain visual contact with shore and ride with a buddy.</span>
+            </div>
+          `;
+          hazardContainer.classList.remove('hidden');
+        }
+      }
+    }
+
+    function openDownwindModal() {
+      populateDownwindSelects();
+      renderDownwindPresets();
+
+      // Read current live wind degrees from forecast data
+      let liveWind = 95;
+      if (state.forecastData && state.forecastData.current && typeof state.forecastData.current.degrees === 'number') {
+        liveWind = state.forecastData.current.degrees;
+      }
+      activeDownwindWindDeg = liveWind;
+
+      const inputEl = document.getElementById('downwind-wind-input');
+      const badgeEl = document.getElementById('downwind-live-wind-badge');
+      if (inputEl) inputEl.value = liveWind;
+      if (badgeEl) badgeEl.innerText = `${liveWind}° ${getCompassSector(liveWind)}`;
+
+      // Default selection based on current spot
+      const currentSpotId = state.spot ? state.spot.id : '';
+      const matchingPreset = CLASSIC_DOWNWIND_ROUTES.find(r => r.start === currentSpotId);
+      if (matchingPreset) {
+        selectDownwindPreset(matchingPreset.id);
+      } else {
+        selectDownwindPreset('cumbuco-taiba');
+      }
+
+      const modal = document.getElementById('modal-downwind');
+      if (modal) {
+        modal.classList.remove('hidden');
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+
+    window.openDownwindModal = openDownwindModal;
+    window.selectDownwindPreset = selectDownwindPreset;
+    window.onDownwindPointsChanged = onDownwindPointsChanged;
+    window.onDownwindWindChanged = onDownwindWindChanged;
+    window.calculateDownwind = calculateDownwind;
+
   </script>
 </body>
 </html>
