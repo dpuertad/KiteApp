@@ -4822,9 +4822,20 @@ def start_embedded_http_server(port: int = 8080):
                         }
                     user = db["users"][email]
 
-                    # Update push subscription if provided
+                    # Update push subscription & gear if provided
                     if "push_subscription" in data and data["push_subscription"]:
                         user["push_subscription"] = data["push_subscription"]
+                    if "gear" in data and isinstance(data["gear"], list) and len(data["gear"]) > 0:
+                        user["gear"] = data["gear"]
+                    if "boards" in data and isinstance(data["boards"], list) and len(data["boards"]) > 0:
+                        user["boards"] = data["boards"]
+                    if "weight_kg" in data and data["weight_kg"]:
+                        try:
+                            user["weight_kg"] = float(data["weight_kg"])
+                        except Exception:
+                            pass
+                    if "board" in data and data["board"]:
+                        user["board"] = data["board"]
 
                     # Update spot alerts config
                     spot_alerts = user.get("spot_alerts", {})
@@ -5038,6 +5049,17 @@ def start_embedded_http_server(port: int = 8080):
 
                     if "push_subscription" in data and data["push_subscription"]:
                         user["push_subscription"] = data["push_subscription"]
+                    if "gear" in data and isinstance(data["gear"], list) and len(data["gear"]) > 0:
+                        user["gear"] = data["gear"]
+                    if "boards" in data and isinstance(data["boards"], list) and len(data["boards"]) > 0:
+                        user["boards"] = data["boards"]
+                    if "weight_kg" in data and data["weight_kg"]:
+                        try:
+                            user["weight_kg"] = float(data["weight_kg"])
+                        except Exception:
+                            pass
+                    if "board" in data and data["board"]:
+                        user["board"] = data["board"]
 
                     s_alerts = user.get("spot_alerts", {})
                     if spot:

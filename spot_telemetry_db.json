@@ -1,6 +1,50 @@
 {
   "spot_views": [
     {
+      "timestamp": "2026-11-09T12:59:08.833699+00:00Z",
+      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "lat": -3.0232,
+      "lon": -39.6433,
+      "email": "d_puerta@hotmail.com",
+      "rider_name": "Dani",
+      "nationality": "Spanish",
+      "ip_hash": "72524404",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-09T12:54:08.869904+00:00Z",
+      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "lat": -3.0232,
+      "lon": -39.6433,
+      "email": "d_puerta@hotmail.com",
+      "rider_name": "Dani",
+      "nationality": "Spanish",
+      "ip_hash": "72524404",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-09T12:53:49.657102+00:00Z",
+      "spot_name": "Praia de Maceió (Camocim), Brazil",
+      "lat": -2.88,
+      "lon": -40.83,
+      "email": "d_puerta@hotmail.com",
+      "rider_name": "Dani",
+      "nationality": "Spanish",
+      "ip_hash": "17812371",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-09T12:53:22.835487+00:00Z",
+      "spot_name": "Praia de Maceió (Camocim), Brazil",
+      "lat": -2.88,
+      "lon": -40.83,
+      "email": "d_puerta@hotmail.com",
+      "rider_name": "Dani",
+      "nationality": "Spanish",
+      "ip_hash": "17812371",
+      "action": "view_forecast"
+    },
+    {
       "timestamp": "2026-11-09T12:49:08.902939+00:00Z",
       "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
@@ -343,13 +387,13 @@
     }
   ],
   "spot_totals": {
-    "Icaraí de Amontada (Icaraizinho), Brazil": 23,
+    "Icaraí de Amontada (Icaraizinho), Brazil": 25,
     "Preá, Brazil": 2,
-    "Praia de Maceió (Camocim), Brazil": 6
+    "Praia de Maceió (Camocim), Brazil": 8
   },
   "nationality_totals": {
     "Swiss": 15,
-    "Spanish": 14,
+    "Spanish": 18,
     "German": 2
   },
   "spot_by_nationality": {
@@ -359,8 +403,8 @@
     },
     "Spanish": {
       "Preá, Brazil": 2,
-      "Icaraí de Amontada (Icaraizinho), Brazil": 9,
-      "Praia de Maceió (Camocim), Brazil": 3
+      "Icaraí de Amontada (Icaraizinho), Brazil": 11,
+      "Praia de Maceió (Camocim), Brazil": 5
     },
     "German": {
       "Icaraí de Amontada (Icaraizinho), Brazil": 2

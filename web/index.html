@@ -7209,14 +7209,20 @@
     function updateAlarmQuiverSummary() {
       const summaryEl = document.getElementById('alarm-quiver-summary');
       if (!summaryEl) return;
-      const weight = state.weight_kg || 74;
-      const board = state.board || 'Twintip';
-      const kites = (state.gear || []).filter(g => (g.type || 'kite') === 'kite' || g.size);
+      const weight = (state.user && state.user.weight) || state.weight_kg || 74;
+      const board = (state.user && state.user.board) || state.board || 'Twintip';
+      const rawGear = (state.inventory && state.inventory.length > 0) ? state.inventory : (state.gear || []);
+      const kites = rawGear.filter(g => (g.category || g.type || 'kite') === 'kite' || g.size);
       if (kites.length === 0) {
-        summaryEl.innerHTML = `⚠️ <strong>No kites registered:</strong> HolyGust calculates optimal wind for your gear. Add your kites below to unlock precision sweet-spot alerts.`;
+        summaryEl.innerHTML = `⚠️ <strong>No kites registered:</strong> HolyGust calculates optimal wind for your gear. Add your kites in your Profile to unlock precision sweet-spot alerts.`;
       } else {
-        const kiteSizes = kites.map(k => `${k.size}m ${k.model || k.brand || ''}`.trim()).join(', ');
-        summaryEl.innerHTML = `<strong>Rider:</strong> ${weight} kg · ${board}<br><strong>Active Quiver:</strong> ${kiteSizes}<br><span class="text-emerald-400 font-semibold">✓ Smart sweet-spot filtering active: only alerted when rideable for your gear (no slogging).</span>`;
+        const activeKites = kites.filter(k => k.available !== false);
+        const displayKites = activeKites.length > 0 ? activeKites : kites;
+        const kiteSizes = displayKites.map(k => `${k.size}m ${k.brand || ''} ${k.model || ''}`.replace(/\s+/g, ' ').trim()).join(', ');
+        const boardsList = (state.boards && state.boards.length > 0)
+          ? state.boards.filter(b => b.available !== false).map(b => `${b.brand || ''} ${b.model || ''} ${b.size || ''}`.replace(/\s+/g, ' ').trim()).join(', ')
+          : board;
+        summaryEl.innerHTML = `<strong>Rider:</strong> ${weight} kg · ${boardsList || board}<br><strong>Active Quiver (${displayKites.length}):</strong> ${kiteSizes}<br><span class="text-emerald-400 font-semibold">✓ Smart sweet-spot filtering active: only alerted when rideable for your gear (no slogging).</span>`;
       }
     }
 
@@ -7353,14 +7359,15 @@
       try {
         const payload = {
           email: email || (getAuthUser()?.email) || 'guest@holygust.com',
-          name: state.user_name || 'Rider',
+          name: (state.user && state.user.name) || state.user_name || 'Rider',
           spot: activeAlarmSpot || 'Cumbuco, Brazil',
           enable_push: pushEnabled,
           enable_email: emailEnabled,
           push_subscription: pushSub,
-          gear: state.gear || [],
-          board: state.board || 'Twintip',
-          weight_kg: state.weight_kg || 74
+          gear: (state.inventory && state.inventory.length > 0) ? state.inventory : (state.gear || []),
+          boards: state.boards || [],
+          board: (state.user && state.user.board) || state.board || 'Twintip',
+          weight_kg: (state.user && state.user.weight) || state.weight_kg || 74
         };
 
         const res = await fetch('/api/alerts/test', {
@@ -7451,13 +7458,17 @@
       try {
         const payload = {
           email: email || (getAuthUser()?.email) || 'guest@holygust.com',
-          name: state.user_name || 'Rider',
+          name: (state.user && state.user.name) || state.user_name || 'Rider',
           spot: activeAlarmSpot,
           spots: localAlarms.spots,
           enable_push: pushEnabled,
           enable_email: emailEnabled,
           weekend_only: weekendOnly,
-          push_subscription: pushSub
+          push_subscription: pushSub,
+          gear: (state.inventory && state.inventory.length > 0) ? state.inventory : (state.gear || []),
+          boards: state.boards || [],
+          board: (state.user && state.user.board) || state.board || 'Twintip',
+          weight_kg: (state.user && state.user.weight) || state.weight_kg || 74
         };
 
         await fetch('/api/alerts/subscribe', {

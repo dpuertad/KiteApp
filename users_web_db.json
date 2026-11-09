@@ -54,14 +54,15 @@
       "beta_approved_at": "2026-11-06T13:07:35.934278+00:00Z",
       "nationality": "Spanish",
       "registered_at": "2026-11-04T22:00:00Z",
-      "last_login": "2026-11-09T12:49:08.902939+00:00Z",
+      "last_login": "2026-11-09T12:59:08.833699+00:00Z",
       "spot_alerts": {
         "enabled": true,
         "enable_push": true,
-        "enable_email": true,
+        "enable_email": false,
         "weekend_only": false,
         "spots": [
-          "Cumbuco, Brazil"
+          "Cumbuco, Brazil",
+          "Praia de Maceió (Camocim), Brazil"
         ]
       },
       "spot": {
@@ -69,7 +70,15 @@
         "lat": -3.0232,
         "lon": -39.6433
       },
-      "last_sync": "2026-11-09T12:23:32.416398Z"
+      "last_sync": "2026-11-09T12:53:51.938139Z",
+      "push_subscription": {
+        "endpoint": "https://fcm.googleapis.com/fcm/send/e0Fy5K6O5Vo:APA91bGmmQKIvrzVpkGdJWfL3WEDYogQFk3svGSd0rSD7VkzBM6dve3bpZx3pi6nXMxqCRxxjdCQP9YRSjuedc8KvHWcoNP6mvrlt8IXYEx4vHZebkPFjvCt8K6LE4sZt1LH7XCBfIO6",
+        "expirationTime": null,
+        "keys": {
+          "p256dh": "BDvfhAcPqhgGzWJ-ytChDuogXmdBIaxM3pg5nNHxFByGm2OmpanBujmLFnzLRpSLcwokf97gVLSPa2aidUF0cmM",
+          "auth": "IhtTcIUldyWsalBHKrjdRw"
+        }
+      }
     },
     "mailtobeat@gmail.com": {
       "email": "mailtobeat@gmail.com",
@@ -386,8 +395,8 @@
       "favorite_spots": [
         "Icaraí de Amontada (Icaraizinho), Brazil"
       ],
-      "is_beta_rider": true,
-      "beta_status": "approved",
+      "is_beta_rider": false,
+      "beta_status": "none",
       "spot": {
         "name": "Icaraí de Amontada (Icaraizinho), Brazil",
         "lat": -3.0232,
