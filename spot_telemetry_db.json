@@ -1,0 +1,209 @@
+{
+  "spot_views": [
+    {
+      "timestamp": "2026-11-09T11:45:32.333817+00:00Z",
+      "spot_name": "Praia de Maceió (Camocim), Brazil",
+      "lat": -2.8935,
+      "lon": -40.8654,
+      "email": "tot3030@gmail.com",
+      "rider_name": "Banana Gorilla",
+      "nationality": "Swiss",
+      "ip_hash": "84102344",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-09T11:44:55.128940+00:00Z",
+      "spot_name": "Praia de Maceió (Camocim), Brazil",
+      "lat": -2.8935,
+      "lon": -40.8654,
+      "email": "raphael.joss@gmail.com",
+      "rider_name": "Raphi",
+      "nationality": "Swiss",
+      "ip_hash": "91204411",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-08T01:14:37.233220+00:00Z",
+      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "lat": -3.0232,
+      "lon": -39.6433,
+      "email": "lipp.spam@gmail.com",
+      "rider_name": "Sebastian",
+      "nationality": "German",
+      "ip_hash": "31142837",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-08T01:08:09.522697+00:00Z",
+      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "lat": -3.0232,
+      "lon": -39.6433,
+      "email": "d_puerta@hotmail.com",
+      "rider_name": "Dani",
+      "nationality": "Spanish",
+      "ip_hash": "31142837",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-08T01:00:39.756406+00:00Z",
+      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "lat": -3.0232,
+      "lon": -39.6433,
+      "email": "mailtobeat@gmail.com",
+      "rider_name": "Beat",
+      "nationality": "Swiss",
+      "ip_hash": "31142837",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-08T00:47:29.123623+00:00Z",
+      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "lat": -3.0232,
+      "lon": -39.6433,
+      "email": "mailtobeat@gmail.com",
+      "rider_name": "Beat",
+      "nationality": "Swiss",
+      "ip_hash": "31142837",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-08T00:46:21.687313+00:00Z",
+      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "lat": -3.0232,
+      "lon": -39.6433,
+      "email": "mailtobeat@gmail.com",
+      "rider_name": "Beat",
+      "nationality": "Swiss",
+      "ip_hash": "31142837",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-08T00:45:02.041548+00:00Z",
+      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "lat": -3.0232,
+      "lon": -39.6433,
+      "email": "mailtobeat@gmail.com",
+      "rider_name": "Beat",
+      "nationality": "Swiss",
+      "ip_hash": "31142837",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-08T00:44:05.441710+00:00Z",
+      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "lat": -3.0232,
+      "lon": -39.6433,
+      "email": "mailtobeat@gmail.com",
+      "rider_name": "Beat",
+      "nationality": "Swiss",
+      "ip_hash": "31142837",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-08T00:43:36.791012+00:00Z",
+      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "lat": -3.0232,
+      "lon": -39.6433,
+      "email": "mailtobeat@gmail.com",
+      "rider_name": "Beat",
+      "nationality": "Swiss",
+      "ip_hash": "31142837",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-08T00:43:32.311337+00:00Z",
+      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "lat": -3.0232,
+      "lon": -39.6433,
+      "email": "mailtobeat@gmail.com",
+      "rider_name": "Beat",
+      "nationality": "Swiss",
+      "ip_hash": "31142837",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-08T00:43:31.188722+00:00Z",
+      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "lat": -3.0232,
+      "lon": -39.6433,
+      "email": "mailtobeat@gmail.com",
+      "rider_name": "Beat",
+      "nationality": "Swiss",
+      "ip_hash": "31142837",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-08T00:42:08.095214+00:00Z",
+      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "lat": -3.0232,
+      "lon": -39.6433,
+      "email": "d_puerta@hotmail.com",
+      "rider_name": "Dani",
+      "nationality": "Spanish",
+      "ip_hash": "86361893",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-08T00:41:53.937256+00:00Z",
+      "spot_name": "Preá, Brazil",
+      "lat": -2.8139,
+      "lon": -40.4189,
+      "email": "d_puerta@hotmail.com",
+      "rider_name": "Dani",
+      "nationality": "Spanish",
+      "ip_hash": "86361893",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-08T00:41:03.880310+00:00Z",
+      "spot_name": "Preá, Brazil",
+      "lat": -2.8139,
+      "lon": -40.4189,
+      "email": "d_puerta@hotmail.com",
+      "rider_name": "Dani",
+      "nationality": "Spanish",
+      "ip_hash": "86361893",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-08T00:40:02.658813+00:00Z",
+      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "lat": -3.0232,
+      "lon": -39.6433,
+      "email": "mailtobeat@gmail.com",
+      "rider_name": "Beat",
+      "nationality": "Swiss",
+      "ip_hash": "31142837",
+      "action": "view_forecast"
+    }
+  ],
+  "spot_totals": {
+    "Icaraí de Amontada (Icaraizinho), Brazil": 12,
+    "Preá, Brazil": 2,
+    "Praia de Maceió (Camocim), Brazil": 2
+  },
+  "nationality_totals": {
+    "Swiss": 11,
+    "Spanish": 4,
+    "German": 1
+  },
+  "spot_by_nationality": {
+    "Swiss": {
+      "Icaraí de Amontada (Icaraizinho), Brazil": 9,
+      "Praia de Maceió (Camocim), Brazil": 2
+    },
+    "Spanish": {
+      "Preá, Brazil": 2,
+      "Icaraí de Amontada (Icaraizinho), Brazil": 2
+    },
+    "German": {
+      "Icaraí de Amontada (Icaraizinho), Brazil": 1
+    }
+  },
+  "searches": [],
+  "search_totals": {},
+  "travel_inquiries": [],
+  "travel_destinations": {},
+  "travel_months": {},
+  "travel_gear_gaps": {}
+}
