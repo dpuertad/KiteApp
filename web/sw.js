@@ -1,4 +1,4 @@
-const CACHE_NAME = 'holygust-v32';
+const CACHE_NAME = 'holygust-v33';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',
@@ -64,7 +64,7 @@ self.addEventListener('push', (event) => {
       url: data.url || '/'
     },
     actions: [
-      { action: 'view', title: 'Open Spot Forecast' }
+      { action: 'view', title: (data.url && data.url.includes('open_admin')) ? 'Open Admin Profile' : 'Open Spot Forecast' }
     ]
   };
 

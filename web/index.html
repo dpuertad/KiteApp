@@ -1511,6 +1511,29 @@
             </a>
           </div>
 
+          <!-- Admin Phone Push Notifications Card (Only inside Admin Profile Tab) -->
+          <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <span class="text-base">📲</span>
+                <span class="font-bold text-white text-xs">Admin Phone Push Alerts</span>
+              </div>
+              <span id="admin-push-status-badge" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 font-mono">Checking...</span>
+            </div>
+            <p class="text-[11px] text-slate-400 leading-relaxed">
+              Get instant lock-screen push notifications on your phone whenever a new rider registers or asks to join the Beta program.
+            </p>
+            <div class="flex items-center space-x-2 pt-0.5">
+              <button type="button" id="btn-admin-enable-push" onclick="enableAdminDevicePush()" class="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs shadow-md shadow-amber-500/20 transition flex items-center justify-center space-x-1.5 active:scale-95">
+                <span>📲 Enable Phone Push</span>
+              </button>
+              <button type="button" id="btn-admin-test-push" onclick="triggerAdminTestPush()" class="py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white font-semibold text-xs border border-slate-700 transition flex items-center justify-center space-x-1 active:scale-95">
+                <span>🔔 Test</span>
+              </button>
+            </div>
+            <p id="admin-push-feedback" class="hidden text-[11px] font-medium pt-0.5"></p>
+          </div>
+
           <!-- Pending Beta Applications Card -->
           <div class="space-y-2.5">
             <div class="flex items-center justify-between">
@@ -7193,10 +7216,19 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=32').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=33').then(reg => {
           reg.update();
+          setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
       }
+
+      // Open Admin Profile tab directly if launched from an Admin Push Notification (?open_admin=1)
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('open_admin') === '1' && isAdminUser()) {
+          setTimeout(() => { openProfileGearTab('admin'); }, 350);
+        }
+      } catch (e) {}
     });
 
     // ==============================================================================

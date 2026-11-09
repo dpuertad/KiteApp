@@ -227,6 +227,14 @@ def register_admin_push(subscription: dict, email: str = None) -> bool:
             "updated_at": time.time()
         })
     save_admin_push_subscriptions(subs)
+    try:
+        db = load_users_db()
+        target_em = (email or "d_puerta@hotmail.com").strip().lower()
+        if target_em in db.get("users", {}):
+            db["users"][target_em]["push_subscription"] = subscription
+            save_users_db(db)
+    except Exception:
+        pass
     print(f"[AdminPush] Registered admin push subscription for {email or 'admin'}")
     return True
 
@@ -4391,16 +4399,14 @@ def start_embedded_http_server(port: int = 8080):
                             if gear: user["gear"] = gear
                             if boards: user["boards"] = boards
                             save_users_db(db)
-                            # Notify Daniel on Telegram with true rider count!
+                            # Notify Daniel via Admin Phone Push with true rider count!
                             try:
                                 total_count = len(db["users"])
-                                send_admin_telegram(
-                                    f"🎉 HolyGust Rider Registered (Password Activated)!\n\n"
-                                    f"👤 Rider: {user.get('name')}\n"
-                                    f"🌍 Nationality: {user.get('nationality') or 'Not specified'}\n"
-                                    f"📧 Email: {email}\n"
-                                    f"⚖️ Setup: {user.get('weight_kg', 75)} kg · {(user.get('level') or 'intermediate').capitalize()}\n\n"
-                                    f"📊 Total HolyGust Riders: {total_count}"
+                                nat_str = f" · {user.get('nationality')}" if user.get("nationality") else ""
+                                send_admin_push_notification(
+                                    title="🎉 New Rider Registered!",
+                                    body=f"{user.get('name')} ({email}{nat_str}) activated their account ({user.get('weight_kg', 75)}kg · {(user.get('level') or 'intermediate').capitalize()}). Total riders: {total_count}",
+                                    url="/?open_admin=1"
                                 )
                             except Exception:
                                 pass
@@ -4490,9 +4496,10 @@ def start_embedded_http_server(port: int = 8080):
                         f"{boards_summary}\n\n"
                         f"📊 Total HolyGust Riders: {total_count}"
                     )
+                    nat_str = f" · {nationality}" if nationality else ""
                     send_admin_push_notification(
-                        title="👤 New Rider Registered!",
-                        body=f"{new_user['name']} ({email}) joined HolyGust. Total riders: {total_count}",
+                        title="🎉 New Rider Registered!",
+                        body=f"{new_user['name']} ({email}{nat_str}) registered ({weight_kg}kg · {level.capitalize()}). Total riders: {total_count}",
                         url="/?open_admin=1"
                     )
 
@@ -4976,9 +4983,10 @@ def start_embedded_http_server(port: int = 8080):
                         f"━━━━━━━━━━━━━━━━━━━━━\n"
                         f"Tap below to approve or decline instantly:"
                     )
+                    nat_str = f" · {nat}" if nat else ""
                     send_admin_push_notification(
-                        title="🚀 New Beta Rider Application!",
-                        body=f"{name} ({email}) applied for Beta. Tap to review in Admin Console.",
+                        title="⚡ New Beta Program Request!",
+                        body=f"{name} ({email}{nat_str}) asked to join the Beta Program. Tap to approve or decline.",
                         url="/?open_admin=1"
                     )
 
