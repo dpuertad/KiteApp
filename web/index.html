@@ -1342,6 +1342,11 @@
             <span>Boards & Foils</span>
             <span id="badge-tab-boards-count" class="ml-1 text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300 font-mono">0</span>
           </button>
+          <button type="button" id="tab-btn-profile-admin" onclick="switchProfileTab('admin')" class="hidden flex-1 py-1.5 px-2 rounded-xl text-xs font-medium transition flex items-center justify-center space-x-1 text-amber-400 hover:text-white">
+            <span class="text-xs">👑</span>
+            <span>Admin</span>
+            <span id="badge-tab-admin-pending" class="hidden ml-1 text-[10px] px-1.5 py-0.2 rounded-full bg-amber-500 text-slate-950 font-black font-mono">0</span>
+          </button>
         </div>
       </div>
 
@@ -1474,6 +1479,77 @@
           <p class="text-[11px] text-slate-400 font-normal">Click 🎒 icon to mark the board that is with you at the beach</p>
           <div id="modal-boards-list" class="space-y-2.5">
             <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 4: ADMIN CONSOLE & BETA RIDERS (Visible for Admins) -->
+        <!-- ============================================== -->
+        <div id="profile-tab-admin" class="space-y-4 hidden">
+          <!-- Telemetry Console Link & Summary Banner -->
+          <div class="bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-slate-950 p-3.5 rounded-2xl border border-amber-500/30 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <span class="text-base">👑</span>
+                <span class="font-black text-amber-300 text-xs uppercase tracking-wider">HolyGust Mission Control</span>
+              </div>
+              <span id="admin-summary-pill" class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-mono font-bold">Loading...</span>
+            </div>
+            <p class="text-[11px] text-slate-300 leading-relaxed">
+              Review pending Beta applications, test mobile push notifications, and monitor spot telemetry.
+            </p>
+            <a href="/admin" target="_blank" class="w-full py-2 px-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-sky-400 hover:text-white border border-sky-500/30 font-bold text-xs flex items-center justify-between transition shadow-sm group">
+              <span class="flex items-center space-x-2">
+                <span class="text-sm">📊</span>
+                <span>Open Full Admin Telemetry Console</span>
+              </span>
+              <i data-lucide="external-link" class="w-3.5 h-3.5 text-sky-400 group-hover:translate-x-0.5 transition"></i>
+            </a>
+          </div>
+
+          <!-- Mobile Push Notification Card -->
+          <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-1.5">
+                <i data-lucide="bell" class="w-4 h-4 text-sky-400"></i>
+                <h4 class="font-bold text-white text-xs">Admin Lock Screen Push</h4>
+              </div>
+              <span id="admin-push-status-badge" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 font-mono">Checking...</span>
+            </div>
+            <p class="text-[11px] text-slate-400">
+              Get instant phone notifications when riders apply for Beta, submit suggestions, or add spots.
+            </p>
+            <div class="flex items-center gap-2">
+              <button type="button" id="btn-admin-enable-push" onclick="enableAdminDevicePush()" class="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 text-white font-bold text-xs shadow-md shadow-sky-500/20 transition flex items-center justify-center space-x-1.5 active:scale-95">
+                <i data-lucide="bell-ring" class="w-3.5 h-3.5"></i>
+                <span>Enable Push on Phone</span>
+              </button>
+              <button type="button" id="btn-admin-test-push" onclick="triggerAdminTestPush()" class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs border border-amber-500/30 transition flex items-center justify-center space-x-1.5 active:scale-95">
+                <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400"></i>
+                <span>Send Test Alert</span>
+              </button>
+            </div>
+            <p id="admin-push-feedback" class="text-[11px] text-slate-400 hidden"></p>
+          </div>
+
+          <!-- Pending Beta Applications Card -->
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between">
+              <h4 class="font-bold text-white text-xs flex items-center space-x-1.5">
+                <span class="text-amber-400">⚡</span>
+                <span>Pending Beta Riders</span>
+              </h4>
+              <button type="button" onclick="loadAdminTabOverview()" class="text-[10px] text-slate-400 hover:text-sky-400 flex items-center space-x-1 transition">
+                <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+                <span>Refresh</span>
+              </button>
+            </div>
+
+            <div id="admin-pending-beta-container" class="space-y-2">
+              <div class="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 text-center text-slate-400 text-xs">
+                Loading pending riders...
+              </div>
+            </div>
           </div>
         </div>
 
@@ -3121,23 +3197,33 @@
       const tabSpecs = document.getElementById('profile-tab-specs');
       const tabKites = document.getElementById('profile-tab-kites');
       const tabBoards = document.getElementById('profile-tab-boards');
+      const tabAdmin = document.getElementById('profile-tab-admin');
 
       const btnSpecs = document.getElementById('tab-btn-profile-specs');
       const btnKites = document.getElementById('tab-btn-profile-kites');
       const btnBoards = document.getElementById('tab-btn-profile-boards');
+      const btnAdmin = document.getElementById('tab-btn-profile-admin');
 
       if (tabSpecs) tabSpecs.classList.toggle('hidden', tab !== 'specs');
       if (tabKites) tabKites.classList.toggle('hidden', tab !== 'kites');
       if (tabBoards) tabBoards.classList.toggle('hidden', tab !== 'boards');
+      if (tabAdmin) tabAdmin.classList.toggle('hidden', tab !== 'admin');
 
       const activeClass = "flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-sky-600 text-white shadow-sm";
       const inactiveClass = "flex-1 py-1.5 px-2 rounded-xl text-xs font-medium transition flex items-center justify-center space-x-1 text-slate-400 hover:text-white";
+      const activeAdminClass = "flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md shadow-amber-500/20";
+      const inactiveAdminClass = "flex-1 py-1.5 px-2 rounded-xl text-xs font-medium transition flex items-center justify-center space-x-1 text-amber-400 hover:text-white";
 
       if (btnSpecs) btnSpecs.className = tab === 'specs' ? activeClass : inactiveClass;
       if (btnKites) btnKites.className = tab === 'kites' ? activeClass : inactiveClass;
       if (btnBoards) btnBoards.className = tab === 'boards' ? activeClass : inactiveClass;
+      if (btnAdmin) btnAdmin.className = tab === 'admin' ? activeAdminClass : inactiveAdminClass;
 
-      renderGearInventory();
+      if (tab === 'admin') {
+        loadAdminTabOverview();
+      } else {
+        renderGearInventory();
+      }
       if (window.lucide) lucide.createIcons();
     }
 
@@ -4511,6 +4597,16 @@
             adminCard.classList.remove('hidden');
           } else {
             adminCard.classList.add('hidden');
+          }
+        }
+        const tabBtnAdmin = document.getElementById('tab-btn-profile-admin');
+        if (tabBtnAdmin) {
+          if (isAdminUser()) {
+            tabBtnAdmin.classList.remove('hidden');
+            checkPendingBetaCount();
+            checkAdminDevicePushStatus();
+          } else {
+            tabBtnAdmin.classList.add('hidden');
           }
         }
         const mNatInput = document.getElementById('modal-rider-nationality');
@@ -6555,7 +6651,347 @@
       switchTravelMode('A');
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
+
+    // ==============================================================================
+    // 👑 ADMIN PROFILE TAB & 1-CLICK BETA APPROVAL
+    // ==============================================================================
+    const ADMIN_EMAILS = ['d_puerta@hotmail.com', 'admin.holygust@gmail.com', 'd.puertadiaz@gmail.com'];
+
+    function isAdminUser() {
+      const u = (typeof getAuthUser === 'function') ? getAuthUser() : null;
+      if (!u || !u.email) return false;
+      return ADMIN_EMAILS.includes(u.email.toLowerCase().trim());
+    }
+
+    async function checkPendingBetaCount() {
+      if (!isAdminUser()) return;
+      try {
+        const res = await fetch('/api/admin/pending-beta-riders');
+        if (!res.ok) return;
+        const data = await res.json();
+        const badgeEl = document.getElementById('badge-tab-admin-pending');
+        if (badgeEl) {
+          if (data.pending_count > 0) {
+            badgeEl.innerText = data.pending_count;
+            badgeEl.classList.remove('hidden');
+          } else {
+            badgeEl.classList.add('hidden');
+          }
+        }
+      } catch (e) {
+        console.warn('Failed to check pending beta count:', e);
+      }
+    }
+
+    async function loadAdminTabOverview() {
+      if (!isAdminUser()) return;
+      const container = document.getElementById('admin-pending-beta-container');
+      const summaryPill = document.getElementById('admin-summary-pill');
+      if (container) {
+        container.innerHTML = `
+          <div class="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 text-center text-slate-400 text-xs flex items-center justify-center space-x-2">
+            <i data-lucide="loader" class="w-4 h-4 animate-spin text-amber-400"></i>
+            <span>Loading pending applications...</span>
+          </div>
+        `;
+        if (window.lucide) lucide.createIcons();
+      }
+
+      checkAdminDevicePushStatus();
+
+      try {
+        const res = await fetch('/api/admin/pending-beta-riders');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+
+        if (summaryPill) {
+          summaryPill.innerText = `${data.approved_count || 0} Beta / ${data.total_riders || 0} Total Riders`;
+        }
+
+        const badgeEl = document.getElementById('badge-tab-admin-pending');
+        if (badgeEl) {
+          if (data.pending_count > 0) {
+            badgeEl.innerText = data.pending_count;
+            badgeEl.classList.remove('hidden');
+          } else {
+            badgeEl.classList.add('hidden');
+          }
+        }
+
+        if (!container) return;
+
+        if (!data.pending || data.pending.length === 0) {
+          container.innerHTML = `
+            <div class="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 text-center space-y-1.5">
+              <span class="text-xl">✨</span>
+              <p class="text-xs font-bold text-slate-200">All Caught Up!</p>
+              <p class="text-[11px] text-slate-400">There are currently no pending Beta applications awaiting approval.</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = data.pending.map((rider) => {
+          const name = escapeHtml(rider.name || 'Anonymous Rider');
+          const email = escapeHtml(rider.email || '');
+          const nat = rider.nationality ? `🌍 ${escapeHtml(rider.nationality)}` : '';
+          const weight = rider.weight_kg ? `⚖️ ${rider.weight_kg}kg` : '';
+          const level = rider.level ? `🎯 ${escapeHtml(rider.level)}` : '';
+          const board = rider.board ? `🏄 ${escapeHtml(rider.board)}` : '';
+          
+          let dateStr = 'Recently';
+          if (rider.applied_at) {
+            try {
+              const d = new Date(rider.applied_at);
+              dateStr = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+            } catch (e) {}
+          }
+
+          const tags = [nat, weight, level, board].filter(Boolean).join(' · ');
+
+          return `
+            <div class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2.5 transition">
+              <div class="flex items-start justify-between gap-2">
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center space-x-2">
+                    <span class="font-extrabold text-white text-xs truncate">${name}</span>
+                    <span class="text-[9px] px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 font-mono font-semibold">Pending</span>
+                  </div>
+                  <p class="text-[11px] text-sky-400 font-mono truncate mt-0.5">${email}</p>
+                  ${tags ? `<p class="text-[10px] text-slate-400 mt-1">${tags}</p>` : ''}
+                  <p class="text-[9px] text-slate-500 font-mono mt-0.5">Applied: ${dateStr}</p>
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-2 pt-1 border-t border-slate-800/80">
+                <button type="button" onclick="approveBetaRiderFromProfile('${escapeHtml(rider.email)}', this)" class="flex-1 py-1.5 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs shadow-md shadow-amber-500/20 transition flex items-center justify-center space-x-1 active:scale-95">
+                  <span class="text-xs">⚡</span>
+                  <span>Approve Beta</span>
+                </button>
+                <button type="button" onclick="declineBetaRiderFromProfile('${escapeHtml(rider.email)}', this)" class="py-1.5 px-3 rounded-xl bg-slate-900 hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 font-semibold text-xs border border-slate-800 hover:border-rose-500/30 transition flex items-center justify-center space-x-1 active:scale-95">
+                  <span>✕ Decline</span>
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        if (window.lucide) lucide.createIcons();
+      } catch (err) {
+        if (container) {
+          container.innerHTML = `
+            <div class="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs text-center">
+              ⚠️ Failed to load pending riders: ${escapeHtml(err.message)}
+            </div>
+          `;
+        }
+      }
+    }
+
+    async function approveBetaRiderFromProfile(email, btnEl) {
+      if (!email) return;
+      if (btnEl) {
+        btnEl.disabled = true;
+        btnEl.innerHTML = `
+          <i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i>
+          <span>Approving & Emailing...</span>
+        `;
+        if (window.lucide) lucide.createIcons();
+      }
+
+      try {
+        const res = await fetch('/api/admin/approve-beta', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) throw new Error(data.error || 'Approval failed');
+
+        if (btnEl) {
+          btnEl.className = "flex-1 py-1.5 px-3 rounded-xl bg-emerald-500 text-white font-black text-xs transition";
+          btnEl.innerHTML = `<span>✅ Approved!</span>`;
+        }
+
+        setTimeout(() => {
+          loadAdminTabOverview();
+        }, 1200);
+      } catch (err) {
+        alert(`Could not approve rider: ${err.message}`);
+        if (btnEl) {
+          btnEl.disabled = false;
+          btnEl.innerHTML = `<span>⚡ Retry Approve</span>`;
+        }
+      }
+    }
+
+    async function declineBetaRiderFromProfile(email, btnEl) {
+      if (!confirm(`Are you sure you want to decline ${email}?`)) return;
+      if (btnEl) {
+        btnEl.disabled = true;
+        btnEl.innerText = "Declining...";
+      }
+
+      try {
+        const res = await fetch('/api/admin/decline-beta', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) throw new Error(data.error || 'Decline failed');
+
+        loadAdminTabOverview();
+      } catch (err) {
+        alert(`Could not decline rider: ${err.message}`);
+        if (btnEl) {
+          btnEl.disabled = false;
+          btnEl.innerText = "✕ Decline";
+        }
+      }
+    }
+
+    async function checkAdminDevicePushStatus() {
+      const badge = document.getElementById('admin-push-status-badge');
+      const btn = document.getElementById('btn-admin-enable-push');
+      if (!badge) return;
+
+      if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+        badge.innerText = "Not Supported";
+        badge.className = "text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-500 font-mono";
+        if (btn) btn.disabled = true;
+        return;
+      }
+
+      if (Notification.permission === 'denied') {
+        badge.innerText = "Blocked in Browser";
+        badge.className = "text-[10px] px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 font-mono";
+        return;
+      }
+
+      if (Notification.permission === 'granted') {
+        try {
+          const reg = await navigator.serviceWorker.ready;
+          const sub = await reg.pushManager.getSubscription();
+          if (sub) {
+            badge.innerText = "Active & Subscribed";
+            badge.className = "text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono font-bold";
+            if (btn) {
+              btn.innerText = "✅ Push Active on Phone";
+              btn.className = "flex-1 py-2 px-3 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold text-xs flex items-center justify-center space-x-1.5";
+            }
+            return;
+          }
+        } catch (e) {}
+      }
+
+      badge.innerText = "Not Subscribed";
+      badge.className = "text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-mono";
+    }
+
+    async function enableAdminDevicePush() {
+      const fb = document.getElementById('admin-push-feedback');
+      const btn = document.getElementById('btn-admin-enable-push');
+      if (fb) {
+        fb.classList.remove('hidden', 'text-rose-400', 'text-emerald-400');
+        fb.classList.add('text-sky-400');
+        fb.innerText = "Requesting notification permission on this device...";
+      }
+
+      try {
+        const sub = await subscribeToPushNotifications();
+        if (!sub) throw new Error("Could not acquire push subscription token.");
+
+        const u = getAuthUser();
+        const email = u ? u.email : 'd_puerta@hotmail.com';
+        const res = await fetch('/api/admin/push-subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ subscription: sub, email: email })
+        });
+        const d = await res.json();
+        if (!res.ok || !d.success) throw new Error(d.error || 'Failed to register admin device');
+
+        if (fb) {
+          fb.classList.remove('text-sky-400');
+          fb.classList.add('text-emerald-400');
+          fb.innerText = "🎉 This phone is now registered to receive Admin Push Alerts!";
+        }
+        checkAdminDevicePushStatus();
+      } catch (err) {
+        if (fb) {
+          fb.classList.remove('text-sky-400');
+          fb.classList.add('text-rose-400');
+          fb.innerText = `⚠️ ${err.message}`;
+        }
+      }
+    }
+
+    async function triggerAdminTestPush() {
+      const fb = document.getElementById('admin-push-feedback');
+      const btn = document.getElementById('btn-admin-test-push');
+      if (fb) {
+        fb.classList.remove('hidden', 'text-rose-400', 'text-emerald-400');
+        fb.classList.add('text-sky-400');
+        fb.innerText = "Sending test alert to subscribed devices...";
+      }
+
+      try {
+        const u = getAuthUser();
+        const email = u ? u.email : 'd_puerta@hotmail.com';
+        const res = await fetch('/api/admin/test-push', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email })
+        });
+        const d = await res.json();
+        if (!res.ok) throw new Error(d.error || 'Server error');
+
+        if (fb) {
+          fb.classList.remove('text-sky-400');
+          fb.classList.add('text-emerald-400');
+          fb.innerText = `🔔 Alert sent! Delivered to ${d.delivered_count || 0} device(s). Check your lock screen!`;
+        }
+      } catch (err) {
+        if (fb) {
+          fb.classList.remove('text-sky-400');
+          fb.classList.add('text-rose-400');
+          fb.innerText = `⚠️ Failed: ${err.message}`;
+        }
+      }
+    }
+
+    async function autoRegisterAdminPushIfPermitted() {
+      if (!isAdminUser()) return;
+      if (!('Notification' in window) || Notification.permission !== 'granted') return;
+      try {
+        const reg = await navigator.serviceWorker.ready;
+        let sub = await reg.pushManager.getSubscription();
+        if (!sub) {
+          const vapidKey = await getVapidPublicKey();
+          if (vapidKey) {
+            const appKey = urlBase64ToUint8Array(vapidKey);
+            sub = await reg.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: appKey
+            });
+          }
+        }
+        if (sub) {
+          const subJson = sub.toJSON ? sub.toJSON() : sub;
+          const u = getAuthUser();
+          await fetch('/api/admin/push-subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ subscription: subJson, email: u ? u.email : 'd_puerta@hotmail.com' })
+          });
+        }
+      } catch (e) {
+        console.warn("Silent admin push registration:", e);
+      }
+    }
+
+        window.addEventListener('DOMContentLoaded', () => {
       loadPublicSpots();
       renderProfileFavorites();
       setKiteType('tube');
@@ -6650,7 +7086,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=23').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=24').then(reg => {
           reg.update();
         }).catch(err => console.log('SW register failed:', err));
       }

@@ -205,7 +205,7 @@ def register_admin_push(subscription: dict, email: str = None) -> bool:
     print(f"[AdminPush] Registered admin push subscription for {email or 'admin'}")
     return True
 
-def send_admin_push_notification(title: str, body: str, url: str = "/admin") -> int:
+def send_admin_push_notification(title: str, body: str, url: str = "/?open_admin=1") -> int:
     """Dispatches a real Web Push notification to all of Daniel's subscribed devices."""
     try:
         import spot_alerts
@@ -377,7 +377,7 @@ def leave_beta_program(email: str) -> tuple:
     send_admin_push_notification(
         title="👋 Rider Left Beta",
         body=f"{rider_name} ({email}) has opted out of the Beta program.",
-        url="/admin"
+        url="/?open_admin=1"
     )
     
     return True, rider_name
@@ -3128,6 +3128,55 @@ def start_embedded_http_server(port: int = 8080):
                 self.wfile.write(html_out.encode("utf-8"))
                 return
 
+            # 2d. API: Admin Pending Beta Applications
+            if path == "/api/admin/pending-beta-riders":
+                try:
+                    db = load_users_db()
+                    users = db.get("users", {})
+                    pending = []
+                    approved_count = 0
+                    for em, u in users.items():
+                        is_beta = bool(u.get("is_beta_rider") or u.get("beta_status") == "approved")
+                        if is_beta:
+                            approved_count += 1
+                        status = u.get("beta_status")
+                        if status == "pending" or (not is_beta and u.get("beta_applied_at") and status not in ("declined", "left")):
+                            pending.append({
+                                "email": u.get("email") or em,
+                                "name": u.get("name") or em.split("@")[0].title(),
+                                "nationality": u.get("nationality") or "",
+                                "weight_kg": u.get("weight_kg", 75),
+                                "level": u.get("level", "intermediate"),
+                                "board": u.get("board", "Twintip"),
+                                "applied_at": u.get("beta_applied_at") or u.get("registered_at") or "",
+                                "kites_count": len(u.get("gear", [])),
+                                "boards_count": len(u.get("boards", [])),
+                                "favorite_spots": u.get("favorite_spots", [])
+                            })
+                    pending.sort(key=lambda x: x.get("applied_at") or "", reverse=True)
+                    subs = load_admin_push_subscriptions()
+                    resp_data = {
+                        "success": True,
+                        "pending": pending,
+                        "pending_count": len(pending),
+                        "approved_count": approved_count,
+                        "total_riders": len(users),
+                        "admin_push_count": len(subs)
+                    }
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Cache-Control", "no-cache")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps(resp_data).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
             # 2c. API: Spot Analytics & Intelligence JSON
             if path == "/api/admin/spot-insights":
                 import spot_telemetry
@@ -3912,7 +3961,7 @@ def start_embedded_http_server(port: int = 8080):
                     send_admin_push_notification(
                         title="👤 New Rider Registered!",
                         body=f"{new_user['name']} ({email}) joined HolyGust. Total riders: {total_count}",
-                        url="/admin"
+                        url="/?open_admin=1"
                     )
 
                     safe_user = {k: v for k, v in new_user.items() if not k.startswith("password_")}
@@ -4041,7 +4090,7 @@ def start_embedded_http_server(port: int = 8080):
                     send_admin_push_notification(
                         title="📍 New Kite Spot Added!",
                         body=f"{spot_data.get('name')} ({spot_data.get('country')}) added to public catalog.",
-                        url="/admin"
+                        url="/?open_admin=1"
                     )
 
                     self.send_response(200)
@@ -4383,7 +4432,7 @@ def start_embedded_http_server(port: int = 8080):
                     send_admin_push_notification(
                         title="🚀 New Beta Rider Application!",
                         body=f"{name} ({email}) applied for Beta. Tap to review in Admin Console.",
-                        url="/admin"
+                        url="/?open_admin=1"
                     )
 
                     self.send_response(200)
@@ -4606,7 +4655,7 @@ def start_embedded_http_server(port: int = 8080):
                     send_admin_push_notification(
                         title="💬 New Rider Feedback!",
                         body=f"From {name} ({email}): {msg[:80]}",
-                        url="/admin"
+                        url="/?open_admin=1"
                     )
 
                     self.send_response(200)
@@ -4676,7 +4725,7 @@ def start_embedded_http_server(port: int = 8080):
                         send_admin_push_notification(
                             title="🔔 Spot Wind Alarm Activated!",
                             body=f"{user.get('name', email)} ({email}) set an alarm for {', '.join(spots) if spots else 'Favorites'}.",
-                            url="/admin"
+                            url="/?open_admin=1"
                         )
                     except Exception:
                         pass
@@ -4732,6 +4781,61 @@ def start_embedded_http_server(port: int = 8080):
                     self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
                 return
 
+            # ADMIN: 1-Click Beta Rider Approval
+            if parsed.path == "/api/admin/approve-beta":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    data = json.loads(body)
+                    email = (data.get("email") or "").strip().lower()
+                    if not email:
+                        raise ValueError("Email required")
+                    ok, rider_name = approve_beta_rider(email)
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({
+                        "success": True,
+                        "email": email,
+                        "rider_name": rider_name,
+                        "message": f"Approved {rider_name} ({email}) as HolyGust Beta Rider! Welcome email dispatched."
+                    }).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # ADMIN: Decline Beta Rider
+            if parsed.path == "/api/admin/decline-beta":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    data = json.loads(body)
+                    email = (data.get("email") or "").strip().lower()
+                    if not email:
+                        raise ValueError("Email required")
+                    decline_beta_rider(email)
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({
+                        "success": True,
+                        "email": email,
+                        "message": f"Beta application for {email} declined."
+                    }).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
             # ADMIN: Push Notification Subscription for Admin Phone
             if parsed.path == "/api/admin/push-subscribe":
                 try:
@@ -4764,7 +4868,7 @@ def start_embedded_http_server(port: int = 8080):
                     delivered = send_admin_push_notification(
                         title="🔔 HolyGust Admin Push Working!",
                         body="You will now receive native alerts whenever riders apply for Beta, register, or add spots! 🚀",
-                        url="/admin"
+                        url="/?open_admin=1"
                     )
                     self.send_response(200)
                     self.send_header("Content-Type", "application/json")
