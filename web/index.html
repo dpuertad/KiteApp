@@ -401,11 +401,11 @@
       <div class="flex items-center justify-between">
         <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
           <i data-lucide="bar-chart-2" class="w-4 h-4 text-sky-400"></i>
-          <span>Wind & Gust Timeline</span>
+          <span id="wind-chart-title">Wind & Gust Timeline</span>
         </h3>
         <span class="text-[11px] text-slate-400 flex items-center space-x-2">
-          <span class="inline-block w-2.5 h-2.5 rounded bg-sky-500"></span> <span>Wind</span>
-          <span class="inline-block w-2.5 h-2.5 rounded bg-amber-500"></span> <span>Gusts</span>
+          <span class="inline-block w-2.5 h-2.5 rounded bg-sky-500"></span> <span id="wind-chart-legend-wind">Wind</span>
+          <span class="inline-block w-2.5 h-2.5 rounded bg-amber-500"></span> <span id="wind-chart-legend-gust">Gusts</span>
         </span>
       </div>
 
@@ -3612,6 +3612,13 @@
     }
 
     function renderWindChart(schedule) {
+      const titleEl = document.getElementById('wind-chart-title');
+      const legWindEl = document.getElementById('wind-chart-legend-wind');
+      const legGustEl = document.getElementById('wind-chart-legend-gust');
+      if (titleEl) titleEl.innerText = 'Wind & Gust Timeline';
+      if (legWindEl) legWindEl.innerText = 'Wind';
+      if (legGustEl) legGustEl.innerText = 'Gusts';
+
       const svg = document.getElementById('wind-chart-svg');
       const entries = Object.entries(schedule);
       if (entries.length === 0) return;
@@ -5921,7 +5928,7 @@
                       <span>${d.day_name}</span>
                       <span class="text-slate-500 font-normal">(${d.date_display})</span>
                     </h4>
-                    <span class="text-[10px] text-slate-400 font-medium">Gusts ${Math.round(d.gust_peak_kts)} kts · ${d.direction}</span>
+                    <span class="text-[10px] text-slate-400 font-medium">Avg ${Math.round(d.wind_avg_kts || d.wind_peak_kts)} kts · Gusts ${Math.round(d.gust_peak_kts)} kts · ${d.direction}</span>
                     <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold border ${shoreBadgeClass}">${shoreType}</span>
                     <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30 font-medium">${d.best_window || '12:00 – 16:00'}</span>
                     <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30">${d.model_used || d.model || 'ECMWF IFS (9km)'}</span>
@@ -5941,7 +5948,70 @@
         `;
       }).join('');
 
+      renderWeeklyWindChart(weekly);
       if (window.lucide) lucide.createIcons();
+    }
+
+    function renderWeeklyWindChart(weekly) {
+      const titleEl = document.getElementById('wind-chart-title');
+      const legWindEl = document.getElementById('wind-chart-legend-wind');
+      const legGustEl = document.getElementById('wind-chart-legend-gust');
+      if (titleEl) titleEl.innerText = '7-Day Average Wind & Gusts';
+      if (legWindEl) legWindEl.innerText = 'Avg Wind';
+      if (legGustEl) legGustEl.innerText = 'Gusts';
+
+      const svg = document.getElementById('wind-chart-svg');
+      if (!svg || !weekly || weekly.length === 0) return;
+
+      const maxSpeed = Math.max(...weekly.map(d => d.gust_peak_kts || 25), 25) + 6;
+      const svgWidth = svg.clientWidth || 340;
+      const svgHeight = 110;
+      const spacing = svgWidth / weekly.length;
+      const barWidth = Math.max(16, Math.min(32, Math.floor(spacing - 10)));
+
+      svg.innerHTML = weekly.map((d, idx) => {
+        const avgW = Math.round(d.wind_avg_kts || d.wind_peak_kts || 15);
+        const gustW = Math.round(d.gust_peak_kts || avgW + 5);
+        const x = idx * spacing + (spacing - barWidth) / 2;
+        const windH = (avgW / maxSpeed) * svgHeight;
+        const gustH = (gustW / maxSpeed) * svgHeight;
+        const yWind = svgHeight - windH;
+        const yGust = svgHeight - gustH;
+
+        // Format concise weekday label (e.g. "Mon 9", "Tue 10")
+        let shortDay = (d.day_name || '').substring(0, 3);
+        if (d.date_display) {
+          const parts = d.date_display.replace(',', '').split(' ');
+          if (parts.length >= 3) {
+            shortDay = `${parts[0]} ${parseInt(parts[2], 10) || parts[2]}`;
+          } else {
+            shortDay = parts[0];
+          }
+        }
+
+        const gustTextY = Math.max(12, yGust - 3);
+        const gustLabel = `<text x="${x + barWidth/2}" y="${gustTextY}" text-anchor="middle" font-size="10" font-weight="bold" fill="#fbbf24">${gustW}</text>`;
+
+        const windCloseToGust = (yWind - yGust) < 14;
+        const windTextY = windCloseToGust ? (yWind + 12) : (yWind - 3);
+        const windFill = windCloseToGust ? "#ffffff" : "#38bdf8";
+        const windLabel = `<text x="${x + barWidth/2}" y="${windTextY}" text-anchor="middle" font-size="10" font-weight="bold" fill="${windFill}">${avgW}</text>`;
+
+        return `
+          <rect x="${x}" y="${yGust}" width="${barWidth}" height="${gustH}" rx="5" fill="#f59e0b" fill-opacity="0.25" stroke="#f59e0b" stroke-width="0.9" />
+          <rect x="${x}" y="${yWind}" width="${barWidth}" height="${windH}" rx="5" fill="url(#windGrad)" />
+          ${gustLabel}
+          ${windLabel}
+          <text x="${x + barWidth/2}" y="${svgHeight + 15}" text-anchor="middle" font-size="9" font-weight="600" fill="#cbd5e1">${shortDay}</text>
+        `;
+      }).join('') + `
+        <defs>
+          <linearGradient id="windGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#38bdf8" />
+            <stop offset="100%" stop-color="#0284c7" />
+          </linearGradient>
+        </defs>
+      `;
     }
 
     function toggleWeekDayHourly(dIdx) {
@@ -7123,7 +7193,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=31').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=32').then(reg => {
           reg.update();
         }).catch(err => console.log('SW register failed:', err));
       }

@@ -1892,9 +1892,10 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
                     d_gusts.append(h_g)
                     d_dirs.append(h_d)
 
+        session_speeds = [s["wind_kts"] for s in day_hourly if 10 <= int(s["hour"][:2]) <= 17] or d_speeds
         peak_w = round_knots(max(d_speeds) if d_speeds else 15.0)
         min_w = round_knots(min(d_speeds) if d_speeds else 10.0)
-        avg_w = round(sum(d_speeds)/len(d_speeds), 1) if d_speeds else 12.0
+        avg_w = round_knots(sum(session_speeds)/len(session_speeds)) if session_speeds else 12.0
         peak_g = round_knots(max(d_gusts) if d_gusts else peak_w * 1.25)
         dom_deg = round(d_dirs[len(d_dirs)//2]) if d_dirs else 90
         dom_card = degrees_to_cardinal(dom_deg)
@@ -2051,14 +2052,25 @@ def fetch_weather_metno(spot: dict, today_sst: float = None, tomorrow_sst: float
             pass
 
     def get_metno_slot(day_idx: int, hr: int, sst_val: float) -> dict:
-        # Find exact hour or interpolate from nearest available hours on that day (or previous day)
+        # Find exact hour or linearly interpolate from bracketing hours on that day
         pt = parsed_points.get((day_idx, hr))
         if not pt:
-            # Search nearest hour in same day_idx, else nearest across all parsed_points
-            same_day = [(abs(h - hr), p) for (d_i, h), p in parsed_points.items() if d_i == day_idx]
-            if same_day:
-                same_day.sort(key=lambda x: x[0])
-                pt = same_day[0][1]
+            day_hrs = sorted([(h, p) for (d_i, h), p in parsed_points.items() if d_i == day_idx], key=lambda x: x[0])
+            if len(day_hrs) >= 2:
+                before = [x for x in day_hrs if x[0] <= hr]
+                after = [x for x in day_hrs if x[0] >= hr]
+                if before and after:
+                    h1, p1 = before[-1]
+                    h2, p2 = after[0]
+                    frac = (hr - h1) / max(1.0, float(h2 - h1)) if h2 != h1 else 0.0
+                    w_int = p1["w"] + frac * (p2["w"] - p1["w"])
+                    g_int = p1["g"] + frac * (p2["g"] - p1["g"])
+                    t_int = round(p1["t"] + frac * (p2["t"] - p1["t"]), 1)
+                    pt = {"w": w_int, "g": g_int, "d": p2["d"] if frac >= 0.5 else p1["d"], "t": t_int}
+                else:
+                    pt = (before[-1][1] if before else after[0][1])
+            elif len(day_hrs) == 1:
+                pt = day_hrs[0][1]
             elif parsed_points:
                 any_day = [(abs((d_i * 24 + h) - (day_idx * 24 + hr)), p) for (d_i, h), p in parsed_points.items()]
                 any_day.sort(key=lambda x: x[0])
@@ -2143,9 +2155,10 @@ def fetch_weather_metno(spot: dict, today_sst: float = None, tomorrow_sst: float
                 d_speeds.append(hw)
                 d_gusts.append(hg)
                 d_dirs.append(s_slot["degrees"])
+        session_speeds = [s["wind_kts"] for s in day_hourly if 10 <= int(s["hour"][:2]) <= 17] or d_speeds
         pw = round_knots(max(d_speeds) if d_speeds else cur_wind)
         mw = round_knots(min(d_speeds) if d_speeds else cur_wind)
-        aw = round(sum(d_speeds)/len(d_speeds), 1) if d_speeds else cur_wind
+        aw = round_knots(sum(session_speeds)/len(session_speeds)) if session_speeds else cur_wind
         pg = round_knots(max(d_gusts) if d_gusts else cur_gust)
         dom_deg = round(d_dirs[len(d_dirs)//2]) if d_dirs else cur_dir_deg
         dom_shore = calculate_shoreline_status(dom_deg, beach_angle)
