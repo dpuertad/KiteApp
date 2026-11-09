@@ -7531,7 +7531,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=38').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=39').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
@@ -8017,7 +8017,7 @@
         end: 'jericoacoara',
         extraDetourKm: 0,
         hazards: [
-          { type: 'wind', icon: '💨', title: 'Sunset Dune Wind Shadow', desc: 'Wind drops dramatically within 150m of the village beach behind Duna do Pôr do Sol. Land before the dune at Praia da Malhada or keep kite at 12 o'clock.' }
+          { type: 'wind', icon: '💨', title: 'Sunset Dune Wind Shadow', desc: 'Wind drops dramatically within 150m of the village beach behind Duna do Pôr do Sol. Land before the dune at Praia da Malhada or keep kite at 12 o\'clock.' }
         ]
       },
       {
@@ -8304,7 +8304,7 @@
               type: 'wind',
               icon: '💨',
               title: 'Sunset Dune Wind Shadow',
-              desc: 'Wind drops dramatically within 150m of the village beach behind Duna do Pôr do Sol. Land before the dune at Praia da Malhada or keep kite at 12 o'clock.'
+              desc: 'Wind drops dramatically within 150m of the village beach behind Duna do Pôr do Sol. Land before the dune at Praia da Malhada or keep kite at 12 o\'clock.'
             });
           }
           if (endId === 'paracuru') {
