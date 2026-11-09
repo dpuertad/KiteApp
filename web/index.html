@@ -50,6 +50,10 @@
 
   <style>
     /* Smooth iOS momentum scrolling & safe area support */
+    html, body {
+      max-width: 100vw;
+      overflow-x: hidden;
+    }
     body {
       -webkit-tap-highlight-color: transparent;
       padding-top: env(safe-area-inset-top);
@@ -68,7 +72,7 @@
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-sky-500 selection:text-white pb-12">
+<body class="bg-slate-950 text-slate-100 min-h-screen max-w-full overflow-x-hidden flex flex-col font-sans selection:bg-sky-500 selection:text-white pb-12">
 
   <!-- TOP HEADER -->
   <header class="sticky top-0 z-40 bg-slate-900/80 backdrop-blur-md border-b border-slate-800/80 px-4 py-3">
@@ -1326,26 +1330,26 @@
       </div>
 
       <!-- Profile Tab Navigation Bar (Visible in Beta) -->
-      <div id="profile-modal-tabs-bar" class="px-5 pt-3 pb-2 flex-shrink-0 border-b border-slate-800/80 bg-slate-900/90">
+      <div id="profile-modal-tabs-bar" class="px-3 sm:px-5 pt-3 pb-2 flex-shrink-0 border-b border-slate-800/80 bg-slate-900/90">
         <div class="flex items-center space-x-1 bg-slate-950 p-1 rounded-2xl border border-slate-800">
-          <button type="button" id="tab-btn-profile-specs" onclick="switchProfileTab('specs')" class="flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-sky-600 text-white shadow-sm">
-            <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
-            <span>Rider Specs</span>
+          <button type="button" id="tab-btn-profile-specs" onclick="switchProfileTab('specs')" class="min-w-0 flex-1 py-1.5 px-1.5 rounded-xl text-[11px] sm:text-xs font-bold transition flex items-center justify-center space-x-1 bg-sky-600 text-white shadow-sm truncate">
+            <i data-lucide="sliders" class="w-3 h-3 flex-shrink-0"></i>
+            <span class="truncate">Specs</span>
           </button>
-          <button type="button" id="tab-btn-profile-kites" onclick="switchProfileTab('kites')" class="flex-1 py-1.5 px-2 rounded-xl text-xs font-medium transition flex items-center justify-center space-x-1 text-slate-400 hover:text-white">
-            <span class="text-sm">🪁</span>
-            <span>Kites & Wings</span>
-            <span id="badge-tab-kites-count" class="ml-1 text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300 font-mono">0</span>
+          <button type="button" id="tab-btn-profile-kites" onclick="switchProfileTab('kites')" class="min-w-0 flex-1 py-1.5 px-1.5 rounded-xl text-[11px] sm:text-xs font-medium transition flex items-center justify-center space-x-1 text-slate-400 hover:text-white truncate">
+            <span class="text-xs flex-shrink-0">🪁</span>
+            <span class="truncate">Kites</span>
+            <span id="badge-tab-kites-count" class="text-[9px] px-1 py-0.2 rounded-full bg-slate-800 text-slate-300 font-mono flex-shrink-0">0</span>
           </button>
-          <button type="button" id="tab-btn-profile-boards" onclick="switchProfileTab('boards')" class="flex-1 py-1.5 px-2 rounded-xl text-xs font-medium transition flex items-center justify-center space-x-1 text-slate-400 hover:text-white">
-            <span class="text-sm">🏄</span>
-            <span>Boards & Foils</span>
-            <span id="badge-tab-boards-count" class="ml-1 text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300 font-mono">0</span>
+          <button type="button" id="tab-btn-profile-boards" onclick="switchProfileTab('boards')" class="min-w-0 flex-1 py-1.5 px-1.5 rounded-xl text-[11px] sm:text-xs font-medium transition flex items-center justify-center space-x-1 text-slate-400 hover:text-white truncate">
+            <span class="text-xs flex-shrink-0">🏄</span>
+            <span class="truncate">Boards</span>
+            <span id="badge-tab-boards-count" class="text-[9px] px-1 py-0.2 rounded-full bg-slate-800 text-slate-300 font-mono flex-shrink-0">0</span>
           </button>
-          <button type="button" id="tab-btn-profile-admin" onclick="switchProfileTab('admin')" class="hidden flex-1 py-1.5 px-2 rounded-xl text-xs font-medium transition flex items-center justify-center space-x-1 text-amber-400 hover:text-white">
-            <span class="text-xs">👑</span>
-            <span>Admin</span>
-            <span id="badge-tab-admin-pending" class="hidden ml-1 text-[10px] px-1.5 py-0.2 rounded-full bg-amber-500 text-slate-950 font-black font-mono">0</span>
+          <button type="button" id="tab-btn-profile-admin" onclick="switchProfileTab('admin')" class="hidden min-w-0 flex-1 py-1.5 px-1.5 rounded-xl text-[11px] sm:text-xs font-medium transition flex items-center justify-center space-x-1 text-amber-400 hover:text-white truncate">
+            <span class="text-xs flex-shrink-0">👑</span>
+            <span class="truncate">Admin</span>
+            <span id="badge-tab-admin-pending" class="hidden text-[9px] px-1 py-0.2 rounded-full bg-amber-500 text-slate-950 font-black font-mono flex-shrink-0">0</span>
           </button>
         </div>
       </div>
@@ -1496,7 +1500,7 @@
               <span id="admin-summary-pill" class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-mono font-bold">Loading...</span>
             </div>
             <p class="text-[11px] text-slate-300 leading-relaxed">
-              Review pending Beta applications, test mobile push notifications, and monitor spot telemetry.
+              Review pending Beta applications and monitor registered riders & spot telemetry.
             </p>
             <a href="/admin" target="_blank" class="w-full py-2 px-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-sky-400 hover:text-white border border-sky-500/30 font-bold text-xs flex items-center justify-between transition shadow-sm group">
               <span class="flex items-center space-x-2">
@@ -1505,31 +1509,6 @@
               </span>
               <i data-lucide="external-link" class="w-3.5 h-3.5 text-sky-400 group-hover:translate-x-0.5 transition"></i>
             </a>
-          </div>
-
-          <!-- Mobile Push Notification Card -->
-          <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800 space-y-3">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-1.5">
-                <i data-lucide="bell" class="w-4 h-4 text-sky-400"></i>
-                <h4 class="font-bold text-white text-xs">Admin Lock Screen Push</h4>
-              </div>
-              <span id="admin-push-status-badge" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 font-mono">Checking...</span>
-            </div>
-            <p class="text-[11px] text-slate-400">
-              Get instant phone notifications when riders apply for Beta, submit suggestions, or add spots.
-            </p>
-            <div class="flex items-center gap-2">
-              <button type="button" id="btn-admin-enable-push" onclick="enableAdminDevicePush()" class="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 text-white font-bold text-xs shadow-md shadow-sky-500/20 transition flex items-center justify-center space-x-1.5 active:scale-95">
-                <i data-lucide="bell-ring" class="w-3.5 h-3.5"></i>
-                <span>Enable Push on Phone</span>
-              </button>
-              <button type="button" id="btn-admin-test-push" onclick="triggerAdminTestPush()" class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs border border-amber-500/30 transition flex items-center justify-center space-x-1.5 active:scale-95">
-                <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400"></i>
-                <span>Send Test Alert</span>
-              </button>
-            </div>
-            <p id="admin-push-feedback" class="text-[11px] text-slate-400 hidden"></p>
           </div>
 
           <!-- Pending Beta Applications Card -->
@@ -3209,10 +3188,10 @@
       if (tabBoards) tabBoards.classList.toggle('hidden', tab !== 'boards');
       if (tabAdmin) tabAdmin.classList.toggle('hidden', tab !== 'admin');
 
-      const activeClass = "flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-sky-600 text-white shadow-sm";
-      const inactiveClass = "flex-1 py-1.5 px-2 rounded-xl text-xs font-medium transition flex items-center justify-center space-x-1 text-slate-400 hover:text-white";
-      const activeAdminClass = "flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md shadow-amber-500/20";
-      const inactiveAdminClass = "flex-1 py-1.5 px-2 rounded-xl text-xs font-medium transition flex items-center justify-center space-x-1 text-amber-400 hover:text-white";
+      const activeClass = "min-w-0 flex-1 py-1.5 px-1.5 rounded-xl text-[11px] sm:text-xs font-bold transition flex items-center justify-center space-x-1 bg-sky-600 text-white shadow-sm truncate";
+      const inactiveClass = "min-w-0 flex-1 py-1.5 px-1.5 rounded-xl text-[11px] sm:text-xs font-medium transition flex items-center justify-center space-x-1 text-slate-400 hover:text-white truncate";
+      const activeAdminClass = "min-w-0 flex-1 py-1.5 px-1.5 rounded-xl text-[11px] sm:text-xs font-bold transition flex items-center justify-center space-x-1 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md shadow-amber-500/20 truncate";
+      const inactiveAdminClass = "min-w-0 flex-1 py-1.5 px-1.5 rounded-xl text-[11px] sm:text-xs font-medium transition flex items-center justify-center space-x-1 text-amber-400 hover:text-white truncate";
 
       if (btnSpecs) btnSpecs.className = tab === 'specs' ? activeClass : inactiveClass;
       if (btnKites) btnKites.className = tab === 'kites' ? activeClass : inactiveClass;
@@ -3742,6 +3721,9 @@
         }
 
         renderForecast();
+        if (authUser && authUser.email) {
+          syncUserDataQuiet();
+        }
       } catch (e) {
         console.error("Forecast fetch failed:", e);
         if (!state.forecastData) {
@@ -5165,33 +5147,75 @@
     async function refreshUserProfile(silent = true) {
       if (!authUser || !authUser.email) return;
       try {
+        // Purge any legacy test items (k_beat_*, b_beat_*) from local storage before syncing
+        if (Array.isArray(state.inventory)) {
+          const filteredInv = state.inventory.filter(g => !String(g.id || '').startsWith('k_beat_'));
+          if (filteredInv.length !== state.inventory.length) {
+            state.inventory = filteredInv;
+            localStorage.setItem('kf_inventory', JSON.stringify(state.inventory));
+          }
+        }
+        if (Array.isArray(state.boards)) {
+          const filteredBoards = state.boards.filter(b => !String(b.id || '').startsWith('b_beat_'));
+          if (filteredBoards.length !== state.boards.length) {
+            state.boards = filteredBoards;
+            localStorage.setItem('kf_boards', JSON.stringify(state.boards));
+          }
+        }
+
         const res = await fetch('/api/auth/sync', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: authUser.email })
+          body: JSON.stringify({
+            email: authUser.email,
+            name: state.user.name || authUser.name || '',
+            nationality: state.user.nationality || authUser.nationality || '',
+            gear: state.inventory || [],
+            boards: state.boards || [],
+            weight_kg: state.user.weight,
+            level: state.user.level,
+            board: state.user.board,
+            spot: state.spot,
+            favorite_spots: state.favorite_spots || []
+          })
         });
         const data = await res.json();
         if (res.ok && data.success && data.user) {
           authUser = data.user;
           localStorage.setItem('kf_auth_user', JSON.stringify(authUser));
+          if (!data.user.is_beta_rider && !isAdminUser()) {
+            localStorage.removeItem('hg_beta_mode');
+          }
+          if (data.user.name) {
+            state.user.name = data.user.name;
+            localStorage.setItem('kf_name', data.user.name);
+          }
+          if (data.user.nationality) {
+            state.user.nationality = data.user.nationality;
+            localStorage.setItem('kf_nationality', data.user.nationality);
+          }
           if (data.user.gear && Array.isArray(data.user.gear) && data.user.gear.length > 0) {
-            if (!state.inventory || state.inventory.length === 0) {
-              state.inventory = data.user.gear;
+            const cleanServerGear = data.user.gear.filter(g => !String(g.id || '').startsWith('k_beat_'));
+            if ((!state.inventory || state.inventory.length === 0) && cleanServerGear.length > 0) {
+              state.inventory = cleanServerGear;
               localStorage.setItem('kf_inventory', JSON.stringify(state.inventory));
-              renderGearInventory();
             }
           }
           if (data.user.boards && Array.isArray(data.user.boards) && data.user.boards.length > 0) {
-            if (!state.boards || state.boards.length === 0) {
-              state.boards = data.user.boards;
+            const cleanServerBoards = data.user.boards.filter(b => !String(b.id || '').startsWith('b_beat_'));
+            if ((!state.boards || state.boards.length === 0) && cleanServerBoards.length > 0) {
+              state.boards = cleanServerBoards;
               localStorage.setItem('kf_boards', JSON.stringify(state.boards));
             }
           }
           if (data.user.favorite_spots && Array.isArray(data.user.favorite_spots) && data.user.favorite_spots.length > 0) {
-            state.favorite_spots = data.user.favorite_spots;
-            localStorage.setItem('hg_favorite_spots', JSON.stringify(state.favorite_spots));
-            renderProfileFavorites();
+            if (!state.favorite_spots || state.favorite_spots.length === 0) {
+              state.favorite_spots = data.user.favorite_spots;
+              localStorage.setItem('hg_favorite_spots', JSON.stringify(state.favorite_spots));
+              renderProfileFavorites();
+            }
           }
+          renderGearInventory();
           updateAuthUI();
           renderBetaUI();
         }
@@ -7086,7 +7110,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=24').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=25').then(reg => {
           reg.update();
         }).catch(err => console.log('SW register failed:', err));
       }

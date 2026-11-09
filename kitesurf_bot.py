@@ -115,11 +115,13 @@ def load_users_db() -> dict:
             for v in t_data.get("spot_views", []):
                 em = (v.get("email") or "").strip().lower()
                 if em and "@" in em and em != "anonymous":
+                    r_name = (v.get("rider_name") or "").strip()
+                    nat_val = v.get("nationality") if v.get("nationality") and v.get("nationality") != "Undefined" else ""
                     if em not in db.get("users", {}):
                         db.setdefault("users", {})[em] = {
                             "email": em,
-                            "name": v.get("rider_name") or em.split("@")[0].title(),
-                            "nationality": v.get("nationality") if v.get("nationality") != "Undefined" else "",
+                            "name": r_name or em.split("@")[0].title(),
+                            "nationality": nat_val,
                             "registered_at": v.get("timestamp"),
                             "last_login": v.get("timestamp"),
                             "gear": [],
@@ -127,17 +129,39 @@ def load_users_db() -> dict:
                             "weight_kg": 75.0,
                             "level": "intermediate",
                             "board": "Twintip",
+                            "is_beta_rider": False,
+                            "beta_status": "none",
                             "spot": {"name": v.get("spot_name"), "lat": v.get("lat"), "lon": v.get("lon")}
                         }
                         changed = True
+                    else:
+                        u_obj = db["users"][em]
+                        em_prefix = em.split("@")[0].lower()
+                        cur_name = (u_obj.get("name") or "").strip()
+                        if r_name and r_name.lower() != em_prefix and (not cur_name or cur_name.lower() == em_prefix):
+                            u_obj["name"] = r_name
+                            changed = True
+                        if nat_val and not u_obj.get("nationality"):
+                            u_obj["nationality"] = nat_val
+                            changed = True
+                        ts = v.get("timestamp") or ""
+                        if ts and ts > (u_obj.get("last_login") or ""):
+                            u_obj["last_login"] = ts
+                            if v.get("spot_name"):
+                                u_obj["spot"] = {"name": v.get("spot_name"), "lat": v.get("lat"), "lon": v.get("lon")}
+                            changed = True
             if changed:
                 save_users_db(db)
     except Exception as e:
         print(f"Error reconciling users from telemetry: {e}")
 
-    # Auto-apply approved beta emails unless user opted out
+    # Purge any legacy test gear/boards (k_beat_*, b_beat_*) and enforce approved_set beta status
     approved_set = load_approved_beta_emails()
     for em, u in db.get("users", {}).items():
+        if isinstance(u.get("gear"), list):
+            u["gear"] = [g for g in u["gear"] if not str(g.get("id", "")).startswith("k_beat_")]
+        if isinstance(u.get("boards"), list):
+            u["boards"] = [b for b in u["boards"] if not str(b.get("id", "")).startswith("b_beat_")]
         if u.get("beta_status") == "left":
             u["is_beta_rider"] = False
             continue
@@ -147,7 +171,7 @@ def load_users_db() -> dict:
         else:
             u["is_beta_rider"] = False
             if u.get("beta_status") == "approved":
-                u["beta_status"] = "pending"
+                u["beta_status"] = "none"
     return db
 
 def save_users_db(db: dict):
@@ -3189,6 +3213,22 @@ def start_embedded_http_server(port: int = 8080):
                 self.wfile.write(json.dumps(summary).encode("utf-8"))
                 return
 
+            # 2e. API: Export Full Live Server State (Users + Telemetry + Approved Beta)
+            if path == "/api/admin/export-state":
+                import spot_telemetry
+                state_export = {
+                    "users_db": load_users_db(),
+                    "telemetry_db": spot_telemetry._load_telemetry(),
+                    "approved_beta": list(load_approved_beta_emails())
+                }
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Cache-Control", "no-cache")
+                self._send_cors_headers()
+                self.end_headers()
+                self.wfile.write(json.dumps(state_export, indent=2).encode("utf-8"))
+                return
+
             # 3. API: Kite Catalog
             if path == "/api/catalog":
                 from kite_catalog import KITE_CATALOG
@@ -4135,16 +4175,21 @@ def start_embedded_http_server(port: int = 8080):
                         }
 
                     user = db["users"][email]
-                    if "name" in data and data["name"]:
-                        user["name"] = data["name"]
+                    em_prefix = email.split("@")[0].lower()
+                    inc_name = (data.get("name") or "").strip()
+                    cur_name = (user.get("name") or "").strip()
+                    if inc_name and (inc_name.lower() != em_prefix or not cur_name):
+                        user["name"] = inc_name
                     if "nationality" in data and data["nationality"]:
                         user["nationality"] = data["nationality"].strip()
                     if "gear" in data and isinstance(data["gear"], list):
-                        if len(data["gear"]) > 0 or not user.get("gear"):
-                            user["gear"] = data["gear"]
+                        clean_gear = [g for g in data["gear"] if not str(g.get("id", "")).startswith("k_beat_")]
+                        if len(clean_gear) > 0 or not user.get("gear"):
+                            user["gear"] = clean_gear
                     if "boards" in data and isinstance(data["boards"], list):
-                        if len(data["boards"]) > 0 or not user.get("boards"):
-                            user["boards"] = data["boards"]
+                        clean_boards = [b for b in data["boards"] if not str(b.get("id", "")).startswith("b_beat_")]
+                        if len(clean_boards) > 0 or not user.get("boards"):
+                            user["boards"] = clean_boards
                     if "weight_kg" in data and data["weight_kg"] is not None:
                         try:
                             user["weight_kg"] = float(data["weight_kg"])

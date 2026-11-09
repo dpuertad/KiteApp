@@ -54,7 +54,7 @@
       "beta_approved_at": "2026-11-06T13:07:35.934278+00:00Z",
       "nationality": "Spanish",
       "registered_at": "2026-11-04T22:00:00Z",
-      "last_login": "2026-11-08T01:08:00Z",
+      "last_login": "2026-11-09T11:45:00Z",
       "spot_alerts": {
         "enabled": true,
         "enable_push": true,
@@ -71,49 +71,8 @@
       "nationality": "Swiss",
       "registered_at": "2026-11-08T00:39:35.595561Z",
       "last_login": "2026-11-08T01:00:39Z",
-      "gear": [
-        {
-          "id": "k_beat_1",
-          "category": "kite",
-          "kite_type": "tube",
-          "brand": "Duotone",
-          "model": "Evo",
-          "size": 12,
-          "year": 2025,
-          "active": true
-        },
-        {
-          "id": "k_beat_2",
-          "category": "kite",
-          "kite_type": "tube",
-          "brand": "Duotone",
-          "model": "Evo",
-          "size": 9,
-          "year": 2025,
-          "active": true
-        },
-        {
-          "id": "k_beat_3",
-          "category": "kite",
-          "kite_type": "tube",
-          "brand": "Duotone",
-          "model": "Rebel",
-          "size": 7,
-          "year": 2024,
-          "active": true
-        }
-      ],
-      "boards": [
-        {
-          "id": "b_beat_1",
-          "type": "Twintip",
-          "brand": "Duotone",
-          "model": "Jaime",
-          "size": "139",
-          "carbon": true,
-          "active": true
-        }
-      ],
+      "gear": [],
+      "boards": [],
       "weight_kg": 93.0,
       "level": "advanced",
       "board": "Twintip",
@@ -121,8 +80,7 @@
         "Icaraí de Amontada (Icaraizinho), Brazil"
       ],
       "is_beta_rider": false,
-      "beta_status": "pending",
-      "beta_applied_at": "2026-11-08T00:39:35.595561Z",
+      "beta_status": "none",
       "spot": {
         "name": "Icaraí de Amontada (Icaraizinho), Brazil",
         "lat": -3.0232,
@@ -131,9 +89,9 @@
     },
     "lipp.spam@gmail.com": {
       "email": "lipp.spam@gmail.com",
-      "name": "Seb",
+      "name": "Sebastian",
       "nationality": "German",
-      "registered_at": "2026-11-08T01:14:37.233220Z",
+      "registered_at": "2026-11-07T09:29:00Z",
       "last_login": "2026-11-08T01:14:37Z",
       "gear": [],
       "boards": [],
@@ -150,7 +108,178 @@
         "lat": -3.0232,
         "lon": -39.6433
       }
+    },
+    "maja.jan@gmx.de": {
+      "email": "maja.jan@gmx.de",
+      "name": "Marzena",
+      "nationality": "German",
+      "registered_at": "2026-11-07T12:11:00Z",
+      "last_login": "2026-11-07T12:11:00Z",
+      "gear": [],
+      "boards": [
+        {
+          "id": "b_marzena_1",
+          "type": "Twintip",
+          "brand": "Duotone",
+          "model": "Jaime SLS",
+          "size": "136",
+          "volume": null,
+          "mast": null,
+          "carbon": true,
+          "active": true
+        }
+      ],
+      "weight_kg": 75.0,
+      "level": "intermediate",
+      "board": "Twintip",
+      "favorite_spots": [
+        "Cumbuco, Brazil"
+      ],
+      "is_beta_rider": false,
+      "beta_status": "none",
+      "spot": {
+        "name": "Cumbuco, Brazil",
+        "lat": -3.6247,
+        "lon": -38.7297
+      }
+    },
+    "rjariego@gmail.com": {
+      "email": "rjariego@gmail.com",
+      "name": "Rafa",
+      "nationality": "Spanish",
+      "registered_at": "2026-11-08T06:29:00Z",
+      "last_login": "2026-11-08T06:29:00Z",
+      "gear": [],
+      "boards": [],
+      "weight_kg": 75.0,
+      "level": "advanced",
+      "board": "Twintip",
+      "favorite_spots": [],
+      "is_beta_rider": false,
+      "beta_status": "none",
+      "spot": {
+        "name": "Icaraí de Amontada (Icaraizinho), Brazil",
+        "lat": -3.0232,
+        "lon": -39.6433
+      }
+    },
+    "mauricebaier@aol.com": {
+      "email": "mauricebaier@aol.com",
+      "name": "Maurice",
+      "nationality": "German",
+      "registered_at": "2026-11-08T07:48:00Z",
+      "last_login": "2026-11-08T07:53:00Z",
+      "gear": [],
+      "boards": [],
+      "weight_kg": 73.0,
+      "level": "intermediate",
+      "board": "Twintip",
+      "favorite_spots": [],
+      "is_beta_rider": false,
+      "beta_status": "none",
+      "spot": {
+        "name": "Icaraí de Amontada (Icaraizinho), Brazil",
+        "lat": -3.0232,
+        "lon": -39.6433
+      }
+    },
+    "raphael.joss@gmail.com": {
+      "email": "raphael.joss@gmail.com",
+      "name": "Raphi",
+      "nationality": "Swiss",
+      "registered_at": "2026-11-08T08:41:00Z",
+      "last_login": "2026-11-09T11:44:55Z",
+      "gear": [],
+      "boards": [],
+      "weight_kg": 75.0,
+      "level": "intermediate",
+      "board": "Twintip",
+      "favorite_spots": [
+        "Icaraí de Amontada (Icaraizinho), Brazil",
+        "Praia de Maceió (Camocim), Brazil"
+      ],
+      "is_beta_rider": false,
+      "beta_status": "none",
+      "spot": {
+        "name": "Praia de Maceió (Camocim), Brazil",
+        "lat": -2.8935,
+        "lon": -40.8654
+      }
+    },
+    "tot3030@gmail.com": {
+      "email": "tot3030@gmail.com",
+      "name": "Banana Gorilla",
+      "nationality": "Swiss",
+      "registered_at": "2026-11-08T08:44:00Z",
+      "last_login": "2026-11-09T11:45:32Z",
+      "gear": [],
+      "boards": [],
+      "weight_kg": 75.0,
+      "level": "intermediate",
+      "board": "Twintip",
+      "favorite_spots": [
+        "Tatajuba (Camocim), Brazil",
+        "Praia de Maceió (Camocim), Brazil"
+      ],
+      "is_beta_rider": false,
+      "beta_status": "none",
+      "spot": {
+        "name": "Praia de Maceió (Camocim), Brazil",
+        "lat": -2.8935,
+        "lon": -40.8654
+      }
+    },
+    "benjaminadler@web.de": {
+      "email": "benjaminadler@web.de",
+      "name": "Benny",
+      "nationality": "Swiss",
+      "registered_at": "2026-11-08T08:46:00Z",
+      "last_login": "2026-11-08T08:46:00Z",
+      "gear": [],
+      "boards": [],
+      "weight_kg": 79.0,
+      "level": "intermediate",
+      "board": "Twintip",
+      "favorite_spots": [
+        "Icaraí de Amontada (Icaraizinho), Brazil"
+      ],
+      "is_beta_rider": false,
+      "beta_status": "none",
+      "spot": {
+        "name": "Icaraí de Amontada (Icaraizinho), Brazil",
+        "lat": -3.0232,
+        "lon": -39.6433
+      }
     }
   },
-  "feedback": []
+  "feedback": [
+    {
+      "name": "Sebastian",
+      "email": "lipp.spam@gmail.com",
+      "spot": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "feedback": "Looks really professional.",
+      "timestamp": "2026-11-07T09:29:00Z"
+    },
+    {
+      "name": "Raphi",
+      "email": "raphael.joss@gmail.com",
+      "spot": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "feedback": "My kite model is missing: Harlem Thrive v1",
+      "timestamp": "2026-11-08T08:41:00Z"
+    },
+    {
+      "name": "Banana Gorilla",
+      "email": "tot3030@gmail.com",
+      "spot": "Tatajuba (Camocim), Brazil",
+      "feedback": "Kit selection: if you select one kite, the next kite should start with the same kite as before for faster selection",
+      "timestamp": "2026-11-08T08:44:00Z"
+    },
+    {
+      "name": "Raphi",
+      "email": "raphael.joss@gmail.com",
+      "spot": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "feedback": "My board type is missing: Harlem Aspect",
+      "timestamp": "2026-11-08T08:46:00Z"
+    }
+  ]
 }

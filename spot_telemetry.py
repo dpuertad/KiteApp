@@ -169,15 +169,19 @@ def get_spot_analytics_summary() -> dict:
     nat_totals = data.get("nationality_totals", {})
     s_totals = data.get("search_totals", {})
     
-    # Load and reconcile registered riders from users_web_db
+    # Load and reconcile registered riders via kitesurf_bot.load_users_db()
     users_db = {"users": {}}
-    users_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "users_web_db.json")
-    if os.path.exists(users_file):
-        try:
-            with open(users_file, "r", encoding="utf-8") as f:
-                users_db = json.load(f)
-        except Exception:
-            pass
+    try:
+        import kitesurf_bot
+        users_db = kitesurf_bot.load_users_db()
+    except Exception:
+        users_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "users_web_db.json")
+        if os.path.exists(users_file):
+            try:
+                with open(users_file, "r", encoding="utf-8") as f:
+                    users_db = json.load(f)
+            except Exception:
+                pass
             
     users = users_db.get("users", {})
     registered_riders = []
