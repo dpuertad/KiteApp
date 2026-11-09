@@ -152,30 +152,31 @@
         </div>
       </div>
 
-      <!-- Quick Weight Control -->
-      <div class="bg-slate-950/60 rounded-xl p-3 border border-slate-800/80 flex items-center justify-between">
-        <div class="flex items-center space-x-2">
-          <i data-lucide="scale" class="w-4 h-4 text-sky-400"></i>
-          <span class="text-xs text-slate-400 font-medium">Rider Weight:</span>
-          <span id="profile-weight-display" class="text-sm font-bold text-white">75.0 kg</span>
+      <!-- Rider Specs Overview (Read-Only on landing page, edit & save inside Profile) -->
+      <div onclick="openProfileGearTab('specs')" title="Tap to view & edit specs in Rider Profile" class="cursor-pointer group bg-slate-950/70 hover:bg-slate-950/90 rounded-2xl p-3 border border-slate-800/80 hover:border-sky-500/40 transition flex items-center justify-between text-xs shadow-inner">
+        <!-- Weight Display -->
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 rounded-xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400">
+            <i data-lucide="scale" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <span class="text-[10px] text-slate-400 font-semibold block uppercase tracking-wide">Rider Weight</span>
+            <span id="profile-weight-display" class="text-sm font-bold text-white font-mono">75.0 kg</span>
+          </div>
         </div>
-        <div class="flex items-center space-x-1.5">
-          <button onclick="adjustWeight(-1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 text-xs font-bold border border-slate-700 flex items-center justify-center">-</button>
-          <input id="slider-weight" type="range" min="45" max="125" step="1" value="75" oninput="onWeightSlider(this.value)" class="w-24 accent-sky-500 cursor-pointer">
-          <button onclick="adjustWeight(1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 text-xs font-bold border border-slate-700 flex items-center justify-center">+</button>
-        </div>
-      </div>
 
-      <!-- Skill Level Selector (Beginner / Medium / Advanced) -->
-      <div class="mt-2.5 pt-2.5 border-t border-slate-800/80 flex items-center justify-between text-xs">
-        <span class="text-slate-400 font-medium flex items-center space-x-1.5">
-          <i data-lucide="gauge" class="w-3.5 h-3.5 text-sky-400"></i>
-          <span>Rider Level:</span>
-        </span>
-        <div class="flex items-center bg-slate-950/90 p-0.5 rounded-xl border border-slate-800">
-          <button type="button" id="btn-level-beginner" onclick="setRiderLevel('beginner')" class="px-2.5 py-1 rounded-lg font-semibold transition text-[11px] text-slate-400 hover:text-white">Beginner</button>
-          <button type="button" id="btn-level-intermediate" onclick="setRiderLevel('intermediate')" class="px-2.5 py-1 rounded-lg font-semibold transition text-[11px] bg-sky-600 text-white shadow-sm">Medium</button>
-          <button type="button" id="btn-level-advanced" onclick="setRiderLevel('advanced')" class="px-2.5 py-1 rounded-lg font-semibold transition text-[11px] text-slate-400 hover:text-white">Advanced</button>
+        <!-- Divider -->
+        <div class="h-7 w-px bg-slate-800/80"></div>
+
+        <!-- Level Display -->
+        <div class="flex items-center space-x-2.5">
+          <div class="text-right">
+            <span class="text-[10px] text-slate-400 font-semibold block uppercase tracking-wide">Rider Level</span>
+            <span id="profile-level-display" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">Medium</span>
+          </div>
+          <div class="w-8 h-8 rounded-xl bg-slate-800/80 group-hover:bg-sky-500/20 border border-slate-700/80 group-hover:border-sky-500/40 flex items-center justify-center text-slate-400 group-hover:text-sky-300 transition" title="Edit in Profile">
+            <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5"></i>
+          </div>
         </div>
       </div>
     </section>
@@ -1516,9 +1517,13 @@
           <div>
             <div class="flex justify-between items-center mb-1">
               <label class="font-semibold text-slate-300">Rider Weight (kg)</label>
-              <span id="modal-weight-val" class="text-sky-400 font-bold">75.0 kg</span>
+              <span id="modal-weight-val" class="text-sky-400 font-bold font-mono">75.0 kg</span>
             </div>
-            <input id="modal-rider-weight" type="range" min="45" max="120" step="1" oninput="onModalWeightSlider(this.value)" class="w-full accent-sky-500 cursor-pointer">
+            <div class="flex items-center space-x-2">
+              <button type="button" onclick="adjustModalWeight(-1)" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 text-xs font-bold border border-slate-700 flex items-center justify-center flex-shrink-0">-</button>
+              <input id="modal-rider-weight" type="range" min="45" max="125" step="1" oninput="onModalWeightSlider(this.value)" class="flex-1 accent-sky-500 cursor-pointer">
+              <button type="button" onclick="adjustModalWeight(1)" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 text-xs font-bold border border-slate-700 flex items-center justify-center flex-shrink-0">+</button>
+            </div>
           </div>
 
           <!-- Rider Level Selector -->
@@ -1527,9 +1532,9 @@
               <label class="font-semibold text-slate-300">Skill Level</label>
             </div>
             <div class="flex items-center space-x-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
-              <button type="button" id="modal-btn-level-beginner" onclick="setRiderLevel('beginner')" class="flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition text-slate-400 hover:text-white">Beginner</button>
-              <button type="button" id="modal-btn-level-intermediate" onclick="setRiderLevel('intermediate')" class="flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition bg-sky-600 text-white shadow-sm">Medium</button>
-              <button type="button" id="modal-btn-level-advanced" onclick="setRiderLevel('advanced')" class="flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition text-slate-400 hover:text-white">Advanced</button>
+              <button type="button" id="modal-btn-level-beginner" onclick="setModalRiderLevel('beginner')" class="flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition text-slate-400 hover:text-white">Beginner</button>
+              <button type="button" id="modal-btn-level-intermediate" onclick="setModalRiderLevel('intermediate')" class="flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition bg-sky-600 text-white shadow-sm">Medium</button>
+              <button type="button" id="modal-btn-level-advanced" onclick="setModalRiderLevel('advanced')" class="flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition text-slate-400 hover:text-white">Advanced</button>
             </div>
           </div>
 
@@ -2639,28 +2644,53 @@
       }
     }
 
+    let pendingProfileLevel = 'intermediate';
+    let pendingProfileWeight = 75.0;
+
     function setRiderLevel(lvl) {
       state.user.level = lvl;
+      pendingProfileLevel = lvl;
       localStorage.setItem('kf_level', lvl);
       updateLevelButtonsUI();
       renderQuiver();
       renderForecast();
     }
 
-    function updateLevelButtonsUI() {
-      const lvl = state.user.level || 'intermediate';
+    function setModalRiderLevel(lvl) {
+      pendingProfileLevel = lvl;
       ['beginner', 'intermediate', 'advanced'].forEach(l => {
-        const mainBtn = document.getElementById(`btn-level-${l}`);
-        if (mainBtn) {
-          if (l === lvl) {
-            mainBtn.className = "px-2.5 py-1 rounded-lg font-semibold transition text-[11px] bg-sky-600 text-white shadow-sm";
-          } else {
-            mainBtn.className = "px-2.5 py-1 rounded-lg font-semibold transition text-[11px] text-slate-400 hover:text-white";
-          }
-        }
         const modalBtn = document.getElementById(`modal-btn-level-${l}`);
         if (modalBtn) {
           if (l === lvl) {
+            modalBtn.className = "flex-1 py-1.5 rounded-lg text-[11px] font-bold transition bg-sky-600 text-white shadow-sm";
+          } else {
+            modalBtn.className = "flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition text-slate-400 hover:text-white";
+          }
+        }
+      });
+    }
+
+    function updateLevelButtonsUI() {
+      const lvl = state.user.level || 'intermediate';
+      const levelDisplayEl = document.getElementById('profile-level-display');
+      if (levelDisplayEl) {
+        if (lvl === 'beginner') {
+          levelDisplayEl.innerText = 'Beginner';
+          levelDisplayEl.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+        } else if (lvl === 'intermediate') {
+          levelDisplayEl.innerText = 'Medium';
+          levelDisplayEl.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30';
+        } else {
+          levelDisplayEl.innerText = 'Advanced';
+          levelDisplayEl.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30';
+        }
+      }
+
+      const activeModalLvl = pendingProfileLevel || lvl;
+      ['beginner', 'intermediate', 'advanced'].forEach(l => {
+        const modalBtn = document.getElementById(`modal-btn-level-${l}`);
+        if (modalBtn) {
+          if (l === activeModalLvl) {
             modalBtn.className = "flex-1 py-1.5 rounded-lg text-[11px] font-bold transition bg-sky-600 text-white shadow-sm";
           } else {
             modalBtn.className = "flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition text-slate-400 hover:text-white";
@@ -3420,6 +3450,24 @@
 
     function openProfileGearTab(tab = 'specs') {
       switchProfileTab(tab);
+
+      // Pre-fill specs fields with saved values
+      pendingProfileWeight = state.user.weight || 75.0;
+      pendingProfileLevel = state.user.level || 'intermediate';
+
+      const nameInput = document.getElementById('modal-rider-name');
+      if (nameInput) nameInput.value = state.user.name || (authUser ? authUser.name : '') || '';
+      const natInput = document.getElementById('modal-rider-nationality');
+      if (natInput) natInput.value = state.user.nationality || (authUser ? authUser.nationality : '') || '';
+      const mWeight = document.getElementById('modal-rider-weight');
+      if (mWeight) mWeight.value = pendingProfileWeight;
+      const mWeightVal = document.getElementById('modal-weight-val');
+      if (mWeightVal) mWeightVal.innerText = `${pendingProfileWeight.toFixed(1)} kg`;
+      const mBoard = document.getElementById('modal-board-type');
+      if (mBoard && state.user.board) mBoard.value = state.user.board;
+
+      setModalRiderLevel(pendingProfileLevel);
+
       const modal = document.getElementById('modal-profile');
       if (modal && modal.classList.contains('hidden')) {
         toggleModal('modal-profile');
@@ -3427,17 +3475,17 @@
     }
 
     function onModalWeightSlider(val) {
-      const w = parseFloat(val);
-      state.user.weight = w;
-      localStorage.setItem('kf_weight', w);
-      const disp = document.getElementById('profile-weight-display');
-      if (disp) disp.innerText = `${w.toFixed(1)} kg`;
+      pendingProfileWeight = parseFloat(val);
       const mVal = document.getElementById('modal-weight-val');
-      if (mVal) mVal.innerText = `${w.toFixed(1)} kg`;
-      const sliderMain = document.getElementById('slider-weight');
-      if (sliderMain) sliderMain.value = w;
-      renderQuiver();
-      renderForecast();
+      if (mVal) mVal.innerText = `${pendingProfileWeight.toFixed(1)} kg`;
+    }
+
+    function adjustModalWeight(delta) {
+      pendingProfileWeight = Math.max(45, Math.min(125, (pendingProfileWeight || 75.0) + delta));
+      const mSlider = document.getElementById('modal-rider-weight');
+      if (mSlider) mSlider.value = pendingProfileWeight;
+      const mVal = document.getElementById('modal-weight-val');
+      if (mVal) mVal.innerText = `${pendingProfileWeight.toFixed(1)} kg`;
     }
 
 
@@ -5827,7 +5875,7 @@
     function saveModalProfile() {
       const name = (document.getElementById('modal-rider-name')?.value || '').trim();
       const nat = (document.getElementById('modal-rider-nationality')?.value || '').trim();
-      const weight = parseFloat(document.getElementById('modal-rider-weight')?.value || state.user.weight || 75);
+      const weight = parseFloat(pendingProfileWeight || document.getElementById('modal-rider-weight')?.value || state.user.weight || 75);
       const board = document.getElementById('modal-board-type')?.value || state.user.board;
 
       if (name) {
@@ -5843,21 +5891,30 @@
       if (!isNaN(weight)) {
         state.user.weight = weight;
         localStorage.setItem('kf_weight', weight);
-        document.getElementById('profile-weight-display').innerText = `${weight.toFixed(1)} kg`;
-        document.getElementById('slider-weight').value = weight;
+        const wDisp = document.getElementById('profile-weight-display');
+        if (wDisp) wDisp.innerText = `${weight.toFixed(1)} kg`;
+      }
+      if (pendingProfileLevel) {
+        state.user.level = pendingProfileLevel;
+        localStorage.setItem('kf_level', pendingProfileLevel);
       }
       if (board) {
         state.user.board = board;
         localStorage.setItem('kf_board', board);
       }
       if (authUser) {
+        authUser.weight_kg = state.user.weight;
+        authUser.level = state.user.level;
+        authUser.board = state.user.board;
         localStorage.setItem('kf_auth_user', JSON.stringify(authUser));
       }
       updateAuthUI();
+      updateLevelButtonsUI();
+      renderQuiver();
       renderForecast();
       toggleModal('modal-profile');
       syncUserDataQuiet();
-      alert("✅ Rider profile & nationality updated!");
+      alert("✅ Rider profile updated!");
     }
 
     function resetProfileAll() {
@@ -5872,7 +5929,7 @@
         state.user.level = 'intermediate';
         state.user.name = '';
         document.getElementById('rider-name-input').value = '';
-        document.getElementById('slider-weight').value = 75;
+        const swEl = document.getElementById('slider-weight'); if (swEl) swEl.value = 75;
         document.getElementById('profile-weight-display').innerText = '75.0 kg';
         updateLevelButtonsUI();
         updateSpotDisplayState();
@@ -7424,7 +7481,7 @@
       } catch (e) {}
 
       document.getElementById('profile-weight-display').innerText = `${state.user.weight.toFixed(1)} kg`;
-      document.getElementById('slider-weight').value = state.user.weight;
+      const swEl2 = document.getElementById('slider-weight'); if (swEl2) swEl2.value = state.user.weight;
       updateLevelButtonsUI();
       updateScheduleViewUI();
 
@@ -7474,7 +7531,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=37').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=38').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
