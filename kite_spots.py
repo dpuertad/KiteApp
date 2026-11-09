@@ -80,7 +80,7 @@ GLOBAL_KITE_SPOTS = [
         "lat": -3.3458,
         "lon": -39.1417,
         "timezone": "America/Fortaleza",
-        "beach_angle": 350.0,
+        "beach_angle": 25.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Dune Accel",
         "thermal_boost": 0.16,
@@ -172,7 +172,7 @@ GLOBAL_KITE_SPOTS = [
         "lat": -2.9833,
         "lon": -40.1167,
         "timezone": "America/Fortaleza",
-        "beach_angle": 350.0,
+        "beach_angle": 25.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Lagoon Chimney",
         "thermal_boost": 0.2,
@@ -194,7 +194,7 @@ GLOBAL_KITE_SPOTS = [
         "lat": -2.8139,
         "lon": -40.4189,
         "timezone": "America/Fortaleza",
-        "beach_angle": 340.0,
+        "beach_angle": 30.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Prea Trade Venturi",
         "thermal_boost": 0.2,
@@ -237,7 +237,7 @@ GLOBAL_KITE_SPOTS = [
         "lat": -2.9031,
         "lon": -41.5361,
         "timezone": "America/Fortaleza",
-        "beach_angle": 330.0,
+        "beach_angle": 20.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Delta Thermal",
         "thermal_boost": 0.18,
@@ -258,7 +258,7 @@ GLOBAL_KITE_SPOTS = [
         "lat": -2.915,
         "lon": -41.442,
         "timezone": "America/Fortaleza",
-        "beach_angle": 340.0,
+        "beach_angle": 20.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Flatwater Thermal",
         "thermal_boost": 0.18,
@@ -279,7 +279,7 @@ GLOBAL_KITE_SPOTS = [
         "lat": -2.5714,
         "lon": -42.7483,
         "timezone": "America/Fortaleza",
-        "beach_angle": 350.0,
+        "beach_angle": 25.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Lençóis Heating",
         "thermal_boost": 0.18,
@@ -1313,7 +1313,7 @@ GLOBAL_KITE_SPOTS = [
         "lat": -2.825,
         "lon": -40.59,
         "timezone": "America/Fortaleza",
-        "beach_angle": 340.0,
+        "beach_angle": 20.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Mangrove Flat",
         "thermal_boost": 0.22,
@@ -1323,8 +1323,8 @@ GLOBAL_KITE_SPOTS = [
             "mangue seco jeri",
             "rio guriu"
         ],
-        "spot_type": "lake",
-        "elevation": 434
+        "spot_type": "lagoon",
+        "elevation": 0
     },
     {
         "id": "tatajuba",
@@ -1336,7 +1336,7 @@ GLOBAL_KITE_SPOTS = [
         "lat": -2.8595,
         "lon": -40.6948,
         "timezone": "America/Fortaleza",
-        "beach_angle": 330.0,
+        "beach_angle": 20.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Dune Estuary Venturi",
         "thermal_boost": 0.22,
@@ -1360,7 +1360,7 @@ GLOBAL_KITE_SPOTS = [
         "lat": -2.88,
         "lon": -40.83,
         "timezone": "America/Fortaleza",
-        "beach_angle": 340.0,
+        "beach_angle": 20.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Outer Reef Trade",
         "thermal_boost": 0.2,
@@ -2638,7 +2638,6 @@ GLOBAL_KITE_SPOTS = [
         ]
     }
 ]
-
 
 def haversine_distance_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     """Calculates great-circle distance between two GPS points in kilometers."""

@@ -54,7 +54,7 @@
       "beta_approved_at": "2026-11-06T13:07:35.934278+00:00Z",
       "nationality": "Spanish",
       "registered_at": "2026-11-04T22:00:00Z",
-      "last_login": "2026-11-09T12:24:08.748785+00:00Z",
+      "last_login": "2026-11-09T12:49:08.902939+00:00Z",
       "spot_alerts": {
         "enabled": true,
         "enable_push": true,
@@ -262,7 +262,8 @@
       "spot": {
         "name": "Praia de Maceió (Camocim), Brazil",
         "lat": -2.8935,
-        "lon": -40.8654
+        "lon": -40.8654,
+        "beach_angle": 25.0
       }
     },
     "tot3030@gmail.com": {
@@ -315,7 +316,7 @@
         "lat": -2.88,
         "lon": -40.83,
         "timezone": "America/Fortaleza",
-        "beach_angle": 340,
+        "beach_angle": 25.0,
         "model_label": "ECMWF (9km) + Outer Reef Trade"
       },
       "last_sync": "2026-11-09T12:22:44.000576Z"
@@ -325,7 +326,7 @@
       "name": "Benny",
       "nationality": "Swiss",
       "registered_at": "2026-11-08T08:46:00Z",
-      "last_login": "2026-11-09T12:23:41.473682+00:00Z",
+      "last_login": "2026-11-09T12:30:25.120705+00:00Z",
       "gear": [
         {
           "category": "kite",
@@ -395,7 +396,7 @@
         "beach_angle": 55,
         "model_label": "ECMWF (9km) + Bay Venturi"
       },
-      "last_sync": "2026-11-09T12:23:42.967570Z",
+      "last_sync": "2026-11-09T12:30:26.621995Z",
       "beta_applied_at": "2026-11-09T12:18:52.523990+00:00Z",
       "beta_approved_at": "2026-11-09T12:19:29.432071+00:00Z"
     }

@@ -720,6 +720,10 @@ def resolve_spot_model_and_angle(lat: float, lon: float, country_code: str = "",
     return preferred_model, model_label, b_angle
 
 def resolve_beach_angle(spot_name: str, custom_angle=None) -> float:
+    clean_n = (spot_name or "").lower()
+    for br_spot in ["maceio", "maceió", "camocim", "tatajuba", "guriu", "guriú", "barra grande", "macapa", "macapá", "atins", "guajiru", "prea", "preá"]:
+        if br_spot in clean_n:
+            return 25.0
     if custom_angle is not None:
         if isinstance(custom_angle, (int, float)):
             return float(custom_angle)
@@ -1154,20 +1158,30 @@ def fetch_tides_both_days(lat: float, lon: float, timezone_str: str = "auto") ->
 
 GLOBAL_THERMAL_SPOTS = {
     # Brazil (Ceará, Piauí, Maranhão) - World-renowned trade + sand dune thermal venturi
-    "cumbuco": {"name": "Cumbuco", "boost_pct": 0.16, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Sand-dune thermal venturi"},
-    "caucaia": {"name": "Caucaia/Cumbuco", "boost_pct": 0.16, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Sand-dune thermal venturi"},
-    "taiba": {"name": "Taíba", "boost_pct": 0.18, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Lagoon & point thermal boost"},
-    "paracuru": {"name": "Paracuru", "boost_pct": 0.18, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Quebra Mar coastal thermal boost"},
-    "lagoinha": {"name": "Lagoinha", "boost_pct": 0.16, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Dune thermal acceleration"},
-    "flecheiras": {"name": "Flecheiras", "boost_pct": 0.15, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Coastal reef thermal draw"},
-    "guajiru": {"name": "Ilha do Guajirú", "boost_pct": 0.20, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Flatwater lagoon thermal chimney"},
-    "itapipoca": {"name": "Ilha do Guajirú", "boost_pct": 0.20, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Flatwater lagoon thermal chimney"},
-    "prea": {"name": "Preá", "boost_pct": 0.20, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Trade & dune venturi"},
-    "jericoacoara": {"name": "Jericoacoara", "boost_pct": 0.22, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "National park dune thermal chimney"},
-    "jeri": {"name": "Jericoacoara", "boost_pct": 0.22, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "National park dune thermal chimney"},
-    "macapa": {"name": "Macapá", "boost_pct": 0.18, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Parnaíba delta thermal boost"},
-    "barra grande": {"name": "Barra Grande", "boost_pct": 0.18, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Piauí flatwater thermal boost"},
-    "atins": {"name": "Atins", "boost_pct": 0.18, "peak_start": 11, "peak_end": 16, "months": [7,8,9,10,11,12,1], "desc": "Lençóis Maranhenses dune heating"},
+    "cumbuco": {"name": "Cumbuco", "boost_pct": 0.16, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "Sand-dune thermal venturi"},
+    "caucaia": {"name": "Caucaia/Cumbuco", "boost_pct": 0.16, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "Sand-dune thermal venturi"},
+    "taiba": {"name": "Taíba", "boost_pct": 0.18, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "Lagoon & point thermal boost"},
+    "paracuru": {"name": "Paracuru", "boost_pct": 0.18, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "Quebra Mar coastal thermal boost"},
+    "lagoinha": {"name": "Lagoinha", "boost_pct": 0.16, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "Dune thermal acceleration"},
+    "flecheiras": {"name": "Flecheiras", "boost_pct": 0.15, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "Coastal reef thermal draw"},
+    "guajiru": {"name": "Ilha do Guajirú", "boost_pct": 0.20, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "Flatwater lagoon thermal chimney"},
+    "itapipoca": {"name": "Ilha do Guajirú", "boost_pct": 0.20, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "Flatwater lagoon thermal chimney"},
+    "prea": {"name": "Preá", "boost_pct": 0.20, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "Trade & dune venturi"},
+    "jericoacoara": {"name": "Jericoacoara", "boost_pct": 0.22, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "National park dune thermal chimney"},
+    "jeri": {"name": "Jericoacoara", "boost_pct": 0.22, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "National park dune thermal chimney"},
+    "icarai": {"name": "Icaraizinho", "boost_pct": 0.18, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "Bay venturi & dune thermal acceleration"},
+    "amontada": {"name": "Icaraizinho", "boost_pct": 0.18, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "Bay venturi & dune thermal acceleration"},
+    "moitas": {"name": "Moitas", "boost_pct": 0.18, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "River mouth & dune thermal boost"},
+    "patos": {"name": "Lagoa dos Patos", "boost_pct": 0.18, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "Coastal dune thermal acceleration"},
+    "guriu": {"name": "Guriú", "boost_pct": 0.22, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "Mangrove channel & dune venturi"},
+    "tatajuba": {"name": "Tatajuba", "boost_pct": 0.22, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "Lagoon & sand dune thermal venturi"},
+    "maceio": {"name": "Praia de Maceió (Camocim)", "boost_pct": 0.22, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "Camocim sand-dune & trade venturi"},
+    "maceió": {"name": "Praia de Maceió (Camocim)", "boost_pct": 0.22, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "Camocim sand-dune & trade venturi"},
+    "camocim": {"name": "Camocim", "boost_pct": 0.22, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "Camocim sand-dune & trade venturi"},
+    "bitupita": {"name": "Bitupitá", "boost_pct": 0.19, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "Ceará-Piauí border trade venturi"},
+    "macapa": {"name": "Macapá", "boost_pct": 0.18, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "Parnaíba delta thermal boost"},
+    "barra grande": {"name": "Barra Grande", "boost_pct": 0.18, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "Piauí flatwater thermal boost"},
+    "atins": {"name": "Atins", "boost_pct": 0.18, "peak_start": 9, "peak_end": 17, "months": [7,8,9,10,11,12,1], "desc": "Lençóis Maranhenses dune heating"},
     # Europe
     "tarifa": {"name": "Tarifa", "boost_pct": 0.22, "peak_start": 12, "peak_end": 17, "months": [1,2,3,4,5,6,7,8,9,10,11,12], "desc": "Strait of Gibraltar venturi & Levante thermal acceleration"},
     "lances": {"name": "Tarifa Los Lances", "boost_pct": 0.22, "peak_start": 12, "peak_end": 17, "months": [1,2,3,4,5,6,7,8,9,10,11,12], "desc": "Strait of Gibraltar venturi & Levante thermal acceleration"},
@@ -1321,16 +1335,34 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
     if primary_model == "best_match":
         models_param = "best_match,ecmwf_ifs025,gfs_seamless,icon_seamless"
 
+    spot_name_check = (spot.get("name") or "").lower()
+    is_inland_lake = (
+        spot.get("spot_type") == "lake"
+        or "lake" in spot_name_check
+        or "lago" in spot_name_check
+        or "see" in spot_name_check
+        or "silvaplana" in spot_name_check
+        or "garda" in spot_name_check
+        or "como" in spot_name_check
+    )
+    # For NE Brazil coastal trade-wind beaches, step 0.08 deg (~8km) seaward (North-Northeast)
+    # so GFS (13km) & ECMWF (9km) sample the pure offshore marine trade wind like Windguru, free of coastal land drag
+    q_lat, q_lon = lat, lon
+    if not is_inland_lake and (-6.5 <= lat <= -1.5 and -44.0 <= lon <= -34.5):
+        q_lat = round(lat + 0.08, 4)
+        q_lon = round(lon + 0.03, 4)
+
     params = {
-        "latitude": lat,
-        "longitude": lon,
+        "latitude": q_lat,
+        "longitude": q_lon,
         "current": "temperature_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,wind_gusts_10m,weather_code",
         "hourly": "temperature_2m,apparent_temperature,wind_speed_10m,wind_direction_10m,wind_gusts_10m,weather_code",
         "daily": "weather_code,temperature_2m_max,temperature_2m_min,temperature_2m_mean,wind_speed_10m_max,wind_gusts_10m_max,wind_direction_10m_dominant",
         "models": models_param,
         "wind_speed_unit": "kn",
         "timezone": spot.get("timezone", "auto"),
-        "forecast_days": 7
+        "forecast_days": 7,
+        "cell_selection": "land" if is_inland_lake else "sea"
     }
     url = f"https://api.open-meteo.com/v1/forecast?{urllib.parse.urlencode(params)}"
     req = urllib.request.Request(url, headers={"User-Agent": "KiteForecastBot/1.0"})
@@ -1370,11 +1402,35 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
             result.append(val)
         return result
 
-    speeds = clean_hourly_array(raw_speeds, ecmwf_speeds, 14.0)
+    base_speeds = clean_hourly_array(raw_speeds, ecmwf_speeds, 14.0)
+    ec_clean = clean_hourly_array(ecmwf_speeds, base_speeds, 14.0)
+    gf_clean = clean_hourly_array(gfs_speeds, base_speeds, 14.0)
+
+    # For coastal/ocean spots using best_match, blend the top marine models (GFS + ECMWF + BestMatch)
+    # so damped land-contaminated blends never under-predict coastal trade winds vs Windguru
+    if not is_inland_lake and primary_model == "best_match":
+        speeds = []
+        for i in range(len(base_speeds)):
+            candidates = sorted([base_speeds[i], ec_clean[i], gf_clean[i]], reverse=True)
+            # Weighted average of the top 2 marine models (e.g. GFS 13km & ECMWF 9km)
+            speeds.append(round(0.55 * candidates[0] + 0.45 * candidates[1], 2))
+    else:
+        speeds = base_speeds
 
     bm_gusts = hourly.get("wind_gusts_10m_best_match") or hourly.get("wind_gusts_10m", [])
     raw_gusts = hourly.get(f"wind_gusts_10m_{primary_model}") or bm_gusts
-    gusts = clean_hourly_array(raw_gusts, [s * 1.25 for s in speeds], 18.0)
+    ec_gusts = hourly.get("wind_gusts_10m_ecmwf_ifs025", [])
+    gf_gusts = hourly.get("wind_gusts_10m_gfs_seamless", [])
+    base_gusts = clean_hourly_array(raw_gusts, [s * 1.25 for s in speeds], 18.0)
+    if not is_inland_lake and primary_model == "best_match":
+        ec_g_clean = clean_hourly_array(ec_gusts, base_gusts, 18.0)
+        gf_g_clean = clean_hourly_array(gf_gusts, base_gusts, 18.0)
+        gusts = [
+            max(base_gusts[i], ec_g_clean[i], gf_g_clean[i], round(speeds[i] * 1.24, 1))
+            for i in range(len(speeds))
+        ]
+    else:
+        gusts = base_gusts
 
     bm_dirs = hourly.get("wind_direction_10m_best_match") or hourly.get("wind_direction_10m", [])
     raw_dirs = hourly.get(f"wind_direction_10m_{primary_model}") or bm_dirs
@@ -1484,8 +1540,12 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
         except Exception:
             cur_hr = 12
 
-    raw_cur_wind = round_knots(current.get("wind_speed_10m", speeds[cur_hr] if len(speeds) > cur_hr else 14.0))
-    raw_cur_gust = round_knots(current.get("wind_gusts_10m", gusts[cur_hr] if len(gusts) > cur_hr else raw_cur_wind))
+    cur_api_w = current.get("wind_speed_10m")
+    cur_slot_w = speeds[cur_hr] if len(speeds) > cur_hr else 14.0
+    raw_cur_wind = round_knots(max(float(cur_api_w or 0), float(cur_slot_w)))
+    cur_api_g = current.get("wind_gusts_10m")
+    cur_slot_g = gusts[cur_hr] if len(gusts) > cur_hr else raw_cur_wind * 1.25
+    raw_cur_gust = round_knots(max(float(cur_api_g or 0), float(cur_slot_g), raw_cur_wind * 1.22))
     cur_dir_deg = round(current.get("wind_direction_10m", directions[cur_hr] if len(directions) > cur_hr else 90))
     cur_dir = degrees_to_cardinal(cur_dir_deg)
     cur_temp = round(current.get("temperature_2m", temps[cur_hr] if len(temps) > cur_hr else 18.0), 1)
@@ -1566,12 +1626,36 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
             day_name = "Today" if d == 0 else ("Tomorrow" if d == 1 else f"Day +{d}")
             date_display = dt_str
 
-        h_start = d * 24 + 8
-        h_end = d * 24 + 19
-        d_speeds = [speeds[h] for h in range(h_start, min(h_end, len(speeds)))]
-        d_gusts = [gusts[h] for h in range(h_start, min(h_end, len(gusts)))]
-        d_dirs = [directions[h] for h in range(h_start, min(h_end, len(directions)))]
-        d_temps = [temps[h] for h in range(h_start, min(h_end, len(temps)))]
+        day_hourly = []
+        d_speeds = []
+        d_gusts = []
+        d_dirs = []
+        for h_sub in range(7, 20):
+            full_h = d * 24 + h_sub
+            if full_h < len(speeds):
+                raw_hw = speeds[full_h]
+                raw_hg = gusts[full_h] if full_h < len(gusts) else raw_hw * 1.25
+                h_d = round(directions[full_h]) if full_h < len(directions) else 90
+                h_t = temps[full_h] if full_h < len(temps) else 28.0
+                h_shore = calculate_shoreline_status(h_d, beach_angle)
+                h_cal = calculate_thermal_calibration(
+                    h_sub, raw_hw, raw_hg, h_t, today_sst,
+                    spot.get("name", ""), shore_diff=h_shore.get("relative_angle", 45.0), month=cur_month
+                )
+                h_w = h_cal["boosted_wind"]
+                h_g = h_cal["boosted_gust"]
+                day_hourly.append({
+                    "hour": f"{h_sub:02d}:00",
+                    "wind_kts": h_w,
+                    "gust_kts": h_g,
+                    "direction": degrees_to_cardinal(h_d),
+                    "degrees": h_d,
+                    "shoreline": h_shore
+                })
+                if 8 <= h_sub <= 18:
+                    d_speeds.append(h_w)
+                    d_gusts.append(h_g)
+                    d_dirs.append(h_d)
 
         peak_w = round_knots(max(d_speeds) if d_speeds else 15.0)
         min_w = round_knots(min(d_speeds) if d_speeds else 10.0)
@@ -1597,23 +1681,7 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
         end_w = min(19, best_hr_idx + 2)
         best_window = f"{start_w:02d}:00 – {end_w:02d}:00"
 
-        day_model = short_model if d < 2 else "ECMWF IFS (9km) Synoptic Ensemble"
-
-        day_hourly = []
-        for h_sub in range(7, 20):
-            full_h = d * 24 + h_sub
-            if full_h < len(speeds):
-                h_w = round_knots(speeds[full_h])
-                h_g = round_knots(gusts[full_h]) if full_h < len(gusts) else h_w
-                h_d = round(directions[full_h]) if full_h < len(directions) else 90
-                day_hourly.append({
-                    "hour": f"{h_sub:02d}:00",
-                    "wind_kts": h_w,
-                    "gust_kts": h_g,
-                    "direction": degrees_to_cardinal(h_d),
-                    "degrees": h_d,
-                    "shoreline": calculate_shoreline_status(h_d, beach_angle)
-                })
+        day_model = short_model if d < 2 else "ECMWF IFS (9km) + GFS Marine Blend" 
 
         weekly_forecast.append({
             "day_index": d,
@@ -3254,6 +3322,16 @@ def start_embedded_http_server(port: int = 8080):
                             beach_angle = float(beach_angle_param)
                         except ValueError:
                             pass
+                    # Override stale client beach_angle if spot matches curated catalog
+                    try:
+                        from kite_spots import GLOBAL_KITE_SPOTS
+                        n_clean = (name or "").strip().lower()
+                        for cs in GLOBAL_KITE_SPOTS:
+                            if cs.get("name", "").lower() == n_clean or (abs(cs.get("lat", 0) - lat) < 0.04 and abs(cs.get("lon", 0) - lon) < 0.04):
+                                beach_angle = float(cs.get("beach_angle", beach_angle or 45.0))
+                                break
+                    except Exception:
+                        pass
                     # Telemetry tracking for spot activity & rider demographics
                     try:
                         import spot_telemetry
