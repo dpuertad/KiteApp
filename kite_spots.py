@@ -477,7 +477,7 @@ GLOBAL_KITE_SPOTS = [
         "lat": 27.8184,
         "lon": -15.4243,
         "timezone": "Atlantic/Canary",
-        "beach_angle": 90.0,
+        "beach_angle": 45.0,
         "preferred_model": "best_match",
         "model_label": "ECMWF (9km) + Trade Venturi",
         "thermal_boost": 0.2,
@@ -4218,3 +4218,59 @@ def search_spots_catalog(query: str, max_results: int = 15) -> list:
 
     matches.sort(key=lambda s: -s["match_score"])
     return matches[:max_results]
+
+def get_spot_conditions(spot: dict) -> dict:
+    """Returns curated spot water conditions, depth, bottom type, and badges for riders."""
+    name_l = (spot.get("name") or "").lower()
+    s_type = spot.get("spot_type") or "ocean"
+    
+    # 1. Water Type
+    if s_type == "lagoon" or any(k in name_l for k in ["lagoon", "lagoa", "mar menor", "stagnone", "mangroovy", "shark bay", "cauipe", "guajiru", "hatteras", "soma bay"]):
+        water_type = "Lagoon / Flat Water"
+        water_icon = "🏝️"
+    elif s_type == "lake" or any(k in name_l for k in ["lake", "garda", "como", "silvaplana", "uri", "reschen"]):
+        water_type = "Freshwater Lake"
+        water_icon = "🏔️"
+    elif any(k in name_l for k in ["pozo", "one eye", "manawa", "ponta preta", "hookipa", "guincho", "pacasmayo", "cotillo"]):
+        water_type = "Ocean Waves"
+        water_icon = "🏄"
+    else:
+        water_type = "Ocean Chop & Swell"
+        water_icon = "🌊"
+
+    # 2. Bottom Type
+    if any(k in name_l for k in ["pozo", "one eye", "reef", "le morne", "dakhla speed", "fuerteventura", "lanzarote", "famara"]):
+        bottom_type = "Reef / Booties Advised"
+        bottom_icon = "🪨"
+    elif s_type == "lake" or any(k in name_l for k in ["garda", "como", "torbole", "colico"]):
+        bottom_type = "Pebble / Grass Launch"
+        bottom_icon = "⛰️"
+    else:
+        bottom_type = "Sand Bottom"
+        bottom_icon = "🏖️"
+
+    # 3. Depth
+    if s_type == "lagoon" or any(k in name_l for k in ["mar menor", "cauipe", "taiba lagoon", "el gouna", "lo stagnone", "shark bay", "guajiru", "hatteras"]):
+        depth = "Waist-Deep"
+        depth_icon = "🚶"
+    else:
+        depth = "Deep Water"
+        depth_icon = "🏊"
+
+    is_enclosed = s_type in ["lagoon", "lake"] or any(k in name_l for k in ["lagoon", "lagoa", "mar menor", "stagnone", "reschensee", "see", "lac", "dam", "estuary"])
+
+    return {
+        "water_type": water_type,
+        "water_icon": water_icon,
+        "bottom_type": bottom_type,
+        "bottom_icon": bottom_icon,
+        "depth": depth,
+        "depth_icon": depth_icon,
+        "is_enclosed": is_enclosed,
+        "badges": [
+            f"{water_icon} {water_type}",
+            f"{depth_icon} {depth}",
+            f"{bottom_icon} {bottom_type}"
+        ]
+    }
+

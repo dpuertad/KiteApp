@@ -1,6 +1,17 @@
 {
   "spot_views": [
     {
+      "timestamp": "2026-11-09T19:46:37.237097+00:00Z",
+      "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
+      "lat": -3.0232,
+      "lon": -39.6433,
+      "email": "lipp.spam@gmail.com",
+      "rider_name": "Seb",
+      "nationality": "German",
+      "ip_hash": "02890186",
+      "action": "view_forecast"
+    },
+    {
       "timestamp": "2026-11-09T16:56:24.510660+00:00Z",
       "spot_name": "Icaraí de Amontada (Icaraizinho), Brazil",
       "lat": -3.0232,
@@ -530,14 +541,14 @@
     }
   ],
   "spot_totals": {
-    "Icaraí de Amontada (Icaraizinho), Brazil": 36,
+    "Icaraí de Amontada (Icaraizinho), Brazil": 37,
     "Preá, Brazil": 2,
     "Praia de Maceió (Camocim), Brazil": 10
   },
   "nationality_totals": {
     "Swiss": 15,
     "Spanish": 30,
-    "German": 3
+    "German": 4
   },
   "spot_by_nationality": {
     "Swiss": {
@@ -550,7 +561,7 @@
       "Praia de Maceió (Camocim), Brazil": 7
     },
     "German": {
-      "Icaraí de Amontada (Icaraizinho), Brazil": 3
+      "Icaraí de Amontada (Icaraizinho), Brazil": 4
     }
   },
   "searches": [],

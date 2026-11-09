@@ -23,6 +23,7 @@ import threading
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import urllib.request
 import urllib.parse
+import requests
 from datetime import datetime, timezone, timedelta
 from zoneinfo import ZoneInfo
 
@@ -686,7 +687,7 @@ DEFAULT_BEACH_ORIENTATIONS = {
     "tarifa": 220.0,        # SW (Los Lances / Valdevaqueros)
     "dakhla": 340.0,        # NNW (Lagoon trade wind axis)
     "leucate": 110.0,       # ESE (La Franqui)
-    "pozo": 90.0,           # E
+    "pozo": 45.0,           # NE side-on (bunker point)
     "sotavento": 95.0,      # E
     "bonaire": 260.0,       # W (Atlantis)
     "el gouna": 60.0,       # ENE (Red Sea Lagoon)
@@ -897,15 +898,19 @@ def resolve_beach_angle(spot_name: str, custom_angle=None, lat: float = None, lo
     return infer_coastal_beach_angle(lat=lat, lon=lon, name=spot_name, country_code=country_code)
 
 
-def calculate_shoreline_status(wind_deg: float, beach_deg: float) -> dict:
-    """Calculates wind angle relative to beach coastline."""
+def calculate_shoreline_status(wind_deg: float, beach_deg: float, spot_type: str = None, is_enclosed: bool = False, spot_name: str = "") -> dict:
+    """Calculates wind angle relative to beach coastline, accounting for enclosed lagoon/lake exceptions."""
+    name_l = (spot_name or "").lower()
+    is_lagoon_or_lake = is_enclosed or (spot_type in ["lagoon", "lake"]) or any(k in name_l for k in ["lagoon", "lagoa", "lake", "mar menor", "stagnone", "mangroovy", "shark bay", "cauipe", "reschensee", "lac", "see"])
     diff = abs((wind_deg - beach_deg + 180.0) % 360.0 - 180.0)
+    
     if diff <= 30.0:
         return {
             "type": "Onshore",
             "tag": "🟡 Onshore",
             "pill": "Onshore",
             "badge_color": "amber",
+            "badgeColor": "amber",
             "description": "Direct onshore: choppy shorebreak, harder waterstarts",
             "is_safe": True,
             "warning": False,
@@ -918,6 +923,7 @@ def calculate_shoreline_status(wind_deg: float, beach_deg: float) -> dict:
             "tag": "🟢 Side-Onshore",
             "pill": "Side-Onshore",
             "badge_color": "emerald",
+            "badgeColor": "emerald",
             "description": "Ideal & safe: prime riding angle, pushes back to shore",
             "is_safe": True,
             "warning": False,
@@ -930,6 +936,7 @@ def calculate_shoreline_status(wind_deg: float, beach_deg: float) -> dict:
             "tag": "🟢 Sideshore",
             "pill": "Sideshore",
             "badge_color": "emerald",
+            "badgeColor": "emerald",
             "description": "Safe & clean: parallel to beach, smooth speed runs",
             "is_safe": True,
             "warning": False,
@@ -937,11 +944,25 @@ def calculate_shoreline_status(wind_deg: float, beach_deg: float) -> dict:
             "relative_angle": round(diff)
         }
     elif diff <= 110.0:
+        if is_lagoon_or_lake:
+            return {
+                "type": "Enclosed Flat Water",
+                "tag": "🟢 Enclosed Water (Side-Flat)",
+                "pill": "Enclosed Water",
+                "badge_color": "emerald",
+                "badgeColor": "emerald",
+                "description": "Enclosed flat water: smooth off-sandbar speed strip, safe shallow water",
+                "is_safe": True,
+                "warning": False,
+                "danger": False,
+                "relative_angle": round(diff)
+            }
         return {
             "type": "Side-Offshore",
             "tag": "🟠 Side-Offshore",
             "pill": "Side-Offshore",
             "badge_color": "orange",
+            "badgeColor": "orange",
             "description": "Caution: blowing away from beach, safety cover advised",
             "is_safe": False,
             "warning": True,
@@ -949,11 +970,25 @@ def calculate_shoreline_status(wind_deg: float, beach_deg: float) -> dict:
             "relative_angle": round(diff)
         }
     else:
+        if is_lagoon_or_lake:
+            return {
+                "type": "Enclosed Flat Water",
+                "tag": "🟢 Enclosed Water (Safe Flat)",
+                "pill": "Enclosed Flat Water",
+                "badge_color": "emerald",
+                "badgeColor": "emerald",
+                "description": "Safe enclosed water: wind creates mirror-flat speed runs, no open-ocean hazard",
+                "is_safe": True,
+                "warning": False,
+                "danger": False,
+                "relative_angle": round(diff)
+            }
         return {
             "type": "Offshore",
             "tag": "🚨 Offshore Hazard",
             "pill": "Offshore Hazard",
             "badge_color": "rose",
+            "badgeColor": "rose",
             "description": "DANGER: blowing out to open sea! Rescue boat mandatory",
             "is_safe": False,
             "warning": True,
@@ -2241,6 +2276,51 @@ def fetch_weather_metno(spot: dict, today_sst: float = None, tomorrow_sst: float
     }
 
 
+
+MARINE_WAVE_CACHE = {}
+
+def fetch_marine_waves(lat: float, lon: float, tz: str = "auto") -> dict:
+    """Fetches real-time wave height, period, and swell direction from Open-Meteo Marine API."""
+    key = (round(float(lat), 2), round(float(lon), 2))
+    now = time.time()
+    if key in MARINE_WAVE_CACHE and (now - MARINE_WAVE_CACHE[key][0]) < 1800:
+        return copy.deepcopy(MARINE_WAVE_CACHE[key][1])
+
+    try:
+        import requests
+        url = f"https://marine-api.open-meteo.com/v1/marine?latitude={lat}&longitude={lon}&hourly=wave_height,wave_direction,wave_period&timezone={tz}"
+        r = requests.get(url, timeout=3.5)
+        if not r.ok:
+            MARINE_WAVE_CACHE[key] = (now, None)
+            return None
+        d = r.json()
+        h = d.get("hourly", {})
+        heights = [x for x in h.get("wave_height", []) if x is not None]
+        if not heights or heights[0] is None:
+            MARINE_WAVE_CACHE[key] = (now, None)
+            return None
+        
+        curr_h = heights[0]
+        periods = [x for x in h.get("wave_period", []) if x is not None]
+        curr_p = periods[0] if periods else None
+        dirs = [x for x in h.get("wave_direction", []) if x is not None]
+        curr_d = dirs[0] if dirs else None
+        
+        cardinal = degrees_to_cardinal(curr_d) if curr_d is not None else ""
+        res = {
+            "height_m": round(curr_h, 1),
+            "period_s": round(curr_p, 1) if curr_p else None,
+            "direction_deg": round(curr_d) if curr_d is not None else None,
+            "cardinal": cardinal,
+            "hourly_heights": heights[:24],
+            "is_ocean_swell": True
+        }
+        MARINE_WAVE_CACHE[key] = (now, res)
+        return res
+    except Exception:
+        MARINE_WAVE_CACHE[key] = (now, None)
+        return None
+
 def fetch_live_forecast(spot: dict) -> dict:
     cache_key = (round(float(spot.get("lat", 0)), 3), round(float(spot.get("lon", 0)), 3), (spot.get("name") or "").strip().lower())
     now_ts = time.time()
@@ -2342,8 +2422,17 @@ def fetch_live_forecast(spot: dict) -> dict:
     cur_dir_deg = forecast.get("current", {}).get("degrees", 90)
     cur_temp = forecast.get("current", {}).get("temp", 18.0)
 
-    if "shoreline" not in forecast:
-        forecast["shoreline"] = calculate_shoreline_status(cur_dir_deg, beach_angle)
+    import kite_spots
+    spot_cond = getattr(kite_spots, "get_spot_conditions", lambda s: {})(spot)
+    forecast["spot_conditions"] = spot_cond
+    forecast["wave"] = fetch_marine_waves(float(spot.get("lat", 0)), float(spot.get("lon", 0)), spot.get("timezone", "auto"))
+    # Always apply enclosed spot exception logic to shoreline status
+    forecast["shoreline"] = calculate_shoreline_status(
+        cur_dir_deg, beach_angle,
+        spot_type=spot.get("spot_type"),
+        is_enclosed=spot_cond.get("is_enclosed", False),
+        spot_name=spot.get("name", "")
+    )
     if "stability" not in forecast:
         forecast["stability"] = calculate_stability_score(cur_wind, cur_gust)
     if "consensus" not in forecast:
