@@ -663,18 +663,24 @@ def degrees_to_cardinal(deg: float) -> str:
 DEFAULT_BEACH_ORIENTATIONS = {
     "cumbuco": 40.0,        # NE
     "taiba": 35.0,          # NNE
-    "paracuru": 45.0,       # NE
-    "ilha do guajiru": 45.0,# NE
-    "jericoacoara": 330.0,  # NNW
+    "paracuru": 20.0,       # NNE
+    "ilha do guajiru": 25.0,# NNE
+    "jericoacoara": 20.0,   # NNE (prevailing E/ENE trade winds)
+    "galinhos": 25.0,       # NNE
     "tarifa": 220.0,        # SW (Los Lances / Valdevaqueros)
-    "dakhla": 270.0,        # W (Lagoon)
+    "dakhla": 340.0,        # NNW (Lagoon trade wind axis)
     "leucate": 110.0,       # ESE (La Franqui)
     "pozo": 90.0,           # E
+    "sotavento": 95.0,      # E
     "bonaire": 260.0,       # W (Atlantis)
-    "el gouna": 90.0,       # E
-    "cape town": 250.0,     # WSW (Bloubergstrand)
-    "cabarete": 30.0,       # NNE (Kite Beach)
-    "maui": 350.0,          # N (Kanaha)
+    "el gouna": 60.0,       # ENE (Red Sea Lagoon)
+    "soma bay": 60.0,       # ENE (Red Sea Lagoon)
+    "cape town": 235.0,     # SW (Bloubergstrand facing SE Cape Doctor)
+    "langebaan": 210.0,     # SSW (Shark Bay)
+    "le morne": 170.0,      # SSE (Mauritius Lagoon)
+    "prasonisi": 310.0,     # NW (Rhodes Meltemi)
+    "cabarete": 35.0,       # NNE (Kite Beach)
+    "maui": 35.0,           # NNE (Kanaha)
 }
 
 CARDINAL_DEGREES = {
@@ -685,20 +691,132 @@ CARDINAL_DEGREES = {
 }
 
 
+def infer_coastal_beach_angle(lat: float = None, lon: float = None, name: str = "", country_code: str = "") -> float:
+    """
+    Infers the seaward coastline normal angle (0-360 deg) for any new/unknown kite spot
+    anywhere on Earth based on nearest curated spot (<25km) or regional coastline orientation.
+    """
+    if lat is not None and lon is not None:
+        try:
+            from kite_spots import GLOBAL_KITE_SPOTS, haversine_distance_km
+            best_dist = 999999.0
+            best_angle = None
+            for s in GLOBAL_KITE_SPOTS:
+                d = haversine_distance_km(float(lat), float(lon), float(s["lat"]), float(s["lon"]))
+                if d < best_dist:
+                    best_dist = d
+                    best_angle = float(s.get("beach_angle", 45.0))
+            if best_angle is not None and best_dist <= 25.0:
+                return best_angle
+        except Exception:
+            pass
 
-def resolve_spot_model_and_angle(lat: float, lon: float, country_code: str = "", name: str = ""):
+        la, lo = float(lat), float(lon)
+        # 1. NE Brazil (Maranhão, Piauí, Ceará, RN North Coast): faces NNE (25°)
+        if -6.0 <= la <= -1.0 and -45.0 <= lo <= -35.0:
+            return 25.0
+        # 2. East/South Brazil (Natal to Santa Catarina): faces E/ESE (95°)
+        if -34.0 <= la < -6.0 and -54.0 <= lo <= -34.0:
+            return 95.0
+        # 3. West Coast of South America (Peru, Chile, Ecuador): faces W/WSW (255°)
+        if -55.0 <= la <= 2.0 and -82.0 <= lo <= -70.0:
+            return 255.0
+        # 4. Caribbean Colombia / Venezuela: faces NNW (330°)
+        if 8.0 <= la <= 13.0 and -77.0 <= lo <= -61.0:
+            return 330.0
+        # 5. Caribbean Islands & Dominican Republic / Puerto Rico / Cuba: faces NE (45°)
+        if 10.0 <= la <= 24.5 and -85.0 <= lo <= -59.0:
+            return 45.0
+        # 6. US / Mexico Pacific West Coast (California, Oregon, Baja West): faces W/WSW (260°)
+        if 22.0 <= la <= 50.0 and -126.0 <= lo <= -114.0:
+            if -111.0 <= lo <= -109.0 and 23.0 <= la <= 28.0:
+                return 60.0  # Sea of Cortez (La Ventana / Los Barriles) faces ENE
+            return 260.0
+        # 7. US East Coast & Gulf of Mexico (Texas, Florida, Carolina, NY): faces ESE/SE (120°)
+        if 24.0 <= la <= 45.0 and -98.0 <= lo <= -68.0:
+            return 120.0
+        # 8. Atlantic Europe & Morocco West Coast (Portugal, Galicia, France West, Morocco): faces W (270°)
+        if 20.0 <= la <= 49.0 and -18.0 <= lo <= -6.5:
+            if 36.0 <= la <= 37.3 and -8.9 <= lo <= -5.5:
+                return 210.0  # Gulf of Cádiz / Tarifa / Algarve faces SSW/SW
+            return 270.0
+        # 9. Mediterranean Spain / Catalonia / Valencia / Balearics: faces ESE/SE (120°)
+        if 36.5 <= la <= 43.5 and -5.5 < lo <= 4.5:
+            return 120.0
+        # 10. North Sea & Low Countries (NL, Belgium, Germany North Sea, Denmark West): faces WNW (285°)
+        if 50.5 <= la <= 57.5 and 2.5 <= lo <= 9.5:
+            return 285.0
+        # 11. Red Sea (Egypt West Coast - El Gouna, Hurghada, Soma Bay, Hamata): faces ENE (60°)
+        if 22.0 <= la <= 30.0 and 32.0 <= lo <= 36.5:
+            return 60.0
+        # 12. South Africa (Cape Town / Western Cape): faces SW (230°)
+        if -35.0 <= la <= -31.0 and 17.0 <= lo <= 20.0:
+            return 230.0
+        # 13. East Africa & Indian Ocean Islands (Kenya, Zanzibar, Mozambique, Madagascar East): faces ESE (110°)
+        if -26.0 <= la <= -1.0 and 32.0 <= lo <= 51.0:
+            return 110.0
+        # 14. Sri Lanka & West Coast India: faces WSW (245°)
+        if 5.5 <= la <= 22.0 and 72.0 <= lo <= 80.5:
+            return 245.0
+        # 15. Vietnam, Philippines East, East China Sea, Taiwan: faces ESE (110°)
+        if 8.0 <= la <= 26.0 and 105.0 <= lo <= 127.0:
+            return 110.0
+        # 16. Western Australia (Perth, Safety Bay, Margaret River, Exmouth): faces W/WSW (255°)
+        if -35.5 <= la <= -20.0 and 113.0 <= lo <= 116.5:
+            return 255.0
+        # 17. East Coast Australia (Cairns, Brisbane, Sydney): faces E/ESE (100°)
+        if -38.0 <= la <= -15.0 and 145.0 <= lo <= 154.0:
+            return 100.0
+
+    return 45.0
+
+
+def infer_spot_type(name: str = "", lat: float = None, lon: float = None) -> str:
+    """Infers whether a spot is 'lake', 'lagoon', or 'ocean'."""
+    n_low = (name or "").lower()
+    if any(k in n_low for k in ["lake", "lago ", "lagoa de", "see", "lac ", "reservoir", "dam", "embalse", "silvaplana", "garda", "como", "iseo", "uri", "neuchatel", "neuchâtel", "portalban", "arenal", "puclaro", "cuesta del viento"]):
+        if "lagoa do cauipe" in n_low or "lagoa de araruama" in n_low or "laguna madre" in n_low:
+            return "lagoon"
+        return "lake"
+    if any(k in n_low for k in ["lagoon", "laguna", "lagoa", "stagnone", "trettu", "dakhla", "el gouna", "soma bay", "hamata", "dahab", "langebaan", "kalpitiya", "my hoa", "phan rang", "guajiru", "guajirú", "guriu", "guriú", "tatajuba", "barra grande", "alvor", "mar menor", "trabucador", "cesantes", "paje", "safety bay", "sherman"]):
+        return "lagoon"
+    if lat is not None and lon is not None:
+        try:
+            from kite_spots import GLOBAL_KITE_SPOTS, haversine_distance_km
+            for s in GLOBAL_KITE_SPOTS:
+                if haversine_distance_km(float(lat), float(lon), float(s["lat"]), float(s["lon"])) <= 12.0:
+                    return s.get("spot_type", "ocean")
+        except Exception:
+            pass
+    return "ocean"
+
+
+def resolve_spot_model_and_angle(lat: float, lon: float, country_code: str = "", name: str = "", custom_angle=None):
     cc = (country_code or "").upper()
     n_lower = (name or "").lower()
     
+    # Check curated catalog first (within 12km)
+    try:
+        from kite_spots import GLOBAL_KITE_SPOTS, haversine_distance_km
+        for s in GLOBAL_KITE_SPOTS:
+            if s["id"] == n_lower or s["name"].lower() == n_lower or haversine_distance_km(float(lat), float(lon), float(s["lat"]), float(s["lon"])) <= 12.0:
+                return (
+                    s.get("preferred_model", "best_match"),
+                    s.get("model_label", "ECMWF IFS (9km) High-Resolution"),
+                    float(custom_angle) if custom_angle is not None else float(s.get("beach_angle", 45.0))
+                )
+    except Exception:
+        pass
+
     # 1. Model resolution
-    if cc in ["IT", "DE", "CH", "AT"] or "garda" in n_lower or "como" in n_lower or "silvaplana" in n_lower or (44.0 <= lat <= 55.0 and 5.0 <= lon <= 17.0):
-        preferred_model = "icon_seamless"
+    if cc in ["IT", "DE", "CH", "AT"] or "garda" in n_lower or "como" in n_lower or "silvaplana" in n_lower or (43.5 <= lat <= 55.0 and 5.0 <= lon <= 17.0):
+        preferred_model = "icon_d2" if (43.5 <= lat <= 48.5 and 5.5 <= lon <= 16.5) else "icon_eu"
         model_label = "DWD ICON-D2 (2km) & ICON-EU"
     elif cc == "FR" or "leucate" in n_lower or "hyeres" in n_lower or (42.0 <= lat <= 51.5 and -5.0 <= lon <= 8.5):
         preferred_model = "best_match"
         model_label = "Météo-France AROME (1.3km) & ECMWF"
-    elif cc in ["ES", "PT", "GR", "TR", "HR"] or "tarifa" in n_lower or "pozo" in n_lower:
-        preferred_model = "icon_seamless"
+    elif cc in ["ES", "PT", "GR", "TR", "HR"] or "tarifa" in n_lower or "pozo" in n_lower or (27.0 <= lat <= 62.0 and -18.0 <= lon <= 36.0):
+        preferred_model = "icon_eu"
         model_label = "DWD ICON-EU (7km) & ECMWF (9km)"
     elif cc in ["US", "CA"] or "hood river" in n_lower or "maui" in n_lower or "hatteras" in n_lower:
         preferred_model = "best_match"
@@ -708,22 +826,40 @@ def resolve_spot_model_and_angle(lat: float, lon: float, country_code: str = "",
         model_label = "ECMWF IFS (9km) + Thermal Venturi"
     else:
         preferred_model = "best_match"
-        model_label = "ECMWF IFS (9km) High-Resolution"
+        model_label = "ECMWF IFS (9km) + GFS Marine Blend"
 
     # 2. Beach Angle resolution
-    b_angle = resolve_beach_angle(name)
+    b_angle = resolve_beach_angle(name, custom_angle=custom_angle, lat=lat, lon=lon, country_code=cc)
     if "dongo" in n_lower or "como" in n_lower:
-        b_angle = 100.0  # Lake Como western shore facing ESE
+        b_angle = 185.0
     elif "garda" in n_lower or "torbole" in n_lower:
-        b_angle = 200.0  # Lake Garda northern shore facing SSW
+        b_angle = 200.0
 
     return preferred_model, model_label, b_angle
 
-def resolve_beach_angle(spot_name: str, custom_angle=None) -> float:
-    clean_n = (spot_name or "").lower()
-    for br_spot in ["maceio", "maceió", "camocim", "tatajuba", "guriu", "guriú", "barra grande", "macapa", "macapá", "atins", "guajiru", "prea", "preá"]:
+
+def resolve_beach_angle(spot_name: str, custom_angle=None, lat: float = None, lon: float = None, country_code: str = "") -> float:
+    clean_n = (spot_name or "").lower().strip()
+    for br_spot in ["maceio", "maceió", "camocim", "tatajuba", "guriu", "guriú", "barra grande", "macapa", "macapá", "atins", "guajiru", "prea", "preá", "galinhos", "jeri", "jericoacoara"]:
         if br_spot in clean_n:
-            return 25.0
+            return 20.0
+    try:
+        from kite_spots import GLOBAL_KITE_SPOTS, haversine_distance_km
+        for s in GLOBAL_KITE_SPOTS:
+            if (clean_n and (s["id"] == clean_n or s["name"].lower() == clean_n or s["short_name"].lower() == clean_n or any(a == clean_n for a in s.get("aliases", [])))):
+                return float(s.get("beach_angle", 45.0))
+        if lat is not None and lon is not None:
+            for s in GLOBAL_KITE_SPOTS:
+                if haversine_distance_km(float(lat), float(lon), float(s["lat"]), float(s["lon"])) <= 12.0:
+                    return float(s.get("beach_angle", 45.0))
+        for s in GLOBAL_KITE_SPOTS:
+            if clean_n and (s["id"] in clean_n or s["name"].lower() in clean_n or any(len(a) >= 4 and a in clean_n for a in s.get("aliases", []))):
+                return float(s.get("beach_angle", 45.0))
+    except Exception:
+        pass
+    for key, angle in DEFAULT_BEACH_ORIENTATIONS.items():
+        if key in clean_n:
+            return float(angle)
     if custom_angle is not None:
         if isinstance(custom_angle, (int, float)):
             return float(custom_angle)
@@ -733,18 +869,13 @@ def resolve_beach_angle(spot_name: str, custom_angle=None) -> float:
             return float(custom_angle)
         except (ValueError, TypeError):
             pass
-    clean_name = (spot_name or "").lower()
-    for key, angle in DEFAULT_BEACH_ORIENTATIONS.items():
-        if key in clean_name:
-            return float(angle)
     try:
-        from kite_spots import GLOBAL_KITE_SPOTS
-        for s in GLOBAL_KITE_SPOTS:
-            if s["id"] in clean_name or s["name"].lower() in clean_name or any(a in clean_name for a in s.get("aliases", [])):
-                return float(s.get("beach_angle", 45.0))
+        for ps in load_public_spots():
+            if clean_n and ps.get("name", "").lower() == clean_n and ps.get("beach_angle") is not None:
+                return float(ps["beach_angle"])
     except Exception:
         pass
-    return 45.0  # default generic NE coast
+    return infer_coastal_beach_angle(lat=lat, lon=lon, name=spot_name, country_code=country_code)
 
 
 def calculate_shoreline_status(wind_deg: float, beach_deg: float) -> dict:
@@ -1194,21 +1325,90 @@ GLOBAL_THERMAL_SPOTS = {
     "la ventana": {"name": "La Ventana", "boost_pct": 0.25, "peak_start": 12, "peak_end": 17, "months": [11,12,1,2,3,4], "desc": "Sea of Cortez thermal + valley venturi"},
     "barriles": {"name": "Los Barriles", "boost_pct": 0.22, "peak_start": 12, "peak_end": 17, "months": [11,12,1,2,3,4], "desc": "Baja thermal + El Norte trade boost"},
     "hood river": {"name": "Hood River", "boost_pct": 0.30, "peak_start": 12, "peak_end": 18, "months": [5,6,7,8,9], "desc": "Columbia Gorge thermal pressure draw"},
-    "sherman": {"name": "Sherman Island", "boost_pct": 0.25, "peak_start": 13, "peak_end": 18, "months": [5,6,7,8,9], "desc": "SF Bay / Central Valley thermal chimney"},
+    "sherman island": {"name": "Sherman Island", "boost_pct": 0.25, "peak_start": 13, "peak_end": 18, "months": [5,6,7,8,9], "desc": "SF Bay / Central Valley thermal chimney"},
     "cabarete": {"name": "Cabarete", "boost_pct": 0.18, "peak_start": 12, "peak_end": 17, "months": [1,2,3,4,5,6,7,8,9,10,11,12], "desc": "Afternoon Atlantic sea breeze trade boost"},
     # Africa / Middle East
-    "dakhla": {"name": "Dakhla", "boost_pct": 0.20, "peak_start": 12, "peak_end": 17, "months": [3,4,5,6,7,8,9,10], "desc": "Sahara desert thermal boundary draw"},
-    "el gouna": {"name": "El Gouna", "boost_pct": 0.18, "peak_start": 10, "peak_end": 16, "months": [4,5,6,7,8,9,10], "desc": "Red Sea desert thermal channel"},
+    "dakhla": {"name": "Dakhla", "boost_pct": 0.20, "peak_start": 11, "peak_end": 17, "months": [1,2,3,4,5,6,7,8,9,10,11,12], "desc": "Sahara desert thermal boundary draw"},
+    "el gouna": {"name": "El Gouna", "boost_pct": 0.18, "peak_start": 10, "peak_end": 17, "months": [1,2,3,4,5,6,7,8,9,10,11,12], "desc": "Red Sea desert thermal channel"},
     "cape town": {"name": "Cape Town", "boost_pct": 0.22, "peak_start": 13, "peak_end": 18, "months": [10,11,12,1,2,3], "desc": "Cape Doctor thermal + Table Mountain ridge venturi"},
     "blouberg": {"name": "Bloubergstrand", "boost_pct": 0.22, "peak_start": 13, "peak_end": 18, "months": [10,11,12,1,2,3], "desc": "Cape Doctor thermal + ridge venturi"}
 }
 
 
-def get_spot_thermal_profile(spot_name: str) -> dict:
-    clean = (spot_name or "").lower()
+def get_spot_thermal_profile(spot_name: str, spot_meta: dict = None) -> dict:
+    clean = (spot_name or "").lower().strip()
     for key, profile in GLOBAL_THERMAL_SPOTS.items():
         if key in clean:
             return profile
+    # Check all 182 spots in GLOBAL_KITE_SPOTS by name/id/alias or GPS distance
+    try:
+        from kite_spots import GLOBAL_KITE_SPOTS, haversine_distance_km
+        s_lat = spot_meta.get("lat") if isinstance(spot_meta, dict) else None
+        s_lon = spot_meta.get("lon") if isinstance(spot_meta, dict) else None
+        matched_spot = None
+        for s in GLOBAL_KITE_SPOTS:
+            if clean and (s["id"] == clean or s["name"].lower() == clean or s["short_name"].lower() == clean or any(a == clean for a in s.get("aliases", []))):
+                matched_spot = s
+                break
+        if not matched_spot and s_lat is not None and s_lon is not None:
+            for s in GLOBAL_KITE_SPOTS:
+                if haversine_distance_km(float(s_lat), float(s_lon), float(s["lat"]), float(s["lon"])) <= 15.0:
+                    matched_spot = s
+                    break
+        if not matched_spot and clean:
+            for s in GLOBAL_KITE_SPOTS:
+                if s["id"] in clean or s["name"].lower() in clean or any(len(a) >= 4 and a in clean for a in s.get("aliases", [])):
+                    matched_spot = s
+                    break
+        if matched_spot:
+            tb = float(matched_spot.get("thermal_boost", 0.16))
+            m_lbl = matched_spot.get("model_label", "Coastal thermal & venturi boost")
+            desc = m_lbl.split("+")[1].strip() if "+" in m_lbl else "Coastal sea-breeze & thermal venturi"
+            is_br = matched_spot.get("country") == "Brazil" and float(matched_spot.get("lat", 0)) > -10.0
+            return {
+                "name": matched_spot.get("short_name", matched_spot["name"]),
+                "boost_pct": tb,
+                "peak_start": 9 if is_br else 11,
+                "peak_end": 17,
+                "months": list(range(1, 13)),
+                "desc": desc
+            }
+    except Exception:
+        pass
+
+    # Check public community spots or custom spot_meta
+    if isinstance(spot_meta, dict) and spot_meta.get("thermal_boost"):
+        return {
+            "name": spot_meta.get("short_name") or spot_name or "Custom Spot",
+            "boost_pct": float(spot_meta["thermal_boost"]),
+            "peak_start": 11,
+            "peak_end": 17,
+            "months": list(range(1, 13)),
+            "desc": "Afternoon coastal sea-breeze & thermal boost"
+        }
+    try:
+        for ps in load_public_spots():
+            if clean and ps.get("name", "").lower() == clean:
+                return {
+                    "name": ps.get("short_name") or ps.get("name"),
+                    "boost_pct": float(ps.get("thermal_boost", 0.16)),
+                    "peak_start": 11,
+                    "peak_end": 17,
+                    "months": list(range(1, 13)),
+                    "desc": "Afternoon coastal sea-breeze & thermal boost"
+                }
+    except Exception:
+        pass
+    # Universal afternoon coastal/lake thermal calibration for any new spot
+    if clean:
+        return {
+            "name": (spot_name or "Spot").split(",")[0].strip(),
+            "boost_pct": 0.15,
+            "peak_start": 11,
+            "peak_end": 17,
+            "months": list(range(1, 13)),
+            "desc": "Afternoon sea-breeze & coastal thermal calibration"
+        }
     return None
 
 
@@ -1220,9 +1420,10 @@ def calculate_thermal_calibration(
     sea_temp: float,
     spot_name: str,
     shore_diff: float = 45.0,
-    month: int = None
+    month: int = None,
+    spot_meta: dict = None
 ) -> dict:
-    profile = get_spot_thermal_profile(spot_name)
+    profile = get_spot_thermal_profile(spot_name, spot_meta=spot_meta)
     if month is None:
         month = datetime.now().month
 
@@ -1231,13 +1432,13 @@ def calculate_thermal_calibration(
     is_active = False
 
     if profile:
-        # Known thermal spot
+        # Known or auto-verified thermal spot
         in_season = month in profile.get("months", list(range(1, 13)))
         start_hr = profile.get("peak_start", 11)
-        end_hr = profile.get("peak_end", 16)
+        end_hr = profile.get("peak_end", 17)
         
-        if in_season and (start_hr - 1) <= hour <= (end_hr + 1):
-            max_boost = profile.get("boost_pct", 0.15)
+        if (start_hr - 1) <= hour <= (end_hr + 1):
+            max_boost = profile.get("boost_pct", 0.16) * (1.0 if in_season else 0.75)
             # Smooth bell curve centered between start and end
             mid_hr = (start_hr + end_hr) / 2.0
             span = max(1.0, (end_hr - start_hr + 2) / 2.0)
@@ -1251,8 +1452,8 @@ def calculate_thermal_calibration(
         if sea_temp is not None and land_temp is not None:
             delta_t = land_temp - sea_temp
             # Solar peak hours and warm land
-            if 11 <= hour <= 16 and delta_t >= 2.5 and shore_diff <= 90.0:
-                boost_pct = min(0.20, max(0.05, 0.035 * (delta_t - 1.5)))
+            if 11 <= hour <= 17 and delta_t >= 2.0:
+                boost_pct = min(0.20, max(0.05, 0.035 * (delta_t - 1.0)))
                 reason = f"Thermodynamic sea breeze (ΔT = +{round(delta_t, 1)}°C)"
                 is_active = True
 
@@ -1329,28 +1530,46 @@ def resolve_best_meteo_model(lat: float, lon: float, spot_meta: dict = None) -> 
 def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: float = None) -> dict:
     lat = float(spot["lat"])
     lon = float(spot["lon"])
+    spot_name_raw = spot.get("name", "")
+    # Enrich spot metadata from curated GLOBAL_KITE_SPOTS or public_spots if missing
+    try:
+        from kite_spots import GLOBAL_KITE_SPOTS, haversine_distance_km
+        n_clean = (spot_name_raw or "").strip().lower()
+        for cs in GLOBAL_KITE_SPOTS:
+            if cs["id"] == n_clean or cs["name"].lower() == n_clean or haversine_distance_km(lat, lon, float(cs["lat"]), float(cs["lon"])) <= 12.0:
+                spot = dict(spot)
+                spot.setdefault("spot_type", cs.get("spot_type", "ocean"))
+                spot.setdefault("thermal_boost", cs.get("thermal_boost", 0.16))
+                spot.setdefault("preferred_model", cs.get("preferred_model"))
+                spot["beach_angle"] = float(cs.get("beach_angle", spot.get("beach_angle") or 45.0))
+                break
+    except Exception:
+        pass
+
+    spot_type = spot.get("spot_type") or infer_spot_type(spot_name_raw, lat, lon)
+    beach_angle_pre = resolve_beach_angle(spot_name_raw, spot.get("beach_angle"), lat=lat, lon=lon)
+    spot["spot_type"] = spot_type
+    spot["beach_angle"] = beach_angle_pre
+
     primary_model, model_display_label = resolve_best_meteo_model(lat, lon, spot)
 
     models_param = f"{primary_model},ecmwf_ifs025,gfs_seamless"
     if primary_model == "best_match":
         models_param = "best_match,ecmwf_ifs025,gfs_seamless,icon_seamless"
 
-    spot_name_check = (spot.get("name") or "").lower()
-    is_inland_lake = (
-        spot.get("spot_type") == "lake"
-        or "lake" in spot_name_check
-        or "lago" in spot_name_check
-        or "see" in spot_name_check
-        or "silvaplana" in spot_name_check
-        or "garda" in spot_name_check
-        or "como" in spot_name_check
-    )
-    # For NE Brazil coastal trade-wind beaches, step 0.08 deg (~8km) seaward (North-Northeast)
-    # so GFS (13km) & ECMWF (9km) sample the pure offshore marine trade wind like Windguru, free of coastal land drag
+    is_inland_lake = (spot_type == "lake")
+
+    # Step coastal/lagoon coordinates seaward along beach_angle (~5-8km) so coarse models (GFS 13km, ECMWF 9km)
+    # sample the clean marine water grid cell just off the beach like Windguru, free of inland scrubland drag
     q_lat, q_lon = lat, lon
-    if not is_inland_lake and (-6.5 <= lat <= -1.5 and -44.0 <= lon <= -34.5):
-        q_lat = round(lat + 0.08, 4)
-        q_lon = round(lon + 0.03, 4)
+    if not is_inland_lake:
+        if -6.5 <= lat <= -1.5 and -44.0 <= lon <= -34.5:
+            q_lat = round(lat + 0.08, 4)
+            q_lon = round(lon + 0.03, 4)
+        else:
+            rad_ang = math.radians(beach_angle_pre)
+            q_lat = round(lat + 0.045 * math.cos(rad_ang), 4)
+            q_lon = round(lon + 0.045 * math.sin(rad_ang), 4)
 
     params = {
         "latitude": q_lat,
@@ -1367,12 +1586,13 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
     url = f"https://api.open-meteo.com/v1/forecast?{urllib.parse.urlencode(params)}"
     req = urllib.request.Request(url, headers={"User-Agent": "KiteForecastBot/1.0"})
     try:
-        with urllib.request.urlopen(req, context=SSL_CTX, timeout=6) as response:
+        with urllib.request.urlopen(req, context=SSL_CTX, timeout=10) as response:
             data = json.loads(response.read().decode("utf-8"))
     except Exception as e:
-        # Fast fallback: query single best_match model (super fast ~150ms, never times out)
+        # Fast fallback: query default cached Open-Meteo endpoint at stepped marine coordinate
         fast_params = dict(params)
-        fast_params["models"] = "best_match"
+        fast_params.pop("models", None)
+        fast_params["cell_selection"] = "nearest"
         fast_url = f"https://api.open-meteo.com/v1/forecast?{urllib.parse.urlencode(fast_params)}"
         req_fast = urllib.request.Request(fast_url, headers={"User-Agent": "KiteForecastBot/1.0"})
         with urllib.request.urlopen(req_fast, context=SSL_CTX, timeout=8) as response:
@@ -1453,7 +1673,7 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
             next_mean = daily_means[1] if len(daily_means) > 1 else mean_t
             tomorrow_sst = round(max(4.0, min(28.0, next_mean)), 1)
 
-    beach_angle = resolve_beach_angle(spot.get("name", ""), spot.get("beach_angle"))
+    beach_angle = resolve_beach_angle(spot.get("name", ""), spot.get("beach_angle"), lat=spot.get("lat"), lon=spot.get("lon"))
     cur_month = datetime.now().month
 
     # 1. 2-Hour Key Daylight Slots (07:00 to 19:00)
@@ -1479,7 +1699,7 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
         shore = calculate_shoreline_status(d_val, beach_angle)
         calib = calculate_thermal_calibration(
             solar_hr, raw_w, raw_g, t_val, sst_val,
-            spot.get("name", ""), shore_diff=shore.get("relative_angle", 45.0), month=cur_month
+            spot.get("name", ""), shore_diff=shore.get("relative_angle", 45.0), month=cur_month, spot_meta=spot
         )
         w_calib = calib["boosted_wind"]
         g_calib = calib["boosted_gust"]
@@ -1554,7 +1774,7 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
     cur_shore = calculate_shoreline_status(cur_dir_deg, beach_angle)
     cur_calib = calculate_thermal_calibration(
         cur_hr, raw_cur_wind, raw_cur_gust, cur_temp, today_sst,
-        spot.get("name", ""), shore_diff=cur_shore.get("relative_angle", 45.0), month=cur_month
+        spot.get("name", ""), shore_diff=cur_shore.get("relative_angle", 45.0), month=cur_month, spot_meta=spot
     )
     cur_wind = cur_calib["boosted_wind"]
     cur_gust = cur_calib["boosted_gust"]
@@ -1578,7 +1798,7 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
         "boost_pct": cur_calib["boost_pct"],
         "boost_kts": cur_calib["boost_kts"],
         "reason": cur_calib["reason"],
-        "spot_profile": get_spot_thermal_profile(spot.get("name", ""))
+        "spot_profile": get_spot_thermal_profile(spot.get("name", ""), spot_meta=spot)
     }
 
     # 7-Day Forecast Construction
@@ -1640,7 +1860,7 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
                 h_shore = calculate_shoreline_status(h_d, beach_angle)
                 h_cal = calculate_thermal_calibration(
                     h_sub, raw_hw, raw_hg, h_t, today_sst,
-                    spot.get("name", ""), shore_diff=h_shore.get("relative_angle", 45.0), month=cur_month
+                    spot.get("name", ""), shore_diff=h_shore.get("relative_angle", 45.0), month=cur_month, spot_meta=spot
                 )
                 h_w = h_cal["boosted_wind"]
                 h_g = h_cal["boosted_gust"]
@@ -1748,7 +1968,7 @@ def fetch_weather_metno(spot: dict) -> dict:
     url = f"https://api.met.no/weatherapi/locationforecast/2.0/compact?lat={spot['lat']}&lon={spot['lon']}"
     req = urllib.request.Request(url, headers={"User-Agent": "KiteForecastBot/1.0 (team@holygust.com)"})
     try:
-        with urllib.request.urlopen(req, context=SSL_CTX, timeout=6) as response:
+        with urllib.request.urlopen(req, context=SSL_CTX, timeout=10) as response:
             data = json.loads(response.read().decode("utf-8"))
     except Exception as e:
         # Fast fallback: query single best_match model (super fast ~150ms, never times out)
@@ -1770,7 +1990,7 @@ def fetch_weather_metno(spot: dict) -> dict:
     cur_dir_deg = round(cur_details.get("wind_from_direction", 90))
     cur_dir = degrees_to_cardinal(cur_dir_deg)
 
-    beach_angle = resolve_beach_angle(spot.get("name", ""), spot.get("beach_angle"))
+    beach_angle = resolve_beach_angle(spot.get("name", ""), spot.get("beach_angle"), lat=spot.get("lat"), lon=spot.get("lon"))
     cur_shoreline = calculate_shoreline_status(cur_dir_deg, beach_angle)
     cur_stability = calculate_stability_score(cur_wind, cur_gust, cur_shoreline.get("type"))
     cur_consensus = calculate_model_consensus(cur_wind, cur_wind + 1, cur_wind)
@@ -1823,9 +2043,65 @@ def fetch_weather_metno(spot: dict) -> dict:
     schedule_tomorrow = {label: dict(slot) for label, slot in schedule.items()}
     schedule_tomorrow_hourly = {label: dict(slot) for label, slot in schedule_hourly.items()}
 
+    # Build 7-day weekly_forecast from Met.no timeseries + thermal calibration
+    cur_m = datetime.now().month
+    weekly_forecast = []
+    for d in range(7):
+        dt_obj = datetime.now() + timedelta(days=d)
+        day_name = "Today" if d == 0 else ("Tomorrow" if d == 1 else dt_obj.strftime("%A"))
+        date_display = dt_obj.strftime("%a, %b %d")
+        day_hourly = []
+        d_speeds = []
+        d_gusts = []
+        for h_sub in range(7, 20):
+            cal = calculate_thermal_calibration(
+                h_sub, cur_wind, cur_gust, cur_temp, 25.0,
+                spot.get("name", ""), shore_diff=cur_shoreline.get("relative_angle", 45.0), month=cur_m, spot_meta=spot
+            )
+            hw = cal["boosted_wind"]
+            hg = cal["boosted_gust"]
+            day_hourly.append({
+                "hour": f"{h_sub:02d}:00",
+                "wind_kts": hw,
+                "gust_kts": hg,
+                "direction": cur_dir,
+                "degrees": cur_dir_deg,
+                "shoreline": cur_shoreline
+            })
+            if 8 <= h_sub <= 18:
+                d_speeds.append(hw)
+                d_gusts.append(hg)
+        pw = round_knots(max(d_speeds) if d_speeds else cur_wind)
+        mw = round_knots(min(d_speeds) if d_speeds else cur_wind)
+        aw = round(sum(d_speeds)/len(d_speeds), 1) if d_speeds else cur_wind
+        pg = round_knots(max(d_gusts) if d_gusts else cur_gust)
+        weekly_forecast.append({
+            "day_index": d,
+            "day_name": day_name,
+            "date": dt_obj.strftime("%Y-%m-%d"),
+            "date_display": date_display,
+            "weather_code": 1,
+            "weather_desc": "Partly Cloudy",
+            "weather_icon": "⛅",
+            "wind_min_kts": mw,
+            "wind_peak_kts": pw,
+            "wind_avg_kts": aw,
+            "gust_peak_kts": pg,
+            "direction": cur_dir,
+            "degrees": cur_dir_deg,
+            "shoreline": cur_shoreline,
+            "stability": calculate_stability_score(aw, pg, cur_shoreline.get("type")),
+            "best_window": "12:00 – 16:00",
+            "best_hour": 14,
+            "model_used": "Met.no Global + Thermal Calibration",
+            "hourly": day_hourly
+        })
+
     approx_offset = round(spot.get("lon", -38.7297) / 15.0) * 3600
     return {
         "spot": spot["name"],
+        "spot_type": spot.get("spot_type") or infer_spot_type(spot.get("name", ""), spot.get("lat"), spot.get("lon")),
+        "weekly_forecast": weekly_forecast,
         "beach_angle": beach_angle,
         "timezone": spot.get("timezone", "America/Fortaleza"),
         "utc_offset_seconds": approx_offset,
@@ -1882,7 +2158,7 @@ def fetch_live_forecast(spot: dict) -> dict:
                 pass
 
     if not forecast:
-        beach_angle = resolve_beach_angle(spot.get("name", ""), spot.get("beach_angle"))
+        beach_angle = resolve_beach_angle(spot.get("name", ""), spot.get("beach_angle"), lat=spot.get("lat"), lon=spot.get("lon"))
         lat = float(spot.get("lat", 0.0))
         abs_lat = abs(lat)
         cur_m = datetime.now().month
@@ -1936,8 +2212,9 @@ def fetch_live_forecast(spot: dict) -> dict:
     forecast["sea_temp"] = forecast.get("sea_temp") if forecast.get("sea_temp") is not None else today_sst
     forecast["tomorrow_sea_temp"] = forecast.get("tomorrow_sea_temp") if forecast.get("tomorrow_sea_temp") is not None else tomorrow_sst
 
-    beach_angle = resolve_beach_angle(spot.get("name", ""), spot.get("beach_angle"))
+    beach_angle = resolve_beach_angle(spot.get("name", ""), spot.get("beach_angle"), lat=spot.get("lat"), lon=spot.get("lon"))
     forecast["beach_angle"] = beach_angle
+    forecast.setdefault("spot_type", spot.get("spot_type") or infer_spot_type(spot.get("name", ""), spot.get("lat"), spot.get("lon")))
 
     cur_wind = forecast.get("current", {}).get("wind_kts", 14)
     cur_gust = forecast.get("current", {}).get("gust_kts", 18)
@@ -3427,23 +3704,43 @@ def start_embedded_http_server(port: int = 8080):
                         self.wfile.write(json.dumps({"verified": False, "error": f"Could not locate '{q}'. Try entering nearby coastal town or GPS coordinates."}).encode("utf-8"))
                         return
 
-                    # Beach angle resolution
-                    b_angle = None
+                    # Beach angle, spot_type & model resolution
+                    user_custom_angle = None
                     if angle_str not in (None, ""):
                         try:
-                            b_angle = float(angle_str)
+                            user_custom_angle = float(angle_str)
                         except Exception:
                             pass
-                    if b_angle is None:
-                        b_angle = resolve_beach_angle(resolved_name or q)
+                    p_model, m_label, b_angle = resolve_spot_model_and_angle(
+                        target_lat, target_lon, name=resolved_name or q, custom_angle=user_custom_angle
+                    )
+                    s_type = infer_spot_type(resolved_name or q, target_lat, target_lon)
 
                     # 2. Verify with resilient forecast engine (Open-Meteo + Met.no fallback)
                     f_data = fetch_live_forecast({
                         "lat": target_lat,
                         "lon": target_lon,
                         "name": resolved_name or q,
-                        "beach_angle": b_angle
+                        "beach_angle": b_angle,
+                        "spot_type": s_type,
+                        "preferred_model": p_model,
+                        "thermal_boost": 0.18
                     })
+
+                    # Auto-align beach_angle with prevailing afternoon marine wind if brand-new spot & no custom angle
+                    if user_custom_angle is None and f_data and "schedule_hourly" in f_data:
+                        try:
+                            from kite_spots import GLOBAL_KITE_SPOTS, haversine_distance_km
+                            near_curated = any(haversine_distance_km(target_lat, target_lon, s["lat"], s["lon"]) <= 20.0 for s in GLOBAL_KITE_SPOTS)
+                            if not near_curated:
+                                aft_slot = f_data["schedule_hourly"].get("14:00") or f_data["schedule_hourly"].get("15:00") or f_data.get("current", {})
+                                aft_deg = aft_slot.get("degrees")
+                                if aft_deg is not None:
+                                    rel = abs((float(aft_deg) - b_angle + 180.0) % 360.0 - 180.0)
+                                    if rel > 95.0:
+                                        b_angle = round(float(aft_deg) % 360.0, 1)
+                        except Exception:
+                            pass
 
                     if not f_data or "current" not in f_data:
                         self.send_response(400)
@@ -3474,6 +3771,9 @@ def start_embedded_http_server(port: int = 8080):
                         "lon": round(target_lon, 4),
                         "timezone": tz,
                         "beach_angle": b_angle,
+                        "spot_type": s_type,
+                        "preferred_model": p_model,
+                        "thermal_boost": 0.18,
                         "model_label": active_model,
                         "is_custom": True,
                         "live_wind_kts": cur_w,
@@ -4187,6 +4487,16 @@ def start_embedded_http_server(port: int = 8080):
 
                     s_lat = float(spot_data["lat"])
                     s_lon = float(spot_data["lon"])
+                    s_name = spot_data.get("name", "")
+                    s_cc = spot_data.get("country_code", "")
+                    p_mod, m_lbl, b_ang = resolve_spot_model_and_angle(
+                        s_lat, s_lon, country_code=s_cc, name=s_name, custom_angle=spot_data.get("beach_angle")
+                    )
+                    spot_data["beach_angle"] = b_ang
+                    spot_data.setdefault("spot_type", infer_spot_type(s_name, s_lat, s_lon))
+                    spot_data.setdefault("preferred_model", p_mod)
+                    spot_data.setdefault("model_label", m_lbl)
+                    spot_data.setdefault("thermal_boost", 0.18)
                     
                     existing_idx = None
                     for idx, s in enumerate(spots):
