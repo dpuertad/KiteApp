@@ -17,6 +17,7 @@ import re
 import json
 import time
 import math
+import copy
 import ssl
 import threading
 from http.server import HTTPServer, BaseHTTPRequestHandler
@@ -663,10 +664,17 @@ def degrees_to_cardinal(deg: float) -> str:
 DEFAULT_BEACH_ORIENTATIONS = {
     "cumbuco": 40.0,        # NE
     "taiba": 35.0,          # NNE
-    "paracuru": 20.0,       # NNE
-    "ilha do guajiru": 25.0,# NNE
-    "jericoacoara": 20.0,   # NNE (prevailing E/ENE trade winds)
-    "galinhos": 25.0,       # NNE
+    "paracuru": 15.0,       # NNE
+    "ilha do guajiru": 0.0, # N (North-facing coastline, side-onshore NE/ENE/E trades)
+    "jericoacoara": 0.0,    # N (North-facing coastline, side-onshore/sideshore trades)
+    "maceio": 0.0,          # N (Praia de Maceió Camocim, North-facing beach)
+    "camocim": 0.0,         # N
+    "tatajuba": 0.0,        # N
+    "guriu": 0.0,           # N
+    "barra grande": 0.0,    # N
+    "macapa": 0.0,          # N
+    "atins": 0.0,           # N
+    "galinhos": 0.0,        # N
     "tarifa": 220.0,        # SW (Los Lances / Valdevaqueros)
     "dakhla": 340.0,        # NNW (Lagoon trade wind axis)
     "leucate": 110.0,       # ESE (La Franqui)
@@ -712,8 +720,11 @@ def infer_coastal_beach_angle(lat: float = None, lon: float = None, name: str = 
             pass
 
         la, lo = float(lat), float(lon)
-        # 1. NE Brazil (Maranhão, Piauí, Ceará, RN North Coast): faces NNE (25°)
-        if -6.0 <= la <= -1.0 and -45.0 <= lo <= -35.0:
+        # 1a. West Ceará, Piauí, Maranhão & RN North Coast (Camocim, Maceió, Jeri, Barra Grande, Atins): faces due North (0°)
+        if -6.0 <= la <= -1.0 and -45.0 <= lo <= -39.2:
+            return 0.0
+        # 1b. East Ceará & RN NE Coast (Fortaleza, Cumbuco, Taíba, Paracuru, São Miguel do Gostoso): faces NNE (25°)
+        if -6.0 <= la <= -1.0 and -39.2 < lo <= -35.0:
             return 25.0
         # 2. East/South Brazil (Natal to Santa Catarina): faces E/ESE (95°)
         if -34.0 <= la < -6.0 and -54.0 <= lo <= -34.0:
@@ -842,7 +853,7 @@ def resolve_beach_angle(spot_name: str, custom_angle=None, lat: float = None, lo
     clean_n = (spot_name or "").lower().strip()
     for br_spot in ["maceio", "maceió", "camocim", "tatajuba", "guriu", "guriú", "barra grande", "macapa", "macapá", "atins", "guajiru", "prea", "preá", "galinhos", "jeri", "jericoacoara"]:
         if br_spot in clean_n:
-            return 20.0
+            return 0.0
     try:
         from kite_spots import GLOBAL_KITE_SPOTS, haversine_distance_km
         for s in GLOBAL_KITE_SPOTS:
@@ -1460,10 +1471,10 @@ def calculate_thermal_calibration(
     boosted_wind = round_knots(base_wind * (1.0 + boost_pct))
     # In off-land or Levante winds (60-120 deg or side-offshore), gustiness is significantly higher
     if shore_diff > 90.0:
-        boosted_gust = round_knots(max(base_gust, boosted_wind * 1.48, base_wind + 8.5))
+        boosted_gust = round_knots(max(base_gust * (1.0 + boost_pct * 0.90), boosted_wind * 1.48, base_wind + 8.5))
     else:
-        boosted_gust = round_knots(max(base_gust, boosted_wind * 1.25))
-    boost_kts = round(boosted_wind - base_wind, 1)
+        boosted_gust = round_knots(max(base_gust * (1.0 + boost_pct * 0.85), boosted_wind * 1.28))
+    boost_kts = max(0.0, round(boosted_wind - base_wind, 1))
 
     return {
         "boosted_wind": boosted_wind,
@@ -1527,6 +1538,9 @@ def resolve_best_meteo_model(lat: float, lon: float, spot_meta: dict = None) -> 
         return "icon_eu", "DWD ICON-EU (7km)"
     return "best_match", "ECMWF IFS (9km) / Multi-Model High-Res"
 
+FORECAST_MEM_CACHE = {}
+FORECAST_MEM_TTL_SEC = 300
+
 def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: float = None) -> dict:
     lat = float(spot["lat"])
     lon = float(spot["lon"])
@@ -1553,9 +1567,10 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
 
     primary_model, model_display_label = resolve_best_meteo_model(lat, lon, spot)
 
-    models_param = f"{primary_model},ecmwf_ifs025,gfs_seamless"
+    # Keep multi-model query lightweight (2 models max) so Open-Meteo never times out on shared cloud IPs
+    models_param = f"{primary_model},gfs_seamless"
     if primary_model == "best_match":
-        models_param = "best_match,ecmwf_ifs025,gfs_seamless,icon_seamless"
+        models_param = "best_match,gfs_seamless"
 
     is_inland_lake = (spot_type == "lake")
 
@@ -1586,9 +1601,9 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
     url = f"https://api.open-meteo.com/v1/forecast?{urllib.parse.urlencode(params)}"
     req = urllib.request.Request(url, headers={"User-Agent": "KiteForecastBot/1.0"})
     try:
-        with urllib.request.urlopen(req, context=SSL_CTX, timeout=10) as response:
+        with urllib.request.urlopen(req, context=SSL_CTX, timeout=8) as response:
             data = json.loads(response.read().decode("utf-8"))
-    except Exception as e:
+    except Exception:
         # Fast fallback: query default cached Open-Meteo endpoint at stepped marine coordinate
         fast_params = dict(params)
         fast_params.pop("models", None)
@@ -1964,36 +1979,112 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
     }
 
 
-def fetch_weather_metno(spot: dict) -> dict:
-    url = f"https://api.met.no/weatherapi/locationforecast/2.0/compact?lat={spot['lat']}&lon={spot['lon']}"
-    req = urllib.request.Request(url, headers={"User-Agent": "KiteForecastBot/1.0 (team@holygust.com)"})
+def fetch_weather_metno(spot: dict, today_sst: float = None, tomorrow_sst: float = None) -> dict:
+    lat = float(spot["lat"])
+    lon = float(spot["lon"])
+    spot_name_raw = spot.get("name", "")
     try:
-        with urllib.request.urlopen(req, context=SSL_CTX, timeout=10) as response:
-            data = json.loads(response.read().decode("utf-8"))
-    except Exception as e:
-        # Fast fallback: query single best_match model (super fast ~150ms, never times out)
-        fast_params = dict(params)
-        fast_params["models"] = "best_match"
-        fast_url = f"https://api.open-meteo.com/v1/forecast?{urllib.parse.urlencode(fast_params)}"
-        req_fast = urllib.request.Request(fast_url, headers={"User-Agent": "KiteForecastBot/1.0"})
-        with urllib.request.urlopen(req_fast, context=SSL_CTX, timeout=8) as response:
-            data = json.loads(response.read().decode("utf-8"))
+        from kite_spots import GLOBAL_KITE_SPOTS, haversine_distance_km
+        n_clean = (spot_name_raw or "").strip().lower()
+        for cs in GLOBAL_KITE_SPOTS:
+            if cs["id"] == n_clean or cs["name"].lower() == n_clean or haversine_distance_km(lat, lon, float(cs["lat"]), float(cs["lon"])) <= 12.0:
+                spot = dict(spot)
+                spot.setdefault("spot_type", cs.get("spot_type", "ocean"))
+                spot.setdefault("thermal_boost", cs.get("thermal_boost", 0.16))
+                spot.setdefault("preferred_model", cs.get("preferred_model"))
+                spot["beach_angle"] = float(cs.get("beach_angle", spot.get("beach_angle") or 45.0))
+                break
+    except Exception:
+        pass
+
+    spot_type = spot.get("spot_type") or infer_spot_type(spot_name_raw, lat, lon)
+    beach_angle = resolve_beach_angle(spot_name_raw, spot.get("beach_angle"), lat=lat, lon=lon)
+    spot["spot_type"] = spot_type
+    spot["beach_angle"] = beach_angle
+    is_inland_lake = (spot_type == "lake")
+
+    q_lat, q_lon = lat, lon
+    if not is_inland_lake:
+        if -6.5 <= lat <= -1.5 and -44.0 <= lon <= -34.5:
+            q_lat = round(lat + 0.08, 4)
+            q_lon = round(lon + 0.03, 4)
+        else:
+            rad_ang = math.radians(beach_angle)
+            q_lat = round(lat + 0.045 * math.cos(rad_ang), 4)
+            q_lon = round(lon + 0.045 * math.sin(rad_ang), 4)
+
+    url = f"https://api.met.no/weatherapi/locationforecast/2.0/compact?lat={q_lat}&lon={q_lon}"
+    req = urllib.request.Request(url, headers={"User-Agent": "KiteForecastBot/1.0 (team@holygust.com)"})
+    with urllib.request.urlopen(req, context=SSL_CTX, timeout=10) as response:
+        data = json.loads(response.read().decode("utf-8"))
 
     series = data.get("properties", {}).get("timeseries", [])
     if not series:
         raise ValueError("Empty timeseries from Met.no")
 
-    cur_details = series[0]["data"]["instant"]["details"]
-    cur_wind = round_knots(cur_details["wind_speed"] * 1.94384)
-    cur_gust = round_knots(cur_details.get("wind_speed_of_gust", cur_details["wind_speed"]) * 1.94384)
-    cur_temp = round(cur_details["air_temperature"], 1)
-    cur_dir_deg = round(cur_details.get("wind_from_direction", 90))
-    cur_dir = degrees_to_cardinal(cur_dir_deg)
+    approx_offset = round(lon / 15.0) * 3600
+    local_now = datetime.now(timezone.utc) + timedelta(seconds=approx_offset)
+    cur_month = local_now.month
+    sst_today = today_sst if today_sst is not None else 25.0
+    sst_tmrw = tomorrow_sst if tomorrow_sst is not None else sst_today
 
-    beach_angle = resolve_beach_angle(spot.get("name", ""), spot.get("beach_angle"), lat=spot.get("lat"), lon=spot.get("lon"))
-    cur_shoreline = calculate_shoreline_status(cur_dir_deg, beach_angle)
-    cur_stability = calculate_stability_score(cur_wind, cur_gust, cur_shoreline.get("type"))
-    cur_consensus = calculate_model_consensus(cur_wind, cur_wind + 1, cur_wind)
+    # Parse real hourly & 6-hourly Met.no ECMWF HRES series into (day_offset, local_hour) buckets
+    parsed_points = {}
+    for item in series:
+        t_str = item.get("time", "")
+        try:
+            utc_dt = datetime.fromisoformat(t_str.replace("Z", "+00:00"))
+            loc_dt = utc_dt + timedelta(seconds=approx_offset)
+            day_diff = (loc_dt.date() - local_now.date()).days
+            if 0 <= day_diff <= 7:
+                det = item.get("data", {}).get("instant", {}).get("details", {})
+                w_kts = float(det.get("wind_speed", 6.0)) * 1.94384
+                g_raw = det.get("wind_speed_of_gust")
+                g_kts = float(g_raw) * 1.94384 if g_raw is not None else w_kts * 1.26
+                parsed_points[(day_diff, loc_dt.hour)] = {
+                    "w": w_kts,
+                    "g": max(g_kts, w_kts * 1.24),
+                    "d": round(float(det.get("wind_from_direction", 75.0))),
+                    "t": round(float(det.get("air_temperature", 27.0)), 1)
+                }
+        except Exception:
+            pass
+
+    def get_metno_slot(day_idx: int, hr: int, sst_val: float) -> dict:
+        # Find exact hour or interpolate from nearest available hours on that day (or previous day)
+        pt = parsed_points.get((day_idx, hr))
+        if not pt:
+            # Search nearest hour in same day_idx, else nearest across all parsed_points
+            same_day = [(abs(h - hr), p) for (d_i, h), p in parsed_points.items() if d_i == day_idx]
+            if same_day:
+                same_day.sort(key=lambda x: x[0])
+                pt = same_day[0][1]
+            elif parsed_points:
+                any_day = [(abs((d_i * 24 + h) - (day_idx * 24 + hr)), p) for (d_i, h), p in parsed_points.items()]
+                any_day.sort(key=lambda x: x[0])
+                pt = any_day[0][1]
+            else:
+                pt = {"w": 16.0, "g": 20.0, "d": 70, "t": 27.0}
+
+        shore = calculate_shoreline_status(pt["d"], beach_angle)
+        calib = calculate_thermal_calibration(
+            hr, pt["w"], pt["g"], pt["t"], sst_val,
+            spot_name_raw, shore_diff=shore.get("relative_angle", 45.0), month=cur_month, spot_meta=spot
+        )
+        w_cal = calib["boosted_wind"]
+        g_cal = calib["boosted_gust"]
+        return {
+            "hour": hr,
+            "wind_kts": w_cal,
+            "gust_kts": g_cal,
+            "direction": degrees_to_cardinal(pt["d"]),
+            "degrees": pt["d"],
+            "temp": pt["t"],
+            "stability": calculate_stability_score(w_cal, g_cal, shore.get("type")),
+            "shoreline": shore,
+            "consensus": calculate_model_consensus(w_cal, w_cal + 1, w_cal),
+            "thermal": calib
+        }
 
     target_2h_slots = {
         "07:00 Early Dawn": 7,
@@ -2006,75 +2097,61 @@ def fetch_weather_metno(spot: dict) -> dict:
     }
     daylight_hours = list(range(7, 20))
 
-    schedule = {}
-    for label, hr in target_2h_slots.items():
-        w_adj = cur_wind + (1 if 11 <= hr <= 15 else 0)
-        g_adj = cur_gust + (2 if 11 <= hr <= 15 else 0)
-        schedule[label] = {
-            "hour": hr,
-            "wind_kts": w_adj,
-            "gust_kts": g_adj,
-            "direction": cur_dir,
-            "degrees": cur_dir_deg,
-            "temp": cur_temp,
-            "stability": cur_stability,
-            "shoreline": cur_shoreline,
-            "consensus": cur_consensus,
-            "thermal": {"is_active": 11 <= hr <= 15, "boost_kts": 1.5, "reason": "Estimated thermal"}
-        }
+    schedule = {label: get_metno_slot(0, hr, sst_today) for label, hr in target_2h_slots.items()}
+    schedule_hourly = {f"{hr:02d}:00": get_metno_slot(0, hr, sst_today) for hr in daylight_hours}
+    schedule_tomorrow = {label: get_metno_slot(1, hr, sst_tmrw) for label, hr in target_2h_slots.items()}
+    schedule_tomorrow_hourly = {f"{hr:02d}:00": get_metno_slot(1, hr, sst_tmrw) for hr in daylight_hours}
 
-    schedule_hourly = {}
-    for hr in daylight_hours:
-        w_adj = cur_wind + (1 if 11 <= hr <= 15 else 0)
-        g_adj = cur_gust + (2 if 11 <= hr <= 15 else 0)
-        schedule_hourly[f"{hr:02d}:00"] = {
-            "hour": hr,
-            "wind_kts": w_adj,
-            "gust_kts": g_adj,
-            "direction": cur_dir,
-            "degrees": cur_dir_deg,
-            "temp": cur_temp,
-            "stability": cur_stability,
-            "shoreline": cur_shoreline,
-            "consensus": cur_consensus,
-            "thermal": {"is_active": 11 <= hr <= 15, "boost_kts": 1.5, "reason": "Estimated thermal"}
-        }
+    cur_hr = local_now.hour
+    cur_slot = get_metno_slot(0, cur_hr, sst_today)
+    cur_wind = cur_slot["wind_kts"]
+    cur_gust = cur_slot["gust_kts"]
+    cur_temp = cur_slot["temp"]
+    cur_dir_deg = cur_slot["degrees"]
+    cur_dir = cur_slot["direction"]
+    cur_shoreline = cur_slot["shoreline"]
+    cur_stability = cur_slot["stability"]
+    cur_consensus = cur_slot["consensus"]
+    cur_calib = cur_slot["thermal"]
 
-    schedule_tomorrow = {label: dict(slot) for label, slot in schedule.items()}
-    schedule_tomorrow_hourly = {label: dict(slot) for label, slot in schedule_hourly.items()}
+    peak_session = find_peak_session_window(list(schedule_hourly.values()))
+    tomorrow_peak_session = find_peak_session_window(list(schedule_tomorrow_hourly.values()))
 
-    # Build 7-day weekly_forecast from Met.no timeseries + thermal calibration
-    cur_m = datetime.now().month
+    # Build 7-day weekly_forecast from real Met.no timeseries + thermal calibration
     weekly_forecast = []
     for d in range(7):
-        dt_obj = datetime.now() + timedelta(days=d)
+        dt_obj = local_now + timedelta(days=d)
         day_name = "Today" if d == 0 else ("Tomorrow" if d == 1 else dt_obj.strftime("%A"))
         date_display = dt_obj.strftime("%a, %b %d")
         day_hourly = []
         d_speeds = []
         d_gusts = []
+        d_dirs = []
         for h_sub in range(7, 20):
-            cal = calculate_thermal_calibration(
-                h_sub, cur_wind, cur_gust, cur_temp, 25.0,
-                spot.get("name", ""), shore_diff=cur_shoreline.get("relative_angle", 45.0), month=cur_m, spot_meta=spot
-            )
-            hw = cal["boosted_wind"]
-            hg = cal["boosted_gust"]
+            s_slot = get_metno_slot(d, h_sub, sst_today)
+            hw = s_slot["wind_kts"]
+            hg = s_slot["gust_kts"]
             day_hourly.append({
                 "hour": f"{h_sub:02d}:00",
                 "wind_kts": hw,
                 "gust_kts": hg,
-                "direction": cur_dir,
-                "degrees": cur_dir_deg,
-                "shoreline": cur_shoreline
+                "direction": s_slot["direction"],
+                "degrees": s_slot["degrees"],
+                "shoreline": s_slot["shoreline"]
             })
             if 8 <= h_sub <= 18:
                 d_speeds.append(hw)
                 d_gusts.append(hg)
+                d_dirs.append(s_slot["degrees"])
         pw = round_knots(max(d_speeds) if d_speeds else cur_wind)
         mw = round_knots(min(d_speeds) if d_speeds else cur_wind)
         aw = round(sum(d_speeds)/len(d_speeds), 1) if d_speeds else cur_wind
         pg = round_knots(max(d_gusts) if d_gusts else cur_gust)
+        dom_deg = round(d_dirs[len(d_dirs)//2]) if d_dirs else cur_dir_deg
+        dom_shore = calculate_shoreline_status(dom_deg, beach_angle)
+        best_hr_idx = 14
+        if d_speeds:
+            best_hr_idx = 8 + d_speeds.index(max(d_speeds))
         weekly_forecast.append({
             "day_index": d,
             "day_name": day_name,
@@ -2087,36 +2164,39 @@ def fetch_weather_metno(spot: dict) -> dict:
             "wind_peak_kts": pw,
             "wind_avg_kts": aw,
             "gust_peak_kts": pg,
-            "direction": cur_dir,
-            "degrees": cur_dir_deg,
-            "shoreline": cur_shoreline,
-            "stability": calculate_stability_score(aw, pg, cur_shoreline.get("type")),
-            "best_window": "12:00 – 16:00",
-            "best_hour": 14,
-            "model_used": "Met.no Global + Thermal Calibration",
+            "direction": degrees_to_cardinal(dom_deg),
+            "degrees": dom_deg,
+            "shoreline": dom_shore,
+            "stability": calculate_stability_score(aw, pg, dom_shore.get("type")),
+            "best_window": f"{max(8, best_hr_idx-2):02d}:00 – {min(19, best_hr_idx+2):02d}:00",
+            "best_hour": best_hr_idx,
+            "model_used": "ECMWF HRES (9km) + Thermal Venturi",
             "hourly": day_hourly
         })
 
-    approx_offset = round(spot.get("lon", -38.7297) / 15.0) * 3600
+    today_t_list = [s["temp"] for s in schedule_hourly.values()]
+    tmrw_t_list = [s["temp"] for s in schedule_tomorrow_hourly.values()]
     return {
         "spot": spot["name"],
-        "spot_type": spot.get("spot_type") or infer_spot_type(spot.get("name", ""), spot.get("lat"), spot.get("lon")),
+        "spot_type": spot_type,
         "weekly_forecast": weekly_forecast,
         "beach_angle": beach_angle,
         "timezone": spot.get("timezone", "America/Fortaleza"),
         "utc_offset_seconds": approx_offset,
-        "temp_min": round(cur_temp - 3, 1),
-        "temp_max": round(cur_temp + 2, 1),
-        "max_gust": round_knots(max(s["gust_kts"] for s in schedule.values())),
-        "tomorrow_temp_min": round(cur_temp - 3, 1),
-        "tomorrow_temp_max": round(cur_temp + 2, 1),
-        "tomorrow_max_gust": round_knots(max(s["gust_kts"] for s in schedule_tomorrow.values())),
+        "model_info": "ECMWF IFS (9km) / Multi-Model High-Res",
+        "temp_min": round(min(today_t_list), 1) if today_t_list else round(cur_temp - 2, 1),
+        "temp_max": round(max(today_t_list), 1) if today_t_list else round(cur_temp + 2, 1),
+        "max_gust": round_knots(max(s["gust_kts"] for s in schedule_hourly.values())),
+        "tomorrow_temp_min": round(min(tmrw_t_list), 1) if tmrw_t_list else round(cur_temp - 2, 1),
+        "tomorrow_temp_max": round(max(tmrw_t_list), 1) if tmrw_t_list else round(cur_temp + 2, 1),
+        "tomorrow_max_gust": round_knots(max(s["gust_kts"] for s in schedule_tomorrow_hourly.values())),
         "current": {
             "wind_kts": cur_wind,
             "gust_kts": cur_gust,
             "direction": cur_dir,
             "degrees": cur_dir_deg,
-            "temp": cur_temp
+            "temp": cur_temp,
+            "apparent_temp": cur_temp
         },
         "shoreline": cur_shoreline,
         "stability": cur_stability,
@@ -2125,13 +2205,28 @@ def fetch_weather_metno(spot: dict) -> dict:
         "schedule_hourly": schedule_hourly,
         "schedule_tomorrow": schedule_tomorrow,
         "schedule_tomorrow_hourly": schedule_tomorrow_hourly,
-        "peak_session": {"tag": "⚡ Peak Session: 12:00 – 15:30", "wind_range": f"{cur_wind}–{cur_wind+2} kts", "best_hour": 13},
-        "tomorrow_peak_session": {"tag": "⚡ Peak Session: 12:00 – 15:30", "wind_range": f"{cur_wind}–{cur_wind+2} kts", "best_hour": 13},
-        "thermal": {"is_active": False, "boost_kts": 0.0, "reason": "Met.no standard"}
+        "peak_session": peak_session,
+        "tomorrow_peak_session": tomorrow_peak_session,
+        "thermal": {
+            "is_active": cur_calib["is_active"],
+            "boost_pct": cur_calib["boost_pct"],
+            "boost_kts": cur_calib["boost_kts"],
+            "reason": cur_calib["reason"],
+            "spot_profile": get_spot_thermal_profile(spot_name_raw, spot_meta=spot)
+        },
+        "sea_temp": sst_today,
+        "tomorrow_sea_temp": sst_tmrw,
+        "is_lake": is_inland_lake
     }
 
 
 def fetch_live_forecast(spot: dict) -> dict:
+    cache_key = (round(float(spot.get("lat", 0)), 3), round(float(spot.get("lon", 0)), 3), (spot.get("name") or "").strip().lower())
+    now_ts = time.time()
+    cached_entry = FORECAST_MEM_CACHE.get(cache_key)
+    if cached_entry and (now_ts - cached_entry[0]) < FORECAST_MEM_TTL_SEC:
+        return copy.deepcopy(cached_entry[1])
+
     today_tides, tomorrow_tides, today_sst, tomorrow_sst = fetch_tides_both_days(spot["lat"], spot["lon"], spot.get("timezone", "auto"))
     forecast = None
     try:
@@ -2139,12 +2234,17 @@ def fetch_live_forecast(spot: dict) -> dict:
     except Exception as e:
         print(f"Open-Meteo ({e}), switching to Met.no...")
         try:
-            forecast = fetch_weather_metno(spot)
+            forecast = fetch_weather_metno(spot, today_sst=today_sst, tomorrow_sst=tomorrow_sst)
         except Exception as e2:
             print(f"Met.no ({e2}), using cache...")
             if os.path.exists(CACHE_FILE):
-                with open(CACHE_FILE, "r", encoding="utf-8") as f:
-                    forecast = json.load(f)
+                try:
+                    with open(CACHE_FILE, "r", encoding="utf-8") as f:
+                        c_data = json.load(f)
+                        if c_data and c_data.get("spot") == spot.get("name"):
+                            forecast = c_data
+                except Exception:
+                    pass
 
     if not forecast:
         # Check if we have recent cached forecast strictly for THIS SPOT
@@ -2297,6 +2397,7 @@ def fetch_live_forecast(spot: dict) -> dict:
         forecast["weekly_forecast"] = synth_week
 
     try:
+        FORECAST_MEM_CACHE[cache_key] = (now_ts, copy.deepcopy(forecast))
         with open(CACHE_FILE, "w", encoding="utf-8") as f:
             json.dump(forecast, f)
     except Exception:
