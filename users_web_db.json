@@ -54,7 +54,7 @@
       "beta_approved_at": "2026-11-06T13:07:35.934278+00:00Z",
       "nationality": "Spanish",
       "registered_at": "2026-11-04T22:00:00Z",
-      "last_login": "2026-11-09T12:59:08.833699+00:00Z",
+      "last_login": "2026-11-09T13:09:09.159554+00:00Z",
       "spot_alerts": {
         "enabled": true,
         "enable_push": true,
@@ -70,7 +70,7 @@
         "lat": -3.0232,
         "lon": -39.6433
       },
-      "last_sync": "2026-11-09T12:53:51.938139Z",
+      "last_sync": "2026-11-09T13:04:45.979062Z",
       "push_subscription": {
         "endpoint": "https://fcm.googleapis.com/fcm/send/e0Fy5K6O5Vo:APA91bGmmQKIvrzVpkGdJWfL3WEDYogQFk3svGSd0rSD7VkzBM6dve3bpZx3pi6nXMxqCRxxjdCQP9YRSjuedc8KvHWcoNP6mvrlt8IXYEx4vHZebkPFjvCt8K6LE4sZt1LH7XCBfIO6",
         "expirationTime": null,
@@ -107,7 +107,7 @@
       "name": "Seb",
       "nationality": "German",
       "registered_at": "2026-11-07T09:29:00Z",
-      "last_login": "2026-11-09T12:19:14.510756+00:00Z",
+      "last_login": "2026-11-09T13:07:35.705828+00:00Z",
       "gear": [
         {
           "category": "kite",
@@ -175,7 +175,7 @@
         "beach_angle": 55,
         "model_label": "ECMWF (9km) + Bay Venturi"
       },
-      "last_sync": "2026-11-09T12:19:15.939608Z"
+      "last_sync": "2026-11-09T13:07:37.234417Z"
     },
     "maja.jan@gmx.de": {
       "email": "maja.jan@gmx.de",

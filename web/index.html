@@ -6668,8 +6668,21 @@
     }
 
     function selectExploredSpot(spotId, month) {
+      const countrySelect = document.getElementById('travel-country-select');
       const destSelect = document.getElementById('travel-destination-select');
       const monthSelect = document.getElementById('travel-month-select');
+
+      let foundCountry = '';
+      for (const [cName, cObj] of Object.entries(travelCountries)) {
+        if (cObj.spots && cObj.spots.some(s => s.id === spotId)) {
+          foundCountry = cName;
+          break;
+        }
+      }
+      if (foundCountry && countrySelect) {
+        countrySelect.value = foundCountry;
+        populateSpotsForCountry(foundCountry, spotId);
+      }
       if (destSelect) destSelect.value = spotId;
       if (monthSelect) monthSelect.value = String(month);
       switchTravelMode('A');

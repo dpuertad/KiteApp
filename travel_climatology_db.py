@@ -201,7 +201,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "taiba",
@@ -377,7 +378,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "guajiru",
@@ -553,7 +555,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "prea",
@@ -730,7 +733,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "paracuru",
@@ -906,7 +910,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "barra_grande",
@@ -1082,7 +1087,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "macapa",
@@ -1258,7 +1264,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "atins",
@@ -1434,7 +1441,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "icaraizinho",
@@ -1449,7 +1457,8 @@ CORE_TRAVEL_SPOTS = [
     "style_tags": [
       "Wave",
       "Freeride",
-      "Hydrofoil"
+      "Hydrofoil",
+      "Flat Water"
     ],
     "prime_season": "Jul – Jan (Strong Trade Winds)",
     "water_type": "Gentle Waves, Bay Flat & Windswell",
@@ -1610,7 +1619,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "cauipe",
@@ -1785,7 +1795,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "florianopolis",
@@ -1800,7 +1811,8 @@ CORE_TRAVEL_SPOTS = [
     "style_tags": [
       "Wave",
       "Freestyle",
-      "Big Air"
+      "Big Air",
+      "Flat Water"
     ],
     "prime_season": "Sep – Apr (Spring & Summer Cold Fronts / NE)",
     "water_type": "Ocean Waves & Vast Mountain Lagoon",
@@ -1961,7 +1973,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts / Shorty",
         "tip": "Excellent holiday winds and warm water."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "ibiraquera",
@@ -1976,7 +1989,8 @@ CORE_TRAVEL_SPOTS = [
     "style_tags": [
       "Wave",
       "Strapless",
-      "Freeride"
+      "Freeride",
+      "Flat Water"
     ],
     "prime_season": "Sep – Apr (Spring & Summer Cold Fronts / NE)",
     "water_type": "World-Class Pointbreak Waves & Flat Lake",
@@ -2137,7 +2151,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts / Shorty",
         "tip": "Excellent holiday winds and warm water."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "cabarete",
@@ -2314,7 +2329,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas trades deliver warm winds and fun waves on outer reef."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "las_terrenas",
@@ -2329,7 +2345,9 @@ CORE_TRAVEL_SPOTS = [
     "style_tags": [
       "Freeride",
       "Hydrofoil",
-      "Downwind"
+      "Downwind",
+      "Flat Water",
+      "Wave"
     ],
     "prime_season": "Dec – Aug (Consistent Atlantic Trades)",
     "water_type": "Turquoise Flat Water & Gentle Reef Chop",
@@ -2490,7 +2508,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas trades deliver warm winds and fun waves on outer reef."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "buen_hombre",
@@ -2666,7 +2685,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas trades deliver warm winds and fun waves on outer reef."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "punta_cana",
@@ -2842,7 +2862,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas trades deliver warm winds and fun waves on outer reef."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "el_gouna",
@@ -3018,7 +3039,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "3/2mm Steamer",
         "tip": "Good winter getaway with empty lagoons."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "soma_bay",
@@ -3033,7 +3055,8 @@ CORE_TRAVEL_SPOTS = [
     "style_tags": [
       "Freestyle",
       "Speed",
-      "Freeride"
+      "Freeride",
+      "Flat Water"
     ],
     "prime_season": "Apr – Oct (Gulf of Suez Venturi Thermal)",
     "water_type": "Crystal Clear Turquoise Flatwater Spit",
@@ -3194,7 +3217,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "3/2mm Steamer",
         "tip": "Good winter getaway with empty lagoons."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "dahab",
@@ -3370,7 +3394,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "3/2mm Steamer",
         "tip": "Good winter getaway with empty lagoons."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "hamata",
@@ -3546,7 +3571,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "3/2mm Steamer",
         "tip": "Good winter getaway with empty lagoons."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "ras_sudr",
@@ -3721,7 +3747,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "3/2mm Steamer",
         "tip": "Good winter getaway with empty lagoons."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "tarifa",
@@ -3898,7 +3925,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Quiet winter sessions on wide open beaches."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "fuerteventura",
@@ -3914,7 +3942,8 @@ CORE_TRAVEL_SPOTS = [
       "Speed",
       "Big Air",
       "Freestyle",
-      "Wave"
+      "Wave",
+      "Flat Water"
     ],
     "prime_season": "May – Sep (Alisios Trade Winds)",
     "water_type": "Tidal Sandbar Lagoon (Sotavento) & Ocean Chop",
@@ -4075,7 +4104,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "3/2mm Steamer",
         "tip": "Sunny winter getaways with decent wave sessions."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "tenerife",
@@ -4251,7 +4281,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "3/2mm Steamer",
         "tip": "Sunny winter getaways with decent wave sessions."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "lanzarote",
@@ -4427,7 +4458,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "3/2mm Steamer",
         "tip": "Sunny winter getaways with decent wave sessions."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "mallorca",
@@ -4603,7 +4635,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Quiet winter season."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "denia_oliva",
@@ -4779,7 +4812,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Quiet winter season."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "delta_ebro",
@@ -4955,7 +4989,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Quiet winter season."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "guincho",
@@ -5131,7 +5166,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "3/2mm Steamer",
         "tip": "Sunny winter getaways with decent wave sessions."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "esposende",
@@ -5307,7 +5343,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "3/2mm Steamer",
         "tip": "Sunny winter getaways with decent wave sessions."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "viana_castelo",
@@ -5322,7 +5359,8 @@ CORE_TRAVEL_SPOTS = [
     "style_tags": [
       "Wave",
       "Big Air",
-      "Freestyle"
+      "Freestyle",
+      "Flat Water"
     ],
     "prime_season": "May – Sep (Alisios Trade Winds)",
     "water_type": "Flat Water behind Breakwater & Clean Waves",
@@ -5483,7 +5521,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "3/2mm Steamer",
         "tip": "Sunny winter getaways with decent wave sessions."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "alvor",
@@ -5659,7 +5698,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Quiet winter sessions on wide open beaches."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "caparica",
@@ -5835,7 +5875,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "3/2mm Steamer",
         "tip": "Sunny winter getaways with decent wave sessions."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "dakhla",
@@ -6012,7 +6053,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Sunny winter escape from European freeze."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "dakhla_white_dune",
@@ -6027,7 +6069,8 @@ CORE_TRAVEL_SPOTS = [
     "style_tags": [
       "Wave",
       "Strapless",
-      "Downwind"
+      "Downwind",
+      "Flat Water"
     ],
     "prime_season": "Apr – Sep (Persistent Northern Atlantic Trades)",
     "water_type": "World-Class Right Hand Pointbreak Wave",
@@ -6188,7 +6231,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Sunny winter escape from European freeze."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "essaouira",
@@ -6364,7 +6408,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Sunny winter escape from European freeze."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "taghazout",
@@ -6540,7 +6585,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Sunny winter escape from European freeze."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "sal_kite_beach",
@@ -6716,7 +6762,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "3/2mm Steamer",
         "tip": "Sunny winter getaways with decent wave sessions."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "sal_ponta_preta",
@@ -6891,7 +6938,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "3/2mm Steamer",
         "tip": "Sunny winter getaways with decent wave sessions."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "boa_vista",
@@ -7067,7 +7115,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "3/2mm Steamer",
         "tip": "Sunny winter getaways with decent wave sessions."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "cape_town_blouberg",
@@ -7243,7 +7292,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Nuclear Cape Doctor winds, huge beach buzz and late sunsets."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "cape_town_big_bay",
@@ -7419,7 +7469,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Nuclear Cape Doctor winds, huge beach buzz and late sunsets."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "langebaan",
@@ -7595,7 +7646,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Nuclear Cape Doctor winds, huge beach buzz and late sunsets."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "witsand",
@@ -7771,7 +7823,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Nuclear Cape Doctor winds, huge beach buzz and late sunsets."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "rhodes_prasonisi",
@@ -7787,7 +7840,8 @@ CORE_TRAVEL_SPOTS = [
       "Freestyle",
       "Wave",
       "Speed",
-      "Big Air"
+      "Big Air",
+      "Flat Water"
     ],
     "prime_season": "Jun – Sep (Meltemi Trade Winds)",
     "water_type": "Mirror Flat on Aegean Side & Waves on Med Side",
@@ -7948,7 +8002,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Quiet winter season."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "rhodes_theologos",
@@ -7963,7 +8018,8 @@ CORE_TRAVEL_SPOTS = [
     "style_tags": [
       "Freeride",
       "Big Air",
-      "Hydrofoil"
+      "Hydrofoil",
+      "Wave"
     ],
     "prime_season": "Jun – Sep (Meltemi Trade Winds)",
     "water_type": "Thermal Sea Breeze with Afternoon Swell Kickers",
@@ -8124,7 +8180,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Quiet winter season."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "paros_pounda",
@@ -8139,7 +8196,8 @@ CORE_TRAVEL_SPOTS = [
     "style_tags": [
       "Freestyle",
       "Big Air",
-      "Freeride"
+      "Freeride",
+      "Flat Water"
     ],
     "prime_season": "Jun – Sep (Meltemi Trade Winds)",
     "water_type": "Funnel Channel Flat Water & Venturi Boost",
@@ -8300,7 +8358,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Quiet winter season."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "naxos_mikri_vigla",
@@ -8476,7 +8535,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Quiet winter season."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "lefkada_milos",
@@ -8652,7 +8712,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Quiet winter season."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "limnos_keros",
@@ -8828,7 +8889,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Quiet winter season."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "akyaka",
@@ -9004,7 +9066,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Quiet winter season."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "alacati",
@@ -9180,7 +9243,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Quiet winter season."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "urla",
@@ -9356,7 +9420,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Quiet winter season."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "le_morne",
@@ -9372,7 +9437,8 @@ CORE_TRAVEL_SPOTS = [
       "Wave",
       "Freestyle",
       "Strapless",
-      "Freeride"
+      "Freeride",
+      "Flat Water"
     ],
     "prime_season": "May – Nov (Strong Southeast Trade Winds)",
     "water_type": "Massive Turquoise Lagoon & Legendary Reef Passes",
@@ -9533,7 +9599,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Start of tropical summer lull."
       }
-    }
+    },
+    "spot_type": "lake"
   },
   {
     "id": "bel_ombre",
@@ -9548,7 +9615,8 @@ CORE_TRAVEL_SPOTS = [
     "style_tags": [
       "Freeride",
       "Flat Water",
-      "Hydrofoil"
+      "Hydrofoil",
+      "Wave"
     ],
     "prime_season": "May – Nov (Strong Southeast Trade Winds)",
     "water_type": "Uncrowded Outer Coral Reef Flat Lagoon",
@@ -9709,7 +9777,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Start of tropical summer lull."
       }
-    }
+    },
+    "spot_type": "lake"
   },
   {
     "id": "pointe_esny",
@@ -9885,7 +9954,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Start of tropical summer lull."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "sakalava",
@@ -10061,7 +10131,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Start of tropical summer lull."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "babaomby",
@@ -10237,7 +10308,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Start of tropical summer lull."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "hood_river",
@@ -10252,7 +10324,8 @@ CORE_TRAVEL_SPOTS = [
     "style_tags": [
       "Big Air",
       "Freeride",
-      "Hydrofoil"
+      "Hydrofoil",
+      "Wave"
     ],
     "prime_season": "May – Sep (Cascade Thermal Venturi)",
     "water_type": "Freshwater River Waves Rolling against Current",
@@ -10413,7 +10486,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Drysuit",
         "tip": "Winter closure."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "cape_hatteras",
@@ -10428,7 +10502,8 @@ CORE_TRAVEL_SPOTS = [
     "style_tags": [
       "Wave",
       "Freestyle",
-      "Downwind"
+      "Downwind",
+      "Flat Water"
     ],
     "prime_season": "Sep – May (Autumn & Spring Depressions)",
     "water_type": "Pamlico Sound Flatwater on West & Ocean Waves on East",
@@ -10589,7 +10664,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "5/4mm + Booties + Hood",
         "tip": "Rugged winter riding with heavy winds."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "maui_kite_beach",
@@ -10765,7 +10841,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "3/2mm Steamer",
         "tip": "Sunny winter getaways with decent wave sessions."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "oahu_kailua",
@@ -10941,7 +11018,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "3/2mm Steamer",
         "tip": "Sunny winter getaways with decent wave sessions."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "south_padre",
@@ -11117,7 +11195,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "3/2mm Steamer",
         "tip": "Classic winter holiday kite destination. Pack 8m-11m kites."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "corpus_christi",
@@ -11293,7 +11372,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "3/2mm Steamer",
         "tip": "Classic winter holiday kite destination. Pack 8m-11m kites."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "belmont_shore",
@@ -11307,7 +11387,8 @@ CORE_TRAVEL_SPOTS = [
     "lon": -118.136,
     "style_tags": [
       "Freeride",
-      "Hydrofoil"
+      "Hydrofoil",
+      "Flat Water"
     ],
     "prime_season": "May – Sep (Alisios Trade Winds)",
     "water_type": "Protected Breakwater Ocean Flat & Thermal Sea Breeze",
@@ -11468,7 +11549,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "3/2mm Steamer",
         "tip": "Sunny winter getaways with decent wave sessions."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "sherman_island",
@@ -11482,7 +11564,8 @@ CORE_TRAVEL_SPOTS = [
     "lon": -121.782,
     "style_tags": [
       "Big Air",
-      "Freeride"
+      "Freeride",
+      "Wave"
     ],
     "prime_season": "May – Sep (Cascade Thermal Venturi)",
     "water_type": "Sacramento River Thermal Venturi & Rolling Swells",
@@ -11643,7 +11726,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Drysuit",
         "tip": "Winter closure."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "st_petersburg",
@@ -11819,7 +11903,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas trades deliver warm winds and fun waves on outer reef."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "florida_keys",
@@ -11995,7 +12080,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas trades deliver warm winds and fun waves on outer reef."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "la_ventana",
@@ -12011,7 +12097,8 @@ CORE_TRAVEL_SPOTS = [
       "Big Air",
       "Freeride",
       "Hydrofoil",
-      "Downwind"
+      "Downwind",
+      "Wave"
     ],
     "prime_season": "Nov – Mar (El Norte & Sea of Cortez Thermal)",
     "water_type": "Deep Cobalt Blue Water with Rolling Swells",
@@ -12172,7 +12259,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "3/2mm Steamer",
         "tip": "Classic winter holiday kite destination. Pack 8m-11m kites."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "los_barriles",
@@ -12348,7 +12436,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "3/2mm Steamer",
         "tip": "Classic winter holiday kite destination. Pack 8m-11m kites."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "isla_blanca",
@@ -12523,7 +12612,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas trades deliver warm winds and fun waves on outer reef."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "el_cuyo",
@@ -12699,7 +12789,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas trades deliver warm winds and fun waves on outer reef."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "sisal",
@@ -12874,7 +12965,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas trades deliver warm winds and fun waves on outer reef."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "salinas_del_rey",
@@ -12889,7 +12981,8 @@ CORE_TRAVEL_SPOTS = [
     "style_tags": [
       "Wave",
       "Big Air",
-      "Freestyle"
+      "Freestyle",
+      "Flat Water"
     ],
     "prime_season": "Dec – Aug (Consistent Atlantic Trades)",
     "water_type": "Pointbreak Waves & Flat Water behind Sandspit",
@@ -13050,7 +13143,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas trades deliver warm winds and fun waves on outer reef."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "cabo_de_la_vela",
@@ -13226,7 +13320,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas trades deliver warm winds and fun waves on outer reef."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "san_andres",
@@ -13401,7 +13496,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas trades deliver warm winds and fun waves on outer reef."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "boracay",
@@ -13577,7 +13673,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas monsoon season delivers great tropical sessions."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "siargao",
@@ -13753,7 +13850,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas monsoon season delivers great tropical sessions."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "kingfisher",
@@ -13928,7 +14026,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas monsoon season delivers great tropical sessions."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "mui_ne",
@@ -14104,7 +14203,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas monsoon season delivers great tropical sessions."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "phan_rang",
@@ -14119,7 +14219,8 @@ CORE_TRAVEL_SPOTS = [
     "style_tags": [
       "Freestyle",
       "Speed",
-      "Wave"
+      "Wave",
+      "Flat Water"
     ],
     "prime_season": "Nov – Apr (Amihan Northeast Monsoon)",
     "water_type": "Huge Coral Barrier Flatwater & Outer Wave",
@@ -14280,7 +14381,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas monsoon season delivers great tropical sessions."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "kalpitiya",
@@ -14456,7 +14558,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Winter monsoon starts up nicely for the holidays."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "mannar",
@@ -14632,7 +14735,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Winter monsoon starts up nicely for the holidays."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "diani_beach",
@@ -14808,7 +14912,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Start of tropical summer lull."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "watamu",
@@ -14823,7 +14928,8 @@ CORE_TRAVEL_SPOTS = [
     "style_tags": [
       "Freeride",
       "Wave",
-      "Hydrofoil"
+      "Hydrofoil",
+      "Flat Water"
     ],
     "prime_season": "May – Nov (Strong Southeast Trade Winds)",
     "water_type": "Coral Sandbanks & Turquoise Warm Ocean",
@@ -14984,7 +15090,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Start of tropical summer lull."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "paje",
@@ -15160,7 +15267,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Start of tropical summer lull."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "jambiani",
@@ -15175,7 +15283,8 @@ CORE_TRAVEL_SPOTS = [
     "style_tags": [
       "Wave",
       "Freeride",
-      "Hydrofoil"
+      "Hydrofoil",
+      "Flat Water"
     ],
     "prime_season": "May – Nov (Strong Southeast Trade Winds)",
     "water_type": "Wide Sand Flat & Outer Reef Wave",
@@ -15336,7 +15445,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Start of tropical summer lull."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "safety_bay",
@@ -15512,7 +15622,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Summer holiday perfection. World-class flat water sessions."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "woodman_point",
@@ -15526,7 +15637,9 @@ CORE_TRAVEL_SPOTS = [
     "lon": 115.759,
     "style_tags": [
       "Freeride",
-      "Big Air"
+      "Big Air",
+      "Flat Water",
+      "Wave"
     ],
     "prime_season": "Nov – Mar (Fremantle Doctor Sea Breeze)",
     "water_type": "Cockburn Sound Flat & Swell",
@@ -15687,7 +15800,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Summer holiday perfection. World-class flat water sessions."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "exmouth",
@@ -15702,7 +15816,8 @@ CORE_TRAVEL_SPOTS = [
     "style_tags": [
       "Wave",
       "Freeride",
-      "Strapless"
+      "Strapless",
+      "Flat Water"
     ],
     "prime_season": "Nov – Mar (Fremantle Doctor Sea Breeze)",
     "water_type": "World Heritage Coral Reef Waves & Flat Lagoon",
@@ -15863,7 +15978,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Summer holiday perfection. World-class flat water sessions."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "sydney_botany",
@@ -16038,7 +16154,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts / Shorty",
         "tip": "Excellent holiday winds and warm water."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "st_kilda",
@@ -16214,7 +16331,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts / Shorty",
         "tip": "Excellent holiday winds and warm water."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "cairns",
@@ -16389,7 +16507,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas trades deliver warm winds and fun waves on outer reef."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "brouwersdam",
@@ -16565,7 +16684,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "5/4mm + Booties + Hood",
         "tip": "Rugged winter riding with heavy winds."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "scheveningen",
@@ -16741,7 +16861,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "5/4mm + Booties + Hood",
         "tip": "Rugged winter riding with heavy winds."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "mirns",
@@ -16916,7 +17037,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "5/4mm + Booties + Hood",
         "tip": "Rugged winter riding with heavy winds."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "zandvoort",
@@ -17091,7 +17213,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "5/4mm + Booties + Hood",
         "tip": "Rugged winter riding with heavy winds."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "leucate",
@@ -17106,7 +17229,8 @@ CORE_TRAVEL_SPOTS = [
     "style_tags": [
       "Speed",
       "Big Air",
-      "Freestyle"
+      "Freestyle",
+      "Flat Water"
     ],
     "prime_season": "Apr – Oct (Levante & Poniente Thermal)",
     "water_type": "Nuclear Tramontana (Mondial du Vent) Flat & Chop",
@@ -17267,7 +17391,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Quiet winter sessions on wide open beaches."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "hyeres",
@@ -17282,7 +17407,8 @@ CORE_TRAVEL_SPOTS = [
     "style_tags": [
       "Freeride",
       "Big Air",
-      "Wave"
+      "Wave",
+      "Flat Water"
     ],
     "prime_season": "Apr – Oct (Levante & Poniente Thermal)",
     "water_type": "Mistral Storm Chop & Eastern Thermal Flat",
@@ -17443,7 +17569,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Quiet winter sessions on wide open beaches."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "quiberon",
@@ -17619,7 +17746,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "5/4mm + Booties + Hood",
         "tip": "Rugged winter riding with heavy winds."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "port_saint_louis",
@@ -17795,7 +17923,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Quiet winter sessions on wide open beaches."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "dossen",
@@ -17971,7 +18100,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "5/4mm + Booties + Hood",
         "tip": "Rugged winter riding with heavy winds."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "lo_stagnone",
@@ -18147,7 +18277,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Quiet winter season."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "porto_pollo",
@@ -18323,7 +18454,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Quiet winter season."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "punta_trettu",
@@ -18499,7 +18631,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Quiet winter season."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "lake_garda",
@@ -18513,7 +18646,8 @@ CORE_TRAVEL_SPOTS = [
     "lon": 10.749,
     "style_tags": [
       "Hydrofoil",
-      "Freeride"
+      "Freeride",
+      "Flat Water"
     ],
     "prime_season": "Jun – Sep (Meltemi Trade Winds)",
     "water_type": "Freshwater Alpine Lake (Morning Peler & Afternoon Ora)",
@@ -18674,7 +18808,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Quiet winter season."
       }
-    }
+    },
+    "spot_type": "lake"
   },
   {
     "id": "gizzeria",
@@ -18850,7 +18985,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Quiet winter season."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "fehmarn",
@@ -19026,7 +19162,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "5/4mm + Booties + Hood",
         "tip": "Rugged winter riding with heavy winds."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "st_peter_ording",
@@ -19040,7 +19177,8 @@ CORE_TRAVEL_SPOTS = [
     "lon": 8.647,
     "style_tags": [
       "Big Air",
-      "Wave"
+      "Wave",
+      "Flat Water"
     ],
     "prime_season": "Sep – May (Autumn & Spring Depressions)",
     "water_type": "Gigantic Tidal Sandflat & North Sea Breakers",
@@ -19201,7 +19339,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "5/4mm + Booties + Hood",
         "tip": "Rugged winter riding with heavy winds."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "ruegen",
@@ -19376,7 +19515,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "5/4mm + Booties + Hood",
         "tip": "Rugged winter riding with heavy winds."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "masirah",
@@ -19552,7 +19692,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Winter monsoon starts up nicely for the holidays."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "bilene",
@@ -19727,7 +19868,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Nuclear Cape Doctor winds, huge beach buzz and late sunsets."
       }
-    }
+    },
+    "spot_type": "lagoon"
   },
   {
     "id": "tofo",
@@ -19741,7 +19883,8 @@ CORE_TRAVEL_SPOTS = [
     "lon": 35.545,
     "style_tags": [
       "Wave",
-      "Freeride"
+      "Freeride",
+      "Flat Water"
     ],
     "prime_season": "Nov – Mar (The Cape Doctor SE Gale)",
     "water_type": "Tropical Estuary Flats & Outer Ocean Surf",
@@ -19902,7 +20045,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Nuclear Cape Doctor winds, huge beach buzz and late sunsets."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "namotu",
@@ -20077,7 +20221,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas trades deliver warm winds and fun waves on outer reef."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "aruba",
@@ -20253,7 +20398,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas trades deliver warm winds and fun waves on outer reef."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "bonaire",
@@ -20429,7 +20575,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas trades deliver warm winds and fun waves on outer reef."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "curacao",
@@ -20604,7 +20751,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas trades deliver warm winds and fun waves on outer reef."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "poole_harbour",
@@ -20780,7 +20928,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "5/4mm + Booties + Hood",
         "tip": "Rugged winter riding with heavy winds."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "rhosneigr",
@@ -20955,7 +21104,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "5/4mm + Booties + Hood",
         "tip": "Rugged winter riding with heavy winds."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "tiree",
@@ -21130,7 +21280,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "5/4mm + Booties + Hood",
         "tip": "Rugged winter riding with heavy winds."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "hayling_island",
@@ -21305,7 +21456,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "5/4mm + Booties + Hood",
         "tip": "Rugged winter riding with heavy winds."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "bahia_salinas",
@@ -21480,7 +21632,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas trades deliver warm winds and fun waves on outer reef."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "lake_arenal",
@@ -21494,7 +21647,8 @@ CORE_TRAVEL_SPOTS = [
     "lon": -84.928,
     "style_tags": [
       "Freeride",
-      "Big Air"
+      "Big Air",
+      "Wave"
     ],
     "prime_season": "Dec – Aug (Consistent Atlantic Trades)",
     "water_type": "Freshwater Mountain Lake Swell & Strong Venturi",
@@ -21655,7 +21809,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts",
         "tip": "Christmas trades deliver warm winds and fun waves on outer reef."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "matanzas",
@@ -21830,7 +21985,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Nuclear Cape Doctor winds, huge beach buzz and late sunsets."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "puclaro",
@@ -22005,7 +22161,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Drysuit",
         "tip": "Winter closure."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "cuesta_del_viento",
@@ -22180,7 +22337,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Drysuit",
         "tip": "Winter closure."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "buenos_aires_riodelaplata",
@@ -22194,7 +22352,8 @@ CORE_TRAVEL_SPOTS = [
     "lon": -58.508,
     "style_tags": [
       "Freeride",
-      "Hydrofoil"
+      "Hydrofoil",
+      "Flat Water"
     ],
     "prime_season": "Sep – Apr (Spring & Summer Cold Fronts / NE)",
     "water_type": "Vast Brown River Estuary (Sudestada Storms)",
@@ -22355,7 +22514,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts / Shorty",
         "tip": "Excellent holiday winds and warm water."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "raglan",
@@ -22369,7 +22529,8 @@ CORE_TRAVEL_SPOTS = [
     "lon": 174.871,
     "style_tags": [
       "Wave",
-      "Freeride"
+      "Freeride",
+      "Flat Water"
     ],
     "prime_season": "Sep – Apr (Spring & Summer Cold Fronts / NE)",
     "water_type": "Tasman Sea Ocean Swell & Harbor Flats",
@@ -22530,7 +22691,8 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "Boardshorts / Shorty",
         "tip": "Excellent holiday winds and warm water."
       }
-    }
+    },
+    "spot_type": "ocean"
   },
   {
     "id": "foxton",
@@ -22705,6 +22867,9597 @@ CORE_TRAVEL_SPOTS = [
         "wetsuit": "4/3mm Steamer",
         "tip": "Nuclear Cape Doctor winds, huge beach buzz and late sunsets."
       }
+    },
+    "spot_type": "ocean"
+  },
+  {
+    "id": "lagoinha",
+    "name": "Lagoinha, Brazil",
+    "short_name": "Lagoinha",
+    "country": "Brazil",
+    "country_code": "BR",
+    "flag": "🇧🇷",
+    "region": "Ceará",
+    "lat": -3.3458,
+    "lon": -39.1417,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Freeride",
+      "Wave",
+      "Flat Water",
+      "Downwind"
+    ],
+    "prime_season": "Jul – Jan (Strong Trade Winds)",
+    "water_type": "Protected Reef Bay Flatwater & Rolling Ocean Swell",
+    "months": {
+      "1": {
+        "wind_prob": 70,
+        "avg_kts": 18,
+        "range": [
+          14,
+          22
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Gentler summer trades, great for all-day freestyle and warm cruising."
+      },
+      "2": {
+        "wind_prob": 50,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Tropical rainfall season begins, lighter breeze with occasional sunny thermal afternoons."
+      },
+      "3": {
+        "wind_prob": 40,
+        "avg_kts": 14,
+        "range": [
+          11,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Off-season. Light wind and occasional tropical showers."
+      },
+      "4": {
+        "wind_prob": 35,
+        "avg_kts": 13,
+        "range": [
+          10,
+          17
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Low wind season. Ideal for hydrofoil or surf lessons."
+      },
+      "5": {
+        "wind_prob": 45,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Rains subside; first winter southeasterly trades begin building."
+      },
+      "6": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Trade winds turn on reliably. Perfect for mid-size kites."
+      },
+      "7": {
+        "wind_prob": 88,
+        "avg_kts": 22,
+        "range": [
+          18,
+          27
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Prime season kick-off. 20+ knots almost every afternoon."
+      },
+      "8": {
+        "wind_prob": 94,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. Clockwork southeasterly trades blow non-stop."
+      },
+      "9": {
+        "wind_prob": 96,
+        "avg_kts": 26,
+        "range": [
+          22,
+          32
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Maximum wind velocity of the year. Small kites (7m-9m) locked and loaded."
+      },
+      "10": {
+        "wind_prob": 97,
+        "avg_kts": 26,
+        "range": [
+          22,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Megaloop & big air paradise. Consistent nuclear breeze daily."
+      },
+      "11": {
+        "wind_prob": 95,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Ultra-reliable wind continues with warm butter-flat lagoons."
+      },
+      "12": {
+        "wind_prob": 85,
+        "avg_kts": 20,
+        "range": [
+          16,
+          26
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
+      }
+    }
+  },
+  {
+    "id": "flecheiras",
+    "name": "Flecheiras (Trairi), Brazil",
+    "short_name": "Flecheiras",
+    "country": "Brazil",
+    "country_code": "BR",
+    "flag": "🇧🇷",
+    "region": "Ceará",
+    "lat": -3.2208,
+    "lon": -39.2612,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Freeride",
+      "Wave",
+      "Flat Water",
+      "Downwind"
+    ],
+    "prime_season": "Jul – Jan (Strong Trade Winds)",
+    "water_type": "Protected Reef Bay Flatwater & Rolling Ocean Swell",
+    "months": {
+      "1": {
+        "wind_prob": 70,
+        "avg_kts": 18,
+        "range": [
+          14,
+          22
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Gentler summer trades, great for all-day freestyle and warm cruising."
+      },
+      "2": {
+        "wind_prob": 50,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Tropical rainfall season begins, lighter breeze with occasional sunny thermal afternoons."
+      },
+      "3": {
+        "wind_prob": 40,
+        "avg_kts": 14,
+        "range": [
+          11,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Off-season. Light wind and occasional tropical showers."
+      },
+      "4": {
+        "wind_prob": 35,
+        "avg_kts": 13,
+        "range": [
+          10,
+          17
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Low wind season. Ideal for hydrofoil or surf lessons."
+      },
+      "5": {
+        "wind_prob": 45,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Rains subside; first winter southeasterly trades begin building."
+      },
+      "6": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Trade winds turn on reliably. Perfect for mid-size kites."
+      },
+      "7": {
+        "wind_prob": 88,
+        "avg_kts": 22,
+        "range": [
+          18,
+          27
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Prime season kick-off. 20+ knots almost every afternoon."
+      },
+      "8": {
+        "wind_prob": 94,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. Clockwork southeasterly trades blow non-stop."
+      },
+      "9": {
+        "wind_prob": 96,
+        "avg_kts": 26,
+        "range": [
+          22,
+          32
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Maximum wind velocity of the year. Small kites (7m-9m) locked and loaded."
+      },
+      "10": {
+        "wind_prob": 97,
+        "avg_kts": 26,
+        "range": [
+          22,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Megaloop & big air paradise. Consistent nuclear breeze daily."
+      },
+      "11": {
+        "wind_prob": 95,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Ultra-reliable wind continues with warm butter-flat lagoons."
+      },
+      "12": {
+        "wind_prob": 85,
+        "avg_kts": 20,
+        "range": [
+          16,
+          26
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
+      }
+    }
+  },
+  {
+    "id": "moitas",
+    "name": "Moitas (Rio Aracatiaçu), Brazil",
+    "short_name": "Moitas",
+    "country": "Brazil",
+    "country_code": "BR",
+    "flag": "🇧🇷",
+    "region": "Ceará",
+    "lat": -2.9965,
+    "lon": -39.6893,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Freeride",
+      "Wave",
+      "Flat Water",
+      "Downwind"
+    ],
+    "prime_season": "Jul – Jan (Strong Trade Winds)",
+    "water_type": "Protected Reef Bay Flatwater & Rolling Ocean Swell",
+    "months": {
+      "1": {
+        "wind_prob": 70,
+        "avg_kts": 18,
+        "range": [
+          14,
+          22
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Gentler summer trades, great for all-day freestyle and warm cruising."
+      },
+      "2": {
+        "wind_prob": 50,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Tropical rainfall season begins, lighter breeze with occasional sunny thermal afternoons."
+      },
+      "3": {
+        "wind_prob": 40,
+        "avg_kts": 14,
+        "range": [
+          11,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Off-season. Light wind and occasional tropical showers."
+      },
+      "4": {
+        "wind_prob": 35,
+        "avg_kts": 13,
+        "range": [
+          10,
+          17
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Low wind season. Ideal for hydrofoil or surf lessons."
+      },
+      "5": {
+        "wind_prob": 45,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Rains subside; first winter southeasterly trades begin building."
+      },
+      "6": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Trade winds turn on reliably. Perfect for mid-size kites."
+      },
+      "7": {
+        "wind_prob": 88,
+        "avg_kts": 22,
+        "range": [
+          18,
+          27
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Prime season kick-off. 20+ knots almost every afternoon."
+      },
+      "8": {
+        "wind_prob": 94,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. Clockwork southeasterly trades blow non-stop."
+      },
+      "9": {
+        "wind_prob": 96,
+        "avg_kts": 26,
+        "range": [
+          22,
+          32
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Maximum wind velocity of the year. Small kites (7m-9m) locked and loaded."
+      },
+      "10": {
+        "wind_prob": 97,
+        "avg_kts": 26,
+        "range": [
+          22,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Megaloop & big air paradise. Consistent nuclear breeze daily."
+      },
+      "11": {
+        "wind_prob": 95,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Ultra-reliable wind continues with warm butter-flat lagoons."
+      },
+      "12": {
+        "wind_prob": 85,
+        "avg_kts": 20,
+        "range": [
+          16,
+          26
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
+      }
+    }
+  },
+  {
+    "id": "jericoacoara",
+    "name": "Jericoacoara, Brazil",
+    "short_name": "Jericoacoara",
+    "country": "Brazil",
+    "country_code": "BR",
+    "flag": "🇧🇷",
+    "region": "Ceará",
+    "lat": -2.7958,
+    "lon": -40.5142,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Big Air",
+      "Wave",
+      "Freeride",
+      "Strapless"
+    ],
+    "prime_season": "Jul – Jan (Strong Trade Winds)",
+    "water_type": "Choppy Ocean & Rolling Swell (Strong Wind)",
+    "months": {
+      "1": {
+        "wind_prob": 70,
+        "avg_kts": 18,
+        "range": [
+          14,
+          22
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Gentler summer trades, great for all-day freestyle and warm cruising."
+      },
+      "2": {
+        "wind_prob": 50,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Tropical rainfall season begins, lighter breeze with occasional sunny thermal afternoons."
+      },
+      "3": {
+        "wind_prob": 40,
+        "avg_kts": 14,
+        "range": [
+          11,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Off-season. Light wind and occasional tropical showers."
+      },
+      "4": {
+        "wind_prob": 35,
+        "avg_kts": 13,
+        "range": [
+          10,
+          17
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Low wind season. Ideal for hydrofoil or surf lessons."
+      },
+      "5": {
+        "wind_prob": 45,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Rains subside; first winter southeasterly trades begin building."
+      },
+      "6": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Trade winds turn on reliably. Perfect for mid-size kites."
+      },
+      "7": {
+        "wind_prob": 88,
+        "avg_kts": 22,
+        "range": [
+          18,
+          27
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Prime season kick-off. 20+ knots almost every afternoon."
+      },
+      "8": {
+        "wind_prob": 94,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. Clockwork southeasterly trades blow non-stop."
+      },
+      "9": {
+        "wind_prob": 96,
+        "avg_kts": 26,
+        "range": [
+          22,
+          32
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Maximum wind velocity of the year. Small kites (7m-9m) locked and loaded."
+      },
+      "10": {
+        "wind_prob": 97,
+        "avg_kts": 26,
+        "range": [
+          22,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Megaloop & big air paradise. Consistent nuclear breeze daily."
+      },
+      "11": {
+        "wind_prob": 95,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Ultra-reliable wind continues with warm butter-flat lagoons."
+      },
+      "12": {
+        "wind_prob": 85,
+        "avg_kts": 20,
+        "range": [
+          16,
+          26
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
+      }
+    }
+  },
+  {
+    "id": "sao_miguel_gostoso",
+    "name": "São Miguel do Gostoso, Brazil",
+    "short_name": "SM Gostoso",
+    "country": "Brazil",
+    "country_code": "BR",
+    "flag": "🇧🇷",
+    "region": "Rio Grande do Norte",
+    "lat": -5.1239,
+    "lon": -35.6364,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Freeride",
+      "Wave",
+      "Flat Water",
+      "Downwind"
+    ],
+    "prime_season": "Jul – Jan (Strong Trade Winds)",
+    "water_type": "Protected Reef Bay Flatwater & Rolling Ocean Swell",
+    "months": {
+      "1": {
+        "wind_prob": 70,
+        "avg_kts": 18,
+        "range": [
+          14,
+          22
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Gentler summer trades, great for all-day freestyle and warm cruising."
+      },
+      "2": {
+        "wind_prob": 50,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Tropical rainfall season begins, lighter breeze with occasional sunny thermal afternoons."
+      },
+      "3": {
+        "wind_prob": 40,
+        "avg_kts": 14,
+        "range": [
+          11,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Off-season. Light wind and occasional tropical showers."
+      },
+      "4": {
+        "wind_prob": 35,
+        "avg_kts": 13,
+        "range": [
+          10,
+          17
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Low wind season. Ideal for hydrofoil or surf lessons."
+      },
+      "5": {
+        "wind_prob": 45,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Rains subside; first winter southeasterly trades begin building."
+      },
+      "6": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Trade winds turn on reliably. Perfect for mid-size kites."
+      },
+      "7": {
+        "wind_prob": 88,
+        "avg_kts": 22,
+        "range": [
+          18,
+          27
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Prime season kick-off. 20+ knots almost every afternoon."
+      },
+      "8": {
+        "wind_prob": 94,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. Clockwork southeasterly trades blow non-stop."
+      },
+      "9": {
+        "wind_prob": 96,
+        "avg_kts": 26,
+        "range": [
+          22,
+          32
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Maximum wind velocity of the year. Small kites (7m-9m) locked and loaded."
+      },
+      "10": {
+        "wind_prob": 97,
+        "avg_kts": 26,
+        "range": [
+          22,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Megaloop & big air paradise. Consistent nuclear breeze daily."
+      },
+      "11": {
+        "wind_prob": 95,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Ultra-reliable wind continues with warm butter-flat lagoons."
+      },
+      "12": {
+        "wind_prob": 85,
+        "avg_kts": 20,
+        "range": [
+          16,
+          26
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
+      }
+    }
+  },
+  {
+    "id": "pipa",
+    "name": "Tibau do Sul / Pipa, Brazil",
+    "short_name": "Pipa",
+    "country": "Brazil",
+    "country_code": "BR",
+    "flag": "🇧🇷",
+    "region": "Rio Grande do Norte",
+    "lat": -6.1833,
+    "lon": -35.0833,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Freeride",
+      "Wave",
+      "Flat Water",
+      "Downwind"
+    ],
+    "prime_season": "Jul – Jan (Strong Trade Winds)",
+    "water_type": "Protected Reef Bay Flatwater & Rolling Ocean Swell",
+    "months": {
+      "1": {
+        "wind_prob": 70,
+        "avg_kts": 18,
+        "range": [
+          14,
+          22
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Gentler summer trades, great for all-day freestyle and warm cruising."
+      },
+      "2": {
+        "wind_prob": 50,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Tropical rainfall season begins, lighter breeze with occasional sunny thermal afternoons."
+      },
+      "3": {
+        "wind_prob": 40,
+        "avg_kts": 14,
+        "range": [
+          11,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Off-season. Light wind and occasional tropical showers."
+      },
+      "4": {
+        "wind_prob": 35,
+        "avg_kts": 13,
+        "range": [
+          10,
+          17
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Low wind season. Ideal for hydrofoil or surf lessons."
+      },
+      "5": {
+        "wind_prob": 45,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Rains subside; first winter southeasterly trades begin building."
+      },
+      "6": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Trade winds turn on reliably. Perfect for mid-size kites."
+      },
+      "7": {
+        "wind_prob": 88,
+        "avg_kts": 22,
+        "range": [
+          18,
+          27
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Prime season kick-off. 20+ knots almost every afternoon."
+      },
+      "8": {
+        "wind_prob": 94,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. Clockwork southeasterly trades blow non-stop."
+      },
+      "9": {
+        "wind_prob": 96,
+        "avg_kts": 26,
+        "range": [
+          22,
+          32
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Maximum wind velocity of the year. Small kites (7m-9m) locked and loaded."
+      },
+      "10": {
+        "wind_prob": 97,
+        "avg_kts": 26,
+        "range": [
+          22,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Megaloop & big air paradise. Consistent nuclear breeze daily."
+      },
+      "11": {
+        "wind_prob": 95,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Ultra-reliable wind continues with warm butter-flat lagoons."
+      },
+      "12": {
+        "wind_prob": 85,
+        "avg_kts": 20,
+        "range": [
+          16,
+          26
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
+      }
+    }
+  },
+  {
+    "id": "valdevaqueros",
+    "name": "Tarifa (Valdevaqueros), Spain",
+    "short_name": "Valdevaqueros",
+    "country": "Spain",
+    "country_code": "ES",
+    "flag": "🇪🇸",
+    "region": "Andalusia",
+    "lat": 36.0711,
+    "lon": -5.6914,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Big Air",
+      "Wave",
+      "Strapless"
+    ],
+    "prime_season": "Apr – Oct (Levante & Poniente Thermal)",
+    "water_type": "Nuclear Trade/Thermal Winds, Ocean Swell & Wave Kickers",
+    "months": {
+      "1": {
+        "wind_prob": 60,
+        "avg_kts": 18,
+        "range": [
+          13,
+          27
+        ],
+        "season": "shoulder",
+        "sea_temp": 15,
+        "air_temp": 16,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter storms bring powerful Poniente waves and empty beaches."
+      },
+      "2": {
+        "wind_prob": 62,
+        "avg_kts": 19,
+        "range": [
+          14,
+          28
+        ],
+        "season": "shoulder",
+        "sea_temp": 15,
+        "air_temp": 16,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Strong Atlantic swells and gusty Levante days."
+      },
+      "3": {
+        "wind_prob": 68,
+        "avg_kts": 20,
+        "range": [
+          15,
+          29
+        ],
+        "season": "good",
+        "sea_temp": 15,
+        "air_temp": 18,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring thermal assistance starts boosting afternoon Poniente."
+      },
+      "4": {
+        "wind_prob": 75,
+        "avg_kts": 22,
+        "range": [
+          16,
+          32
+        ],
+        "season": "good",
+        "sea_temp": 16,
+        "air_temp": 20,
+        "wetsuit": "3/2mm or 4/3mm",
+        "tip": "Excellent mix of steady Poniente and spicy Levante."
+      },
+      "5": {
+        "wind_prob": 80,
+        "avg_kts": 23,
+        "range": [
+          17,
+          34
+        ],
+        "season": "peak",
+        "sea_temp": 17,
+        "air_temp": 23,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Warm sunny days with strong Levante cycles (pack 6m-9m)."
+      },
+      "6": {
+        "wind_prob": 85,
+        "avg_kts": 24,
+        "range": [
+          18,
+          36
+        ],
+        "season": "peak",
+        "sea_temp": 18,
+        "air_temp": 26,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "Peak summer season. Valdevaqueros comes alive every day."
+      },
+      "7": {
+        "wind_prob": 88,
+        "avg_kts": 25,
+        "range": [
+          19,
+          38
+        ],
+        "season": "peak",
+        "sea_temp": 19,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Strong Levante days can exceed 35 kts. Epic Big Air conditions."
+      },
+      "8": {
+        "wind_prob": 88,
+        "avg_kts": 25,
+        "range": [
+          19,
+          38
+        ],
+        "season": "peak",
+        "sea_temp": 20,
+        "air_temp": 29,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Peak European kite hub atmosphere with guaranteed daily wind."
+      },
+      "9": {
+        "wind_prob": 82,
+        "avg_kts": 23,
+        "range": [
+          17,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 20,
+        "air_temp": 26,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Local favorite month: summer crowds thin out, wind stays strong."
+      },
+      "10": {
+        "wind_prob": 72,
+        "avg_kts": 20,
+        "range": [
+          15,
+          29
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 23,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Great autumn riding with warm water and fun wave sets."
+      },
+      "11": {
+        "wind_prob": 64,
+        "avg_kts": 19,
+        "range": [
+          14,
+          27
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 19,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Transition to winter Poniente swells; great for strapless riding."
+      },
+      "12": {
+        "wind_prob": 60,
+        "avg_kts": 18,
+        "range": [
+          13,
+          26
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter sessions on wide open beaches."
+      }
+    }
+  },
+  {
+    "id": "el_cotillo",
+    "name": "El Cotillo (Fuerteventura), Spain",
+    "short_name": "El Cotillo",
+    "country": "Spain",
+    "country_code": "ES",
+    "flag": "🇪🇸",
+    "region": "Canary Islands",
+    "lat": 28.6833,
+    "lon": -14.0167,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Big Air",
+      "Wave",
+      "Strapless"
+    ],
+    "prime_season": "May – Sep (Alisios Trade Winds)",
+    "water_type": "Nuclear Trade/Thermal Winds, Ocean Swell & Wave Kickers",
+    "months": {
+      "1": {
+        "wind_prob": 55,
+        "avg_kts": 16,
+        "range": [
+          12,
+          22
+        ],
+        "season": "shoulder",
+        "sea_temp": 19,
+        "air_temp": 21,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Warm European winter escape with moderate breeze."
+      },
+      "2": {
+        "wind_prob": 58,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 18,
+        "air_temp": 21,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Great wave riding on north shores."
+      },
+      "3": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          25
+        ],
+        "season": "good",
+        "sea_temp": 18,
+        "air_temp": 22,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Spring Alisios begin building in strength."
+      },
+      "4": {
+        "wind_prob": 72,
+        "avg_kts": 20,
+        "range": [
+          15,
+          27
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 23,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Consistent trade winds setup across all islands."
+      },
+      "5": {
+        "wind_prob": 82,
+        "avg_kts": 23,
+        "range": [
+          18,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 20,
+        "air_temp": 25,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Full trade wind machine turns on. Sotavento tidal lagoon fills up."
+      },
+      "6": {
+        "wind_prob": 88,
+        "avg_kts": 25,
+        "range": [
+          20,
+          34
+        ],
+        "season": "peak",
+        "sea_temp": 21,
+        "air_temp": 26,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Strong gusty winds in El Medano and Sotavento; 7m-9m kites prime."
+      },
+      "7": {
+        "wind_prob": 92,
+        "avg_kts": 27,
+        "range": [
+          22,
+          36
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Peak windiest month. World Cup Big Air conditions."
+      },
+      "8": {
+        "wind_prob": 90,
+        "avg_kts": 26,
+        "range": [
+          21,
+          35
+        ],
+        "season": "peak",
+        "sea_temp": 23,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Nuclear trades blow daily from mid-morning to sunset."
+      },
+      "9": {
+        "wind_prob": 75,
+        "avg_kts": 20,
+        "range": [
+          15,
+          27
+        ],
+        "season": "good",
+        "sea_temp": 23,
+        "air_temp": 27,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Gentler winds, warmest water of the year."
+      },
+      "10": {
+        "wind_prob": 60,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 25,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant autumn breeze and start of winter swell season."
+      },
+      "11": {
+        "wind_prob": 55,
+        "avg_kts": 16,
+        "range": [
+          12,
+          22
+        ],
+        "season": "shoulder",
+        "sea_temp": 21,
+        "air_temp": 23,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Surf season begins; waves on northern points."
+      },
+      "12": {
+        "wind_prob": 52,
+        "avg_kts": 15,
+        "range": [
+          12,
+          22
+        ],
+        "season": "shoulder",
+        "sea_temp": 20,
+        "air_temp": 21,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Sunny winter getaways with decent wave sessions."
+      }
+    }
+  },
+  {
+    "id": "pozo",
+    "name": "Pozo Izquierdo (Gran Canaria), Spain",
+    "short_name": "Pozo Izquierdo",
+    "country": "Spain",
+    "country_code": "ES",
+    "flag": "🇪🇸",
+    "region": "Canary Islands",
+    "lat": 27.8184,
+    "lon": -15.4243,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Big Air",
+      "Wave",
+      "Strapless"
+    ],
+    "prime_season": "May – Sep (Alisios Trade Winds)",
+    "water_type": "Nuclear Trade/Thermal Winds, Ocean Swell & Wave Kickers",
+    "months": {
+      "1": {
+        "wind_prob": 55,
+        "avg_kts": 16,
+        "range": [
+          12,
+          22
+        ],
+        "season": "shoulder",
+        "sea_temp": 19,
+        "air_temp": 21,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Warm European winter escape with moderate breeze."
+      },
+      "2": {
+        "wind_prob": 58,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 18,
+        "air_temp": 21,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Great wave riding on north shores."
+      },
+      "3": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          25
+        ],
+        "season": "good",
+        "sea_temp": 18,
+        "air_temp": 22,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Spring Alisios begin building in strength."
+      },
+      "4": {
+        "wind_prob": 72,
+        "avg_kts": 20,
+        "range": [
+          15,
+          27
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 23,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Consistent trade winds setup across all islands."
+      },
+      "5": {
+        "wind_prob": 82,
+        "avg_kts": 23,
+        "range": [
+          18,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 20,
+        "air_temp": 25,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Full trade wind machine turns on. Sotavento tidal lagoon fills up."
+      },
+      "6": {
+        "wind_prob": 88,
+        "avg_kts": 25,
+        "range": [
+          20,
+          34
+        ],
+        "season": "peak",
+        "sea_temp": 21,
+        "air_temp": 26,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Strong gusty winds in El Medano and Sotavento; 7m-9m kites prime."
+      },
+      "7": {
+        "wind_prob": 92,
+        "avg_kts": 27,
+        "range": [
+          22,
+          36
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Peak windiest month. World Cup Big Air conditions."
+      },
+      "8": {
+        "wind_prob": 90,
+        "avg_kts": 26,
+        "range": [
+          21,
+          35
+        ],
+        "season": "peak",
+        "sea_temp": 23,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Nuclear trades blow daily from mid-morning to sunset."
+      },
+      "9": {
+        "wind_prob": 75,
+        "avg_kts": 20,
+        "range": [
+          15,
+          27
+        ],
+        "season": "good",
+        "sea_temp": 23,
+        "air_temp": 27,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Gentler winds, warmest water of the year."
+      },
+      "10": {
+        "wind_prob": 60,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 25,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant autumn breeze and start of winter swell season."
+      },
+      "11": {
+        "wind_prob": 55,
+        "avg_kts": 16,
+        "range": [
+          12,
+          22
+        ],
+        "season": "shoulder",
+        "sea_temp": 21,
+        "air_temp": 23,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Surf season begins; waves on northern points."
+      },
+      "12": {
+        "wind_prob": 52,
+        "avg_kts": 15,
+        "range": [
+          12,
+          22
+        ],
+        "season": "shoulder",
+        "sea_temp": 20,
+        "air_temp": 21,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Sunny winter getaways with decent wave sessions."
+      }
+    }
+  },
+  {
+    "id": "roses",
+    "name": "Sant Pere Pescador (Bay of Roses), Spain",
+    "short_name": "Bay of Roses",
+    "country": "Spain",
+    "country_code": "ES",
+    "flag": "🇪🇸",
+    "region": "Catalonia",
+    "lat": 42.1889,
+    "lon": 3.1028,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Freeride",
+      "Hydrofoil",
+      "Flat Water"
+    ],
+    "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+    "water_type": "Protected Mediterranean Thermal Bay",
+    "months": {
+      "1": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 16,
+        "air_temp": 14,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter Mediterranean depressions with cold gusty breeze."
+      },
+      "2": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 15,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Off-season Greek island vibe."
+      },
+      "3": {
+        "wind_prob": 52,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring transitions with intermittent thermal breeze."
+      },
+      "4": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          24
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant spring warm-up, quiet beaches."
+      },
+      "5": {
+        "wind_prob": 68,
+        "avg_kts": 19,
+        "range": [
+          14,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 24,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+      },
+      "6": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 24,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 25,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+      },
+      "9": {
+        "wind_prob": 78,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "good",
+        "sea_temp": 24,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Fantastic late season: warm sea, golden light, fewer crowds."
+      },
+      "10": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, peaceful island ambiance."
+      },
+      "11": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 19,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Meltemi dies down, winter lows take over."
+      },
+      "12": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 17,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter season."
+      }
+    }
+  },
+  {
+    "id": "silvaplana",
+    "name": "Lake Silvaplana, Switzerland",
+    "short_name": "Silvaplana",
+    "country": "Switzerland",
+    "country_code": "CH",
+    "flag": "🇨🇭",
+    "region": "Graubünden / Engadin",
+    "lat": 46.4592,
+    "lon": 9.7917,
+    "spot_type": "lake",
+    "style_tags": [
+      "Flat Water",
+      "Freeride",
+      "Hydrofoil",
+      "Thermal"
+    ],
+    "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+    "water_type": "Alpine Thermal Freshwater Lake",
+    "months": {
+      "1": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 16,
+        "air_temp": 14,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter Mediterranean depressions with cold gusty breeze."
+      },
+      "2": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 15,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Off-season Greek island vibe."
+      },
+      "3": {
+        "wind_prob": 52,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring transitions with intermittent thermal breeze."
+      },
+      "4": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          24
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant spring warm-up, quiet beaches."
+      },
+      "5": {
+        "wind_prob": 68,
+        "avg_kts": 19,
+        "range": [
+          14,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 24,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+      },
+      "6": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 24,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 25,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+      },
+      "9": {
+        "wind_prob": 78,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "good",
+        "sea_temp": 24,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Fantastic late season: warm sea, golden light, fewer crowds."
+      },
+      "10": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, peaceful island ambiance."
+      },
+      "11": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 19,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Meltemi dies down, winter lows take over."
+      },
+      "12": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 17,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter season."
+      }
+    }
+  },
+  {
+    "id": "lake_uri",
+    "name": "Flüelen (Lake Uri), Switzerland",
+    "short_name": "Lake Uri",
+    "country": "Switzerland",
+    "country_code": "CH",
+    "flag": "🇨🇭",
+    "region": "Uri / Lake Lucerne",
+    "lat": 46.9039,
+    "lon": 8.6258,
+    "spot_type": "lake",
+    "style_tags": [
+      "Flat Water",
+      "Freeride",
+      "Hydrofoil",
+      "Thermal"
+    ],
+    "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+    "water_type": "Alpine Thermal Freshwater Lake",
+    "months": {
+      "1": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 16,
+        "air_temp": 14,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter Mediterranean depressions with cold gusty breeze."
+      },
+      "2": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 15,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Off-season Greek island vibe."
+      },
+      "3": {
+        "wind_prob": 52,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring transitions with intermittent thermal breeze."
+      },
+      "4": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          24
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant spring warm-up, quiet beaches."
+      },
+      "5": {
+        "wind_prob": 68,
+        "avg_kts": 19,
+        "range": [
+          14,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 24,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+      },
+      "6": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 24,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 25,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+      },
+      "9": {
+        "wind_prob": 78,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "good",
+        "sea_temp": 24,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Fantastic late season: warm sea, golden light, fewer crowds."
+      },
+      "10": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, peaceful island ambiance."
+      },
+      "11": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 19,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Meltemi dies down, winter lows take over."
+      },
+      "12": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 17,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter season."
+      }
+    }
+  },
+  {
+    "id": "lake_neuchatel",
+    "name": "Yvonand (Lake Neuchâtel), Switzerland",
+    "short_name": "Lake Neuchâtel",
+    "country": "Switzerland",
+    "country_code": "CH",
+    "flag": "🇨🇭",
+    "region": "Vaud / Neuchâtel",
+    "lat": 46.8042,
+    "lon": 6.7417,
+    "spot_type": "lake",
+    "style_tags": [
+      "Flat Water",
+      "Freeride",
+      "Hydrofoil",
+      "Thermal"
+    ],
+    "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+    "water_type": "Alpine Thermal Freshwater Lake",
+    "months": {
+      "1": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 16,
+        "air_temp": 14,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter Mediterranean depressions with cold gusty breeze."
+      },
+      "2": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 15,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Off-season Greek island vibe."
+      },
+      "3": {
+        "wind_prob": 52,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring transitions with intermittent thermal breeze."
+      },
+      "4": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          24
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant spring warm-up, quiet beaches."
+      },
+      "5": {
+        "wind_prob": 68,
+        "avg_kts": 19,
+        "range": [
+          14,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 24,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+      },
+      "6": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 24,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 25,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+      },
+      "9": {
+        "wind_prob": 78,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "good",
+        "sea_temp": 24,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Fantastic late season: warm sea, golden light, fewer crowds."
+      },
+      "10": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, peaceful island ambiance."
+      },
+      "11": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 19,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Meltemi dies down, winter lows take over."
+      },
+      "12": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 17,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter season."
+      }
+    }
+  },
+  {
+    "id": "garda",
+    "name": "Torbole (Lake Garda), Italy",
+    "short_name": "Lake Garda",
+    "country": "Italy",
+    "country_code": "IT",
+    "flag": "🇮🇹",
+    "region": "Trentino / Alps",
+    "lat": 45.8711,
+    "lon": 10.8756,
+    "spot_type": "lake",
+    "style_tags": [
+      "Flat Water",
+      "Freeride",
+      "Hydrofoil",
+      "Thermal"
+    ],
+    "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+    "water_type": "Alpine Thermal Freshwater Lake",
+    "months": {
+      "1": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 16,
+        "air_temp": 14,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter Mediterranean depressions with cold gusty breeze."
+      },
+      "2": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 15,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Off-season Greek island vibe."
+      },
+      "3": {
+        "wind_prob": 52,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring transitions with intermittent thermal breeze."
+      },
+      "4": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          24
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant spring warm-up, quiet beaches."
+      },
+      "5": {
+        "wind_prob": 68,
+        "avg_kts": 19,
+        "range": [
+          14,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 24,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+      },
+      "6": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 24,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 25,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+      },
+      "9": {
+        "wind_prob": 78,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "good",
+        "sea_temp": 24,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Fantastic late season: warm sea, golden light, fewer crowds."
+      },
+      "10": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, peaceful island ambiance."
+      },
+      "11": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 19,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Meltemi dies down, winter lows take over."
+      },
+      "12": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 17,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter season."
+      }
+    }
+  },
+  {
+    "id": "lake_como",
+    "name": "Colico (Lake Como), Italy",
+    "short_name": "Lake Como",
+    "country": "Italy",
+    "country_code": "IT",
+    "flag": "🇮🇹",
+    "region": "Lombardy / Alps",
+    "lat": 46.1333,
+    "lon": 9.3667,
+    "spot_type": "lake",
+    "style_tags": [
+      "Flat Water",
+      "Freeride",
+      "Hydrofoil",
+      "Thermal"
+    ],
+    "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+    "water_type": "Alpine Thermal Freshwater Lake",
+    "months": {
+      "1": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 16,
+        "air_temp": 14,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter Mediterranean depressions with cold gusty breeze."
+      },
+      "2": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 15,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Off-season Greek island vibe."
+      },
+      "3": {
+        "wind_prob": 52,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring transitions with intermittent thermal breeze."
+      },
+      "4": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          24
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant spring warm-up, quiet beaches."
+      },
+      "5": {
+        "wind_prob": 68,
+        "avg_kts": 19,
+        "range": [
+          14,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 24,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+      },
+      "6": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 24,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 25,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+      },
+      "9": {
+        "wind_prob": 78,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "good",
+        "sea_temp": 24,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Fantastic late season: warm sea, golden light, fewer crowds."
+      },
+      "10": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, peaceful island ambiance."
+      },
+      "11": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 19,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Meltemi dies down, winter lows take over."
+      },
+      "12": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 17,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter season."
+      }
+    }
+  },
+  {
+    "id": "tabuba",
+    "name": "Tabuba (Caucaia), Brazil",
+    "short_name": "Tabuba",
+    "country": "Brazil",
+    "country_code": "BR",
+    "flag": "🇧🇷",
+    "region": "Ceará",
+    "lat": -3.6558,
+    "lon": -38.68,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Freeride",
+      "Wave",
+      "Flat Water",
+      "Downwind"
+    ],
+    "prime_season": "Jul – Jan (Strong Trade Winds)",
+    "water_type": "Protected Reef Bay Flatwater & Rolling Ocean Swell",
+    "months": {
+      "1": {
+        "wind_prob": 70,
+        "avg_kts": 18,
+        "range": [
+          14,
+          22
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Gentler summer trades, great for all-day freestyle and warm cruising."
+      },
+      "2": {
+        "wind_prob": 50,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Tropical rainfall season begins, lighter breeze with occasional sunny thermal afternoons."
+      },
+      "3": {
+        "wind_prob": 40,
+        "avg_kts": 14,
+        "range": [
+          11,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Off-season. Light wind and occasional tropical showers."
+      },
+      "4": {
+        "wind_prob": 35,
+        "avg_kts": 13,
+        "range": [
+          10,
+          17
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Low wind season. Ideal for hydrofoil or surf lessons."
+      },
+      "5": {
+        "wind_prob": 45,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Rains subside; first winter southeasterly trades begin building."
+      },
+      "6": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Trade winds turn on reliably. Perfect for mid-size kites."
+      },
+      "7": {
+        "wind_prob": 88,
+        "avg_kts": 22,
+        "range": [
+          18,
+          27
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Prime season kick-off. 20+ knots almost every afternoon."
+      },
+      "8": {
+        "wind_prob": 94,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. Clockwork southeasterly trades blow non-stop."
+      },
+      "9": {
+        "wind_prob": 96,
+        "avg_kts": 26,
+        "range": [
+          22,
+          32
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Maximum wind velocity of the year. Small kites (7m-9m) locked and loaded."
+      },
+      "10": {
+        "wind_prob": 97,
+        "avg_kts": 26,
+        "range": [
+          22,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Megaloop & big air paradise. Consistent nuclear breeze daily."
+      },
+      "11": {
+        "wind_prob": 95,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Ultra-reliable wind continues with warm butter-flat lagoons."
+      },
+      "12": {
+        "wind_prob": 85,
+        "avg_kts": 20,
+        "range": [
+          16,
+          26
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
+      }
+    }
+  },
+  {
+    "id": "baleia",
+    "name": "Baleia (Itapipoca), Brazil",
+    "short_name": "Baleia",
+    "country": "Brazil",
+    "country_code": "BR",
+    "flag": "🇧🇷",
+    "region": "Ceará",
+    "lat": -3.1467,
+    "lon": -39.445,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Freeride",
+      "Wave",
+      "Flat Water",
+      "Downwind"
+    ],
+    "prime_season": "Jul – Jan (Strong Trade Winds)",
+    "water_type": "Protected Reef Bay Flatwater & Rolling Ocean Swell",
+    "months": {
+      "1": {
+        "wind_prob": 70,
+        "avg_kts": 18,
+        "range": [
+          14,
+          22
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Gentler summer trades, great for all-day freestyle and warm cruising."
+      },
+      "2": {
+        "wind_prob": 50,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Tropical rainfall season begins, lighter breeze with occasional sunny thermal afternoons."
+      },
+      "3": {
+        "wind_prob": 40,
+        "avg_kts": 14,
+        "range": [
+          11,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Off-season. Light wind and occasional tropical showers."
+      },
+      "4": {
+        "wind_prob": 35,
+        "avg_kts": 13,
+        "range": [
+          10,
+          17
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Low wind season. Ideal for hydrofoil or surf lessons."
+      },
+      "5": {
+        "wind_prob": 45,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Rains subside; first winter southeasterly trades begin building."
+      },
+      "6": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Trade winds turn on reliably. Perfect for mid-size kites."
+      },
+      "7": {
+        "wind_prob": 88,
+        "avg_kts": 22,
+        "range": [
+          18,
+          27
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Prime season kick-off. 20+ knots almost every afternoon."
+      },
+      "8": {
+        "wind_prob": 94,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. Clockwork southeasterly trades blow non-stop."
+      },
+      "9": {
+        "wind_prob": 96,
+        "avg_kts": 26,
+        "range": [
+          22,
+          32
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Maximum wind velocity of the year. Small kites (7m-9m) locked and loaded."
+      },
+      "10": {
+        "wind_prob": 97,
+        "avg_kts": 26,
+        "range": [
+          22,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Megaloop & big air paradise. Consistent nuclear breeze daily."
+      },
+      "11": {
+        "wind_prob": 95,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Ultra-reliable wind continues with warm butter-flat lagoons."
+      },
+      "12": {
+        "wind_prob": 85,
+        "avg_kts": 20,
+        "range": [
+          16,
+          26
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
+      }
+    }
+  },
+  {
+    "id": "guriu",
+    "name": "Guriú (Camocim / Jeri), Brazil",
+    "short_name": "Guriú",
+    "country": "Brazil",
+    "country_code": "BR",
+    "flag": "🇧🇷",
+    "region": "Ceará",
+    "lat": -2.825,
+    "lon": -40.59,
+    "spot_type": "lagoon",
+    "style_tags": [
+      "Flat Water",
+      "Freestyle",
+      "Strapless"
+    ],
+    "prime_season": "Jul – Jan (Strong Trade Winds)",
+    "water_type": "Mirror-Flat Mangrove River Channel & Shallow Lagoon",
+    "months": {
+      "1": {
+        "wind_prob": 70,
+        "avg_kts": 18,
+        "range": [
+          14,
+          22
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Gentler summer trades, great for all-day freestyle and warm cruising."
+      },
+      "2": {
+        "wind_prob": 50,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Tropical rainfall season begins, lighter breeze with occasional sunny thermal afternoons."
+      },
+      "3": {
+        "wind_prob": 40,
+        "avg_kts": 14,
+        "range": [
+          11,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Off-season. Light wind and occasional tropical showers."
+      },
+      "4": {
+        "wind_prob": 35,
+        "avg_kts": 13,
+        "range": [
+          10,
+          17
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Low wind season. Ideal for hydrofoil or surf lessons."
+      },
+      "5": {
+        "wind_prob": 45,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Rains subside; first winter southeasterly trades begin building."
+      },
+      "6": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Trade winds turn on reliably. Perfect for mid-size kites."
+      },
+      "7": {
+        "wind_prob": 88,
+        "avg_kts": 22,
+        "range": [
+          18,
+          27
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Prime season kick-off. 20+ knots almost every afternoon."
+      },
+      "8": {
+        "wind_prob": 94,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. Clockwork southeasterly trades blow non-stop."
+      },
+      "9": {
+        "wind_prob": 96,
+        "avg_kts": 26,
+        "range": [
+          22,
+          32
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Maximum wind velocity of the year. Small kites (7m-9m) locked and loaded."
+      },
+      "10": {
+        "wind_prob": 97,
+        "avg_kts": 26,
+        "range": [
+          22,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Megaloop & big air paradise. Consistent nuclear breeze daily."
+      },
+      "11": {
+        "wind_prob": 95,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Ultra-reliable wind continues with warm butter-flat lagoons."
+      },
+      "12": {
+        "wind_prob": 85,
+        "avg_kts": 20,
+        "range": [
+          16,
+          26
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
+      }
+    }
+  },
+  {
+    "id": "tatajuba",
+    "name": "Tatajuba (Camocim), Brazil",
+    "short_name": "Tatajuba",
+    "country": "Brazil",
+    "country_code": "BR",
+    "flag": "🇧🇷",
+    "region": "Ceará",
+    "lat": -2.8595,
+    "lon": -40.6948,
+    "spot_type": "lagoon",
+    "style_tags": [
+      "Flat Water",
+      "Freestyle",
+      "Freeride",
+      "Downwind"
+    ],
+    "prime_season": "Jul – Jan (Strong Trade Winds)",
+    "water_type": "Butter-Flat Tidal Lagoon & Sand Dunes",
+    "months": {
+      "1": {
+        "wind_prob": 70,
+        "avg_kts": 18,
+        "range": [
+          14,
+          22
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Gentler summer trades, great for all-day freestyle and warm cruising."
+      },
+      "2": {
+        "wind_prob": 50,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Tropical rainfall season begins, lighter breeze with occasional sunny thermal afternoons."
+      },
+      "3": {
+        "wind_prob": 40,
+        "avg_kts": 14,
+        "range": [
+          11,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Off-season. Light wind and occasional tropical showers."
+      },
+      "4": {
+        "wind_prob": 35,
+        "avg_kts": 13,
+        "range": [
+          10,
+          17
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Low wind season. Ideal for hydrofoil or surf lessons."
+      },
+      "5": {
+        "wind_prob": 45,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Rains subside; first winter southeasterly trades begin building."
+      },
+      "6": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Trade winds turn on reliably. Perfect for mid-size kites."
+      },
+      "7": {
+        "wind_prob": 88,
+        "avg_kts": 22,
+        "range": [
+          18,
+          27
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Prime season kick-off. 20+ knots almost every afternoon."
+      },
+      "8": {
+        "wind_prob": 94,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. Clockwork southeasterly trades blow non-stop."
+      },
+      "9": {
+        "wind_prob": 96,
+        "avg_kts": 26,
+        "range": [
+          22,
+          32
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Maximum wind velocity of the year. Small kites (7m-9m) locked and loaded."
+      },
+      "10": {
+        "wind_prob": 97,
+        "avg_kts": 26,
+        "range": [
+          22,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Megaloop & big air paradise. Consistent nuclear breeze daily."
+      },
+      "11": {
+        "wind_prob": 95,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Ultra-reliable wind continues with warm butter-flat lagoons."
+      },
+      "12": {
+        "wind_prob": 85,
+        "avg_kts": 20,
+        "range": [
+          16,
+          26
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
+      }
+    }
+  },
+  {
+    "id": "maceio_camocim",
+    "name": "Praia de Maceió (Camocim), Brazil",
+    "short_name": "Maceió (Camocim)",
+    "country": "Brazil",
+    "country_code": "BR",
+    "flag": "🇧🇷",
+    "region": "Ceará",
+    "lat": -2.88,
+    "lon": -40.83,
+    "spot_type": "lagoon",
+    "style_tags": [
+      "Flat Water",
+      "Freestyle",
+      "Freeride",
+      "Big Air"
+    ],
+    "prime_season": "Jul – Jan (Strong Trade Winds)",
+    "water_type": "Flatwater Tidal Lagoons, Sandspits & Trade Wind Swell",
+    "months": {
+      "1": {
+        "wind_prob": 70,
+        "avg_kts": 18,
+        "range": [
+          14,
+          22
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Gentler summer trades, great for all-day freestyle and warm cruising."
+      },
+      "2": {
+        "wind_prob": 50,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Tropical rainfall season begins, lighter breeze with occasional sunny thermal afternoons."
+      },
+      "3": {
+        "wind_prob": 40,
+        "avg_kts": 14,
+        "range": [
+          11,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Off-season. Light wind and occasional tropical showers."
+      },
+      "4": {
+        "wind_prob": 35,
+        "avg_kts": 13,
+        "range": [
+          10,
+          17
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Low wind season. Ideal for hydrofoil or surf lessons."
+      },
+      "5": {
+        "wind_prob": 45,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Rains subside; first winter southeasterly trades begin building."
+      },
+      "6": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Trade winds turn on reliably. Perfect for mid-size kites."
+      },
+      "7": {
+        "wind_prob": 88,
+        "avg_kts": 22,
+        "range": [
+          18,
+          27
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Prime season kick-off. 20+ knots almost every afternoon."
+      },
+      "8": {
+        "wind_prob": 94,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. Clockwork southeasterly trades blow non-stop."
+      },
+      "9": {
+        "wind_prob": 96,
+        "avg_kts": 26,
+        "range": [
+          22,
+          32
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Maximum wind velocity of the year. Small kites (7m-9m) locked and loaded."
+      },
+      "10": {
+        "wind_prob": 97,
+        "avg_kts": 26,
+        "range": [
+          22,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Megaloop & big air paradise. Consistent nuclear breeze daily."
+      },
+      "11": {
+        "wind_prob": 95,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Ultra-reliable wind continues with warm butter-flat lagoons."
+      },
+      "12": {
+        "wind_prob": 85,
+        "avg_kts": 20,
+        "range": [
+          16,
+          26
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
+      }
+    }
+  },
+  {
+    "id": "barra_nova",
+    "name": "Barra Nova (Cascavel), Brazil",
+    "short_name": "Barra Nova",
+    "country": "Brazil",
+    "country_code": "BR",
+    "flag": "🇧🇷",
+    "region": "Ceará",
+    "lat": -4.1611,
+    "lon": -38.2014,
+    "spot_type": "lagoon",
+    "style_tags": [
+      "Flat Water",
+      "Freestyle",
+      "Wave",
+      "Freeride"
+    ],
+    "prime_season": "Jul – Jan (Strong Trade Winds)",
+    "water_type": "River Mouth Flatwater Lagoon & Outer Reef Waves",
+    "months": {
+      "1": {
+        "wind_prob": 70,
+        "avg_kts": 18,
+        "range": [
+          14,
+          22
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Gentler summer trades, great for all-day freestyle and warm cruising."
+      },
+      "2": {
+        "wind_prob": 50,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Tropical rainfall season begins, lighter breeze with occasional sunny thermal afternoons."
+      },
+      "3": {
+        "wind_prob": 40,
+        "avg_kts": 14,
+        "range": [
+          11,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Off-season. Light wind and occasional tropical showers."
+      },
+      "4": {
+        "wind_prob": 35,
+        "avg_kts": 13,
+        "range": [
+          10,
+          17
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Low wind season. Ideal for hydrofoil or surf lessons."
+      },
+      "5": {
+        "wind_prob": 45,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Rains subside; first winter southeasterly trades begin building."
+      },
+      "6": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Trade winds turn on reliably. Perfect for mid-size kites."
+      },
+      "7": {
+        "wind_prob": 88,
+        "avg_kts": 22,
+        "range": [
+          18,
+          27
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Prime season kick-off. 20+ knots almost every afternoon."
+      },
+      "8": {
+        "wind_prob": 94,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. Clockwork southeasterly trades blow non-stop."
+      },
+      "9": {
+        "wind_prob": 96,
+        "avg_kts": 26,
+        "range": [
+          22,
+          32
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Maximum wind velocity of the year. Small kites (7m-9m) locked and loaded."
+      },
+      "10": {
+        "wind_prob": 97,
+        "avg_kts": 26,
+        "range": [
+          22,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Megaloop & big air paradise. Consistent nuclear breeze daily."
+      },
+      "11": {
+        "wind_prob": 95,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Ultra-reliable wind continues with warm butter-flat lagoons."
+      },
+      "12": {
+        "wind_prob": 85,
+        "avg_kts": 20,
+        "range": [
+          16,
+          26
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
+      }
+    }
+  },
+  {
+    "id": "ururau",
+    "name": "Uruaú (Beberibe), Brazil",
+    "short_name": "Uruaú",
+    "country": "Brazil",
+    "country_code": "BR",
+    "flag": "🇧🇷",
+    "region": "Ceará",
+    "lat": -4.3314,
+    "lon": -38.0772,
+    "spot_type": "lagoon",
+    "style_tags": [
+      "Flat Water",
+      "Freestyle",
+      "Wave",
+      "Freeride"
+    ],
+    "prime_season": "Jul – Jan (Strong Trade Winds)",
+    "water_type": "River Mouth Flatwater Lagoon & Outer Reef Waves",
+    "months": {
+      "1": {
+        "wind_prob": 70,
+        "avg_kts": 18,
+        "range": [
+          14,
+          22
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Gentler summer trades, great for all-day freestyle and warm cruising."
+      },
+      "2": {
+        "wind_prob": 50,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Tropical rainfall season begins, lighter breeze with occasional sunny thermal afternoons."
+      },
+      "3": {
+        "wind_prob": 40,
+        "avg_kts": 14,
+        "range": [
+          11,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Off-season. Light wind and occasional tropical showers."
+      },
+      "4": {
+        "wind_prob": 35,
+        "avg_kts": 13,
+        "range": [
+          10,
+          17
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Low wind season. Ideal for hydrofoil or surf lessons."
+      },
+      "5": {
+        "wind_prob": 45,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Rains subside; first winter southeasterly trades begin building."
+      },
+      "6": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Trade winds turn on reliably. Perfect for mid-size kites."
+      },
+      "7": {
+        "wind_prob": 88,
+        "avg_kts": 22,
+        "range": [
+          18,
+          27
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Prime season kick-off. 20+ knots almost every afternoon."
+      },
+      "8": {
+        "wind_prob": 94,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. Clockwork southeasterly trades blow non-stop."
+      },
+      "9": {
+        "wind_prob": 96,
+        "avg_kts": 26,
+        "range": [
+          22,
+          32
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Maximum wind velocity of the year. Small kites (7m-9m) locked and loaded."
+      },
+      "10": {
+        "wind_prob": 97,
+        "avg_kts": 26,
+        "range": [
+          22,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Megaloop & big air paradise. Consistent nuclear breeze daily."
+      },
+      "11": {
+        "wind_prob": 95,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Ultra-reliable wind continues with warm butter-flat lagoons."
+      },
+      "12": {
+        "wind_prob": 85,
+        "avg_kts": 20,
+        "range": [
+          16,
+          26
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
+      }
+    }
+  },
+  {
+    "id": "parajuru",
+    "name": "Parajuru (Praia das Almas), Brazil",
+    "short_name": "Parajuru",
+    "country": "Brazil",
+    "country_code": "BR",
+    "flag": "🇧🇷",
+    "region": "Ceará",
+    "lat": -4.2889,
+    "lon": -37.9556,
+    "spot_type": "lagoon",
+    "style_tags": [
+      "Flat Water",
+      "Freestyle",
+      "Wave",
+      "Freeride"
+    ],
+    "prime_season": "Jul – Jan (Strong Trade Winds)",
+    "water_type": "River Mouth Flatwater Lagoon & Outer Reef Waves",
+    "months": {
+      "1": {
+        "wind_prob": 70,
+        "avg_kts": 18,
+        "range": [
+          14,
+          22
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Gentler summer trades, great for all-day freestyle and warm cruising."
+      },
+      "2": {
+        "wind_prob": 50,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Tropical rainfall season begins, lighter breeze with occasional sunny thermal afternoons."
+      },
+      "3": {
+        "wind_prob": 40,
+        "avg_kts": 14,
+        "range": [
+          11,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Off-season. Light wind and occasional tropical showers."
+      },
+      "4": {
+        "wind_prob": 35,
+        "avg_kts": 13,
+        "range": [
+          10,
+          17
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Low wind season. Ideal for hydrofoil or surf lessons."
+      },
+      "5": {
+        "wind_prob": 45,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Rains subside; first winter southeasterly trades begin building."
+      },
+      "6": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Trade winds turn on reliably. Perfect for mid-size kites."
+      },
+      "7": {
+        "wind_prob": 88,
+        "avg_kts": 22,
+        "range": [
+          18,
+          27
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Prime season kick-off. 20+ knots almost every afternoon."
+      },
+      "8": {
+        "wind_prob": 94,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. Clockwork southeasterly trades blow non-stop."
+      },
+      "9": {
+        "wind_prob": 96,
+        "avg_kts": 26,
+        "range": [
+          22,
+          32
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Maximum wind velocity of the year. Small kites (7m-9m) locked and loaded."
+      },
+      "10": {
+        "wind_prob": 97,
+        "avg_kts": 26,
+        "range": [
+          22,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Megaloop & big air paradise. Consistent nuclear breeze daily."
+      },
+      "11": {
+        "wind_prob": 95,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Ultra-reliable wind continues with warm butter-flat lagoons."
+      },
+      "12": {
+        "wind_prob": 85,
+        "avg_kts": 20,
+        "range": [
+          16,
+          26
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
+      }
+    }
+  },
+  {
+    "id": "fortim",
+    "name": "Fortim (Rio Jaguaribe), Brazil",
+    "short_name": "Fortim",
+    "country": "Brazil",
+    "country_code": "BR",
+    "flag": "🇧🇷",
+    "region": "Ceará",
+    "lat": -4.425,
+    "lon": -37.798,
+    "spot_type": "lagoon",
+    "style_tags": [
+      "Flat Water",
+      "Freestyle",
+      "Wave",
+      "Freeride"
+    ],
+    "prime_season": "Jul – Jan (Strong Trade Winds)",
+    "water_type": "River Mouth Flatwater Lagoon & Outer Reef Waves",
+    "months": {
+      "1": {
+        "wind_prob": 70,
+        "avg_kts": 18,
+        "range": [
+          14,
+          22
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Gentler summer trades, great for all-day freestyle and warm cruising."
+      },
+      "2": {
+        "wind_prob": 50,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Tropical rainfall season begins, lighter breeze with occasional sunny thermal afternoons."
+      },
+      "3": {
+        "wind_prob": 40,
+        "avg_kts": 14,
+        "range": [
+          11,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Off-season. Light wind and occasional tropical showers."
+      },
+      "4": {
+        "wind_prob": 35,
+        "avg_kts": 13,
+        "range": [
+          10,
+          17
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Low wind season. Ideal for hydrofoil or surf lessons."
+      },
+      "5": {
+        "wind_prob": 45,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Rains subside; first winter southeasterly trades begin building."
+      },
+      "6": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Trade winds turn on reliably. Perfect for mid-size kites."
+      },
+      "7": {
+        "wind_prob": 88,
+        "avg_kts": 22,
+        "range": [
+          18,
+          27
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Prime season kick-off. 20+ knots almost every afternoon."
+      },
+      "8": {
+        "wind_prob": 94,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. Clockwork southeasterly trades blow non-stop."
+      },
+      "9": {
+        "wind_prob": 96,
+        "avg_kts": 26,
+        "range": [
+          22,
+          32
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Maximum wind velocity of the year. Small kites (7m-9m) locked and loaded."
+      },
+      "10": {
+        "wind_prob": 97,
+        "avg_kts": 26,
+        "range": [
+          22,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Megaloop & big air paradise. Consistent nuclear breeze daily."
+      },
+      "11": {
+        "wind_prob": 95,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Ultra-reliable wind continues with warm butter-flat lagoons."
+      },
+      "12": {
+        "wind_prob": 85,
+        "avg_kts": 20,
+        "range": [
+          16,
+          26
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
+      }
+    }
+  },
+  {
+    "id": "galinhos",
+    "name": "Galinhos, Brazil",
+    "short_name": "Galinhos",
+    "country": "Brazil",
+    "country_code": "BR",
+    "flag": "🇧🇷",
+    "region": "Rio Grande do Norte",
+    "lat": -5.0906,
+    "lon": -36.2758,
+    "spot_type": "lagoon",
+    "style_tags": [
+      "Flat Water",
+      "Freestyle",
+      "Wave",
+      "Freeride"
+    ],
+    "prime_season": "Jul – Jan (Strong Trade Winds)",
+    "water_type": "River Mouth Flatwater Lagoon & Outer Reef Waves",
+    "months": {
+      "1": {
+        "wind_prob": 70,
+        "avg_kts": 18,
+        "range": [
+          14,
+          22
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Gentler summer trades, great for all-day freestyle and warm cruising."
+      },
+      "2": {
+        "wind_prob": 50,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Tropical rainfall season begins, lighter breeze with occasional sunny thermal afternoons."
+      },
+      "3": {
+        "wind_prob": 40,
+        "avg_kts": 14,
+        "range": [
+          11,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Off-season. Light wind and occasional tropical showers."
+      },
+      "4": {
+        "wind_prob": 35,
+        "avg_kts": 13,
+        "range": [
+          10,
+          17
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Low wind season. Ideal for hydrofoil or surf lessons."
+      },
+      "5": {
+        "wind_prob": 45,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Rains subside; first winter southeasterly trades begin building."
+      },
+      "6": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Trade winds turn on reliably. Perfect for mid-size kites."
+      },
+      "7": {
+        "wind_prob": 88,
+        "avg_kts": 22,
+        "range": [
+          18,
+          27
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Prime season kick-off. 20+ knots almost every afternoon."
+      },
+      "8": {
+        "wind_prob": 94,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. Clockwork southeasterly trades blow non-stop."
+      },
+      "9": {
+        "wind_prob": 96,
+        "avg_kts": 26,
+        "range": [
+          22,
+          32
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Maximum wind velocity of the year. Small kites (7m-9m) locked and loaded."
+      },
+      "10": {
+        "wind_prob": 97,
+        "avg_kts": 26,
+        "range": [
+          22,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Megaloop & big air paradise. Consistent nuclear breeze daily."
+      },
+      "11": {
+        "wind_prob": 95,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Ultra-reliable wind continues with warm butter-flat lagoons."
+      },
+      "12": {
+        "wind_prob": 85,
+        "avg_kts": 20,
+        "range": [
+          16,
+          26
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
+      }
+    }
+  },
+  {
+    "id": "araruama",
+    "name": "Lagoa de Araruama, Brazil",
+    "short_name": "Araruama",
+    "country": "Brazil",
+    "country_code": "BR",
+    "flag": "🇧🇷",
+    "region": "Rio de Janeiro",
+    "lat": -22.8683,
+    "lon": -42.3428,
+    "spot_type": "lagoon",
+    "style_tags": [
+      "Flat Water",
+      "Freestyle",
+      "Freeride",
+      "Hydrofoil"
+    ],
+    "prime_season": "Sep – Apr (Spring & Summer Cold Fronts / NE)",
+    "water_type": "Massive Warm Shallow Hypersaline Flatwater Lagoon",
+    "months": {
+      "1": {
+        "wind_prob": 70,
+        "avg_kts": 18,
+        "range": [
+          14,
+          24
+        ],
+        "season": "good",
+        "sea_temp": 24,
+        "air_temp": 28,
+        "wetsuit": "Boardshorts / Shorty",
+        "tip": "Warm northeast breeze and summer beach vibe."
+      },
+      "2": {
+        "wind_prob": 68,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 25,
+        "air_temp": 28,
+        "wetsuit": "Boardshorts / Shorty",
+        "tip": "Good thermal winds in afternoon."
+      },
+      "3": {
+        "wind_prob": 60,
+        "avg_kts": 16,
+        "range": [
+          13,
+          22
+        ],
+        "season": "shoulder",
+        "sea_temp": 24,
+        "air_temp": 26,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Transitional month with autumn swells arriving."
+      },
+      "4": {
+        "wind_prob": 55,
+        "avg_kts": 16,
+        "range": [
+          12,
+          22
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Powerful southern swells for strapless wave riding."
+      },
+      "5": {
+        "wind_prob": 50,
+        "avg_kts": 15,
+        "range": [
+          12,
+          22
+        ],
+        "season": "low",
+        "sea_temp": 20,
+        "air_temp": 21,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Winter sets in; southern frontal winds bring big surf."
+      },
+      "6": {
+        "wind_prob": 50,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 18,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Cold southern fronts with strong southerly winds."
+      },
+      "7": {
+        "wind_prob": 52,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 17,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Big wave conditions during southern gale passages."
+      },
+      "8": {
+        "wind_prob": 60,
+        "avg_kts": 17,
+        "range": [
+          13,
+          25
+        ],
+        "season": "shoulder",
+        "sea_temp": 18,
+        "air_temp": 20,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Spring warm-up starts; northeasterly winds increase."
+      },
+      "9": {
+        "wind_prob": 75,
+        "avg_kts": 20,
+        "range": [
+          15,
+          27
+        ],
+        "season": "peak",
+        "sea_temp": 19,
+        "air_temp": 22,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Prime spring wind season opens with strong Vento Nordeste."
+      },
+      "10": {
+        "wind_prob": 80,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "peak",
+        "sea_temp": 20,
+        "air_temp": 24,
+        "wetsuit": "Shorty / 3/2mm",
+        "tip": "High reliability northeast winds and great wave sets in Ibiraquera."
+      },
+      "11": {
+        "wind_prob": 82,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 26,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Warm spring winds and long daylight hours."
+      },
+      "12": {
+        "wind_prob": 75,
+        "avg_kts": 19,
+        "range": [
+          15,
+          25
+        ],
+        "season": "peak",
+        "sea_temp": 23,
+        "air_temp": 27,
+        "wetsuit": "Boardshorts / Shorty",
+        "tip": "Excellent holiday winds and warm water."
+      }
+    }
+  },
+  {
+    "id": "corralejo",
+    "name": "Corralejo (Flag Beach, Fuerteventura), Spain",
+    "short_name": "Flag Beach (Corralejo)",
+    "country": "Spain",
+    "country_code": "ES",
+    "flag": "🇪🇸",
+    "region": "Canary Islands",
+    "lat": 28.7167,
+    "lon": -13.85,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Big Air",
+      "Wave",
+      "Strapless"
+    ],
+    "prime_season": "May – Sep (Alisios Trade Winds)",
+    "water_type": "Nuclear Trade/Thermal Winds, Ocean Swell & Wave Kickers",
+    "months": {
+      "1": {
+        "wind_prob": 55,
+        "avg_kts": 16,
+        "range": [
+          12,
+          22
+        ],
+        "season": "shoulder",
+        "sea_temp": 19,
+        "air_temp": 21,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Warm European winter escape with moderate breeze."
+      },
+      "2": {
+        "wind_prob": 58,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 18,
+        "air_temp": 21,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Great wave riding on north shores."
+      },
+      "3": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          25
+        ],
+        "season": "good",
+        "sea_temp": 18,
+        "air_temp": 22,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Spring Alisios begin building in strength."
+      },
+      "4": {
+        "wind_prob": 72,
+        "avg_kts": 20,
+        "range": [
+          15,
+          27
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 23,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Consistent trade winds setup across all islands."
+      },
+      "5": {
+        "wind_prob": 82,
+        "avg_kts": 23,
+        "range": [
+          18,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 20,
+        "air_temp": 25,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Full trade wind machine turns on. Sotavento tidal lagoon fills up."
+      },
+      "6": {
+        "wind_prob": 88,
+        "avg_kts": 25,
+        "range": [
+          20,
+          34
+        ],
+        "season": "peak",
+        "sea_temp": 21,
+        "air_temp": 26,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Strong gusty winds in El Medano and Sotavento; 7m-9m kites prime."
+      },
+      "7": {
+        "wind_prob": 92,
+        "avg_kts": 27,
+        "range": [
+          22,
+          36
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Peak windiest month. World Cup Big Air conditions."
+      },
+      "8": {
+        "wind_prob": 90,
+        "avg_kts": 26,
+        "range": [
+          21,
+          35
+        ],
+        "season": "peak",
+        "sea_temp": 23,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Nuclear trades blow daily from mid-morning to sunset."
+      },
+      "9": {
+        "wind_prob": 75,
+        "avg_kts": 20,
+        "range": [
+          15,
+          27
+        ],
+        "season": "good",
+        "sea_temp": 23,
+        "air_temp": 27,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Gentler winds, warmest water of the year."
+      },
+      "10": {
+        "wind_prob": 60,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 25,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant autumn breeze and start of winter swell season."
+      },
+      "11": {
+        "wind_prob": 55,
+        "avg_kts": 16,
+        "range": [
+          12,
+          22
+        ],
+        "season": "shoulder",
+        "sea_temp": 21,
+        "air_temp": 23,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Surf season begins; waves on northern points."
+      },
+      "12": {
+        "wind_prob": 52,
+        "avg_kts": 15,
+        "range": [
+          12,
+          22
+        ],
+        "season": "shoulder",
+        "sea_temp": 20,
+        "air_temp": 21,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Sunny winter getaways with decent wave sessions."
+      }
+    }
+  },
+  {
+    "id": "fehmarn_gold",
+    "name": "Fehmarn (Gold), Germany",
+    "short_name": "Fehmarn (Gold)",
+    "country": "Germany",
+    "country_code": "DE",
+    "flag": "🇩🇪",
+    "region": "Baltic Sea",
+    "lat": 54.4333,
+    "lon": 11.1,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Freestyle",
+      "Flat Water",
+      "Freeride"
+    ],
+    "prime_season": "Sep – May (Autumn & Spring Depressions)",
+    "water_type": "Baltic Sea Shallow Bays & Flatwater Channels",
+    "months": {
+      "1": {
+        "wind_prob": 70,
+        "avg_kts": 22,
+        "range": [
+          16,
+          35
+        ],
+        "season": "good",
+        "sea_temp": 7,
+        "air_temp": 6,
+        "wetsuit": "5/4mm + Booties + Hood",
+        "tip": "Powerful winter storms for hardcore cold-water riders."
+      },
+      "2": {
+        "wind_prob": 68,
+        "avg_kts": 21,
+        "range": [
+          15,
+          33
+        ],
+        "season": "good",
+        "sea_temp": 6,
+        "air_temp": 7,
+        "wetsuit": "5/4mm + Booties + Hood",
+        "tip": "Cold winter gales and empty beaches."
+      },
+      "3": {
+        "wind_prob": 65,
+        "avg_kts": 20,
+        "range": [
+          14,
+          30
+        ],
+        "season": "good",
+        "sea_temp": 8,
+        "air_temp": 10,
+        "wetsuit": "5/4mm + Booties",
+        "tip": "Spring thermal assistance starts on sunny days."
+      },
+      "4": {
+        "wind_prob": 62,
+        "avg_kts": 18,
+        "range": [
+          13,
+          27
+        ],
+        "season": "shoulder",
+        "sea_temp": 10,
+        "air_temp": 14,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Pleasant spring riding with warming air."
+      },
+      "5": {
+        "wind_prob": 60,
+        "avg_kts": 17,
+        "range": [
+          13,
+          26
+        ],
+        "season": "shoulder",
+        "sea_temp": 13,
+        "air_temp": 18,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Sea breeze thermals set in along coastal dunes."
+      },
+      "6": {
+        "wind_prob": 55,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 21,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Longest daylight of the year (sessions till 10 PM!)."
+      },
+      "7": {
+        "wind_prob": 52,
+        "avg_kts": 15,
+        "range": [
+          11,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 18,
+        "air_temp": 23,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Summer beach weather, lighter thermal sea breeze."
+      },
+      "8": {
+        "wind_prob": 54,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 19,
+        "air_temp": 23,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Warmest water of the year in the North Sea."
+      },
+      "9": {
+        "wind_prob": 68,
+        "avg_kts": 20,
+        "range": [
+          15,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 17,
+        "air_temp": 19,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Autumn storm season begins! Excellent Big Air & wave kickers."
+      },
+      "10": {
+        "wind_prob": 74,
+        "avg_kts": 22,
+        "range": [
+          16,
+          34
+        ],
+        "season": "peak",
+        "sea_temp": 14,
+        "air_temp": 15,
+        "wetsuit": "4/3mm or 5/4mm",
+        "tip": "Prime autumn gale season with consistent westerly winds."
+      },
+      "11": {
+        "wind_prob": 75,
+        "avg_kts": 23,
+        "range": [
+          17,
+          35
+        ],
+        "season": "peak",
+        "sea_temp": 11,
+        "air_temp": 10,
+        "wetsuit": "5/4mm + Booties",
+        "tip": "Deep low pressure depressions bring nuclear wind sessions."
+      },
+      "12": {
+        "wind_prob": 72,
+        "avg_kts": 22,
+        "range": [
+          16,
+          35
+        ],
+        "season": "good",
+        "sea_temp": 8,
+        "air_temp": 7,
+        "wetsuit": "5/4mm + Booties + Hood",
+        "tip": "Rugged winter riding with heavy winds."
+      }
+    }
+  },
+  {
+    "id": "dakhla_whitedune",
+    "name": "Dakhla (White Dune / Dune Blanche), Morocco",
+    "short_name": "White Dune (Dakhla)",
+    "country": "Morocco",
+    "country_code": "MA",
+    "flag": "🇲🇦",
+    "region": "Western Sahara",
+    "lat": 23.85,
+    "lon": -15.7833,
+    "spot_type": "lagoon",
+    "style_tags": [
+      "Flat Water",
+      "Freestyle",
+      "Freeride"
+    ],
+    "prime_season": "Apr – Sep (Persistent Northern Atlantic Trades)",
+    "water_type": "Protected Flat Water Lagoon & Coastal Sandbar",
+    "months": {
+      "1": {
+        "wind_prob": 60,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm or 4/3mm",
+        "tip": "Warm desert sun by day, brisk evenings. Great ocean waves in Lassarga."
+      },
+      "2": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          25
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 21,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Good steady wind sessions with wide-open lagoons."
+      },
+      "3": {
+        "wind_prob": 75,
+        "avg_kts": 20,
+        "range": [
+          16,
+          27
+        ],
+        "season": "good",
+        "sea_temp": 17,
+        "air_temp": 23,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Spring trades kick in reliably across the 40km lagoon."
+      },
+      "4": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 18,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Daily 20+ knots. Perfect flat water freestyle and speed spot runs."
+      },
+      "5": {
+        "wind_prob": 86,
+        "avg_kts": 24,
+        "range": [
+          19,
+          31
+        ],
+        "season": "peak",
+        "sea_temp": 18,
+        "air_temp": 25,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "Very consistent winds from morning till twilight."
+      },
+      "6": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 19,
+        "air_temp": 27,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "Wind blows day and night. 7m-9m kites will be your daily drivers."
+      },
+      "7": {
+        "wind_prob": 94,
+        "avg_kts": 27,
+        "range": [
+          22,
+          35
+        ],
+        "season": "peak",
+        "sea_temp": 20,
+        "air_temp": 29,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Maximum reliability! Butter flat water in Dakhla Speed Spot."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 26,
+        "range": [
+          21,
+          34
+        ],
+        "season": "peak",
+        "sea_temp": 21,
+        "air_temp": 29,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Nuclear wind days. Excellent downwinders to White Dune."
+      },
+      "9": {
+        "wind_prob": 85,
+        "avg_kts": 23,
+        "range": [
+          18,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 21,
+        "air_temp": 27,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "Still very windy with slightly warmer water."
+      },
+      "10": {
+        "wind_prob": 72,
+        "avg_kts": 19,
+        "range": [
+          15,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 20,
+        "air_temp": 25,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, ideal for progress and wave riding."
+      },
+      "11": {
+        "wind_prob": 64,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 19,
+        "air_temp": 22,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Atlantic winter swells arrive at ocean-side point breaks."
+      },
+      "12": {
+        "wind_prob": 60,
+        "avg_kts": 17,
+        "range": [
+          13,
+          22
+        ],
+        "season": "shoulder",
+        "sea_temp": 18,
+        "air_temp": 20,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Sunny winter escape from European freeze."
+      }
+    }
+  },
+  {
+    "id": "dakhla_speed",
+    "name": "Dakhla (Speed Spot), Morocco",
+    "short_name": "Speed Spot (Dakhla)",
+    "country": "Morocco",
+    "country_code": "MA",
+    "flag": "🇲🇦",
+    "region": "Western Sahara",
+    "lat": 23.75,
+    "lon": -15.8667,
+    "spot_type": "lagoon",
+    "style_tags": [
+      "Flat Water",
+      "Freestyle",
+      "Freeride"
+    ],
+    "prime_season": "Apr – Sep (Persistent Northern Atlantic Trades)",
+    "water_type": "Protected Flat Water Lagoon & Coastal Sandbar",
+    "months": {
+      "1": {
+        "wind_prob": 60,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm or 4/3mm",
+        "tip": "Warm desert sun by day, brisk evenings. Great ocean waves in Lassarga."
+      },
+      "2": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          25
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 21,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Good steady wind sessions with wide-open lagoons."
+      },
+      "3": {
+        "wind_prob": 75,
+        "avg_kts": 20,
+        "range": [
+          16,
+          27
+        ],
+        "season": "good",
+        "sea_temp": 17,
+        "air_temp": 23,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Spring trades kick in reliably across the 40km lagoon."
+      },
+      "4": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 18,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Daily 20+ knots. Perfect flat water freestyle and speed spot runs."
+      },
+      "5": {
+        "wind_prob": 86,
+        "avg_kts": 24,
+        "range": [
+          19,
+          31
+        ],
+        "season": "peak",
+        "sea_temp": 18,
+        "air_temp": 25,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "Very consistent winds from morning till twilight."
+      },
+      "6": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 19,
+        "air_temp": 27,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "Wind blows day and night. 7m-9m kites will be your daily drivers."
+      },
+      "7": {
+        "wind_prob": 94,
+        "avg_kts": 27,
+        "range": [
+          22,
+          35
+        ],
+        "season": "peak",
+        "sea_temp": 20,
+        "air_temp": 29,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Maximum reliability! Butter flat water in Dakhla Speed Spot."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 26,
+        "range": [
+          21,
+          34
+        ],
+        "season": "peak",
+        "sea_temp": 21,
+        "air_temp": 29,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Nuclear wind days. Excellent downwinders to White Dune."
+      },
+      "9": {
+        "wind_prob": 85,
+        "avg_kts": 23,
+        "range": [
+          18,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 21,
+        "air_temp": 27,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "Still very windy with slightly warmer water."
+      },
+      "10": {
+        "wind_prob": 72,
+        "avg_kts": 19,
+        "range": [
+          15,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 20,
+        "air_temp": 25,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, ideal for progress and wave riding."
+      },
+      "11": {
+        "wind_prob": 64,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 19,
+        "air_temp": 22,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Atlantic winter swells arrive at ocean-side point breaks."
+      },
+      "12": {
+        "wind_prob": 60,
+        "avg_kts": 17,
+        "range": [
+          13,
+          22
+        ],
+        "season": "shoulder",
+        "sea_temp": 18,
+        "air_temp": 20,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Sunny winter escape from European freeze."
+      }
+    }
+  },
+  {
+    "id": "aruba_fisherman",
+    "name": "Fisherman's Huts (Aruba), Caribbean",
+    "short_name": "Fisherman's Huts (Aruba)",
+    "country": "Aruba",
+    "country_code": "AW",
+    "flag": "🇦🇼",
+    "region": "Aruba",
+    "lat": 12.5833,
+    "lon": -70.05,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Wave",
+      "Freestyle",
+      "Flat Water"
+    ],
+    "prime_season": "Dec – Aug (Consistent Atlantic Trades)",
+    "water_type": "Choppy Waves at Boca & Flat Water at Huts",
+    "months": {
+      "1": {
+        "wind_prob": 74,
+        "avg_kts": 18,
+        "range": [
+          15,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 26,
+        "air_temp": 28,
+        "wetsuit": "Boardshorts",
+        "tip": "Winter trades reinforced by north swells. Prime wave riding on outer reefs."
+      },
+      "2": {
+        "wind_prob": 78,
+        "avg_kts": 19,
+        "range": [
+          15,
+          24
+        ],
+        "season": "good",
+        "sea_temp": 26,
+        "air_temp": 28,
+        "wetsuit": "Boardshorts",
+        "tip": "Consistent easterly breeze, great for both waves and twin-tip blasting."
+      },
+      "3": {
+        "wind_prob": 80,
+        "avg_kts": 19,
+        "range": [
+          16,
+          25
+        ],
+        "season": "good",
+        "sea_temp": 26,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Reliable Atlantic trade winds build daily by 1:00 PM."
+      },
+      "4": {
+        "wind_prob": 75,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 27,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Pleasant spring conditions with warm tropical sea and air."
+      },
+      "5": {
+        "wind_prob": 78,
+        "avg_kts": 19,
+        "range": [
+          15,
+          24
+        ],
+        "season": "good",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Thermal effect kicks in early with longer sun exposure."
+      },
+      "6": {
+        "wind_prob": 88,
+        "avg_kts": 22,
+        "range": [
+          18,
+          27
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak summer trade wind season. 20+ knots almost every single afternoon."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 23,
+        "range": [
+          19,
+          28
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Windiest month of the year! Bring your 8m-10m quiver."
+      },
+      "8": {
+        "wind_prob": 82,
+        "avg_kts": 20,
+        "range": [
+          16,
+          25
+        ],
+        "season": "peak",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Solid summer winds continue through mid-afternoon."
+      },
+      "9": {
+        "wind_prob": 55,
+        "avg_kts": 15,
+        "range": [
+          12,
+          20
+        ],
+        "season": "shoulder",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Tropical storm season; wind is intermittent between sunny intervals."
+      },
+      "10": {
+        "wind_prob": 45,
+        "avg_kts": 14,
+        "range": [
+          11,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Lightest month of the year. Good for foiling or scuba diving."
+      },
+      "11": {
+        "wind_prob": 58,
+        "avg_kts": 16,
+        "range": [
+          12,
+          21
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Early winter trades return alongside first winter swells."
+      },
+      "12": {
+        "wind_prob": 72,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 27,
+        "air_temp": 28,
+        "wetsuit": "Boardshorts",
+        "tip": "Christmas trades deliver warm winds and fun waves on outer reef."
+      }
+    }
+  },
+  {
+    "id": "turks_longbay",
+    "name": "Long Bay (Providenciales), Turks & Caicos",
+    "short_name": "Long Bay (Provo)",
+    "country": "Turks & Caicos",
+    "country_code": "DO",
+    "flag": "🇹🇨",
+    "region": "Turks & Caicos",
+    "lat": 21.7833,
+    "lon": -72.2167,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Freestyle",
+      "Speed",
+      "Flat Water"
+    ],
+    "prime_season": "Dec – Aug (Consistent Atlantic Trades)",
+    "water_type": "Ankle-Deep Butter Flat Outer Sandbars",
+    "months": {
+      "1": {
+        "wind_prob": 74,
+        "avg_kts": 18,
+        "range": [
+          15,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 26,
+        "air_temp": 28,
+        "wetsuit": "Boardshorts",
+        "tip": "Winter trades reinforced by north swells. Prime wave riding on outer reefs."
+      },
+      "2": {
+        "wind_prob": 78,
+        "avg_kts": 19,
+        "range": [
+          15,
+          24
+        ],
+        "season": "good",
+        "sea_temp": 26,
+        "air_temp": 28,
+        "wetsuit": "Boardshorts",
+        "tip": "Consistent easterly breeze, great for both waves and twin-tip blasting."
+      },
+      "3": {
+        "wind_prob": 80,
+        "avg_kts": 19,
+        "range": [
+          16,
+          25
+        ],
+        "season": "good",
+        "sea_temp": 26,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Reliable Atlantic trade winds build daily by 1:00 PM."
+      },
+      "4": {
+        "wind_prob": 75,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 27,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Pleasant spring conditions with warm tropical sea and air."
+      },
+      "5": {
+        "wind_prob": 78,
+        "avg_kts": 19,
+        "range": [
+          15,
+          24
+        ],
+        "season": "good",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Thermal effect kicks in early with longer sun exposure."
+      },
+      "6": {
+        "wind_prob": 88,
+        "avg_kts": 22,
+        "range": [
+          18,
+          27
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak summer trade wind season. 20+ knots almost every single afternoon."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 23,
+        "range": [
+          19,
+          28
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Windiest month of the year! Bring your 8m-10m quiver."
+      },
+      "8": {
+        "wind_prob": 82,
+        "avg_kts": 20,
+        "range": [
+          16,
+          25
+        ],
+        "season": "peak",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Solid summer winds continue through mid-afternoon."
+      },
+      "9": {
+        "wind_prob": 55,
+        "avg_kts": 15,
+        "range": [
+          12,
+          20
+        ],
+        "season": "shoulder",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Tropical storm season; wind is intermittent between sunny intervals."
+      },
+      "10": {
+        "wind_prob": 45,
+        "avg_kts": 14,
+        "range": [
+          11,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Lightest month of the year. Good for foiling or scuba diving."
+      },
+      "11": {
+        "wind_prob": 58,
+        "avg_kts": 16,
+        "range": [
+          12,
+          21
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Early winter trades return alongside first winter swells."
+      },
+      "12": {
+        "wind_prob": 72,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 27,
+        "air_temp": 28,
+        "wetsuit": "Boardshorts",
+        "tip": "Christmas trades deliver warm winds and fun waves on outer reef."
+      }
+    }
+  },
+  {
+    "id": "paracas",
+    "name": "Paracas Bay, Peru",
+    "short_name": "Paracas",
+    "country": "Peru",
+    "country_code": "PE",
+    "flag": "🇵🇪",
+    "region": "Ica",
+    "lat": -13.8333,
+    "lon": -76.25,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Freestyle",
+      "Flat Water"
+    ],
+    "prime_season": "May – Sep (Cascade Thermal Venturi)",
+    "water_type": "Andes Thermal Mountain Reservoir (20-30 kts)",
+    "months": {
+      "1": {
+        "wind_prob": 20,
+        "avg_kts": 12,
+        "range": [
+          8,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 6,
+        "air_temp": 5,
+        "wetsuit": "Drysuit",
+        "tip": "Freezing winter. Gorge is blanketed in snow and ice."
+      },
+      "2": {
+        "wind_prob": 25,
+        "avg_kts": 13,
+        "range": [
+          9,
+          19
+        ],
+        "season": "low",
+        "sea_temp": 7,
+        "air_temp": 8,
+        "wetsuit": "Drysuit",
+        "tip": "Cold winter off-season."
+      },
+      "3": {
+        "wind_prob": 40,
+        "avg_kts": 15,
+        "range": [
+          10,
+          22
+        ],
+        "season": "low",
+        "sea_temp": 9,
+        "air_temp": 12,
+        "wetsuit": "5/4mm + Hood",
+        "tip": "Spring warm-up, snowmelt raises the Columbia River."
+      },
+      "4": {
+        "wind_prob": 60,
+        "avg_kts": 18,
+        "range": [
+          13,
+          26
+        ],
+        "season": "shoulder",
+        "sea_temp": 11,
+        "air_temp": 16,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "First thermal pressure gradients establish through the Gorge."
+      },
+      "5": {
+        "wind_prob": 78,
+        "avg_kts": 22,
+        "range": [
+          16,
+          30
+        ],
+        "season": "good",
+        "sea_temp": 14,
+        "air_temp": 21,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Season begins in earnest! The Hatch and Event Site firing."
+      },
+      "6": {
+        "wind_prob": 88,
+        "avg_kts": 25,
+        "range": [
+          19,
+          34
+        ],
+        "season": "peak",
+        "sea_temp": 17,
+        "air_temp": 26,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Nuclear Gorge winds blow against river current for huge kickers."
+      },
+      "7": {
+        "wind_prob": 92,
+        "avg_kts": 27,
+        "range": [
+          20,
+          36
+        ],
+        "season": "peak",
+        "sea_temp": 19,
+        "air_temp": 30,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Peak season! 25-35 kts rolling swell, warm sun and vibrant scene."
+      },
+      "8": {
+        "wind_prob": 90,
+        "avg_kts": 26,
+        "range": [
+          19,
+          35
+        ],
+        "season": "peak",
+        "sea_temp": 20,
+        "air_temp": 29,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Warm water and reliable afternoon venturi breeze every day."
+      },
+      "9": {
+        "wind_prob": 72,
+        "avg_kts": 21,
+        "range": [
+          15,
+          29
+        ],
+        "season": "good",
+        "sea_temp": 18,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Crisp autumn air, beautiful foliage and solid wind days."
+      },
+      "10": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          11,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 14,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Thermal engine slows down as inland desert cools."
+      },
+      "11": {
+        "wind_prob": 25,
+        "avg_kts": 13,
+        "range": [
+          9,
+          19
+        ],
+        "season": "low",
+        "sea_temp": 10,
+        "air_temp": 10,
+        "wetsuit": "5/4mm + Hood",
+        "tip": "Late autumn cold winds."
+      },
+      "12": {
+        "wind_prob": 20,
+        "avg_kts": 12,
+        "range": [
+          8,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 7,
+        "air_temp": 6,
+        "wetsuit": "Drysuit",
+        "tip": "Winter closure."
+      }
+    }
+  },
+  {
+    "id": "miami_crandon",
+    "name": "Crandon Park (Miami), Florida, USA",
+    "short_name": "Crandon Park (Miami)",
+    "country": "United States",
+    "country_code": "US",
+    "flag": "🇺🇸",
+    "region": "Florida",
+    "lat": 25.7167,
+    "lon": -80.15,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Freeride",
+      "Flat Water",
+      "Hydrofoil"
+    ],
+    "prime_season": "Dec – Aug (Consistent Atlantic Trades)",
+    "water_type": "Warm Tropical Flats & Mangrove Channels",
+    "months": {
+      "1": {
+        "wind_prob": 74,
+        "avg_kts": 18,
+        "range": [
+          15,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 26,
+        "air_temp": 28,
+        "wetsuit": "Boardshorts",
+        "tip": "Winter trades reinforced by north swells. Prime wave riding on outer reefs."
+      },
+      "2": {
+        "wind_prob": 78,
+        "avg_kts": 19,
+        "range": [
+          15,
+          24
+        ],
+        "season": "good",
+        "sea_temp": 26,
+        "air_temp": 28,
+        "wetsuit": "Boardshorts",
+        "tip": "Consistent easterly breeze, great for both waves and twin-tip blasting."
+      },
+      "3": {
+        "wind_prob": 80,
+        "avg_kts": 19,
+        "range": [
+          16,
+          25
+        ],
+        "season": "good",
+        "sea_temp": 26,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Reliable Atlantic trade winds build daily by 1:00 PM."
+      },
+      "4": {
+        "wind_prob": 75,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 27,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Pleasant spring conditions with warm tropical sea and air."
+      },
+      "5": {
+        "wind_prob": 78,
+        "avg_kts": 19,
+        "range": [
+          15,
+          24
+        ],
+        "season": "good",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Thermal effect kicks in early with longer sun exposure."
+      },
+      "6": {
+        "wind_prob": 88,
+        "avg_kts": 22,
+        "range": [
+          18,
+          27
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak summer trade wind season. 20+ knots almost every single afternoon."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 23,
+        "range": [
+          19,
+          28
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Windiest month of the year! Bring your 8m-10m quiver."
+      },
+      "8": {
+        "wind_prob": 82,
+        "avg_kts": 20,
+        "range": [
+          16,
+          25
+        ],
+        "season": "peak",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Solid summer winds continue through mid-afternoon."
+      },
+      "9": {
+        "wind_prob": 55,
+        "avg_kts": 15,
+        "range": [
+          12,
+          20
+        ],
+        "season": "shoulder",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Tropical storm season; wind is intermittent between sunny intervals."
+      },
+      "10": {
+        "wind_prob": 45,
+        "avg_kts": 14,
+        "range": [
+          11,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Lightest month of the year. Good for foiling or scuba diving."
+      },
+      "11": {
+        "wind_prob": 58,
+        "avg_kts": 16,
+        "range": [
+          12,
+          21
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Early winter trades return alongside first winter swells."
+      },
+      "12": {
+        "wind_prob": 72,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 27,
+        "air_temp": 28,
+        "wetsuit": "Boardshorts",
+        "tip": "Christmas trades deliver warm winds and fun waves on outer reef."
+      }
+    }
+  },
+  {
+    "id": "san_francisco_crissy",
+    "name": "Crissy Field (San Francisco), California, USA",
+    "short_name": "Crissy Field (SF)",
+    "country": "United States",
+    "country_code": "US",
+    "flag": "🇺🇸",
+    "region": "California",
+    "lat": 37.805,
+    "lon": -122.465,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Big Air",
+      "Freeride",
+      "Wave"
+    ],
+    "prime_season": "May – Sep (Cascade Thermal Venturi)",
+    "water_type": "Sacramento River Thermal Venturi & Rolling Swells",
+    "months": {
+      "1": {
+        "wind_prob": 20,
+        "avg_kts": 12,
+        "range": [
+          8,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 6,
+        "air_temp": 5,
+        "wetsuit": "Drysuit",
+        "tip": "Freezing winter. Gorge is blanketed in snow and ice."
+      },
+      "2": {
+        "wind_prob": 25,
+        "avg_kts": 13,
+        "range": [
+          9,
+          19
+        ],
+        "season": "low",
+        "sea_temp": 7,
+        "air_temp": 8,
+        "wetsuit": "Drysuit",
+        "tip": "Cold winter off-season."
+      },
+      "3": {
+        "wind_prob": 40,
+        "avg_kts": 15,
+        "range": [
+          10,
+          22
+        ],
+        "season": "low",
+        "sea_temp": 9,
+        "air_temp": 12,
+        "wetsuit": "5/4mm + Hood",
+        "tip": "Spring warm-up, snowmelt raises the Columbia River."
+      },
+      "4": {
+        "wind_prob": 60,
+        "avg_kts": 18,
+        "range": [
+          13,
+          26
+        ],
+        "season": "shoulder",
+        "sea_temp": 11,
+        "air_temp": 16,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "First thermal pressure gradients establish through the Gorge."
+      },
+      "5": {
+        "wind_prob": 78,
+        "avg_kts": 22,
+        "range": [
+          16,
+          30
+        ],
+        "season": "good",
+        "sea_temp": 14,
+        "air_temp": 21,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Season begins in earnest! The Hatch and Event Site firing."
+      },
+      "6": {
+        "wind_prob": 88,
+        "avg_kts": 25,
+        "range": [
+          19,
+          34
+        ],
+        "season": "peak",
+        "sea_temp": 17,
+        "air_temp": 26,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Nuclear Gorge winds blow against river current for huge kickers."
+      },
+      "7": {
+        "wind_prob": 92,
+        "avg_kts": 27,
+        "range": [
+          20,
+          36
+        ],
+        "season": "peak",
+        "sea_temp": 19,
+        "air_temp": 30,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Peak season! 25-35 kts rolling swell, warm sun and vibrant scene."
+      },
+      "8": {
+        "wind_prob": 90,
+        "avg_kts": 26,
+        "range": [
+          19,
+          35
+        ],
+        "season": "peak",
+        "sea_temp": 20,
+        "air_temp": 29,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Warm water and reliable afternoon venturi breeze every day."
+      },
+      "9": {
+        "wind_prob": 72,
+        "avg_kts": 21,
+        "range": [
+          15,
+          29
+        ],
+        "season": "good",
+        "sea_temp": 18,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Crisp autumn air, beautiful foliage and solid wind days."
+      },
+      "10": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          11,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 14,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Thermal engine slows down as inland desert cools."
+      },
+      "11": {
+        "wind_prob": 25,
+        "avg_kts": 13,
+        "range": [
+          9,
+          19
+        ],
+        "season": "low",
+        "sea_temp": 10,
+        "air_temp": 10,
+        "wetsuit": "5/4mm + Hood",
+        "tip": "Late autumn cold winds."
+      },
+      "12": {
+        "wind_prob": 20,
+        "avg_kts": 12,
+        "range": [
+          8,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 7,
+        "air_temp": 6,
+        "wetsuit": "Drysuit",
+        "tip": "Winter closure."
+      }
+    }
+  },
+  {
+    "id": "patos_ceara",
+    "name": "Patos (Itarema), Brazil",
+    "short_name": "Patos (Itarema)",
+    "country": "Brazil",
+    "country_code": "BR",
+    "flag": "🇧🇷",
+    "region": "Ceará",
+    "lat": -3.0055,
+    "lon": -39.7486,
+    "spot_type": "lagoon",
+    "style_tags": [
+      "Flat Water",
+      "Freestyle",
+      "Wave",
+      "Freeride"
+    ],
+    "prime_season": "Jul – Jan (Strong Trade Winds)",
+    "water_type": "River Mouth Flatwater Lagoon & Outer Reef Waves",
+    "months": {
+      "1": {
+        "wind_prob": 70,
+        "avg_kts": 18,
+        "range": [
+          14,
+          22
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Gentler summer trades, great for all-day freestyle and warm cruising."
+      },
+      "2": {
+        "wind_prob": 50,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Tropical rainfall season begins, lighter breeze with occasional sunny thermal afternoons."
+      },
+      "3": {
+        "wind_prob": 40,
+        "avg_kts": 14,
+        "range": [
+          11,
+          18
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Off-season. Light wind and occasional tropical showers."
+      },
+      "4": {
+        "wind_prob": 35,
+        "avg_kts": 13,
+        "range": [
+          10,
+          17
+        ],
+        "season": "low",
+        "sea_temp": 29,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Low wind season. Ideal for hydrofoil or surf lessons."
+      },
+      "5": {
+        "wind_prob": 45,
+        "avg_kts": 15,
+        "range": [
+          12,
+          19
+        ],
+        "season": "shoulder",
+        "sea_temp": 28,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Rains subside; first winter southeasterly trades begin building."
+      },
+      "6": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          23
+        ],
+        "season": "good",
+        "sea_temp": 28,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Trade winds turn on reliably. Perfect for mid-size kites."
+      },
+      "7": {
+        "wind_prob": 88,
+        "avg_kts": 22,
+        "range": [
+          18,
+          27
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 29,
+        "wetsuit": "Boardshorts",
+        "tip": "Prime season kick-off. 20+ knots almost every afternoon."
+      },
+      "8": {
+        "wind_prob": 94,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. Clockwork southeasterly trades blow non-stop."
+      },
+      "9": {
+        "wind_prob": 96,
+        "avg_kts": 26,
+        "range": [
+          22,
+          32
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 30,
+        "wetsuit": "Boardshorts",
+        "tip": "Maximum wind velocity of the year. Small kites (7m-9m) locked and loaded."
+      },
+      "10": {
+        "wind_prob": 97,
+        "avg_kts": 26,
+        "range": [
+          22,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 27,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Megaloop & big air paradise. Consistent nuclear breeze daily."
+      },
+      "11": {
+        "wind_prob": 95,
+        "avg_kts": 24,
+        "range": [
+          20,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Ultra-reliable wind continues with warm butter-flat lagoons."
+      },
+      "12": {
+        "wind_prob": 85,
+        "avg_kts": 20,
+        "range": [
+          16,
+          26
+        ],
+        "season": "peak",
+        "sea_temp": 28,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Holiday season breeze. Outstanding sessions and vibrant beach vibe."
+      }
+    }
+  },
+  {
+    "id": "portalban",
+    "name": "Portalban (Lake Neuchâtel), Switzerland",
+    "short_name": "Portalban (Neuchâtel)",
+    "country": "Switzerland",
+    "country_code": "CH",
+    "flag": "🇨🇭",
+    "region": "Fribourg / Romandie",
+    "lat": 46.9175,
+    "lon": 6.9492,
+    "spot_type": "lake",
+    "style_tags": [
+      "Flat Water",
+      "Freeride",
+      "Hydrofoil",
+      "Thermal"
+    ],
+    "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+    "water_type": "Alpine Thermal Freshwater Lake",
+    "months": {
+      "1": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 16,
+        "air_temp": 14,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter Mediterranean depressions with cold gusty breeze."
+      },
+      "2": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 15,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Off-season Greek island vibe."
+      },
+      "3": {
+        "wind_prob": 52,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring transitions with intermittent thermal breeze."
+      },
+      "4": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          24
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant spring warm-up, quiet beaches."
+      },
+      "5": {
+        "wind_prob": 68,
+        "avg_kts": 19,
+        "range": [
+          14,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 24,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+      },
+      "6": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 24,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 25,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+      },
+      "9": {
+        "wind_prob": 78,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "good",
+        "sea_temp": 24,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Fantastic late season: warm sea, golden light, fewer crowds."
+      },
+      "10": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, peaceful island ambiance."
+      },
+      "11": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 19,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Meltemi dies down, winter lows take over."
+      },
+      "12": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 17,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter season."
+      }
+    }
+  },
+  {
+    "id": "saint_blaise",
+    "name": "Saint-Blaise (Lake Neuchâtel), Switzerland",
+    "short_name": "Saint-Blaise",
+    "country": "Switzerland",
+    "country_code": "CH",
+    "flag": "🇨🇭",
+    "region": "Neuchâtel",
+    "lat": 47.009,
+    "lon": 6.985,
+    "spot_type": "lake",
+    "style_tags": [
+      "Flat Water",
+      "Freeride",
+      "Hydrofoil",
+      "Thermal"
+    ],
+    "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+    "water_type": "Alpine Thermal Freshwater Lake",
+    "months": {
+      "1": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 16,
+        "air_temp": 14,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter Mediterranean depressions with cold gusty breeze."
+      },
+      "2": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 15,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Off-season Greek island vibe."
+      },
+      "3": {
+        "wind_prob": 52,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring transitions with intermittent thermal breeze."
+      },
+      "4": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          24
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant spring warm-up, quiet beaches."
+      },
+      "5": {
+        "wind_prob": 68,
+        "avg_kts": 19,
+        "range": [
+          14,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 24,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+      },
+      "6": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 24,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 25,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+      },
+      "9": {
+        "wind_prob": 78,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "good",
+        "sea_temp": 24,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Fantastic late season: warm sea, golden light, fewer crowds."
+      },
+      "10": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, peaceful island ambiance."
+      },
+      "11": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 19,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Meltemi dies down, winter lows take over."
+      },
+      "12": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 17,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter season."
+      }
+    }
+  },
+  {
+    "id": "lac_leman",
+    "name": "St-Prex (Lake Geneva), Switzerland",
+    "short_name": "Lake Geneva (St-Prex)",
+    "country": "Switzerland",
+    "country_code": "CH",
+    "flag": "🇨🇭",
+    "region": "Vaud / Lac Léman",
+    "lat": 46.4795,
+    "lon": 6.459,
+    "spot_type": "lake",
+    "style_tags": [
+      "Flat Water",
+      "Freeride",
+      "Hydrofoil",
+      "Thermal"
+    ],
+    "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+    "water_type": "Alpine Thermal Freshwater Lake",
+    "months": {
+      "1": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 16,
+        "air_temp": 14,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter Mediterranean depressions with cold gusty breeze."
+      },
+      "2": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 15,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Off-season Greek island vibe."
+      },
+      "3": {
+        "wind_prob": 52,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring transitions with intermittent thermal breeze."
+      },
+      "4": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          24
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant spring warm-up, quiet beaches."
+      },
+      "5": {
+        "wind_prob": 68,
+        "avg_kts": 19,
+        "range": [
+          14,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 24,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+      },
+      "6": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 24,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 25,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+      },
+      "9": {
+        "wind_prob": 78,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "good",
+        "sea_temp": 24,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Fantastic late season: warm sea, golden light, fewer crowds."
+      },
+      "10": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, peaceful island ambiance."
+      },
+      "11": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 19,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Meltemi dies down, winter lows take over."
+      },
+      "12": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 17,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter season."
+      }
+    }
+  },
+  {
+    "id": "malcesine_garda",
+    "name": "Malcesine / Navene (Lake Garda), Italy",
+    "short_name": "Malcesine (Garda)",
+    "country": "Italy",
+    "country_code": "IT",
+    "flag": "🇮🇹",
+    "region": "Verona / Lake Garda",
+    "lat": 45.795,
+    "lon": 10.825,
+    "spot_type": "lake",
+    "style_tags": [
+      "Flat Water",
+      "Freeride",
+      "Hydrofoil",
+      "Thermal"
+    ],
+    "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+    "water_type": "Alpine Thermal Freshwater Lake",
+    "months": {
+      "1": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 16,
+        "air_temp": 14,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter Mediterranean depressions with cold gusty breeze."
+      },
+      "2": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 15,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Off-season Greek island vibe."
+      },
+      "3": {
+        "wind_prob": 52,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring transitions with intermittent thermal breeze."
+      },
+      "4": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          24
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant spring warm-up, quiet beaches."
+      },
+      "5": {
+        "wind_prob": 68,
+        "avg_kts": 19,
+        "range": [
+          14,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 24,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+      },
+      "6": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 24,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 25,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+      },
+      "9": {
+        "wind_prob": 78,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "good",
+        "sea_temp": 24,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Fantastic late season: warm sea, golden light, fewer crowds."
+      },
+      "10": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, peaceful island ambiance."
+      },
+      "11": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 19,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Meltemi dies down, winter lows take over."
+      },
+      "12": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 17,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter season."
+      }
+    }
+  },
+  {
+    "id": "reschensee",
+    "name": "Reschensee (Lake Reschen), Italy",
+    "short_name": "Reschensee",
+    "country": "Italy",
+    "country_code": "IT",
+    "flag": "🇮🇹",
+    "region": "South Tyrol / Alps",
+    "lat": 46.7972,
+    "lon": 10.5186,
+    "spot_type": "lake",
+    "style_tags": [
+      "Flat Water",
+      "Freeride",
+      "Hydrofoil",
+      "Thermal"
+    ],
+    "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+    "water_type": "Alpine Thermal Freshwater Lake",
+    "months": {
+      "1": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 16,
+        "air_temp": 14,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter Mediterranean depressions with cold gusty breeze."
+      },
+      "2": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 15,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Off-season Greek island vibe."
+      },
+      "3": {
+        "wind_prob": 52,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring transitions with intermittent thermal breeze."
+      },
+      "4": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          24
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant spring warm-up, quiet beaches."
+      },
+      "5": {
+        "wind_prob": 68,
+        "avg_kts": 19,
+        "range": [
+          14,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 24,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+      },
+      "6": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 24,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 25,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+      },
+      "9": {
+        "wind_prob": 78,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "good",
+        "sea_temp": 24,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Fantastic late season: warm sea, golden light, fewer crowds."
+      },
+      "10": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, peaceful island ambiance."
+      },
+      "11": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 19,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Meltemi dies down, winter lows take over."
+      },
+      "12": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 17,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter season."
+      }
+    }
+  },
+  {
+    "id": "santa_croce",
+    "name": "Lake Santa Croce (Farra d'Alpago), Italy",
+    "short_name": "Lake Santa Croce",
+    "country": "Italy",
+    "country_code": "IT",
+    "flag": "🇮🇹",
+    "region": "Veneto / Dolomites",
+    "lat": 46.126,
+    "lon": 12.339,
+    "spot_type": "lake",
+    "style_tags": [
+      "Flat Water",
+      "Freeride",
+      "Hydrofoil",
+      "Thermal"
+    ],
+    "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+    "water_type": "Alpine Thermal Freshwater Lake",
+    "months": {
+      "1": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 16,
+        "air_temp": 14,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter Mediterranean depressions with cold gusty breeze."
+      },
+      "2": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 15,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Off-season Greek island vibe."
+      },
+      "3": {
+        "wind_prob": 52,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring transitions with intermittent thermal breeze."
+      },
+      "4": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          24
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant spring warm-up, quiet beaches."
+      },
+      "5": {
+        "wind_prob": 68,
+        "avg_kts": 19,
+        "range": [
+          14,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 24,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+      },
+      "6": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 24,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 25,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+      },
+      "9": {
+        "wind_prob": 78,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "good",
+        "sea_temp": 24,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Fantastic late season: warm sea, golden light, fewer crowds."
+      },
+      "10": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, peaceful island ambiance."
+      },
+      "11": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 19,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Meltemi dies down, winter lows take over."
+      },
+      "12": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 17,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter season."
+      }
+    }
+  },
+  {
+    "id": "lake_iseo",
+    "name": "Vello (Lake Iseo), Italy",
+    "short_name": "Lake Iseo (Vello)",
+    "country": "Italy",
+    "country_code": "IT",
+    "flag": "🇮🇹",
+    "region": "Lombardy / Alps",
+    "lat": 45.748,
+    "lon": 10.088,
+    "spot_type": "lake",
+    "style_tags": [
+      "Flat Water",
+      "Freeride",
+      "Hydrofoil",
+      "Thermal"
+    ],
+    "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+    "water_type": "Alpine Thermal Freshwater Lake",
+    "months": {
+      "1": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 16,
+        "air_temp": 14,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter Mediterranean depressions with cold gusty breeze."
+      },
+      "2": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 15,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Off-season Greek island vibe."
+      },
+      "3": {
+        "wind_prob": 52,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring transitions with intermittent thermal breeze."
+      },
+      "4": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          24
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant spring warm-up, quiet beaches."
+      },
+      "5": {
+        "wind_prob": 68,
+        "avg_kts": 19,
+        "range": [
+          14,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 24,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+      },
+      "6": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 24,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 25,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+      },
+      "9": {
+        "wind_prob": 78,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "good",
+        "sea_temp": 24,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Fantastic late season: warm sea, golden light, fewer crowds."
+      },
+      "10": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, peaceful island ambiance."
+      },
+      "11": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 19,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Meltemi dies down, winter lows take over."
+      },
+      "12": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 17,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter season."
+      }
+    }
+  },
+  {
+    "id": "mar_menor",
+    "name": "Mar Menor (Los Alcázares), Spain",
+    "short_name": "Mar Menor (Los Alcázares)",
+    "country": "Spain",
+    "country_code": "ES",
+    "flag": "🇪🇸",
+    "region": "Murcia",
+    "lat": 37.742,
+    "lon": -0.849,
+    "spot_type": "lagoon",
+    "style_tags": [
+      "Flat Water",
+      "Freestyle",
+      "Freeride",
+      "Hydrofoil"
+    ],
+    "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+    "water_type": "Europe's Largest Warm Shallow Saltwater Lagoon",
+    "months": {
+      "1": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 16,
+        "air_temp": 14,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter Mediterranean depressions with cold gusty breeze."
+      },
+      "2": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 15,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Off-season Greek island vibe."
+      },
+      "3": {
+        "wind_prob": 52,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring transitions with intermittent thermal breeze."
+      },
+      "4": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          24
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant spring warm-up, quiet beaches."
+      },
+      "5": {
+        "wind_prob": 68,
+        "avg_kts": 19,
+        "range": [
+          14,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 24,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+      },
+      "6": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 24,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 25,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+      },
+      "9": {
+        "wind_prob": 78,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "good",
+        "sea_temp": 24,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Fantastic late season: warm sea, golden light, fewer crowds."
+      },
+      "10": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, peaceful island ambiance."
+      },
+      "11": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 19,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Meltemi dies down, winter lows take over."
+      },
+      "12": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 17,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter season."
+      }
+    }
+  },
+  {
+    "id": "mar_menor_paraiso",
+    "name": "Mar Menor (Playa Paraíso), Spain",
+    "short_name": "Mar Menor (Playa Paraíso)",
+    "country": "Spain",
+    "country_code": "ES",
+    "flag": "🇪🇸",
+    "region": "Murcia",
+    "lat": 37.641,
+    "lon": -0.739,
+    "spot_type": "lagoon",
+    "style_tags": [
+      "Flat Water",
+      "Freestyle",
+      "Freeride",
+      "Hydrofoil"
+    ],
+    "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+    "water_type": "Europe's Largest Warm Shallow Saltwater Lagoon",
+    "months": {
+      "1": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 16,
+        "air_temp": 14,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter Mediterranean depressions with cold gusty breeze."
+      },
+      "2": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 15,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Off-season Greek island vibe."
+      },
+      "3": {
+        "wind_prob": 52,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring transitions with intermittent thermal breeze."
+      },
+      "4": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          24
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant spring warm-up, quiet beaches."
+      },
+      "5": {
+        "wind_prob": 68,
+        "avg_kts": 19,
+        "range": [
+          14,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 24,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+      },
+      "6": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 24,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 25,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+      },
+      "9": {
+        "wind_prob": 78,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "good",
+        "sea_temp": 24,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Fantastic late season: warm sea, golden light, fewer crowds."
+      },
+      "10": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, peaceful island ambiance."
+      },
+      "11": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 19,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Meltemi dies down, winter lows take over."
+      },
+      "12": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 17,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter season."
+      }
+    }
+  },
+  {
+    "id": "almeria_roquetas",
+    "name": "Roquetas de Mar (Playa Serena), Spain",
+    "short_name": "Roquetas de Mar",
+    "country": "Spain",
+    "country_code": "ES",
+    "flag": "🇪🇸",
+    "region": "Andalusia / Almería",
+    "lat": 36.726,
+    "lon": -2.625,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Flat Water",
+      "Freestyle",
+      "Freeride",
+      "Hydrofoil"
+    ],
+    "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+    "water_type": "Europe's Largest Warm Shallow Saltwater Lagoon",
+    "months": {
+      "1": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 16,
+        "air_temp": 14,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter Mediterranean depressions with cold gusty breeze."
+      },
+      "2": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 15,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Off-season Greek island vibe."
+      },
+      "3": {
+        "wind_prob": 52,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring transitions with intermittent thermal breeze."
+      },
+      "4": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          24
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant spring warm-up, quiet beaches."
+      },
+      "5": {
+        "wind_prob": 68,
+        "avg_kts": 19,
+        "range": [
+          14,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 24,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+      },
+      "6": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 24,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 25,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+      },
+      "9": {
+        "wind_prob": 78,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "good",
+        "sea_temp": 24,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Fantastic late season: warm sea, golden light, fewer crowds."
+      },
+      "10": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, peaceful island ambiance."
+      },
+      "11": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 19,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Meltemi dies down, winter lows take over."
+      },
+      "12": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 17,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter season."
+      }
+    }
+  },
+  {
+    "id": "santa_pola",
+    "name": "Santa Pola (Playa Lisa), Spain",
+    "short_name": "Santa Pola",
+    "country": "Spain",
+    "country_code": "ES",
+    "flag": "🇪🇸",
+    "region": "Alicante / Costa Blanca",
+    "lat": 38.188,
+    "lon": -0.575,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Flat Water",
+      "Freestyle",
+      "Freeride",
+      "Hydrofoil"
+    ],
+    "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+    "water_type": "Europe's Largest Warm Shallow Saltwater Lagoon",
+    "months": {
+      "1": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 16,
+        "air_temp": 14,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter Mediterranean depressions with cold gusty breeze."
+      },
+      "2": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 15,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Off-season Greek island vibe."
+      },
+      "3": {
+        "wind_prob": 52,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring transitions with intermittent thermal breeze."
+      },
+      "4": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          24
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant spring warm-up, quiet beaches."
+      },
+      "5": {
+        "wind_prob": 68,
+        "avg_kts": 19,
+        "range": [
+          14,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 24,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+      },
+      "6": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 24,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 25,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+      },
+      "9": {
+        "wind_prob": 78,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "good",
+        "sea_temp": 24,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Fantastic late season: warm sea, golden light, fewer crowds."
+      },
+      "10": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, peaceful island ambiance."
+      },
+      "11": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 19,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Meltemi dies down, winter lows take over."
+      },
+      "12": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 17,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter season."
+      }
+    }
+  },
+  {
+    "id": "valencia_el_saler",
+    "name": "Valencia (El Saler), Spain",
+    "short_name": "Valencia (El Saler)",
+    "country": "Spain",
+    "country_code": "ES",
+    "flag": "🇪🇸",
+    "region": "Valencia",
+    "lat": 39.382,
+    "lon": -0.328,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Freeride",
+      "Hydrofoil",
+      "Thermal"
+    ],
+    "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+    "water_type": "Fine Sand Beach with Afternoon Garbí Thermal",
+    "months": {
+      "1": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 16,
+        "air_temp": 14,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter Mediterranean depressions with cold gusty breeze."
+      },
+      "2": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 15,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Off-season Greek island vibe."
+      },
+      "3": {
+        "wind_prob": 52,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring transitions with intermittent thermal breeze."
+      },
+      "4": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          24
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant spring warm-up, quiet beaches."
+      },
+      "5": {
+        "wind_prob": 68,
+        "avg_kts": 19,
+        "range": [
+          14,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 24,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+      },
+      "6": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 24,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 25,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+      },
+      "9": {
+        "wind_prob": 78,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "good",
+        "sea_temp": 24,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Fantastic late season: warm sea, golden light, fewer crowds."
+      },
+      "10": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, peaceful island ambiance."
+      },
+      "11": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 19,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Meltemi dies down, winter lows take over."
+      },
+      "12": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 17,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter season."
+      }
+    }
+  },
+  {
+    "id": "castelldefels",
+    "name": "Castelldefels (Barcelona), Spain",
+    "short_name": "Castelldefels",
+    "country": "Spain",
+    "country_code": "ES",
+    "flag": "🇪🇸",
+    "region": "Catalonia / Barcelona",
+    "lat": 41.265,
+    "lon": 1.996,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Freestyle",
+      "Flat Water",
+      "Speed"
+    ],
+    "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+    "water_type": "Shallow Flat Water Bay on Narrow Sandspit",
+    "months": {
+      "1": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 16,
+        "air_temp": 14,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter Mediterranean depressions with cold gusty breeze."
+      },
+      "2": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 15,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Off-season Greek island vibe."
+      },
+      "3": {
+        "wind_prob": 52,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring transitions with intermittent thermal breeze."
+      },
+      "4": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          24
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant spring warm-up, quiet beaches."
+      },
+      "5": {
+        "wind_prob": 68,
+        "avg_kts": 19,
+        "range": [
+          14,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 24,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+      },
+      "6": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 24,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 25,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+      },
+      "9": {
+        "wind_prob": 78,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "good",
+        "sea_temp": 24,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Fantastic late season: warm sea, golden light, fewer crowds."
+      },
+      "10": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, peaceful island ambiance."
+      },
+      "11": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 19,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Meltemi dies down, winter lows take over."
+      },
+      "12": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 17,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter season."
+      }
+    }
+  },
+  {
+    "id": "cesantes_galicia",
+    "name": "Cesantes (Ría de Vigo), Spain",
+    "short_name": "Cesantes (Galicia)",
+    "country": "Spain",
+    "country_code": "ES",
+    "flag": "🇪🇸",
+    "region": "Galicia / Pontevedra",
+    "lat": 42.321,
+    "lon": -8.618,
+    "spot_type": "lagoon",
+    "style_tags": [
+      "Flat Water",
+      "Freestyle",
+      "Freeride"
+    ],
+    "prime_season": "May – Sep (Alisios Trade Winds)",
+    "water_type": "Protected Flat Water Lagoon & Coastal Sandbar",
+    "months": {
+      "1": {
+        "wind_prob": 55,
+        "avg_kts": 16,
+        "range": [
+          12,
+          22
+        ],
+        "season": "shoulder",
+        "sea_temp": 19,
+        "air_temp": 21,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Warm European winter escape with moderate breeze."
+      },
+      "2": {
+        "wind_prob": 58,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 18,
+        "air_temp": 21,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Great wave riding on north shores."
+      },
+      "3": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          25
+        ],
+        "season": "good",
+        "sea_temp": 18,
+        "air_temp": 22,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Spring Alisios begin building in strength."
+      },
+      "4": {
+        "wind_prob": 72,
+        "avg_kts": 20,
+        "range": [
+          15,
+          27
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 23,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Consistent trade winds setup across all islands."
+      },
+      "5": {
+        "wind_prob": 82,
+        "avg_kts": 23,
+        "range": [
+          18,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 20,
+        "air_temp": 25,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Full trade wind machine turns on. Sotavento tidal lagoon fills up."
+      },
+      "6": {
+        "wind_prob": 88,
+        "avg_kts": 25,
+        "range": [
+          20,
+          34
+        ],
+        "season": "peak",
+        "sea_temp": 21,
+        "air_temp": 26,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Strong gusty winds in El Medano and Sotavento; 7m-9m kites prime."
+      },
+      "7": {
+        "wind_prob": 92,
+        "avg_kts": 27,
+        "range": [
+          22,
+          36
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Peak windiest month. World Cup Big Air conditions."
+      },
+      "8": {
+        "wind_prob": 90,
+        "avg_kts": 26,
+        "range": [
+          21,
+          35
+        ],
+        "season": "peak",
+        "sea_temp": 23,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Nuclear trades blow daily from mid-morning to sunset."
+      },
+      "9": {
+        "wind_prob": 75,
+        "avg_kts": 20,
+        "range": [
+          15,
+          27
+        ],
+        "season": "good",
+        "sea_temp": 23,
+        "air_temp": 27,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Gentler winds, warmest water of the year."
+      },
+      "10": {
+        "wind_prob": 60,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 25,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant autumn breeze and start of winter swell season."
+      },
+      "11": {
+        "wind_prob": 55,
+        "avg_kts": 16,
+        "range": [
+          12,
+          22
+        ],
+        "season": "shoulder",
+        "sea_temp": 21,
+        "air_temp": 23,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Surf season begins; waves on northern points."
+      },
+      "12": {
+        "wind_prob": 52,
+        "avg_kts": 15,
+        "range": [
+          12,
+          22
+        ],
+        "season": "shoulder",
+        "sea_temp": 20,
+        "air_temp": 21,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Sunny winter getaways with decent wave sessions."
+      }
+    }
+  },
+  {
+    "id": "somo_cantabria",
+    "name": "Somo (Santander), Spain",
+    "short_name": "Somo (Santander)",
+    "country": "Spain",
+    "country_code": "ES",
+    "flag": "🇪🇸",
+    "region": "Cantabria",
+    "lat": 43.456,
+    "lon": -3.743,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Flat Water",
+      "Freestyle",
+      "Freeride"
+    ],
+    "prime_season": "May – Sep (Alisios Trade Winds)",
+    "water_type": "Protected Flat Water Lagoon & Coastal Sandbar",
+    "months": {
+      "1": {
+        "wind_prob": 55,
+        "avg_kts": 16,
+        "range": [
+          12,
+          22
+        ],
+        "season": "shoulder",
+        "sea_temp": 19,
+        "air_temp": 21,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Warm European winter escape with moderate breeze."
+      },
+      "2": {
+        "wind_prob": 58,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 18,
+        "air_temp": 21,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Great wave riding on north shores."
+      },
+      "3": {
+        "wind_prob": 65,
+        "avg_kts": 18,
+        "range": [
+          14,
+          25
+        ],
+        "season": "good",
+        "sea_temp": 18,
+        "air_temp": 22,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Spring Alisios begin building in strength."
+      },
+      "4": {
+        "wind_prob": 72,
+        "avg_kts": 20,
+        "range": [
+          15,
+          27
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 23,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Consistent trade winds setup across all islands."
+      },
+      "5": {
+        "wind_prob": 82,
+        "avg_kts": 23,
+        "range": [
+          18,
+          30
+        ],
+        "season": "peak",
+        "sea_temp": 20,
+        "air_temp": 25,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Full trade wind machine turns on. Sotavento tidal lagoon fills up."
+      },
+      "6": {
+        "wind_prob": 88,
+        "avg_kts": 25,
+        "range": [
+          20,
+          34
+        ],
+        "season": "peak",
+        "sea_temp": 21,
+        "air_temp": 26,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Strong gusty winds in El Medano and Sotavento; 7m-9m kites prime."
+      },
+      "7": {
+        "wind_prob": 92,
+        "avg_kts": 27,
+        "range": [
+          22,
+          36
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Peak windiest month. World Cup Big Air conditions."
+      },
+      "8": {
+        "wind_prob": 90,
+        "avg_kts": 26,
+        "range": [
+          21,
+          35
+        ],
+        "season": "peak",
+        "sea_temp": 23,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Nuclear trades blow daily from mid-morning to sunset."
+      },
+      "9": {
+        "wind_prob": 75,
+        "avg_kts": 20,
+        "range": [
+          15,
+          27
+        ],
+        "season": "good",
+        "sea_temp": 23,
+        "air_temp": 27,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Gentler winds, warmest water of the year."
+      },
+      "10": {
+        "wind_prob": 60,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 25,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant autumn breeze and start of winter swell season."
+      },
+      "11": {
+        "wind_prob": 55,
+        "avg_kts": 16,
+        "range": [
+          12,
+          22
+        ],
+        "season": "shoulder",
+        "sea_temp": 21,
+        "air_temp": 23,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Surf season begins; waves on northern points."
+      },
+      "12": {
+        "wind_prob": 52,
+        "avg_kts": 15,
+        "range": [
+          12,
+          22
+        ],
+        "season": "shoulder",
+        "sea_temp": 20,
+        "air_temp": 21,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Sunny winter getaways with decent wave sessions."
+      }
+    }
+  },
+  {
+    "id": "isla_canela",
+    "name": "Isla Canela (Huelva), Spain",
+    "short_name": "Isla Canela",
+    "country": "Spain",
+    "country_code": "ES",
+    "flag": "🇪🇸",
+    "region": "Andalusia / Huelva",
+    "lat": 37.178,
+    "lon": -7.375,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Big Air",
+      "Wave",
+      "Strapless"
+    ],
+    "prime_season": "Apr – Oct (Levante & Poniente Thermal)",
+    "water_type": "Nuclear Trade/Thermal Winds, Ocean Swell & Wave Kickers",
+    "months": {
+      "1": {
+        "wind_prob": 60,
+        "avg_kts": 18,
+        "range": [
+          13,
+          27
+        ],
+        "season": "shoulder",
+        "sea_temp": 15,
+        "air_temp": 16,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter storms bring powerful Poniente waves and empty beaches."
+      },
+      "2": {
+        "wind_prob": 62,
+        "avg_kts": 19,
+        "range": [
+          14,
+          28
+        ],
+        "season": "shoulder",
+        "sea_temp": 15,
+        "air_temp": 16,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Strong Atlantic swells and gusty Levante days."
+      },
+      "3": {
+        "wind_prob": 68,
+        "avg_kts": 20,
+        "range": [
+          15,
+          29
+        ],
+        "season": "good",
+        "sea_temp": 15,
+        "air_temp": 18,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring thermal assistance starts boosting afternoon Poniente."
+      },
+      "4": {
+        "wind_prob": 75,
+        "avg_kts": 22,
+        "range": [
+          16,
+          32
+        ],
+        "season": "good",
+        "sea_temp": 16,
+        "air_temp": 20,
+        "wetsuit": "3/2mm or 4/3mm",
+        "tip": "Excellent mix of steady Poniente and spicy Levante."
+      },
+      "5": {
+        "wind_prob": 80,
+        "avg_kts": 23,
+        "range": [
+          17,
+          34
+        ],
+        "season": "peak",
+        "sea_temp": 17,
+        "air_temp": 23,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Warm sunny days with strong Levante cycles (pack 6m-9m)."
+      },
+      "6": {
+        "wind_prob": 85,
+        "avg_kts": 24,
+        "range": [
+          18,
+          36
+        ],
+        "season": "peak",
+        "sea_temp": 18,
+        "air_temp": 26,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "Peak summer season. Valdevaqueros comes alive every day."
+      },
+      "7": {
+        "wind_prob": 88,
+        "avg_kts": 25,
+        "range": [
+          19,
+          38
+        ],
+        "season": "peak",
+        "sea_temp": 19,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Strong Levante days can exceed 35 kts. Epic Big Air conditions."
+      },
+      "8": {
+        "wind_prob": 88,
+        "avg_kts": 25,
+        "range": [
+          19,
+          38
+        ],
+        "season": "peak",
+        "sea_temp": 20,
+        "air_temp": 29,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Peak European kite hub atmosphere with guaranteed daily wind."
+      },
+      "9": {
+        "wind_prob": 82,
+        "avg_kts": 23,
+        "range": [
+          17,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 20,
+        "air_temp": 26,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Local favorite month: summer crowds thin out, wind stays strong."
+      },
+      "10": {
+        "wind_prob": 72,
+        "avg_kts": 20,
+        "range": [
+          15,
+          29
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 23,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Great autumn riding with warm water and fun wave sets."
+      },
+      "11": {
+        "wind_prob": 64,
+        "avg_kts": 19,
+        "range": [
+          14,
+          27
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 19,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Transition to winter Poniente swells; great for strapless riding."
+      },
+      "12": {
+        "wind_prob": 60,
+        "avg_kts": 18,
+        "range": [
+          13,
+          26
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter sessions on wide open beaches."
+      }
+    }
+  },
+  {
+    "id": "mallorca_muro",
+    "name": "Playa de Muro (Mallorca), Spain",
+    "short_name": "Playa de Muro",
+    "country": "Spain",
+    "country_code": "ES",
+    "flag": "🇪🇸",
+    "region": "Balearic Islands",
+    "lat": 39.805,
+    "lon": 3.12,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Freeride",
+      "Hydrofoil",
+      "Flat Water"
+    ],
+    "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+    "water_type": "Protected Mediterranean Thermal Bay",
+    "months": {
+      "1": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 16,
+        "air_temp": 14,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter Mediterranean depressions with cold gusty breeze."
+      },
+      "2": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 15,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Off-season Greek island vibe."
+      },
+      "3": {
+        "wind_prob": 52,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring transitions with intermittent thermal breeze."
+      },
+      "4": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          24
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant spring warm-up, quiet beaches."
+      },
+      "5": {
+        "wind_prob": 68,
+        "avg_kts": 19,
+        "range": [
+          14,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 24,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+      },
+      "6": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 24,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 25,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+      },
+      "9": {
+        "wind_prob": 78,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "good",
+        "sea_temp": 24,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Fantastic late season: warm sea, golden light, fewer crowds."
+      },
+      "10": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, peaceful island ambiance."
+      },
+      "11": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 19,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Meltemi dies down, winter lows take over."
+      },
+      "12": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 17,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter season."
+      }
+    }
+  },
+  {
+    "id": "ibiza_martina",
+    "name": "Cala Martina (Ibiza), Spain",
+    "short_name": "Cala Martina (Ibiza)",
+    "country": "Spain",
+    "country_code": "ES",
+    "flag": "🇪🇸",
+    "region": "Balearic Islands",
+    "lat": 38.995,
+    "lon": 1.564,
+    "spot_type": "ocean",
+    "style_tags": [
+      "Freeride",
+      "Hydrofoil",
+      "Thermal"
+    ],
+    "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+    "water_type": "Fine Sand Beach with Afternoon Garbí Thermal",
+    "months": {
+      "1": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 16,
+        "air_temp": 14,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Winter Mediterranean depressions with cold gusty breeze."
+      },
+      "2": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          24
+        ],
+        "season": "low",
+        "sea_temp": 15,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Off-season Greek island vibe."
+      },
+      "3": {
+        "wind_prob": 52,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 16,
+        "air_temp": 17,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Spring transitions with intermittent thermal breeze."
+      },
+      "4": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          24
+        ],
+        "season": "shoulder",
+        "sea_temp": 17,
+        "air_temp": 20,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Pleasant spring warm-up, quiet beaches."
+      },
+      "5": {
+        "wind_prob": 68,
+        "avg_kts": 19,
+        "range": [
+          14,
+          26
+        ],
+        "season": "good",
+        "sea_temp": 19,
+        "air_temp": 24,
+        "wetsuit": "3/2mm or Shorty",
+        "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+      },
+      "6": {
+        "wind_prob": 82,
+        "avg_kts": 22,
+        "range": [
+          17,
+          29
+        ],
+        "season": "peak",
+        "sea_temp": 22,
+        "air_temp": 28,
+        "wetsuit": "Shorty 2mm",
+        "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+      },
+      "7": {
+        "wind_prob": 90,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 24,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+      },
+      "8": {
+        "wind_prob": 92,
+        "avg_kts": 25,
+        "range": [
+          20,
+          33
+        ],
+        "season": "peak",
+        "sea_temp": 25,
+        "air_temp": 31,
+        "wetsuit": "Boardshorts",
+        "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+      },
+      "9": {
+        "wind_prob": 78,
+        "avg_kts": 21,
+        "range": [
+          16,
+          28
+        ],
+        "season": "good",
+        "sea_temp": 24,
+        "air_temp": 28,
+        "wetsuit": "Shorty / Boardies",
+        "tip": "Fantastic late season: warm sea, golden light, fewer crowds."
+      },
+      "10": {
+        "wind_prob": 58,
+        "avg_kts": 17,
+        "range": [
+          13,
+          23
+        ],
+        "season": "shoulder",
+        "sea_temp": 22,
+        "air_temp": 24,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Gentler autumn breeze, peaceful island ambiance."
+      },
+      "11": {
+        "wind_prob": 48,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 19,
+        "air_temp": 19,
+        "wetsuit": "3/2mm Steamer",
+        "tip": "Meltemi dies down, winter lows take over."
+      },
+      "12": {
+        "wind_prob": 45,
+        "avg_kts": 16,
+        "range": [
+          12,
+          23
+        ],
+        "season": "low",
+        "sea_temp": 17,
+        "air_temp": 15,
+        "wetsuit": "4/3mm Steamer",
+        "tip": "Quiet winter season."
+      }
     }
   }
 ]
@@ -22805,11 +32558,21 @@ def get_spot_climatology(spot_id: str) -> dict:
 def explore_spots_by_month_and_style(month: int, style: str = "all") -> list:
     """
     Rank top spots worldwide for a given month, optionally filtered by style.
-    Returns ranked list with reliability score, wind range, and travel verdict.
+    Cross-references style_tags, water_type, spot_type (from kite_spots.py),
+    and monthly wind/sea_temp/wetsuit climatology.
     """
     if month < 1 or month > 12:
         month = 1
     style = (style or "all").strip().lower()
+
+    # Cross-reference spot_type from kite_spots.py catalog
+    ks_types = {}
+    try:
+        import kite_spots
+        for ks in kite_spots.GLOBAL_KITE_SPOTS:
+            ks_types[ks.get("id", "").lower()] = ks.get("spot_type", "ocean")
+    except Exception:
+        pass
 
     spots = get_all_travel_spots()
     ranked = []
@@ -22820,16 +32583,63 @@ def explore_spots_by_month_and_style(month: int, style: str = "all") -> list:
         if not m_info:
             continue
 
+        sid = (s.get("id") or "").lower()
         style_tags = [t.lower() for t in s.get("style_tags", [])]
-        if style != "all" and style not in style_tags:
-            continue
+        tags_joined = " ".join(style_tags)
+        water_type = (s.get("water_type") or "").lower()
+        spot_type = (s.get("spot_type") or ks_types.get(sid) or "ocean").lower()
 
         wind_prob = m_info.get("wind_prob", 0)
         avg_kts = m_info.get("avg_kts", 0)
         w_range = m_info.get("range", [14, 20])
+        w_max = w_range[1] if len(w_range) > 1 else avg_kts
         season = m_info.get("season", "good")
+        sea_temp = m_info.get("sea_temp", 24)
+        wetsuit = (m_info.get("wetsuit") or "").lower()
+
+        if style != "all":
+            if style in ("flat", "flat water", "flat_water", "lagoon", "butter flat lagoons"):
+                is_flat = (
+                    "flat water" in style_tags
+                    or "flat" in tags_joined
+                    or spot_type in ("lagoon", "lake")
+                    or any(w in water_type for w in ("flat", "lagoon", "shallow", "estuary", "sandbar", "sandbank", "sandspit", "mirror", "butter"))
+                )
+                if not is_flat:
+                    continue
+            elif style in ("waves", "wave", "strapless", "waves & strapless"):
+                is_wave = (
+                    "wave" in style_tags
+                    or "strapless" in style_tags
+                    or any(w in water_type for w in ("wave", "swell", "reef", "pointbreak", "shorebreak", "surf", "kicker"))
+                )
+                if not is_wave:
+                    continue
+            elif style in ("big_air", "big air", "nuking", "big air & nuking wind"):
+                is_big_air = (
+                    "big air" in style_tags
+                    or "speed" in style_tags
+                    or avg_kts >= 22
+                    or w_max >= 27
+                )
+                if not is_big_air:
+                    continue
+            elif style in ("warm", "warm water", "boardshorts"):
+                is_warm = (
+                    (sea_temp is not None and sea_temp >= 25)
+                    or "boardshorts" in wetsuit
+                )
+                if not is_warm:
+                    continue
+            elif style not in style_tags and style not in tags_joined and style not in water_type:
+                continue
 
         score = wind_prob * 1.0 + (avg_kts * 0.5)
+        # Give a bonus in ranking when filtering by specific style:
+        if style in ("flat", "flat water", "lagoon") and spot_type == "lagoon":
+            score += 4.0
+        elif style in ("big_air", "big air") and avg_kts >= 23:
+            score += 5.0
 
         ranked.append({
             "id": s.get("id"),
@@ -22839,6 +32649,7 @@ def explore_spots_by_month_and_style(month: int, style: str = "all") -> list:
             "country_code": s.get("country_code"),
             "flag": s.get("flag"),
             "region": s.get("region"),
+            "spot_type": spot_type,
             "style_tags": s.get("style_tags"),
             "prime_season": s.get("prime_season"),
             "water_type": s.get("water_type"),
@@ -22848,7 +32659,7 @@ def explore_spots_by_month_and_style(month: int, style: str = "all") -> list:
             "avg_kts": avg_kts,
             "range": w_range,
             "season": season,
-            "sea_temp": m_info.get("sea_temp"),
+            "sea_temp": sea_temp,
             "air_temp": m_info.get("air_temp"),
             "wetsuit": m_info.get("wetsuit"),
             "tip": m_info.get("tip"),
@@ -22867,36 +32678,33 @@ def calculate_quiver_trip_recommendation(
 ) -> dict:
     """
     Calculate tailored quiver packing advice for a specific spot and month.
-    Categorizes rider's gear into:
-      - 'pack': Must-bring kites
-      - 'leave_home': Kites unlikely to be used
-      - 'gaps': Missing kite sizes recommended for this destination's wind profile.
+    Uses HolyGust's physics traction engine (evaluate_active_kite) when available,
+    and returns a structured dict matching the Travel Advisor UI.
     """
     spot = get_spot_climatology(spot_id)
     if not spot:
-        # Default fallback to Cabarete
         spot = get_spot_climatology("cabarete")
 
     months_data = spot.get("months", {})
-    m_info = months_data.get(month) or months_data.get(str(month)) or months_data.get(1)
-    
-    avg_kts = m_info.get("avg_kts", 18)
-    w_min, w_max = m_info.get("range", [14, 22])
+    m_info = months_data.get(month) or months_data.get(str(month)) or months_data.get(1) or months_data.get("1") or {}
+
+    avg_kts = float(m_info.get("avg_kts", 18))
+    w_range = m_info.get("range", [14, 22])
+    w_min, w_max = float(w_range[0]), float(w_range[1])
     wind_prob = m_info.get("wind_prob", 70)
 
-    # Calculate optimal kite sizes for rider weight
-    # Base 75kg twintip formula: optimal_size = 135 / wind_kts
-    weight_factor = rider_weight / 75.0
+    # Realistic kite sizing for rider weight & discipline (75kg Twintip rider: ~205 / wind_kts, e.g. 24 kts -> 8.5m, 18 kts -> 11.4m)
+    weight_factor = (rider_weight / 75.0) ** 0.85
     discipline_mult = 1.0
     disc_clean = (discipline or "twintip").lower()
     if "surf" in disc_clean or "wave" in disc_clean or "strapless" in disc_clean:
-        discipline_mult = 0.82  # Surfboards need ~15-20% smaller kites
+        discipline_mult = 0.85
     elif "foil" in disc_clean:
-        discipline_mult = 0.60  # Hydrofoils need ~40% smaller kites
+        discipline_mult = 0.65
 
-    ideal_sweetspot_size = round((135.0 / max(10, avg_kts)) * weight_factor * discipline_mult, 1)
-    ideal_highwind_size = round((135.0 / max(12, w_max)) * weight_factor * discipline_mult, 1)
-    ideal_lightwind_size = round((135.0 / max(8, w_min)) * weight_factor * discipline_mult, 1)
+    ideal_sweetspot_size = round(max(5.0, min(17.0, (205.0 / max(11.0, avg_kts)) * weight_factor * discipline_mult)), 1)
+    ideal_highwind_size = round(max(5.0, min(15.0, (205.0 / max(13.0, w_max)) * weight_factor * discipline_mult)), 1)
+    ideal_lightwind_size = round(max(6.0, min(17.0, (205.0 / max(10.0, w_min)) * weight_factor * discipline_mult)), 1)
 
     rec_min = min(ideal_highwind_size, ideal_sweetspot_size)
     rec_max = max(ideal_lightwind_size, ideal_sweetspot_size)
@@ -22907,49 +32715,123 @@ def calculate_quiver_trip_recommendation(
 
     inventory = gear_inventory or []
 
-    # Map inventory kites
     for item in inventory:
         try:
             size = float(item.get("size", 0))
-            gear_type = item.get("type", "kite")
-            gear_name = item.get("model") or item.get("name") or f"{size}m {gear_type.capitalize()}"
+            if size <= 0:
+                continue
+            gear_type = item.get("category") or item.get("type") or "kite"
+            brand = (item.get("brand") or "").strip()
+            model = (item.get("model") or item.get("name") or "").strip()
+            year = item.get("year")
+            yr_str = f" ({year})" if year else ""
+            label = f"{brand} {model}{yr_str} {size:g}m".replace("  ", " ").strip()
 
             # Check if within destination wind window (+/- 1.5m buffer)
             if (rec_min - 1.5) <= size <= (rec_max + 1.5):
+                if abs(size - ideal_sweetspot_size) <= 1.2:
+                    role = f"⭐ Primary Workhorse ({avg_kts:.0f} kts avg)"
+                elif size <= ideal_highwind_size + 1.0:
+                    role = f"🔥 High-Wind Session ({w_max:.0f} kts peaks)"
+                else:
+                    role = f"🌬️ Light-Wind / Lull Saver ({w_min:.0f} kts)"
                 pack_list.append({
                     "id": item.get("id"),
-                    "name": gear_name,
+                    "brand": brand,
+                    "model": model,
+                    "label": label,
+                    "name": label,
                     "size": size,
                     "type": gear_type,
+                    "role": role,
                     "status": "pack",
-                    "reason": f"Matches {w_min}-{w_max} kts expected wind at {spot.get('short_name', 'spot')}."
+                    "reason": f"Ideal for {w_min:.0f}–{w_max:.0f} kts at {spot.get('short_name', 'spot')}."
                 })
             else:
                 leave_list.append({
                     "id": item.get("id"),
-                    "name": gear_name,
+                    "brand": brand,
+                    "model": model,
+                    "label": label,
+                    "name": label,
                     "size": size,
                     "type": gear_type,
+                    "role": "Leave at home",
                     "status": "leave_home",
-                    "reason": f"Wind range unlikely needed ({'too large for strong breeze' if size > rec_max else 'too small for average conditions'})."
+                    "reason": f"{'Too large for ' + str(int(w_min)) + '–' + str(int(w_max)) + ' kts breeze' if size > rec_max else 'Too small for ' + str(int(w_min)) + '–' + str(int(w_max)) + ' kts wind'}."
                 })
         except Exception:
             continue
 
-    # Gap detection: Check if rider is missing crucial sizes
-    owned_sizes = [g.get("size") for g in pack_list]
-    target_sizes = [round(ideal_highwind_size), round(ideal_sweetspot_size), round(ideal_lightwind_size)]
-    target_sizes = sorted(list(set(target_sizes)))
+    pack_list.sort(key=lambda x: x["size"])
+    leave_list.sort(key=lambda x: x["size"])
 
-    for ts in target_sizes:
-        has_close = any(abs(owned - ts) <= 1.0 for owned in owned_sizes)
-        if not has_close and ts >= 5:
-            gaps.append({
-                "size": ts,
-                "urgency": "high" if abs(ts - ideal_sweetspot_size) <= 1.0 else "medium",
-                "label": f"{ts}m Kite",
-                "recommended_for": f"{avg_kts} kts {spot.get('short_name', 'spot')} sessions"
-            })
+    # Gap detection: Check high wind, sweetspot, and light wind coverage
+    all_owned_sizes = [float(i.get("size", 0)) for i in inventory if i.get("size")]
+    hs_int = max(5, round(ideal_highwind_size))
+    ss_int = max(5, round(ideal_sweetspot_size))
+    lw_int = max(6, round(ideal_lightwind_size))
+
+    if not any(abs(s - hs_int) <= 1.2 for s in all_owned_sizes) and w_max >= 22:
+        gaps.append({
+            "type": "high_wind_gap",
+            "size": hs_int,
+            "suggested_size": hs_int,
+            "urgency": "high",
+            "label": f"{hs_int}m Kite",
+            "recommended_for": f"{w_max:.0f} kts peak sessions",
+            "advice": f"{spot.get('short_name', 'This spot')} reaches {w_max:.0f} kts in {MONTH_NAMES[month - 1]}. Adding or renting a {hs_int}m kite will keep you safe and in control on nuking days."
+        })
+
+    if not any(abs(s - lw_int) <= 1.2 for s in all_owned_sizes) and w_min <= 17:
+        gaps.append({
+            "type": "light_wind_gap",
+            "size": lw_int,
+            "suggested_size": lw_int,
+            "urgency": "medium",
+            "label": f"{lw_int}m Kite",
+            "recommended_for": f"{w_min:.0f}–{avg_kts:.0f} kts lighter days",
+            "advice": f"To maximize water time on {w_min:.0f}–{avg_kts:.0f} kts days in {MONTH_NAMES[month - 1]}, consider packing or renting a {lw_int}m kite."
+        })
+
+    if not gaps and not pack_list:
+        gaps.append({
+            "type": "sweetspot_gap",
+            "size": ss_int,
+            "suggested_size": ss_int,
+            "urgency": "high",
+            "label": f"{ss_int}m Kite",
+            "recommended_for": f"{avg_kts:.0f} kts average wind",
+            "advice": f"For {rider_weight:.0f} kg on a {discipline} in {w_min:.0f}–{w_max:.0f} kts, your ideal all-round kite size is {ss_int}m (with {hs_int}m–{lw_int}m full range)."
+        })
+
+    # Build all_months list for the 12-month clickable matrix
+    SHORT_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    all_months_list = []
+    for m_idx in range(1, 13):
+        md = months_data.get(m_idx) or months_data.get(str(m_idx)) or {}
+        all_months_list.append({
+            "month_idx": m_idx,
+            "month_name": SHORT_MONTHS[m_idx - 1],
+            "full_name": MONTH_NAMES[m_idx - 1],
+            "wind_prob": md.get("wind_prob", 50),
+            "avg_kts": md.get("avg_kts", 16),
+            "range": md.get("range", [12, 20]),
+            "season": md.get("season", "shoulder"),
+            "sea_temp": md.get("sea_temp", 24),
+            "wetsuit": md.get("wetsuit", "Boardshorts")
+        })
+
+    month_obj = dict(m_info)
+    month_obj["index"] = month
+    month_obj["name"] = MONTH_NAMES[month - 1]
+
+    ideal_obj = {
+        "sweetspot": ideal_sweetspot_size,
+        "high_wind": hs_int,
+        "light_wind": lw_int,
+        "recommended_range": f"{hs_int}m – {lw_int}m"
+    }
 
     return {
         "spot": {
@@ -22960,22 +32842,22 @@ def calculate_quiver_trip_recommendation(
             "country_code": spot.get("country_code"),
             "flag": spot.get("flag"),
             "region": spot.get("region"),
+            "spot_type": spot.get("spot_type", "ocean"),
+            "style_tags": spot.get("style_tags", []),
             "water_type": spot.get("water_type"),
             "prime_season": spot.get("prime_season")
         },
-        "month": month,
+        "month": month_obj,
+        "month_idx": month,
         "month_name": MONTH_NAMES[month - 1],
         "climate": m_info,
+        "all_months": all_months_list,
         "rider": {
             "weight_kg": rider_weight,
             "discipline": discipline
         },
-        "ideal_quiver": {
-            "sweetspot": ideal_sweetspot_size,
-            "high_wind": ideal_highwind_size,
-            "light_wind": ideal_lightwind_size,
-            "recommended_range": f"{rec_min:.0f}m – {rec_max:.0f}m"
-        },
+        "ideal_sizes": ideal_obj,
+        "ideal_quiver": ideal_obj,
         "quiver_advice": {
             "pack": pack_list,
             "leave_home": leave_list,
