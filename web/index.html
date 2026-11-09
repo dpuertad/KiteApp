@@ -1329,38 +1329,132 @@
         </button>
       </div>
 
-      <!-- Profile Tab Navigation Bar (Visible in Beta) -->
-      <div id="profile-modal-tabs-bar" class="px-3 sm:px-5 pt-3 pb-2 flex-shrink-0 border-b border-slate-800/80 bg-slate-900/90">
-        <div class="flex items-center space-x-1 bg-slate-950 p-1 rounded-2xl border border-slate-800">
-          <button type="button" id="tab-btn-profile-specs" onclick="switchProfileTab('specs')" class="min-w-0 flex-1 py-1.5 px-1.5 rounded-xl text-[11px] sm:text-xs font-bold transition flex items-center justify-center space-x-1 bg-sky-600 text-white shadow-sm truncate">
-            <i data-lucide="sliders" class="w-3 h-3 flex-shrink-0"></i>
-            <span class="truncate">Specs</span>
+      <!-- Profile Tab Navigation Bar (Kites/Wings & Boards for User, + Admin for Admin, No Icons) -->
+      <div id="profile-modal-tabs-bar" class="px-4 sm:px-5 pt-3 pb-2.5 flex-shrink-0 border-b border-slate-800/80 bg-slate-900/90">
+        <div class="flex items-center gap-1.5 bg-slate-950 p-1 rounded-2xl border border-slate-800">
+          <button type="button" id="tab-btn-profile-kites" onclick="switchProfileTab('kites')" class="flex-1 py-2 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-sky-600 text-white shadow-sm whitespace-nowrap">
+            <span>Kites/Wings</span>
+            <span id="badge-tab-kites-count" class="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-900/70 text-white font-mono">0</span>
           </button>
-          <button type="button" id="tab-btn-profile-kites" onclick="switchProfileTab('kites')" class="min-w-0 flex-1 py-1.5 px-1.5 rounded-xl text-[11px] sm:text-xs font-medium transition flex items-center justify-center space-x-1 text-slate-400 hover:text-white truncate">
-            <span class="text-xs flex-shrink-0">🪁</span>
-            <span class="truncate">Kites</span>
-            <span id="badge-tab-kites-count" class="text-[9px] px-1 py-0.2 rounded-full bg-slate-800 text-slate-300 font-mono flex-shrink-0">0</span>
+          <button type="button" id="tab-btn-profile-boards" onclick="switchProfileTab('boards')" class="flex-1 py-2 px-2 rounded-xl text-xs font-medium transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-white whitespace-nowrap">
+            <span>Boards</span>
+            <span id="badge-tab-boards-count" class="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300 font-mono">0</span>
           </button>
-          <button type="button" id="tab-btn-profile-boards" onclick="switchProfileTab('boards')" class="min-w-0 flex-1 py-1.5 px-1.5 rounded-xl text-[11px] sm:text-xs font-medium transition flex items-center justify-center space-x-1 text-slate-400 hover:text-white truncate">
-            <span class="text-xs flex-shrink-0">🏄</span>
-            <span class="truncate">Boards</span>
-            <span id="badge-tab-boards-count" class="text-[9px] px-1 py-0.2 rounded-full bg-slate-800 text-slate-300 font-mono flex-shrink-0">0</span>
-          </button>
-          <button type="button" id="tab-btn-profile-admin" onclick="switchProfileTab('admin')" class="hidden min-w-0 flex-1 py-1.5 px-1.5 rounded-xl text-[11px] sm:text-xs font-medium transition flex items-center justify-center space-x-1 text-amber-400 hover:text-white truncate">
-            <span class="text-xs flex-shrink-0">👑</span>
-            <span class="truncate">Admin</span>
-            <span id="badge-tab-admin-pending" class="hidden text-[9px] px-1 py-0.2 rounded-full bg-amber-500 text-slate-950 font-black font-mono flex-shrink-0">0</span>
+          <button type="button" id="tab-btn-profile-admin" onclick="switchProfileTab('admin')" class="hidden flex-1 py-2 px-2 rounded-xl text-xs font-medium transition flex items-center justify-center gap-1.5 text-amber-400 hover:text-white whitespace-nowrap">
+            <span>Admin</span>
+            <span id="badge-tab-admin-pending" class="hidden text-[10px] px-1.5 py-0.2 rounded-full bg-amber-500 text-slate-950 font-black font-mono">0</span>
           </button>
         </div>
       </div>
 
       <!-- Tab Content Area -->
-      <div class="flex-1 overflow-y-auto p-5 space-y-4 custom-scrollbar text-xs">
-        
+      <div class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 custom-scrollbar text-xs">
+
         <!-- ============================================== -->
-        <!-- TAB 1: RIDER SPECS -->
+        <!-- TAB 1: KITES & WINGS (Default Active Tab) -->
         <!-- ============================================== -->
-        <div id="profile-tab-specs" class="space-y-3.5">
+        <div id="profile-tab-kites" class="space-y-3">
+          <div class="flex items-center justify-between gap-2 bg-slate-950/80 p-3 rounded-2xl border border-slate-800">
+            <div class="min-w-0">
+              <h4 class="font-bold text-white text-xs">Kites & Wings</h4>
+              <p id="modal-kites-sub-badge" class="text-[10px] text-slate-400 mt-0.5">0 packed · 0 at home</p>
+            </div>
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+              <button onclick="openAddKiteModal()" class="px-2.5 py-1.5 rounded-xl bg-sky-500/20 text-sky-400 text-xs font-bold border border-sky-500/30 hover:bg-sky-500/30 flex items-center space-x-1 active:scale-95 transition whitespace-nowrap">
+                <span>+ Kite</span>
+              </button>
+              <button onclick="openAddWingModal()" class="px-2.5 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-500/30 hover:bg-amber-500/30 flex items-center space-x-1 active:scale-95 transition whitespace-nowrap">
+                <span>+ Wing</span>
+              </button>
+            </div>
+          </div>
+          <p class="text-[11px] text-slate-400 font-normal">Tap 🎒 to mark the gear that is packed with you at the beach</p>
+          <div id="modal-quiver-list" class="space-y-2.5">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 2: BOARDS & FOILS -->
+        <!-- ============================================== -->
+        <div id="profile-tab-boards" class="space-y-3 hidden">
+          <div class="flex items-center justify-between gap-2 bg-slate-950/80 p-3 rounded-2xl border border-slate-800">
+            <div class="min-w-0">
+              <h4 class="font-bold text-white text-xs">Boards & Hydrofoils</h4>
+              <p id="modal-boards-sub-badge" class="text-[10px] text-slate-400 mt-0.5">0 packed · 0 at home</p>
+            </div>
+            <button onclick="openAddBoardModal()" class="px-3 py-1.5 rounded-xl bg-violet-500/20 text-violet-300 text-xs font-bold border border-violet-500/30 hover:bg-violet-500/30 flex items-center space-x-1 active:scale-95 transition flex-shrink-0 whitespace-nowrap">
+              <span>+ Board</span>
+            </button>
+          </div>
+          <p class="text-[11px] text-slate-400 font-normal">Tap 🎒 to mark the board that is packed with you at the beach</p>
+          <div id="modal-boards-list" class="space-y-2.5">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB 3: ADMIN CONSOLE & BETA RIDERS (Visible for Admins) -->
+        <!-- ============================================== -->
+        <div id="profile-tab-admin" class="space-y-3.5 hidden">
+          <!-- Telemetry Console Link & Summary Banner -->
+          <div class="bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-slate-950 p-3.5 rounded-2xl border border-amber-500/30 space-y-2.5">
+            <div class="flex items-center justify-between gap-2">
+              <span class="font-black text-amber-300 text-xs uppercase tracking-wider">HolyGust Mission Control</span>
+              <span id="admin-summary-pill" class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-mono font-bold whitespace-nowrap">Loading...</span>
+            </div>
+            <p class="text-[11px] text-slate-300 leading-relaxed">
+              Review pending Beta applications and monitor registered riders & spot telemetry.
+            </p>
+            <a href="/admin" class="w-full py-2 px-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-sky-400 hover:text-white border border-sky-500/30 font-bold text-xs flex items-center justify-between transition shadow-sm group">
+              <span>Open Full Admin Telemetry Console</span>
+              <i data-lucide="external-link" class="w-3.5 h-3.5 text-sky-400 group-hover:translate-x-0.5 transition flex-shrink-0"></i>
+            </a>
+          </div>
+
+          <!-- Admin Phone Push Notifications Card (Only inside Admin Profile Tab) -->
+          <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800 space-y-2.5">
+            <div class="flex items-center justify-between gap-2">
+              <span class="font-bold text-white text-xs">Admin Phone Push Alerts</span>
+              <span id="admin-push-status-badge" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 font-mono whitespace-nowrap">Checking...</span>
+            </div>
+            <p class="text-[11px] text-slate-400 leading-relaxed">
+              Get instant lock-screen push notifications on your phone whenever a new rider registers or asks to join the Beta program.
+            </p>
+            <div class="flex items-center gap-2 pt-0.5">
+              <button type="button" id="btn-admin-enable-push" onclick="enableAdminDevicePush()" class="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs shadow-md shadow-amber-500/20 transition flex items-center justify-center active:scale-95 whitespace-nowrap">
+                <span>Enable Phone Push</span>
+              </button>
+              <button type="button" id="btn-admin-test-push" onclick="triggerAdminTestPush()" class="py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white font-semibold text-xs border border-slate-700 transition flex items-center justify-center active:scale-95 whitespace-nowrap">
+                <span>Test Push</span>
+              </button>
+            </div>
+            <p id="admin-push-feedback" class="hidden text-[11px] font-medium pt-0.5"></p>
+          </div>
+
+          <!-- Pending Beta Applications Card -->
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between">
+              <h4 class="font-bold text-white text-xs">Pending Beta Riders</h4>
+              <button type="button" onclick="loadAdminTabOverview()" class="text-[10px] text-slate-400 hover:text-sky-400 flex items-center space-x-1 transition">
+                <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+                <span>Refresh</span>
+              </button>
+            </div>
+
+            <div id="admin-pending-beta-container" class="space-y-2">
+              <div class="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 text-center text-slate-400 text-xs">
+                Loading pending riders...
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- ALWAYS VISIBLE: RIDER SPECS & ACCOUNT SETTINGS -->
+        <!-- ============================================== -->
+        <div id="profile-tab-specs" class="space-y-3.5 pt-4 border-t border-slate-800">
+          <h4 class="font-bold text-slate-200 text-xs uppercase tracking-wider">Rider Specs & Account</h4>
           <div>
             <label class="block font-semibold text-slate-300 mb-1">Your Name</label>
             <input id="modal-rider-name" type="text" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-sky-500">
@@ -1386,10 +1480,7 @@
           <!-- Rider Level Selector -->
           <div class="p-3 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1.5">
             <div class="flex items-center justify-between">
-              <label class="font-semibold text-slate-300 flex items-center space-x-1.5">
-                <i data-lucide="gauge" class="w-3.5 h-3.5 text-sky-400"></i>
-                <span>Skill Level</span>
-              </label>
+              <label class="font-semibold text-slate-300">Skill Level</label>
             </div>
             <div class="flex items-center space-x-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
               <button type="button" id="modal-btn-level-beginner" onclick="setRiderLevel('beginner')" class="flex-1 py-1.5 rounded-lg text-[11px] font-semibold transition text-slate-400 hover:text-white">Beginner</button>
@@ -1416,10 +1507,7 @@
           <!-- ⭐ My Favorite Spots -->
           <div class="pt-3 border-t border-slate-800 space-y-2">
             <div class="flex items-center justify-between">
-              <span class="font-bold text-slate-200 flex items-center space-x-1.5">
-                <span class="text-amber-400">⭐</span>
-                <span>My Favorite Spots</span>
-              </span>
+              <span class="font-bold text-slate-200">My Favorite Spots</span>
               <span id="profile-fav-count" class="text-[10px] text-slate-400 font-mono">0 spots</span>
             </div>
             <div id="profile-favorites-list" class="space-y-1.5 max-h-[140px] overflow-y-auto pr-0.5 custom-scrollbar">
@@ -1427,132 +1515,18 @@
             </div>
           </div>
 
-          <button onclick="saveModalProfile()" class="w-full py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-95 text-white font-bold text-xs shadow-lg shadow-sky-500/25 transition">
-            Save Settings
-          </button>
-
-          <button onclick="resetProfileAll()" class="w-full py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 font-semibold text-xs border border-rose-500/30 transition">
-            🗑️ Reset Profile & Clear Gear
-          </button>
-        </div>
-
-        <!-- ============================================== -->
-        <!-- TAB 2: KITES & WINGS -->
-        <!-- ============================================== -->
-        <div id="profile-tab-kites" class="space-y-3 hidden">
-          <div class="flex items-center justify-between bg-slate-950/80 p-3 rounded-2xl border border-slate-800">
-            <div>
-              <h4 class="font-bold text-white text-xs flex items-center space-x-1.5">
-                <span>🪁 Kites & Wings</span>
-              </h4>
-              <p id="modal-kites-sub-badge" class="text-[10px] text-slate-400 mt-0.5">0 packed · 0 at home</p>
-            </div>
-            <div class="flex items-center space-x-1.5">
-              <button onclick="openAddKiteModal()" class="px-3 py-1.5 rounded-xl bg-sky-500/20 text-sky-400 text-xs font-bold border border-sky-500/30 hover:bg-sky-500/30 flex items-center space-x-1 active:scale-95 transition">
-                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-                <span>+ Kite</span>
-              </button>
-              <button onclick="openAddWingModal()" class="px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-500/30 hover:bg-amber-500/30 flex items-center space-x-1 active:scale-95 transition">
-                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-                <span>+ Wing</span>
-              </button>
-            </div>
-          </div>
-          <p class="text-[11px] text-slate-400 font-normal">Click 🎒 icon to mark the material that is with you at the beach</p>
-          <div id="modal-quiver-list" class="space-y-2.5">
-            <!-- Rendered dynamically -->
-          </div>
-        </div>
-
-        <!-- ============================================== -->
-        <!-- TAB 3: BOARDS & FOILS -->
-        <!-- ============================================== -->
-        <div id="profile-tab-boards" class="space-y-3 hidden">
-          <div class="flex items-center justify-between bg-slate-950/80 p-3 rounded-2xl border border-slate-800">
-            <div>
-              <h4 class="font-bold text-white text-xs flex items-center space-x-1.5">
-                <span>🏄 Boards & Hydrofoils</span>
-              </h4>
-              <p id="modal-boards-sub-badge" class="text-[10px] text-slate-400 mt-0.5">0 packed · 0 at home</p>
-            </div>
-            <button onclick="openAddBoardModal()" class="px-3 py-1.5 rounded-xl bg-violet-500/20 text-violet-300 text-xs font-bold border border-violet-500/30 hover:bg-violet-500/30 flex items-center space-x-1 active:scale-95 transition">
-              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-              <span>+ Board</span>
+          <div class="flex items-center gap-2 pt-1">
+            <button onclick="saveModalProfile()" class="flex-1 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-95 text-white font-bold text-xs shadow-lg shadow-sky-500/25 transition">
+              Save Settings
+            </button>
+            <button onclick="logoutUser()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-rose-500/20 active:scale-95 text-slate-300 hover:text-rose-300 border border-slate-700 hover:border-rose-500/30 font-bold text-xs transition whitespace-nowrap">
+              Log Out
             </button>
           </div>
-          <p class="text-[11px] text-slate-400 font-normal">Click 🎒 icon to mark the board that is with you at the beach</p>
-          <div id="modal-boards-list" class="space-y-2.5">
-            <!-- Rendered dynamically -->
-          </div>
-        </div>
 
-        <!-- ============================================== -->
-        <!-- TAB 4: ADMIN CONSOLE & BETA RIDERS (Visible for Admins) -->
-        <!-- ============================================== -->
-        <div id="profile-tab-admin" class="space-y-4 hidden">
-          <!-- Telemetry Console Link & Summary Banner -->
-          <div class="bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-slate-950 p-3.5 rounded-2xl border border-amber-500/30 space-y-2.5">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2">
-                <span class="text-base">👑</span>
-                <span class="font-black text-amber-300 text-xs uppercase tracking-wider">HolyGust Mission Control</span>
-              </div>
-              <span id="admin-summary-pill" class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-mono font-bold">Loading...</span>
-            </div>
-            <p class="text-[11px] text-slate-300 leading-relaxed">
-              Review pending Beta applications and monitor registered riders & spot telemetry.
-            </p>
-            <a href="/admin" class="w-full py-2 px-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-sky-400 hover:text-white border border-sky-500/30 font-bold text-xs flex items-center justify-between transition shadow-sm group">
-              <span class="flex items-center space-x-2">
-                <span class="text-sm">📊</span>
-                <span>Open Full Admin Telemetry Console</span>
-              </span>
-              <i data-lucide="external-link" class="w-3.5 h-3.5 text-sky-400 group-hover:translate-x-0.5 transition"></i>
-            </a>
-          </div>
-
-          <!-- Admin Phone Push Notifications Card (Only inside Admin Profile Tab) -->
-          <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800 space-y-2.5">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2">
-                <span class="text-base">📲</span>
-                <span class="font-bold text-white text-xs">Admin Phone Push Alerts</span>
-              </div>
-              <span id="admin-push-status-badge" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 font-mono">Checking...</span>
-            </div>
-            <p class="text-[11px] text-slate-400 leading-relaxed">
-              Get instant lock-screen push notifications on your phone whenever a new rider registers or asks to join the Beta program.
-            </p>
-            <div class="flex items-center space-x-2 pt-0.5">
-              <button type="button" id="btn-admin-enable-push" onclick="enableAdminDevicePush()" class="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs shadow-md shadow-amber-500/20 transition flex items-center justify-center space-x-1.5 active:scale-95">
-                <span>📲 Enable Phone Push</span>
-              </button>
-              <button type="button" id="btn-admin-test-push" onclick="triggerAdminTestPush()" class="py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white font-semibold text-xs border border-slate-700 transition flex items-center justify-center space-x-1 active:scale-95">
-                <span>🔔 Test</span>
-              </button>
-            </div>
-            <p id="admin-push-feedback" class="hidden text-[11px] font-medium pt-0.5"></p>
-          </div>
-
-          <!-- Pending Beta Applications Card -->
-          <div class="space-y-2.5">
-            <div class="flex items-center justify-between">
-              <h4 class="font-bold text-white text-xs flex items-center space-x-1.5">
-                <span class="text-amber-400">⚡</span>
-                <span>Pending Beta Riders</span>
-              </h4>
-              <button type="button" onclick="loadAdminTabOverview()" class="text-[10px] text-slate-400 hover:text-sky-400 flex items-center space-x-1 transition">
-                <i data-lucide="refresh-cw" class="w-3 h-3"></i>
-                <span>Refresh</span>
-              </button>
-            </div>
-
-            <div id="admin-pending-beta-container" class="space-y-2">
-              <div class="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 text-center text-slate-400 text-xs">
-                Loading pending riders...
-              </div>
-            </div>
-          </div>
+          <button onclick="resetProfileAll()" class="w-full py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 font-semibold text-xs border border-rose-500/30 transition">
+            Reset Profile & Clear Gear
+          </button>
         </div>
 
       </div>
@@ -3191,35 +3165,38 @@
     }
     const renderQuiver = renderGearInventory;
     // ==========================================
-    // RIDER PROFILE MODAL TAB CONTROLLER (SPECS, KITES, BOARDS)
+    // RIDER PROFILE MODAL TAB CONTROLLER (KITES/WINGS, BOARDS, ADMIN; SPECS ALWAYS VISIBLE)
     // ==========================================
-    let activeProfileTab = 'specs';
+    let activeProfileTab = 'kites';
     function switchProfileTab(tab) {
+      if (!tab || tab === 'specs') tab = 'kites';
       activeProfileTab = tab;
       const tabSpecs = document.getElementById('profile-tab-specs');
       const tabKites = document.getElementById('profile-tab-kites');
       const tabBoards = document.getElementById('profile-tab-boards');
       const tabAdmin = document.getElementById('profile-tab-admin');
 
-      const btnSpecs = document.getElementById('tab-btn-profile-specs');
       const btnKites = document.getElementById('tab-btn-profile-kites');
       const btnBoards = document.getElementById('tab-btn-profile-boards');
       const btnAdmin = document.getElementById('tab-btn-profile-admin');
 
-      if (tabSpecs) tabSpecs.classList.toggle('hidden', tab !== 'specs');
+      // Rider Specs section is always shown
+      if (tabSpecs) tabSpecs.classList.remove('hidden');
       if (tabKites) tabKites.classList.toggle('hidden', tab !== 'kites');
       if (tabBoards) tabBoards.classList.toggle('hidden', tab !== 'boards');
       if (tabAdmin) tabAdmin.classList.toggle('hidden', tab !== 'admin');
 
-      const activeClass = "min-w-0 flex-1 py-1.5 px-1.5 rounded-xl text-[11px] sm:text-xs font-bold transition flex items-center justify-center space-x-1 bg-sky-600 text-white shadow-sm truncate";
-      const inactiveClass = "min-w-0 flex-1 py-1.5 px-1.5 rounded-xl text-[11px] sm:text-xs font-medium transition flex items-center justify-center space-x-1 text-slate-400 hover:text-white truncate";
-      const activeAdminClass = "min-w-0 flex-1 py-1.5 px-1.5 rounded-xl text-[11px] sm:text-xs font-bold transition flex items-center justify-center space-x-1 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md shadow-amber-500/20 truncate";
-      const inactiveAdminClass = "min-w-0 flex-1 py-1.5 px-1.5 rounded-xl text-[11px] sm:text-xs font-medium transition flex items-center justify-center space-x-1 text-amber-400 hover:text-white truncate";
+      const activeClass = "flex-1 py-2 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-sky-600 text-white shadow-sm whitespace-nowrap";
+      const inactiveClass = "flex-1 py-2 px-2 rounded-xl text-xs font-medium transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-white whitespace-nowrap";
+      const activeAdminClass = "flex-1 py-2 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md shadow-amber-500/20 whitespace-nowrap";
+      const inactiveAdminClass = "flex-1 py-2 px-2 rounded-xl text-xs font-medium transition flex items-center justify-center gap-1.5 text-amber-400 hover:text-white whitespace-nowrap";
 
-      if (btnSpecs) btnSpecs.className = tab === 'specs' ? activeClass : inactiveClass;
       if (btnKites) btnKites.className = tab === 'kites' ? activeClass : inactiveClass;
       if (btnBoards) btnBoards.className = tab === 'boards' ? activeClass : inactiveClass;
-      if (btnAdmin) btnAdmin.className = tab === 'admin' ? activeAdminClass : inactiveAdminClass;
+      if (btnAdmin) {
+        const isHidden = !isAdminUser();
+        btnAdmin.className = (tab === 'admin' ? activeAdminClass : inactiveAdminClass) + (isHidden ? ' hidden' : '');
+      }
 
       if (tab === 'admin') {
         loadAdminTabOverview();
@@ -3230,6 +3207,7 @@
     }
 
     function openProfileGearTab(tab = 'kites') {
+      if (!tab || tab === 'specs') tab = 'kites';
       switchProfileTab(tab);
       const modal = document.getElementById('modal-profile');
       if (modal && modal.classList.contains('hidden')) {
@@ -4677,28 +4655,18 @@
     }
 
     function handleAvatarClick() {
-      const isBeta = (typeof isBetaUserActive === 'function' && isBetaUserActive());
-      if (isBeta) {
-        openProfileGearTab('specs');
+      if (authUser && authUser.email) {
+        openProfileGearTab('kites');
       } else {
-        if (authUser && authUser.email) {
-          openAuthModal();
-        } else {
-          openAuthModal('login');
-        }
+        openAuthModal('login');
       }
     }
 
     function handleBadgeClick() {
-      const isBeta = (typeof isBetaUserActive === 'function' && isBetaUserActive());
-      if (isBeta) {
-        openProfileGearTab('specs');
+      if (authUser && authUser.email) {
+        openProfileGearTab('kites');
       } else {
-        if (authUser && authUser.email) {
-          openAuthModal();
-        } else {
-          openAuthModal('login');
-        }
+        openAuthModal('login');
       }
     }
 
@@ -7216,7 +7184,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=33').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=34').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
