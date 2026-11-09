@@ -201,26 +201,35 @@ def get_spot_analytics_summary() -> dict:
             bsz = b.get("size", "")
             boards_desc.append(f"{bt} {bb} {bm} {bsz}".strip())
 
+        is_beta = bool(u.get("is_beta_rider") or u.get("beta_status") == "approved")
+        b_status = u.get("beta_status") or ("approved" if is_beta else "none")
+        nat_val = u.get("nationality") or last_view.get("nationality") or "Not specified"
+        if nat_val and nat_val not in ("Not specified", "Undefined"):
+            if nat_val not in nat_totals:
+                nat_totals[nat_val] = 1
+
         registered_riders.append({
             "email": em,
             "name": u.get("name") or em.split("@")[0].title(),
-            "nationality": u.get("nationality") or last_view.get("nationality") or "Not specified",
+            "nationality": nat_val,
             "weight_kg": u.get("weight_kg", 75.0),
             "level": (u.get("level") or "intermediate").capitalize(),
             "board": u.get("board", "Twintip"),
             "gear_count": len(gear_items),
             "boards_count": len(boards_items),
-            "gear_summary": ", ".join(gear_desc[:4]) if gear_desc else "No kites registered yet",
-            "boards_summary": ", ".join(boards_desc[:3]) if boards_desc else "No boards registered yet",
-            "is_beta_rider": bool(u.get("is_beta_rider") or u.get("beta_status") == "approved"),
+            "gear_summary": ", ".join(gear_desc[:5]) if gear_desc else "No kites registered yet",
+            "boards_summary": ", ".join(boards_desc[:4]) if boards_desc else "No boards registered yet",
+            "is_beta_rider": is_beta,
+            "beta_status": b_status,
             "registered_at": u.get("registered_at") or u.get("created_at") or last_view.get("timestamp"),
             "last_active": last_view.get("timestamp") or u.get("last_login") or u.get("last_sync") or u.get("registered_at"),
             "last_spot": last_view.get("spot_name") or (u.get("spot", {}).get("name") if isinstance(u.get("spot"), dict) else u.get("spot")) or "None"
         })
 
-    # Sort riders by last active descending
-    registered_riders.sort(key=lambda r: str(r.get("last_active") or r.get("registered_at") or ""), reverse=True)
+    # Sort riders: pending beta first, then by last active descending
+    registered_riders.sort(key=lambda r: (1 if r.get("beta_status") == "pending" else 0, str(r.get("last_active") or r.get("registered_at") or "")), reverse=True)
     total_beta = len([r for r in registered_riders if r.get("is_beta_rider")])
+    total_pending = len([r for r in registered_riders if r.get("beta_status") == "pending"])
     
     sorted_spots = sorted(totals.items(), key=lambda x: x[1], reverse=True)[:15]
     top_spots = []
@@ -237,7 +246,8 @@ def get_spot_analytics_summary() -> dict:
             "last_viewed": latest.get("timestamp")
         })
         
-    sorted_nats = sorted(nat_totals.items(), key=lambda x: x[1], reverse=True)[:10]
+    clean_nats = {k: v for k, v in nat_totals.items() if k and k != "Undefined"}
+    sorted_nats = sorted((clean_nats or nat_totals).items(), key=lambda x: x[1], reverse=True)[:10]
     total_nats = sum(nat_totals.values()) or 1
     top_nationalities = [
         {
@@ -274,6 +284,7 @@ def get_spot_analytics_summary() -> dict:
             "total_unique_spots": len(totals),
             "total_registered_riders": len(registered_riders),
             "total_beta_riders": total_beta,
+            "total_pending_beta": total_pending,
             "total_riders_tracked": len(set(v.get("email") for v in views if v.get("email") and v.get("email") != "anonymous")),
             "total_searches": sum(s_totals.values()),
             "total_travel_inquiries": len(travel_inquiries)

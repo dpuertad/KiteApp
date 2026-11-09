@@ -71,8 +71,49 @@
       "nationality": "Swiss",
       "registered_at": "2026-11-08T00:39:35.595561Z",
       "last_login": "2026-11-08T01:00:39Z",
-      "gear": [],
-      "boards": [],
+      "gear": [
+        {
+          "id": "k_beat_1",
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Duotone",
+          "model": "Evo",
+          "size": 12,
+          "year": 2025,
+          "active": true
+        },
+        {
+          "id": "k_beat_2",
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Duotone",
+          "model": "Evo",
+          "size": 9,
+          "year": 2025,
+          "active": true
+        },
+        {
+          "id": "k_beat_3",
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Duotone",
+          "model": "Rebel",
+          "size": 7,
+          "year": 2024,
+          "active": true
+        }
+      ],
+      "boards": [
+        {
+          "id": "b_beat_1",
+          "type": "Twintip",
+          "brand": "Duotone",
+          "model": "Jaime",
+          "size": "139",
+          "carbon": true,
+          "active": true
+        }
+      ],
       "weight_kg": 93.0,
       "level": "advanced",
       "board": "Twintip",
@@ -81,6 +122,7 @@
       ],
       "is_beta_rider": false,
       "beta_status": "pending",
+      "beta_applied_at": "2026-11-08T00:39:35.595561Z",
       "spot": {
         "name": "Icaraí de Amontada (Icaraizinho), Brazil",
         "lat": -3.0232,

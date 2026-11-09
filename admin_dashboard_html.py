@@ -6,18 +6,22 @@ def render_admin_dashboard(summary: dict) -> str:
 <html lang="en" class="dark">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>HolyGust · Admin Intelligence & Registered Riders</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    body {{ font-family: 'Plus Jakarta Sans', sans-serif; }}
+    html, body {{
+      max-width: 100vw;
+      overflow-x: hidden;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }}
     .font-mono {{ font-family: 'JetBrains Mono', monospace; }}
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-sky-500 selection:text-white pb-12">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-sky-500 selection:text-white pb-12 overflow-x-hidden w-full max-w-full">
   <!-- Top Navigation -->
   <header class="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur sticky top-0 z-40 px-4 py-3 sm:px-6">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
@@ -35,19 +39,12 @@ def render_admin_dashboard(summary: dict) -> str:
           </div>
         </a>
       </div>
-      <div class="flex items-center space-x-2">
-        <button id="btn-admin-push" onclick="enableAdminPush()" class="px-2.5 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold flex items-center space-x-1.5 transition active:scale-95" title="Get real-time push alerts on this device whenever riders apply for Beta, register, or add spots">
-          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-          <span>📲 Enable Phone Push</span>
-        </button>
-        <button onclick="triggerAdminTestPush()" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center space-x-1 transition active:scale-95" title="Test Web Push to registered admin devices">
-          <span>🔔 Test Push</span>
-        </button>
-        <button onclick="fetchFreshData()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center space-x-1.5 transition">
+      <div class="flex items-center space-x-1.5 sm:space-x-2 flex-shrink-0">
+        <button onclick="fetchFreshData()" class="px-2.5 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700/80 text-xs font-semibold flex items-center space-x-1 transition active:scale-95">
           <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-sky-400"></i>
-          <span>Live Refresh</span>
+          <span class="hidden sm:inline">Refresh</span>
         </button>
-        <a href="/" class="px-3 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs shadow-sm shadow-sky-600/30 transition flex items-center space-x-1">
+        <a href="/" class="px-3 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs shadow-sm shadow-sky-600/30 transition flex items-center space-x-1 active:scale-95">
           <span>Open App</span>
           <i data-lucide="external-link" class="w-3 h-3"></i>
         </a>
@@ -55,7 +52,7 @@ def render_admin_dashboard(summary: dict) -> str:
     </div>
   </header>
 
-  <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 pt-6 space-y-6 flex-1">
+  <main class="max-w-7xl w-full mx-auto px-3 sm:px-6 pt-4 sm:pt-6 space-y-5 sm:space-y-6 flex-1 overflow-x-hidden">
     <!-- Stat Cards (5 Core KPIs) -->
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
       <!-- 1. Registered Riders -->
@@ -325,7 +322,9 @@ def render_admin_dashboard(summary: dict) -> str:
 
               ${{isBeta ? 
                 `<span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40 flex-shrink-0">⚡ Beta</span>` : 
-                `<span class="px-2 py-0.5 rounded-full text-[9px] font-semibold bg-slate-800 text-slate-400 border border-slate-700/60 flex-shrink-0">Rider</span>`}}
+                (r.beta_status === 'pending' ? 
+                  `<span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-400 border border-amber-500/40 flex-shrink-0 animate-pulse">⏳ Pending Beta</span>` :
+                  `<span class="px-2 py-0.5 rounded-full text-[9px] font-semibold bg-slate-800 text-slate-400 border border-slate-700/60 flex-shrink-0">Rider</span>`)}}
             </div>
 
             <!-- Setup & Demographics Pills -->
@@ -366,6 +365,17 @@ def render_admin_dashboard(summary: dict) -> str:
                 </span>
               </div>
             </div>
+
+            ${{r.beta_status === 'pending' ? `
+              <div class="flex items-center space-x-2 pt-1 border-t border-amber-500/20">
+                <button type="button" onclick="approveBetaRider('${{r.email}}', this)" class="flex-1 py-1.5 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs shadow-md shadow-amber-500/20 transition flex items-center justify-center space-x-1 active:scale-95">
+                  <span>⚡ Approve Beta</span>
+                </button>
+                <button type="button" onclick="declineBetaRider('${{r.email}}', this)" class="py-1.5 px-3 rounded-xl bg-slate-900 hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 font-semibold text-xs border border-slate-800 hover:border-rose-500/30 transition flex items-center justify-center space-x-1 active:scale-95">
+                  <span>✕ Decline</span>
+                </button>
+              </div>
+            ` : ''}}
 
             <!-- Footer: Last Spot & Timestamps -->
             <div class="flex items-center justify-between text-[10px] text-slate-400 font-mono border-t border-slate-800/80 pt-2">
@@ -566,72 +576,57 @@ def render_admin_dashboard(summary: dict) -> str:
       if (window.lucide) lucide.createIcons();
     }}
 
-    async function enableAdminPush() {{
-      if (!('serviceWorker' in navigator) || !('PushManager' in window)) {{
-        alert("Web Push is not supported in this browser. Please open on Chrome or Safari on iOS 16.4+ / Android.");
-        return;
+
+
+        async function approveBetaRider(email, btnEl) {{
+      if (!email) return;
+      if (btnEl) {{
+        btnEl.disabled = true;
+        btnEl.innerText = 'Approving...';
       }}
-      const btn = document.getElementById('btn-admin-push');
-      if (btn) btn.innerHTML = '<span>⏳ Activating...</span>';
       try {{
-        const reg = await navigator.serviceWorker.register('/sw.js?v=20');
-        await navigator.serviceWorker.ready;
-        const keyRes = await fetch('/api/alerts/vapid-public-key');
-        const keyData = await keyRes.json();
-        if (!keyData.vapid_public_key) throw new Error("VAPID key unavailable");
-
-        const padding = '='.repeat((4 - keyData.vapid_public_key.length % 4) % 4);
-        const base64 = (keyData.vapid_public_key + padding).replace(/\-/g, '+').replace(/_/g, '/');
-        const rawData = window.atob(base64);
-        const outputArray = new Uint8Array(rawData.length);
-        for (let i = 0; i < rawData.length; ++i) {{
-          outputArray[i] = rawData.charCodeAt(i);
-        }}
-
-        let sub = await reg.pushManager.getSubscription();
-        if (!sub) {{
-          sub = await reg.pushManager.subscribe({{
-            userVisibleOnly: true,
-            applicationServerKey: outputArray
-          }});
-        }}
-
-        const res = await fetch('/api/admin/push-subscribe', {{
+        const res = await fetch('/api/admin/approve-beta', {{
           method: 'POST',
           headers: {{ 'Content-Type': 'application/json' }},
-          body: JSON.stringify({{
-            subscription: sub.toJSON ? sub.toJSON() : sub,
-            email: 'd_puerta@hotmail.com'
-          }})
+          body: JSON.stringify({{ email: email }})
         }});
         const data = await res.json();
-        if (data.success) {{
-          if (btn) {{
-            btn.className = "px-2.5 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold flex items-center space-x-1.5";
-            btn.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400"></span><span>✅ Phone Push Active</span>';
-          }}
-          alert("✅ Admin Phone Push enabled! You will now receive instant push alerts when riders apply for Beta, register, or add spots.");
-        }} else {{
-          if (btn) btn.innerHTML = '<span>📲 Enable Phone Push</span>';
-          alert("⚠️ Could not register push: " + (data.error || 'Server error'));
+        if (!res.ok || !data.success) throw new Error(data.error || 'Approval failed');
+        if (btnEl) {{
+          btnEl.className = 'flex-1 py-1.5 px-3 rounded-xl bg-emerald-500 text-white font-black text-xs';
+          btnEl.innerText = '✅ Approved!';
         }}
+        setTimeout(() => {{ fetchFreshData(); }}, 1200);
       }} catch (err) {{
-        if (btn) btn.innerHTML = '<span>📲 Enable Phone Push</span>';
-        alert("Push activation failed: " + err.message);
+        alert('Could not approve rider: ' + err.message);
+        if (btnEl) {{
+          btnEl.disabled = false;
+          btnEl.innerText = '⚡ Retry Approve';
+        }}
       }}
     }}
 
-    async function triggerAdminTestPush() {{
+    async function declineBetaRider(email, btnEl) {{
+      if (!confirm(`Are you sure you want to decline ${{email}}?`)) return;
+      if (btnEl) {{
+        btnEl.disabled = true;
+        btnEl.innerText = 'Declining...';
+      }}
       try {{
-        const res = await fetch('/api/admin/test-push', {{ method: 'POST' }});
+        const res = await fetch('/api/admin/decline-beta', {{
+          method: 'POST',
+          headers: {{ 'Content-Type': 'application/json' }},
+          body: JSON.stringify({{ email: email }})
+        }});
         const data = await res.json();
-        if (data.success && data.delivered_count > 0) {{
-          alert(`🚀 Test push notification sent! (${{data.delivered_count}} device(s) notified) Check your phone screen!`);
-        }} else {{
-          alert("⚠️ Test push sent, but no active admin devices were registered yet. Tap 'Enable Phone Push' on this device first!");
+        if (!res.ok || !data.success) throw new Error(data.error || 'Decline failed');
+        fetchFreshData();
+      }} catch (err) {{
+        alert('Could not decline rider: ' + err.message);
+        if (btnEl) {{
+          btnEl.disabled = false;
+          btnEl.innerText = '✕ Decline';
         }}
-      }} catch (e) {{
-        alert("Error sending test push: " + e.message);
       }}
     }}
 
