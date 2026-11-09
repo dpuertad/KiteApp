@@ -44,10 +44,9 @@ def render_admin_dashboard(summary: dict) -> str:
           <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-sky-400"></i>
           <span class="hidden sm:inline">Refresh</span>
         </button>
-        <a href="/" class="px-3 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs shadow-sm shadow-sky-600/30 transition flex items-center space-x-1 active:scale-95">
-          <span>Open App</span>
-          <i data-lucide="external-link" class="w-3 h-3"></i>
-        </a>
+        <button type="button" onclick="if (window.opener) {{ window.close(); }} else {{ window.location.href = '/'; }}" title="Close Admin View" class="w-8 h-8 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700/80 flex items-center justify-center transition active:scale-95">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
       </div>
     </div>
   </header>

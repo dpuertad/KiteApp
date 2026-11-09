@@ -1502,7 +1502,7 @@
             <p class="text-[11px] text-slate-300 leading-relaxed">
               Review pending Beta applications and monitor registered riders & spot telemetry.
             </p>
-            <a href="/admin" target="_blank" class="w-full py-2 px-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-sky-400 hover:text-white border border-sky-500/30 font-bold text-xs flex items-center justify-between transition shadow-sm group">
+            <a href="/admin" class="w-full py-2 px-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-sky-400 hover:text-white border border-sky-500/30 font-bold text-xs flex items-center justify-between transition shadow-sm group">
               <span class="flex items-center space-x-2">
                 <span class="text-sm">📊</span>
                 <span>Open Full Admin Telemetry Console</span>
@@ -1642,7 +1642,7 @@
 
         <!-- 📊 Admin Spot & Telemetry Insights Shortcut (Visible for Admins / Beta Riders) -->
         <div id="auth-admin-card" class="hidden">
-          <a href="/admin" target="_blank" class="w-full py-2.5 px-3 rounded-2xl bg-gradient-to-r from-sky-500/15 to-cyan-500/10 hover:from-sky-500/25 hover:to-cyan-500/20 text-sky-300 hover:text-white border border-sky-500/30 font-bold text-xs flex items-center justify-between transition shadow-sm group">
+          <a href="/admin" class="w-full py-2.5 px-3 rounded-2xl bg-gradient-to-r from-sky-500/15 to-cyan-500/10 hover:from-sky-500/25 hover:to-cyan-500/20 text-sky-300 hover:text-white border border-sky-500/30 font-bold text-xs flex items-center justify-between transition shadow-sm group">
             <span class="flex items-center space-x-2">
               <span class="text-base group-hover:scale-110 transition">📊</span>
               <span>Spot Intelligence & Telemetry (Admin)</span>
@@ -7110,7 +7110,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=25').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=26').then(reg => {
           reg.update();
         }).catch(err => console.log('SW register failed:', err));
       }
