@@ -1284,14 +1284,14 @@ def calculate_model_consensus(ecmwf_val, gfs_val, icon_val) -> dict:
 
 
 def fetch_tides(lat: float, lon: float, timezone_str: str = "auto") -> list:
-    today_tides, _, _, _ = fetch_tides_both_days(lat, lon, timezone_str)
-    return today_tides
+    res = fetch_tides_both_days(lat, lon, timezone_str)
+    return res[0] if res else []
 
 
 def fetch_tides_both_days(lat: float, lon: float, timezone_str: str = "auto") -> tuple:
     url = (
         f"https://marine-api.open-meteo.com/v1/marine?"
-        f"latitude={lat}&longitude={lon}&hourly=sea_level_height_msl,sea_surface_temperature&timezone={timezone_str}&forecast_days=2"
+        f"latitude={lat}&longitude={lon}&hourly=sea_level_height_msl,sea_surface_temperature&timezone={timezone_str}&forecast_days=7"
     )
     req = urllib.request.Request(url, headers={"User-Agent": "KiteForecastBot/1.0"})
     try:
@@ -1315,30 +1315,34 @@ def fetch_tides_both_days(lat: float, lon: float, timezone_str: str = "auto") ->
                 tmrw_sst = round(sum(valid_tmrw) / len(valid_tmrw), 1)
 
         if not times or not levels:
-            return [], [], today_sst, tmrw_sst
+            return [], [], today_sst, tmrw_sst, {}
 
         today_tides = []
         tomorrow_tides = []
+        weekly_tides = {}
         for i in range(1, len(levels) - 1):
             prev_l, curr_l, next_l = levels[i-1], levels[i], levels[i+1]
             if curr_l is not None and prev_l is not None and next_l is not None:
-                time_str = times[i][-5:]
+                time_full = times[i]
+                time_str = time_full[-5:]
+                date_str = time_full[:10]
                 tide_item = None
                 if curr_l > prev_l and curr_l >= next_l:
-                    tide_item = {"type": "High", "time": time_str, "height": curr_l}
+                    tide_item = {"type": "High", "time": time_str, "height": round(float(curr_l), 2)}
                 elif curr_l < prev_l and curr_l <= next_l:
-                    tide_item = {"type": "Low", "time": time_str, "height": curr_l}
+                    tide_item = {"type": "Low", "time": time_str, "height": round(float(curr_l), 2)}
                 
                 if tide_item:
+                    weekly_tides.setdefault(date_str, []).append(tide_item)
                     if i < 24:
                         today_tides.append(tide_item)
-                    else:
+                    elif i < 48:
                         tomorrow_tides.append(tide_item)
 
-        return today_tides, tomorrow_tides, today_sst, tmrw_sst
+        return today_tides, tomorrow_tides, today_sst, tmrw_sst, weekly_tides
     except Exception as e:
         print(f"Error fetching tides & SST: {e}")
-        return [], [], None, None
+        return [], [], None, None, {}
 
 
 GLOBAL_THERMAL_SPOTS = {
@@ -2328,7 +2332,12 @@ def fetch_live_forecast(spot: dict) -> dict:
     if cached_entry and (now_ts - cached_entry[0]) < FORECAST_MEM_TTL_SEC:
         return copy.deepcopy(cached_entry[1])
 
-    today_tides, tomorrow_tides, today_sst, tomorrow_sst = fetch_tides_both_days(spot["lat"], spot["lon"], spot.get("timezone", "auto"))
+    tides_res = fetch_tides_both_days(spot["lat"], spot["lon"], spot.get("timezone", "auto"))
+    if len(tides_res) == 5:
+        today_tides, tomorrow_tides, today_sst, tomorrow_sst, weekly_tides = tides_res
+    else:
+        today_tides, tomorrow_tides, today_sst, tomorrow_sst = tides_res[:4]
+        weekly_tides = {}
     forecast = None
     try:
         forecast = fetch_weather_openmeteo(spot, today_sst=today_sst, tomorrow_sst=tomorrow_sst)
@@ -2410,6 +2419,7 @@ def fetch_live_forecast(spot: dict) -> dict:
 
     forecast["tides"] = today_tides
     forecast["tides_tomorrow"] = tomorrow_tides
+    forecast["weekly_tides"] = weekly_tides
     forecast["sea_temp"] = forecast.get("sea_temp") if forecast.get("sea_temp") is not None else today_sst
     forecast["tomorrow_sea_temp"] = forecast.get("tomorrow_sea_temp") if forecast.get("tomorrow_sea_temp") is not None else tomorrow_sst
 
@@ -2505,6 +2515,19 @@ def fetch_live_forecast(spot: dict) -> dict:
                 ]
             })
         forecast["weekly_forecast"] = synth_week
+
+    # Attach daily tides to each day in weekly_forecast
+    if "weekly_forecast" in forecast and isinstance(forecast["weekly_forecast"], list):
+        for wf_day in forecast["weekly_forecast"]:
+            day_d = wf_day.get("date")
+            if day_d and day_d in weekly_tides:
+                wf_day["tides"] = weekly_tides[day_d]
+            elif wf_day.get("day_index") == 0:
+                wf_day["tides"] = today_tides
+            elif wf_day.get("day_index") == 1:
+                wf_day["tides"] = tomorrow_tides
+            else:
+                wf_day["tides"] = []
 
     try:
         FORECAST_MEM_CACHE[cache_key] = (now_ts, copy.deepcopy(forecast))

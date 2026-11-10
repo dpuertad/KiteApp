@@ -93,14 +93,14 @@
       <div class="flex flex-col items-end space-y-1.5 flex-shrink-0">
         <!-- Row 1: Quick Refresh, GPS & Spot Selector -->
         <div class="flex items-center space-x-1">
-          <button id="btn-refresh" onclick="fetchForecast(true)" title="Refresh Live Forecast" class="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 border border-slate-700 transition">
-            <i id="refresh-icon" data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+          <button id="btn-refresh" onclick="fetchForecast(true)" title="Refresh Live Forecast" class="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 border border-slate-700 transition flex items-center justify-center">
+            <svg id="refresh-icon" xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
           </button>
-          <button id="btn-gps" onclick="useGpsLocation()" title="Use Current GPS" class="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 border border-slate-700 transition">
-            <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
+          <button id="btn-gps" onclick="useGpsLocation()" title="Use Current GPS" class="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 border border-slate-700 transition flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="22" x2="18" y1="12" y2="12"/><line x1="6" x2="2" y1="12" y2="12"/><line x1="12" x2="12" y1="6" y2="2"/><line x1="12" x2="12" y1="22" y2="18"/></svg>
           </button>
           <button onclick="toggleModal('modal-spot')" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-xl bg-sky-950/60 hover:bg-sky-900/60 active:scale-95 text-sky-300 border border-sky-800/60 text-xs font-semibold transition">
-            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-sky-400"></i>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-sky-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
             <span id="header-spot-name" class="truncate max-w-[95px]">Select Spot</span>
           </button>
         </div>
@@ -156,8 +156,8 @@
       <div onclick="openProfileGearTab('specs')" title="Tap to view & edit specs in Rider Profile" class="cursor-pointer group bg-slate-950/70 hover:bg-slate-950/90 rounded-2xl p-3 border border-slate-800/80 hover:border-sky-500/40 transition flex items-center justify-between text-xs shadow-inner">
         <!-- Weight Display -->
         <div class="flex items-center space-x-2.5">
-          <div class="w-8 h-8 rounded-xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400">
-            <i data-lucide="scale" class="w-4 h-4"></i>
+          <div class="w-8 h-8 rounded-xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400 flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
           </div>
           <div>
             <span class="text-[10px] text-slate-400 font-semibold block uppercase tracking-wide">Rider Weight</span>
@@ -174,8 +174,8 @@
             <span class="text-[10px] text-slate-400 font-semibold block uppercase tracking-wide">Rider Level</span>
             <span id="profile-level-display" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">Medium</span>
           </div>
-          <div class="w-8 h-8 rounded-xl bg-slate-800/80 group-hover:bg-sky-500/20 border border-slate-700/80 group-hover:border-sky-500/40 flex items-center justify-center text-slate-400 group-hover:text-sky-300 transition" title="Edit in Profile">
-            <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5"></i>
+          <div class="w-8 h-8 rounded-xl bg-slate-800/80 group-hover:bg-sky-500/20 border border-slate-700/80 group-hover:border-sky-500/40 flex items-center justify-center text-slate-400 group-hover:text-sky-300 transition flex-shrink-0" title="Edit in Profile">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/></svg>
           </div>
         </div>
       </div>
@@ -1340,6 +1340,17 @@
       <!-- Modal Body -->
       <div class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 custom-scrollbar text-xs">
         
+        <!-- 7-Day Forecast Window / Day Selector -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label class="block font-semibold text-slate-300 text-[11px] uppercase tracking-wider">📅 Downwind Day (7-Day Forecast Window)</label>
+            <span id="downwind-selected-day-label" class="text-[10px] text-cyan-400 font-mono font-bold">Today</span>
+          </div>
+          <div id="downwind-day-pills-container" class="flex items-center space-x-1.5 overflow-x-auto pb-1 custom-scrollbar">
+            <!-- Populated via JS with 7-day forecast pills -->
+          </div>
+        </div>
+
         <!-- Classic Downwind Presets -->
         <div class="space-y-1.5">
           <label class="block font-semibold text-slate-300 text-[11px] uppercase tracking-wider">Classic Downwind Routes</label>
@@ -1420,14 +1431,48 @@
             </div>
           </div>
 
-          <!-- Quiver & Gear Tuning Tip -->
-          <div class="p-3 rounded-xl bg-sky-950/30 border border-sky-800/40 flex items-start space-x-2.5 text-[11px] text-sky-200">
-            <span class="text-base flex-shrink-0">🎒</span>
-            <div class="space-y-0.5">
-              <span class="font-bold text-sky-300 block">Downwind Quiver Recommendation</span>
-              <p class="text-slate-300 text-[10.5px] leading-relaxed">
-                Riding with the wind reduces apparent wind over your kite. We recommend sizing up +1m (e.g. 10m instead of 9m) to maintain power and prevent kite stalls during wave carves.
-              </p>
+          <!-- Recommended Downwind Setup (Personalized to Rider Quiver & Day Forecast) -->
+          <div id="downwind-gear-card" class="p-3.5 rounded-2xl bg-gradient-to-br from-cyan-950/40 to-slate-900/90 border border-cyan-500/30 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold text-cyan-300 flex items-center space-x-1.5">
+                <span>🎒</span>
+                <span>Recommended Gear for This Day</span>
+              </span>
+              <span id="downwind-gear-badge" class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                +1m Downwind Sizing
+              </span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-[11px]">
+              <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800">
+                <span class="text-[10px] text-slate-400 block font-semibold uppercase">Recommended Kite / Wing</span>
+                <span id="downwind-rec-kite" class="font-bold text-white text-xs block truncate mt-0.5">Calculating...</span>
+                <span id="downwind-rec-kite-size" class="text-[10px] text-cyan-300 font-mono">--</span>
+              </div>
+              <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800">
+                <span class="text-[10px] text-slate-400 block font-semibold uppercase">Recommended Board</span>
+                <span id="downwind-rec-board" class="font-bold text-white text-xs block truncate mt-0.5">Twintip / Wave</span>
+                <span id="downwind-rec-board-type" class="text-[10px] text-slate-400">Deep carves</span>
+              </div>
+            </div>
+            <p id="downwind-gear-rationale" class="text-[10px] text-slate-300 leading-relaxed bg-slate-950/50 p-2 rounded-lg border border-slate-800/60">
+              Riding downwind reduces apparent wind across the kite. Sizing +1m larger ensures you maintain continuous line tension during wave transitions.
+            </p>
+          </div>
+
+          <!-- Tide Elements & Safety Advisory for Selected Day -->
+          <div id="downwind-tide-card" class="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="font-bold text-sky-300 flex items-center space-x-1.5">
+                <span>🌊</span>
+                <span>Tide & Water Levels</span>
+              </span>
+              <span id="downwind-tide-summary" class="font-mono text-[10px] text-slate-300">Checking tide levels...</span>
+            </div>
+            <div id="downwind-tide-pills" class="flex flex-wrap items-center gap-1.5 text-[10.5px]">
+              <!-- High / Low Tide Pills -->
+            </div>
+            <div id="downwind-tide-advisory" class="text-[10px] leading-relaxed p-2 rounded-lg bg-slate-900/90 border border-slate-800 text-slate-300">
+              Checking route hazards against tidal height...
             </div>
           </div>
 
@@ -7531,7 +7576,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=40').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=41').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
@@ -8078,6 +8123,89 @@
 
     let activeDownwindWindDeg = 95;
     let selectedDownwindPresetId = 'cumbuco-taiba';
+    let selectedDownwindDayIdx = 0;
+
+    function renderDownwindDayPills() {
+      const container = document.getElementById('downwind-day-pills-container');
+      if (!container) return;
+
+      const weekly = (state.forecastData && state.forecastData.weekly_forecast && state.forecastData.weekly_forecast.length >= 7)
+        ? state.forecastData.weekly_forecast
+        : null;
+
+      const baseNow = new Date();
+      let pillsHtml = '';
+
+      for (let i = 0; i < 7; i++) {
+        let dayName = i === 0 ? 'Today' : (i === 1 ? 'Tmrw' : '');
+        let dateDisp = '';
+        let windKts = 18;
+        let windDir = 'E';
+        let windDeg = 90;
+
+        if (weekly && weekly[i]) {
+          const wItem = weekly[i];
+          dayName = i === 0 ? 'Today' : (i === 1 ? 'Tomorrow' : (wItem.day_name ? wItem.day_name.slice(0, 3) : `Day ${i+1}`));
+          dateDisp = wItem.date_display ? wItem.date_display.split(',')[1] || wItem.date_display : '';
+          windKts = Math.round(wItem.wind_peak_kts || wItem.wind_avg_kts || 18);
+          windDir = wItem.direction || 'E';
+          windDeg = wItem.degrees !== undefined ? wItem.degrees : 90;
+        } else {
+          const d = new Date(baseNow);
+          d.setDate(baseNow.getDate() + i);
+          const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+          const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+          if (i > 1) dayName = days[d.getDay()];
+          dateDisp = `${months[d.getMonth()]} ${d.getDate()}`;
+        }
+
+        const isSelected = (i === selectedDownwindDayIdx);
+        const activeClass = isSelected
+          ? 'bg-gradient-to-r from-cyan-500/30 to-teal-500/30 text-cyan-200 border-cyan-400 font-bold shadow-md shadow-cyan-500/20'
+          : 'bg-slate-950/80 text-slate-400 hover:text-white hover:bg-slate-800 border-slate-800';
+
+        pillsHtml += `
+          <button type="button" onclick="selectDownwindDay(${i})" class="flex-shrink-0 px-3 py-1.5 rounded-xl border text-[11px] transition active:scale-95 flex flex-col items-center min-w-[70px] ${activeClass}">
+            <span class="font-bold text-[11px]">${dayName}</span>
+            <span class="text-[9.5px] text-cyan-400 font-mono mt-0.5">${windKts} kts ${windDir}</span>
+          </button>
+        `;
+      }
+
+      container.innerHTML = pillsHtml;
+      const lbl = document.getElementById('downwind-selected-day-label');
+      if (lbl) {
+        if (weekly && weekly[selectedDownwindDayIdx]) {
+          lbl.innerText = `${weekly[selectedDownwindDayIdx].day_name || 'Day'} (${weekly[selectedDownwindDayIdx].date_display || ''})`;
+        } else {
+          lbl.innerText = selectedDownwindDayIdx === 0 ? 'Today' : (selectedDownwindDayIdx === 1 ? 'Tomorrow' : `+${selectedDownwindDayIdx} Days`);
+        }
+      }
+    }
+
+    function selectDownwindDay(dayIdx) {
+      selectedDownwindDayIdx = dayIdx;
+      renderDownwindDayPills();
+
+      // Synchronize wind direction with the forecasted day
+      let dayDeg = 95;
+      if (state.forecastData && state.forecastData.weekly_forecast && state.forecastData.weekly_forecast[dayIdx]) {
+        const wf = state.forecastData.weekly_forecast[dayIdx];
+        if (typeof wf.degrees === 'number') {
+          dayDeg = wf.degrees;
+        }
+      } else if (state.forecastData && state.forecastData.current && typeof state.forecastData.current.degrees === 'number') {
+        dayDeg = state.forecastData.current.degrees;
+      }
+
+      activeDownwindWindDeg = dayDeg;
+      const inputEl = document.getElementById('downwind-wind-input');
+      const badgeEl = document.getElementById('downwind-live-wind-badge');
+      if (inputEl) inputEl.value = dayDeg;
+      if (badgeEl) badgeEl.innerText = `${dayDeg}° ${getCompassSector(dayDeg)}`;
+
+      calculateDownwind();
+    }
 
     function calculateBearingDeg(lat1, lon1, lat2, lon2) {
       const phi1 = lat1 * Math.PI / 180.0;
@@ -8271,7 +8399,124 @@
         reachIconEl.className = `w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${pillColor === 'emerald' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : pillColor === 'amber' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : pillColor === 'sky' ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'}`;
       }
 
-      // 6. Hazards & Obstacles
+      // 6. Selected Day Forecast, Tides & Best Gear Advise
+      let dayWindKts = 18;
+      let dayGustKts = 23;
+      let dayTides = [];
+      let dayName = selectedDownwindDayIdx === 0 ? 'Today' : (selectedDownwindDayIdx === 1 ? 'Tomorrow' : 'Selected Day');
+
+      if (state.forecastData && state.forecastData.weekly_forecast && state.forecastData.weekly_forecast[selectedDownwindDayIdx]) {
+        const wf = state.forecastData.weekly_forecast[selectedDownwindDayIdx];
+        dayWindKts = wf.wind_peak_kts || wf.wind_avg_kts || 18;
+        dayGustKts = wf.gust_peak_kts || (dayWindKts + 5);
+        dayTides = wf.tides || [];
+        dayName = wf.day_name || dayName;
+      } else if (state.forecastData) {
+        if (selectedDownwindDayIdx === 0) {
+          dayWindKts = state.forecastData.current ? state.forecastData.current.wind_kts : 18;
+          dayGustKts = state.forecastData.current ? state.forecastData.current.gust_kts : 23;
+          dayTides = state.forecastData.tides || [];
+        } else if (selectedDownwindDayIdx === 1) {
+          dayTides = state.forecastData.tides_tomorrow || [];
+        }
+      }
+
+      // Downwind Apparent Wind Reduction (-3.5 kts rule)
+      const apparentKts = Math.max(10, Math.round((dayWindKts - 3.5) * 10) / 10);
+
+      // Best Gear Recommendation from packed quiver
+      const recKiteEl = document.getElementById('downwind-rec-kite');
+      const recKiteSizeEl = document.getElementById('downwind-rec-kite-size');
+      const recBoardEl = document.getElementById('downwind-rec-board');
+      const recBoardTypeEl = document.getElementById('downwind-rec-board-type');
+      const gearBadgeEl = document.getElementById('downwind-gear-badge');
+      const gearRationaleEl = document.getElementById('downwind-gear-rationale');
+
+      const gearRec = recommendRigging(apparentKts, dayGustKts);
+      const userWeight = state.user.weight || 75.0;
+      const idealKiteSize = Math.max(6, Math.min(17, Math.round((userWeight / (apparentKts * 0.40)) * 2) / 2));
+
+      if (gearRec && gearRec.combo) {
+        const c = gearRec.combo;
+        if (recKiteEl) recKiteEl.innerText = `${c.kBrand || ''} ${c.kModel || 'Kite'}`.trim();
+        if (recKiteSizeEl) recKiteSizeEl.innerText = `${c.kSize}m · ${gearRec.inSweet ? '🎯 Sweet Spot (+1m Downwind)' : 'Rideable'}`;
+        if (recBoardEl) recBoardEl.innerText = `${c.bBrand || ''} ${c.bModel || c.bType || 'Board'}`.trim();
+        if (recBoardTypeEl) recBoardTypeEl.innerText = c.bType === 'Wave' || c.bType === 'Surfboard' ? '🌊 Wave carving & swell riding' : '⚡ Twintip with deep fins';
+        if (gearBadgeEl) {
+          gearBadgeEl.innerText = gearRec.inSweet ? '🎯 Powered Sweet Spot' : 'Active Quiver Match';
+          gearBadgeEl.className = `px-2 py-0.5 rounded-full text-[9px] font-bold ${gearRec.inSweet ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'}`;
+        }
+        if (gearRationaleEl) {
+          gearRationaleEl.innerText = `Forecast for ${dayName}: ${Math.round(dayWindKts)} kts (gusts ${Math.round(dayGustKts)} kts). Riding downwind reduces apparent wind to ~${Math.round(apparentKts)} kts across your canopy. Your ${c.kSize}m gives steady drive and bar tension through deep S-curves without luffing.`;
+        }
+      } else {
+        // Fallback when quiver is empty or not matching
+        if (recKiteEl) recKiteEl.innerText = `Ideal Size: ${idealKiteSize}m²`;
+        if (recKiteSizeEl) recKiteSizeEl.innerText = `Sized for ${userWeight.toFixed(0)} kg rider`;
+        if (recBoardEl) recBoardEl.innerText = 'Waveboard or 138cm Twintip';
+        if (recBoardTypeEl) recBoardTypeEl.innerText = 'Deep directional fins recommended';
+        if (gearBadgeEl) {
+          gearBadgeEl.innerText = '+1m Downwind Sizing';
+          gearBadgeEl.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/40';
+        }
+        if (gearRationaleEl) {
+          gearRationaleEl.innerText = `Forecast: ${Math.round(dayWindKts)} kts. Downwinding reduces apparent wind to ~${Math.round(apparentKts)} kts. Pack a ${idealKiteSize}m kite (+1m larger than stationary riding) to keep positive line pressure when carving with the swell.`;
+        }
+      }
+
+      // 7. Tide Elements & Hazard Correlation for Selected Day
+      const tideSummaryEl = document.getElementById('downwind-tide-summary');
+      const tidePillsEl = document.getElementById('downwind-tide-pills');
+      const tideAdvisoryEl = document.getElementById('downwind-tide-advisory');
+
+      if (dayTides && dayTides.length > 0) {
+        let lowTides = dayTides.filter(t => t.type === 'Low');
+        let highTides = dayTides.filter(t => t.type === 'High');
+
+        if (tideSummaryEl) {
+          const lH = lowTides.length > 0 ? `${lowTides[0].height > 0 ? '+' : ''}${lowTides[0].height}m` : '--';
+          const hH = highTides.length > 0 ? `+${highTides[0].height}m` : '--';
+          tideSummaryEl.innerText = `Low: ${lH} · High: ${hH}`;
+        }
+
+        if (tidePillsEl) {
+          tidePillsEl.innerHTML = dayTides.map(t => {
+            const isHigh = t.type === 'High';
+            const badgeClass = isHigh
+              ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+              : 'bg-amber-500/20 text-amber-300 border-amber-500/40';
+            return `<span class="px-2 py-0.5 rounded-lg border font-mono font-semibold ${badgeClass}">${isHigh ? '🔵' : '🟠'} ${t.type} ${t.time} (${t.height > 0 ? '+' : ''}${t.height}m)</span>`;
+          }).join('');
+        }
+
+        // Correlate route hazards with tides
+        let adviceHtml = '';
+        if (endId === 'taiba') {
+          const midDayLow = lowTides.find(t => {
+            const h = parseInt(t.time.split(':')[0], 10);
+            return h >= 8 && h <= 16;
+          });
+          if (midDayLow) {
+            adviceHtml = `⚠️ <b>Taíba Low-Tide Alert (${midDayLow.time}):</b> Rock slabs and secret spot reefs dry below +0.8m MSL. Avoid landing during peak low tide. Plan departure to arrive around incoming or high tide (+1.0m or higher).`;
+          } else {
+            adviceHtml = `🟢 <b>Safe Water Levels at Taíba:</b> Good coastal water depth during peak riding hours. Keep 200m offshore when rounding the point.`;
+          }
+        } else if (endId === 'paracuru') {
+          adviceHtml = `🌊 <b>Quebra Mar Reef:</b> Outer barrier reef has shallow sections at low tide. Enter the inside flatwater pool via the main marked channel.`;
+        } else if (endId === 'moitas' || endId === 'tatajuba') {
+          adviceHtml = `🚤 <b>River Mouth Tidal Flow:</b> Fast outgoing current during dropping tide. Cross river mouths 200m offshore to avoid standing rip chop.`;
+        } else {
+          adviceHtml = `🟢 <b>Open Coast Tides:</b> Wide sandy beaches for easy exits at all tides. High tide provides gentle shorebreaks; low tide creates large flat sandbars.`;
+        }
+
+        if (tideAdvisoryEl) tideAdvisoryEl.innerHTML = adviceHtml;
+      } else {
+        if (tideSummaryEl) tideSummaryEl.innerText = 'Micro-tidal / inland water';
+        if (tidePillsEl) tidePillsEl.innerHTML = '<span class="text-slate-400 text-[10px]">No significant tidal amplitude for this spot route.</span>';
+        if (tideAdvisoryEl) tideAdvisoryEl.innerText = 'Constant water levels. Focus on shoreline orientation and wind shadows.';
+      }
+
+      // 8. Hazards & Obstacles
       const hazardContainer = document.getElementById('downwind-hazard-container');
       if (hazardContainer) {
         const hazards = [];
@@ -8357,6 +8602,8 @@
         populateDownwindSelects();
         renderDownwindPresets();
 
+        renderDownwindDayPills();
+
         // Read current live wind degrees from forecast data
         let liveWind = 95;
         if (state.forecastData && state.forecastData.current && typeof state.forecastData.current.degrees === 'number') {
@@ -8396,6 +8643,8 @@
     window.onDownwindPointsChanged = onDownwindPointsChanged;
     window.onDownwindWindChanged = onDownwindWindChanged;
     window.calculateDownwind = calculateDownwind;
+    window.selectDownwindDay = selectDownwindDay;
+    window.renderDownwindDayPills = renderDownwindDayPills;
 
   </script>
 </body>
