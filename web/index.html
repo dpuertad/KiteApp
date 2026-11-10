@@ -75,24 +75,22 @@
 <body class="bg-slate-950 text-slate-100 min-h-screen max-w-full overflow-x-hidden flex flex-col font-sans selection:bg-sky-500 selection:text-white pb-12">
 
   <!-- TOP HEADER -->
-  <header class="sticky top-0 z-40 bg-slate-900/80 backdrop-blur-md border-b border-slate-800/80 px-4 py-3">
-    <div class="max-w-xl mx-auto flex items-center justify-between">
-      <div class="flex items-center space-x-2 min-w-0 pr-1">
-        <div class="w-9 h-9 rounded-2xl overflow-hidden border border-sky-400/30 shadow-lg shadow-sky-500/20 bg-sky-950/50 flex items-center justify-center flex-shrink-0">
-          <img src="/header-logo.png?v=44" alt="HolyGust" class="w-full h-full object-contain p-0.5">
-        </div>
-        <div class="min-w-0">
-          <div class="flex items-center space-x-1.5">
-            <h1 class="text-base font-bold tracking-tight bg-gradient-to-r from-white via-sky-100 to-cyan-300 bg-clip-text text-transparent truncate">HolyGust</h1>
+  <header class="sticky top-0 z-40 bg-slate-900/85 backdrop-blur-md border-b border-slate-800/80 px-4 py-2.5">
+    <div class="max-w-xl mx-auto space-y-2">
+      <!-- Row 1: Brand & Spot Controls (Full horizontal clearance, zero text truncation) -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2.5 min-w-0 pr-2">
+          <div class="w-9 h-9 rounded-2xl overflow-hidden border border-sky-400/30 shadow-lg shadow-sky-500/20 bg-sky-950/50 flex items-center justify-center flex-shrink-0">
+            <img src="/header-logo.png?v=44" alt="HolyGust" class="w-full h-full object-contain p-0.5">
           </div>
-          <p class="text-[10.5px] text-sky-400 font-medium truncate">Smart Wind & Gear Assistant</p>
+          <div class="min-w-0">
+            <h1 class="text-base font-bold tracking-tight bg-gradient-to-r from-white via-sky-100 to-cyan-300 bg-clip-text text-transparent leading-tight whitespace-nowrap">HolyGust</h1>
+            <p class="text-[10px] sm:text-[10.5px] text-sky-400 font-medium leading-tight whitespace-nowrap">Smart Wind & Gear Assistant</p>
+          </div>
         </div>
-      </div>
 
-      <!-- Right Header Cluster: Row 1 (Refresh, GPS, Spot) + Row 2 (Trip Advisor) -->
-      <div class="flex flex-col items-end space-y-1.5 flex-shrink-0">
-        <!-- Row 1: Quick Refresh, GPS & Spot Selector -->
-        <div class="flex items-center space-x-1">
+        <!-- Right: Quick Refresh, GPS & Spot Selector -->
+        <div class="flex items-center space-x-1 flex-shrink-0">
           <button id="btn-refresh" onclick="fetchForecast(true)" title="Refresh Live Forecast" class="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 border border-slate-700 transition flex items-center justify-center">
             <svg id="refresh-icon" xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
           </button>
@@ -104,22 +102,22 @@
             <span id="header-spot-name" class="truncate max-w-[95px]">Select Spot</span>
           </button>
         </div>
+      </div>
 
-        <!-- Row 2: Travelling? Trip Advisor, Downwinder & Spot Wind Alarm (Beta Features) -->
-        <div class="w-full flex items-center space-x-1">
-          <button id="header-travel-btn" onclick="openTravelModal()" title="Kite Travel Advisor & Quiver Matcher" class="flex-1 flex items-center justify-center space-x-1 px-2 py-1 rounded-xl bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/20 hover:from-amber-500/30 hover:to-orange-500/30 active:scale-95 text-amber-300 hover:text-white border border-amber-500/40 text-[10px] font-bold transition shadow-sm hidden">
-            <span>✈️</span>
-            <span class="truncate">Trip Advisor</span>
-          </button>
-          <button id="header-downwind-btn" onclick="openDownwindModal()" title="Beta Downwind Route Planner" class="flex-1 flex items-center justify-center space-x-1 px-2 py-1 rounded-xl bg-gradient-to-r from-cyan-500/20 via-teal-500/20 to-cyan-500/20 hover:from-cyan-500/30 hover:to-teal-500/30 active:scale-95 text-cyan-300 hover:text-white border border-cyan-500/40 text-[10px] font-bold transition shadow-sm hidden">
-            <span>🏄</span>
-            <span class="truncate">Downwinder</span>
-          </button>
-          <button id="header-alarm-btn" onclick="openCurrentSpotAlarmModal()" title="Spot Wind Alarms" class="flex items-center justify-center space-x-1 px-2 py-1 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 active:scale-95 text-sky-300 hover:text-white border border-sky-500/40 text-[10px] font-bold transition shadow-sm hidden">
-            <span>🔔</span>
-            <span class="truncate">Alarm</span>
-          </button>
-        </div>
+      <!-- Row 2: Beta Actions (Trip Advisor, Downwinder, Alarm) - Under Row 1, Right Aligned -->
+      <div id="header-beta-actions" class="flex items-center justify-end space-x-1.5 pt-0.5 hidden">
+        <button id="header-travel-btn" onclick="openTravelModal()" title="Kite Travel Advisor & Quiver Matcher" class="flex items-center space-x-1 px-2.5 py-1 rounded-xl bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/20 hover:from-amber-500/30 hover:to-orange-500/30 active:scale-95 text-amber-300 hover:text-white border border-amber-500/40 text-[10px] font-bold transition shadow-sm hidden">
+          <span>✈️</span>
+          <span class="truncate">Trip Advisor</span>
+        </button>
+        <button id="header-downwind-btn" onclick="openDownwindModal()" title="Beta Downwind Route Planner" class="flex items-center space-x-1 px-2.5 py-1 rounded-xl bg-gradient-to-r from-cyan-500/20 via-teal-500/20 to-cyan-500/20 hover:from-cyan-500/30 hover:to-teal-500/30 active:scale-95 text-cyan-300 hover:text-white border border-cyan-500/40 text-[10px] font-bold transition shadow-sm hidden">
+          <span>🏄</span>
+          <span class="truncate">Downwinder</span>
+        </button>
+        <button id="header-alarm-btn" onclick="openCurrentSpotAlarmModal()" title="Spot Wind Alarms" class="flex items-center space-x-1 px-2.5 py-1 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 active:scale-95 text-sky-300 hover:text-white border border-sky-500/40 text-[10px] font-bold transition shadow-sm hidden">
+          <span>🔔</span>
+          <span class="truncate">Alarm</span>
+        </button>
       </div>
     </div>
   </header>
@@ -5710,14 +5708,17 @@
       }
 
       // 3. Header Buttons (Beta Features: Trip Advisor, Downwinder & Spot Wind Alarms)
+      const headerBetaRow = document.getElementById('header-beta-actions');
       const headerTravelBtn = document.getElementById('header-travel-btn');
       const headerDownwindBtn = document.getElementById('header-downwind-btn');
       const headerAlarmBtn = document.getElementById('header-alarm-btn');
       if (hasBetaAccess) {
+        if (headerBetaRow) headerBetaRow.classList.remove('hidden');
         if (headerTravelBtn) headerTravelBtn.classList.remove('hidden');
         if (headerDownwindBtn) headerDownwindBtn.classList.remove('hidden');
         if (headerAlarmBtn) headerAlarmBtn.classList.remove('hidden');
       } else {
+        if (headerBetaRow) headerBetaRow.classList.add('hidden');
         if (headerTravelBtn) headerTravelBtn.classList.add('hidden');
         if (headerDownwindBtn) headerDownwindBtn.classList.add('hidden');
         if (headerAlarmBtn) headerAlarmBtn.classList.add('hidden');
@@ -7645,7 +7646,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=44').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=45').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
