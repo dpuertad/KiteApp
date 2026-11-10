@@ -17,10 +17,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="HolyGust">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="apple-touch-icon" href="/icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=44">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png?v=44">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=44">
+  <link rel="apple-touch-icon" href="/icon.png?v=44">
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -79,7 +79,7 @@
     <div class="max-w-xl mx-auto flex items-center justify-between">
       <div class="flex items-center space-x-2 min-w-0 pr-1">
         <div class="w-9 h-9 rounded-2xl overflow-hidden border border-sky-400/30 shadow-lg shadow-sky-500/20 bg-sky-950/50 flex items-center justify-center flex-shrink-0">
-          <img src="/icon.png" alt="HolyGust" class="w-full h-full object-cover">
+          <img src="/header-logo.png?v=44" alt="HolyGust" class="w-full h-full object-contain p-0.5">
         </div>
         <div class="min-w-0">
           <div class="flex items-center space-x-1.5">
@@ -7645,7 +7645,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=43').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=44').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));

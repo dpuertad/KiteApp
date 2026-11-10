@@ -4412,7 +4412,7 @@ def start_embedded_http_server(port: int = 8080):
                     return
 
             # Static icon & asset handler
-            if path in ["/icon.png", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png", "/favicon.png", "/icon.svg"]:
+            if path in ["/icon.png", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png", "/favicon.png", "/icon.svg", "/header-logo.png"]:
                 clean_name = path.lstrip("/")
                 icon_file = os.path.join(web_dir, clean_name)
                 if os.path.exists(icon_file):
