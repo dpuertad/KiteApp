@@ -265,6 +265,12 @@
         </div>
       </div>
 
+      <!-- Spot Water Type & Bottom Conditions Badges -->
+      <div id="hero-spot-conditions-row" class="hidden flex flex-wrap items-center gap-1.5 mb-3"></div>
+
+      <!-- Ocean Swell & Wave Period Card (Ocean Spots) -->
+      <div id="hero-swell-card" class="hidden mb-3 p-2.5 rounded-xl bg-gradient-to-r from-sky-950/60 via-slate-900/90 to-cyan-950/60 border border-sky-500/30 flex items-center justify-between text-xs shadow-sm"></div>
+
       <!-- 4 SAFETY & CONDITIONS METRICS (Fully Readable + Tap to Inspect) -->
       <div class="grid grid-cols-2 gap-2 mb-4">
         <!-- Metric 1: Shoreline Safety -->
@@ -422,16 +428,22 @@
       </div>
     </section>
 
-    <!-- TIDES CARD -->
+    <!-- TIDES & OCEAN SWELL CARD -->
     <section id="section-tides" class="bg-slate-900/70 rounded-2xl p-4 border border-slate-800 shadow-md space-y-2.5">
-      <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
-        <i data-lucide="waves" class="w-4 h-4 text-cyan-400"></i>
-        <span>Tide Heights & Turnarounds</span>
-      </h3>
+      <div class="flex items-center justify-between">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
+          <i data-lucide="waves" class="w-4 h-4 text-cyan-400"></i>
+          <span>Tide Heights & Ocean Swell</span>
+        </h3>
+        <span id="tides-marine-temp-badge" class="text-[10px] text-cyan-300 font-mono font-semibold"></span>
+      </div>
       <div id="tides-container" class="grid grid-cols-2 gap-2 text-xs">
         <div class="bg-slate-950/60 rounded-xl p-3 border border-slate-800/80">
           <span class="text-slate-400">Loading tides...</span>
         </div>
+      </div>
+      <!-- Marine Swell Details for Tides Card -->
+      <div id="tides-swell-detail" class="hidden pt-2 border-t border-slate-800/80 text-[11px] text-slate-300 flex items-center justify-between">
       </div>
     </section>
 
@@ -3739,18 +3751,24 @@
       // C. Ocean Swell & Wave Period Card (Ocean Spots)
       const swellCardEl = document.getElementById('hero-swell-card');
       if (swellCardEl) {
-        if (f.wave && f.wave.height_m !== undefined && f.wave.height_m > 0) {
+        if (f.wave && f.wave.height_m !== undefined && f.wave.height_m > 0 && f.wave.is_ocean_swell !== false) {
+          const pStr = f.wave.period_s ? `${f.wave.period_s}s period` : 'Open swell';
+          const dStr = f.wave.cardinal ? ` · ${f.wave.cardinal} (${f.wave.direction_deg || 0}°)` : '';
+          const typeBadge = (f.wave.period_s && f.wave.period_s >= 10) ? '🏄 Rolling Wave Sets' : '🌊 Wind Chop & Swell';
           swellCardEl.innerHTML = `
             <div class="flex items-center space-x-2.5 min-w-0">
               <span class="text-base flex-shrink-0">🌊</span>
               <div class="truncate">
-                <span class="font-bold text-sky-300 text-xs block">Ocean Swell & Wave Period</span>
+                <div class="flex items-center space-x-1.5">
+                  <span class="font-bold text-sky-300 text-xs block">Ocean Swell & Wave Period</span>
+                  <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">${typeBadge}</span>
+                </div>
                 <p class="text-[10px] text-slate-400 mt-0.5 truncate">
-                  ${f.wave.height_m}m · ${f.wave.period_s ? f.wave.period_s + 's period' : 'Open water'}${f.wave.cardinal ? ' · ' + f.wave.cardinal + ' (' + (f.wave.direction_deg || 0) + '°)' : ''}
+                  ${f.wave.height_m}m · ${pStr}${dStr}
                 </p>
               </div>
             </div>
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-500/20 text-sky-300 font-mono flex-shrink-0 border border-sky-500/30">${f.wave.height_m}m</span>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-sky-500/20 text-sky-300 font-mono flex-shrink-0 border border-sky-500/40">${f.wave.height_m}m</span>
           `;
           swellCardEl.classList.remove('hidden');
         } else {
@@ -4006,6 +4024,28 @@
             <span class="text-xs font-mono font-bold ${t.height >= 0 ? 'text-cyan-400' : 'text-sky-300'}">${t.height > 0 ? '+' : ''}${t.height.toFixed(2)}m</span>
           </div>
         `).join('');
+      }
+
+      // Render Sea Temp Badge & Ocean Swell in Tides Section
+      const tidesTempBadge = document.getElementById('tides-marine-temp-badge');
+      const tidesSwellEl = document.getElementById('tides-swell-detail');
+      const seaTemp = isTomorrow ? f.tomorrow_sea_temp : (f.sea_temp || (f.current && f.current.temp));
+      if (tidesTempBadge) {
+        tidesTempBadge.innerText = seaTemp ? `🌊 Sea Temp: ${Math.round(seaTemp)}°C` : '';
+      }
+      if (tidesSwellEl) {
+        if (f.wave && f.wave.height_m !== undefined && f.wave.height_m > 0 && f.wave.is_ocean_swell !== false) {
+          tidesSwellEl.innerHTML = `
+            <div class="flex items-center space-x-1.5">
+              <span>🌊</span>
+              <span>Ocean Swell: <strong class="text-white">${f.wave.height_m}m</strong> ${f.wave.period_s ? '· ' + f.wave.period_s + 's period' : ''}</span>
+            </div>
+            <span class="font-mono text-[10.5px] text-cyan-300 font-semibold">${f.wave.cardinal ? f.wave.cardinal + ' swell' : ''}</span>
+          `;
+          tidesSwellEl.classList.remove('hidden');
+        } else {
+          tidesSwellEl.classList.add('hidden');
+        }
       }
     }
 
@@ -6336,6 +6376,12 @@
                     </h4>
                     <span class="text-[10px] text-slate-400 font-medium">Avg ${Math.round(d.wind_avg_kts || d.wind_peak_kts)} kts · Gusts ${Math.round(d.gust_peak_kts)} kts · ${d.direction}</span>
                     <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold border ${shoreBadgeClass}">${shoreType}</span>
+                    ${(d.wave_height_m && d.wave_height_m > 0)
+                      ? `<span class="px-1.5 py-0.2 rounded text-[9px] font-semibold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 font-mono">🌊 ${d.wave_height_m}m</span>`
+                      : ((f.wave && f.wave.height_m && f.wave.is_ocean_swell !== false)
+                        ? `<span class="px-1.5 py-0.2 rounded text-[9px] font-semibold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 font-mono">🌊 ${f.wave.height_m}m</span>`
+                        : '')
+                    }
                     <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30 font-medium">${d.best_window || '12:00 – 16:00'}</span>
                     <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold bg-sky-500/15 text-sky-300 border border-sky-500/30">${d.model_used || d.model || 'ECMWF IFS (9km)'}</span>
                   </div>
@@ -7599,7 +7645,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=42').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=43').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));

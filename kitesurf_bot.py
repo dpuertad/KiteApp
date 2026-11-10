@@ -2283,21 +2283,21 @@ def fetch_weather_metno(spot: dict, today_sst: float = None, tomorrow_sst: float
 
 MARINE_WAVE_CACHE = {}
 
-def fetch_marine_waves(lat: float, lon: float, tz: str = "auto") -> dict:
-    """Fetches real-time wave height, period, and swell direction from Open-Meteo Marine API."""
+def fetch_marine_waves(lat: float, lon: float, tz: str = "auto", spot_type: str = "ocean") -> dict:
+    """Fetches real-time 7-day wave height, period, and swell direction from Open-Meteo Marine API."""
+    if spot_type in ["lake", "lagoon"]:
+        return {"height_m": 0.0, "period_s": None, "direction_deg": None, "cardinal": "", "daily_waves": [0.0]*7, "is_ocean_swell": False}
+
     key = (round(float(lat), 2), round(float(lon), 2))
     now = time.time()
     if key in MARINE_WAVE_CACHE and (now - MARINE_WAVE_CACHE[key][0]) < 1800:
         return copy.deepcopy(MARINE_WAVE_CACHE[key][1])
 
+    url = f"https://marine-api.open-meteo.com/v1/marine?latitude={lat}&longitude={lon}&hourly=wave_height,wave_direction,wave_period&timezone={tz}&forecast_days=7"
     try:
-        import requests
-        url = f"https://marine-api.open-meteo.com/v1/marine?latitude={lat}&longitude={lon}&hourly=wave_height,wave_direction,wave_period&timezone={tz}"
-        r = requests.get(url, timeout=3.5)
-        if not r.ok:
-            MARINE_WAVE_CACHE[key] = (now, None)
-            return None
-        d = r.json()
+        req = urllib.request.Request(url, headers={"User-Agent": "KiteForecastBot/1.0"})
+        with urllib.request.urlopen(req, context=SSL_CTX, timeout=5) as resp:
+            d = json.loads(resp.read().decode("utf-8"))
         h = d.get("hourly", {})
         heights = [x for x in h.get("wave_height", []) if x is not None]
         if not heights or heights[0] is None:
@@ -2310,6 +2310,14 @@ def fetch_marine_waves(lat: float, lon: float, tz: str = "auto") -> dict:
         dirs = [x for x in h.get("wave_direction", []) if x is not None]
         curr_d = dirs[0] if dirs else None
         
+        daily_waves = []
+        for day_i in range(7):
+            day_slice = [x for x in heights[day_i*24:(day_i+1)*24] if x is not None]
+            if day_slice:
+                daily_waves.append(round(sum(day_slice) / len(day_slice), 1))
+            else:
+                daily_waves.append(round(curr_h, 1))
+
         cardinal = degrees_to_cardinal(curr_d) if curr_d is not None else ""
         res = {
             "height_m": round(curr_h, 1),
@@ -2317,11 +2325,13 @@ def fetch_marine_waves(lat: float, lon: float, tz: str = "auto") -> dict:
             "direction_deg": round(curr_d) if curr_d is not None else None,
             "cardinal": cardinal,
             "hourly_heights": heights[:24],
+            "daily_waves": daily_waves,
             "is_ocean_swell": True
         }
         MARINE_WAVE_CACHE[key] = (now, res)
         return res
-    except Exception:
+    except Exception as e:
+        print(f"Error fetching marine waves: {e}")
         MARINE_WAVE_CACHE[key] = (now, None)
         return None
 
@@ -2435,7 +2445,12 @@ def fetch_live_forecast(spot: dict) -> dict:
     import kite_spots
     spot_cond = getattr(kite_spots, "get_spot_conditions", lambda s: {})(spot)
     forecast["spot_conditions"] = spot_cond
-    forecast["wave"] = fetch_marine_waves(float(spot.get("lat", 0)), float(spot.get("lon", 0)), spot.get("timezone", "auto"))
+    forecast["wave"] = fetch_marine_waves(float(spot.get("lat", 0)), float(spot.get("lon", 0)), spot.get("timezone", "auto"), spot_type=spot.get("spot_type", "ocean"))
+    if forecast.get("wave") and isinstance(forecast.get("weekly_forecast"), list):
+        d_waves = forecast["wave"].get("daily_waves", [])
+        for idx, wf_day in enumerate(forecast["weekly_forecast"]):
+            if idx < len(d_waves):
+                wf_day["wave_height_m"] = d_waves[idx]
     # Always apply enclosed spot exception logic to shoreline status
     forecast["shoreline"] = calculate_shoreline_status(
         cur_dir_deg, beach_angle,
