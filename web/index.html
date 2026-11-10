@@ -127,52 +127,58 @@
 
     <!-- RIDER PROFILE CARD -->
     <section class="bg-gradient-to-br from-slate-900/90 to-slate-800/60 rounded-2xl p-4 border border-slate-800 shadow-xl relative overflow-hidden">
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center space-x-2.5 min-w-0 flex-1">
-          <!-- Rider Profile Button (Click opens Profile / Log Out menu) -->
-          <button id="btn-rider-avatar" type="button" onclick="handleAvatarClick()" title="Rider Profile & Account" class="px-2.5 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 flex items-center space-x-1.5 text-slate-300 hover:text-white border border-slate-700 hover:border-sky-500/50 transition cursor-pointer flex-shrink-0 group shadow-sm">
-            <i data-lucide="user" class="w-3.5 h-3.5 text-sky-400 group-hover:scale-110 transition"></i>
-            <span class="text-xs font-bold tracking-wide">Profile</span>
-          </button>
+      <!-- Top Row: Identity on Left, Direct Profile Action on Right -->
+      <div class="flex items-center justify-between mb-3.5">
+        <!-- Left: Avatar + Name + Beta Tag + Quiver Hint -->
+        <div class="flex items-center space-x-3 min-w-0 flex-1 pr-2">
+          <div id="rider-avatar-bubble" onclick="handleAvatarClick()" title="Rider Profile & Account" class="relative flex-shrink-0 cursor-pointer group">
+            <div id="rider-avatar-initial" class="w-9 h-9 rounded-full bg-slate-800 border border-slate-700 group-hover:border-sky-500/50 flex items-center justify-center text-slate-300 font-bold text-sm shadow-sm transition">
+              <i data-lucide="user" class="w-4 h-4 text-sky-400"></i>
+            </div>
+            <span id="rider-online-dot" class="hidden absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-slate-900 shadow-sm"></span>
+          </div>
+
           <div class="min-w-0 flex-1">
             <div class="flex items-center space-x-2">
               <input id="rider-name-input" type="text" value="" placeholder="Your Name" onchange="updateRiderName(this.value)" class="w-28 sm:w-36 bg-transparent font-bold text-sm text-white focus:outline-none border-b border-transparent focus:border-sky-500 transition px-0.5 placeholder:text-slate-500 truncate">
-              <!-- Rider Badge Button (Click opens Login or Synced Profile) -->
-              <button id="rider-badge-title" type="button" onclick="handleBadgeClick()" title="Sign In / Rider Profile" class="text-[11px] px-2.5 py-0.5 rounded-full bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 hover:text-white font-semibold border border-sky-500/30 active:scale-95 transition cursor-pointer flex items-center space-x-1 shadow-sm flex-shrink-0">
-                <i data-lucide="log-in" class="w-3 h-3 text-sky-400"></i>
-                <span id="rider-badge-label">Sign In</span>
-              </button>
+              <span id="rider-badge-title" onclick="handleBadgeClick()" title="Click to view & edit Profile" class="hidden font-bold text-sm sm:text-base text-white tracking-wide truncate cursor-pointer hover:text-sky-300 transition">Your Name</span>
               <span id="profile-card-beta-badge" class="hidden text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black tracking-wide shadow-sm shadow-amber-400/40 flex items-center space-x-1 flex-shrink-0">
                 <span>⚡</span><span>Beta Rider</span>
               </span>
             </div>
-            <p id="backpack-count-badge" class="text-[11px] text-slate-400 font-medium truncate">Manage packed gear in profile</p>
+            <p id="backpack-count-badge" class="text-[11px] text-slate-400 font-medium truncate mt-0.5">Manage packed gear in profile</p>
           </div>
         </div>
+
+        <!-- Right: Direct Profile Button -->
+        <button id="btn-rider-avatar" type="button" onclick="handleAvatarClick()" title="Rider Profile & Account" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 hover:text-white border border-slate-700 hover:border-sky-500/50 text-xs font-bold transition shadow-sm flex-shrink-0">
+          <i data-lucide="user" class="w-3.5 h-3.5"></i>
+          <span>Profile</span>
+        </button>
       </div>
 
-      <!-- Rider Specs Overview (Read-Only on landing page, edit & save inside Profile) -->
-      <div onclick="openProfileGearTab('specs')" title="Tap to view & edit specs in Rider Profile" class="cursor-pointer group bg-slate-950/70 hover:bg-slate-950/90 rounded-2xl p-3 border border-slate-800/80 hover:border-sky-500/40 transition flex items-center justify-between text-xs shadow-inner">
-        <!-- Weight Display -->
-        <div class="flex items-center space-x-2.5">
+      <!-- Bottom: Symmetrical 2-Column Specs Grid (Read-Only on landing page, edit inside Profile) -->
+      <div onclick="openProfileGearTab('specs')" title="Tap to view & edit specs in Rider Profile" class="cursor-pointer group bg-slate-950/70 hover:bg-slate-950/90 rounded-2xl p-3 border border-slate-800/80 hover:border-sky-500/40 transition grid grid-cols-2 divide-x divide-slate-800/80 shadow-inner">
+        <!-- Col 1: Weight -->
+        <div class="flex items-center space-x-2.5 pr-2">
           <div class="w-8 h-8 rounded-xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400 flex-shrink-0">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
           </div>
-          <div>
-            <span class="text-[10px] text-slate-400 font-semibold block uppercase tracking-wide">Rider Weight</span>
-            <span id="profile-weight-display" class="text-sm font-bold text-white font-mono">75.0 kg</span>
+          <div class="min-w-0">
+            <span class="text-[10px] text-slate-400 font-semibold block uppercase tracking-wider">Weight</span>
+            <span id="profile-weight-display" class="text-sm font-bold text-white font-mono leading-none">75.0 kg</span>
           </div>
         </div>
 
-        <!-- Divider -->
-        <div class="h-7 w-px bg-slate-800/80"></div>
-
-        <!-- Level Display (Aligned on first letter) -->
-        <div class="flex items-center space-x-2.5">
-          <div class="text-left flex flex-col items-start">
-            <span class="text-[10px] text-slate-400 font-semibold block uppercase tracking-wide">Rider Level</span>
+        <!-- Col 2: Level (Symmetrical Icon Box + Title + Badge) -->
+        <div class="flex items-center space-x-2.5 pl-3">
+          <div class="w-8 h-8 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <div class="min-w-0 flex flex-col items-start">
+            <span class="text-[10px] text-slate-400 font-semibold block uppercase tracking-wider">Level</span>
             <div class="mt-0.5">
-              <span id="profile-level-display" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">Medium</span>
+              <span id="profile-level-display" class="inline-flex items-center px-2 py-0.5 rounded-full text-[10.5px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">Medium</span>
             </div>
           </div>
         </div>
@@ -5054,23 +5060,44 @@
           state.user.name = displayName;
         }
 
-        // Combine rider name with the green online status indicator
+        // Avatar initial and online dot
+        const avatarInitial = document.getElementById('rider-avatar-initial');
+        const onlineDot = document.getElementById('rider-online-dot');
+        if (avatarInitial) {
+          const firstChar = (displayName.trim()[0] || 'R').toUpperCase();
+          avatarInitial.className = "w-9 h-9 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-300 font-bold text-sm shadow-sm";
+          avatarInitial.innerText = firstChar;
+        }
+        if (onlineDot) onlineDot.classList.remove('hidden');
+
+        // Rider name title
         if (badgeBtn) {
-          badgeBtn.className = "text-xs px-3 py-1 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 hover:text-white font-bold border border-emerald-500/40 active:scale-95 transition cursor-pointer flex items-center space-x-2 shadow-sm flex-shrink-0";
+          badgeBtn.classList.remove('hidden');
+          badgeBtn.className = "font-bold text-sm sm:text-base text-white tracking-wide truncate cursor-pointer hover:text-sky-300 transition";
           badgeBtn.title = `Online & Cloud Synced as ${displayName} (${authUser.email}) · Click to open profile`;
-          badgeBtn.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse inline-block shadow-sm shadow-emerald-400/50"></span><span class="text-white font-bold text-xs sm:text-sm tracking-wide max-w-[140px] truncate">${escapeHtml(displayName)}</span>`;
+          badgeBtn.innerText = displayName;
         }
 
+        // Dedicated Profile action button on right
         if (avatarBtn) {
-          avatarBtn.className = "px-2.5 py-1 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 hover:text-white border border-emerald-500/40 ring-1 ring-emerald-500/25 active:scale-95 transition cursor-pointer flex items-center space-x-1.5 flex-shrink-0 group shadow-sm";
+          avatarBtn.className = "flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-sky-400 hover:text-white border border-slate-700 hover:border-sky-500/50 text-xs font-bold transition shadow-sm flex-shrink-0";
           avatarBtn.title = `Logged in as ${displayName} (${authUser.email}) - Click to manage profile or log out`;
-          avatarBtn.innerHTML = `<i data-lucide="user-check" class="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition"></i><span class="text-xs font-bold tracking-wide">Profile</span>`;
+          avatarBtn.innerHTML = `<i data-lucide="user" class="w-3.5 h-3.5"></i><span>Profile</span>`;
         }
       } else {
         if (loggedInView) loggedInView.classList.add('hidden');
         if (formsView) formsView.classList.remove('hidden');
         if (modalTitle) modalTitle.innerText = "Rider Account & Cloud Sync";
         if (feedbackName && !feedbackName.value && state.user.name) feedbackName.value = state.user.name;
+
+        // Guest avatar
+        const avatarInitial = document.getElementById('rider-avatar-initial');
+        const onlineDot = document.getElementById('rider-online-dot');
+        if (avatarInitial) {
+          avatarInitial.className = "w-9 h-9 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 text-sm shadow-sm";
+          avatarInitial.innerHTML = `<i data-lucide="user" class="w-4 h-4"></i>`;
+        }
+        if (onlineDot) onlineDot.classList.add('hidden');
 
         // Show editable input for guest name
         if (rInput) {
@@ -5079,15 +5106,13 @@
         }
 
         if (badgeBtn) {
-          badgeBtn.className = "text-[11px] px-2.5 py-0.5 rounded-full bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 hover:text-white font-semibold border border-sky-500/30 active:scale-95 transition cursor-pointer flex items-center space-x-1 shadow-sm flex-shrink-0";
-          badgeBtn.title = "Click to sign in or create an account";
-          badgeBtn.innerHTML = `<i data-lucide="log-in" class="w-3 h-3 text-sky-400"></i><span>Sign In</span>`;
+          badgeBtn.classList.add('hidden');
         }
 
         if (avatarBtn) {
-          avatarBtn.className = "px-2.5 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 hover:border-sky-500/50 active:scale-95 transition cursor-pointer flex items-center space-x-1.5 flex-shrink-0 group shadow-sm";
-          avatarBtn.title = "Sign In / Rider Profile";
-          avatarBtn.innerHTML = `<i data-lucide="user" class="w-3.5 h-3.5 text-sky-400 group-hover:scale-110 transition"></i><span class="text-xs font-bold tracking-wide">Profile</span>`;
+          avatarBtn.className = "flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 active:scale-95 text-sky-300 hover:text-white border border-sky-500/30 text-xs font-bold transition shadow-sm flex-shrink-0";
+          avatarBtn.title = "Click to sign in or create an account";
+          avatarBtn.innerHTML = `<i data-lucide="log-in" class="w-3.5 h-3.5 text-sky-400"></i><span>Sign In</span>`;
         }
       }
 
@@ -5948,7 +5973,9 @@
       const badgeBtn = document.getElementById('rider-badge-title');
       if (badgeBtn && authUser) {
         const disp = cleanName || authUser.email.split('@')[0];
-        badgeBtn.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse inline-block shadow-sm shadow-emerald-400/50"></span><span class="text-white font-bold text-xs sm:text-sm tracking-wide max-w-[140px] truncate">${escapeHtml(disp)}</span>`;
+        badgeBtn.innerText = disp;
+        const avatarInitial = document.getElementById('rider-avatar-initial');
+        if (avatarInitial) avatarInitial.innerText = (disp[0] || 'R').toUpperCase();
       }
       
       const rInput = document.getElementById('rider-name-input');
@@ -7646,7 +7673,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=47').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=48').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
