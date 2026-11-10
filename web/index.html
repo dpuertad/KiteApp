@@ -1340,17 +1340,6 @@
       <!-- Modal Body -->
       <div class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 custom-scrollbar text-xs">
         
-        <!-- 7-Day Forecast Window / Day Selector -->
-        <div class="space-y-1.5">
-          <div class="flex items-center justify-between">
-            <label class="block font-semibold text-slate-300 text-[11px] uppercase tracking-wider">📅 Downwind Day (7-Day Forecast Window)</label>
-            <span id="downwind-selected-day-label" class="text-[10px] text-cyan-400 font-mono font-bold">Today</span>
-          </div>
-          <div id="downwind-day-pills-container" class="flex items-center space-x-1.5 overflow-x-auto pb-1 custom-scrollbar">
-            <!-- Populated via JS with 7-day forecast pills -->
-          </div>
-        </div>
-
         <!-- Classic Downwind Presets -->
         <div class="space-y-1.5">
           <label class="block font-semibold text-slate-300 text-[11px] uppercase tracking-wider">Classic Downwind Routes</label>
@@ -1370,6 +1359,40 @@
             <label class="block font-semibold text-slate-300 mb-1 text-[11px]">🏁 Arrival Spot</label>
             <select id="downwind-end-select" onchange="onDownwindPointsChanged()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-cyan-500">
             </select>
+          </div>
+        </div>
+
+        <!-- 7-Day Forecast Window / Day Selector (Specific to Departure Spot) -->
+        <div class="space-y-1.5 pt-2 border-t border-slate-800/80">
+          <div class="flex items-center justify-between">
+            <label class="block font-semibold text-slate-300 text-[11px] uppercase tracking-wider">
+              📅 Downwind Day · <span id="downwind-spot-name-label" class="text-sky-400 font-bold">Departure Spot</span>
+            </label>
+            <span id="downwind-selected-day-label" class="text-[10px] text-cyan-400 font-mono font-bold">Today</span>
+          </div>
+          <div id="downwind-day-pills-container" class="flex items-center space-x-1.5 overflow-x-auto pb-1 custom-scrollbar">
+            <!-- Populated via JS with 7-day forecast pills -->
+          </div>
+        </div>
+
+        <!-- Planned Departure Time & Optimal Departure Window Recommendation -->
+        <div class="p-3 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
+              <span>⏰</span>
+              <span>Planned Departure Time</span>
+            </span>
+            <button type="button" onclick="selectRecommendedDepartureTime()" id="downwind-best-time-btn" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 transition flex items-center space-x-1 active:scale-95" title="Tap to select recommended optimal departure time">
+              <span>⭐</span>
+              <span id="downwind-best-time-badge">Suggested: 13:00</span>
+            </button>
+          </div>
+          <div id="downwind-time-pills-container" class="flex items-center space-x-1.5 overflow-x-auto pb-1 custom-scrollbar">
+            <!-- Populated via JS: 10:00, 11:00, 12:00, 13:00, 14:00, 15:00, 16:00 -->
+          </div>
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between text-[10.5px] text-slate-400 gap-1 pt-1 border-t border-slate-900">
+            <span id="downwind-time-wind-detail">Departure: 13:00 · 20 kts wind</span>
+            <span id="downwind-arrival-time-detail" class="font-mono text-cyan-400 font-semibold">Est. Arrival: ~14:31</span>
           </div>
         </div>
 
@@ -7576,7 +7599,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=41').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=42').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
@@ -8124,13 +8147,199 @@
     let activeDownwindWindDeg = 95;
     let selectedDownwindPresetId = 'cumbuco-taiba';
     let selectedDownwindDayIdx = 0;
+    let selectedDownwindTime = '13:00';
+    let optimalDownwindTime = '13:00';
+    let downwindDepartureForecast = null;
+    const downwindForecastCache = {};
+    const DOWNWIND_TIME_SLOTS = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'];
+
+    async function updateDownwindDepartureForecast(spotId) {
+      const spot = GLOBAL_KITE_SPOTS.find(s => s.id === spotId);
+      const spotLabel = document.getElementById('downwind-spot-name-label');
+      if (spot && spotLabel) {
+        spotLabel.innerText = spot.name.split(',')[0];
+      }
+
+      // 1. If currently loaded spot matches active spot
+      if (state.spot && (state.spot.id === spotId || (state.spot.name && state.spot.name.toLowerCase().includes(spotId)))) {
+        downwindDepartureForecast = state.forecastData;
+        renderDownwindDayPills();
+        calculateDownwind();
+        return;
+      }
+
+      // 2. If cached in memory
+      if (downwindForecastCache[spotId]) {
+        downwindDepartureForecast = downwindForecastCache[spotId];
+        renderDownwindDayPills();
+        calculateDownwind();
+        return;
+      }
+
+      // 3. Fetch from API
+      if (spot) {
+        try {
+          const bAngle = spot.beach_angle !== undefined ? spot.beach_angle : resolveBeachAngle(spot.name);
+          const url = `/api/forecast?lat=${spot.lat}&lon=${spot.lon}&name=${encodeURIComponent(spot.name)}&timezone=${encodeURIComponent(spot.timezone || 'auto')}&beach_angle=${bAngle}&_t=${Date.now()}`;
+          const res = await fetch(url);
+          if (res.ok) {
+            const data = await res.json();
+            downwindForecastCache[spotId] = data;
+            const curStart = document.getElementById('downwind-start-select')?.value;
+            if (curStart === spotId) {
+              downwindDepartureForecast = data;
+              renderDownwindDayPills();
+              calculateDownwind();
+            }
+            return;
+          }
+        } catch (e) {
+          console.warn("Downwind spot forecast fetch error:", e);
+        }
+      }
+
+      downwindDepartureForecast = state.forecastData;
+      renderDownwindDayPills();
+      calculateDownwind();
+    }
+
+    function getDepartureSpotHourlyWind(dayIdx, hourStr) {
+      const f = downwindDepartureForecast || state.forecastData;
+      if (!f) return { windKts: 18, gustKts: 23, degrees: 90, dir: 'E' };
+
+      const targetH = parseInt(hourStr.split(':')[0], 10);
+
+      // Day 0: Today
+      if (dayIdx === 0 && f.schedule_hourly && f.schedule_hourly[hourStr]) {
+        const s = f.schedule_hourly[hourStr];
+        return {
+          windKts: s.wind_kts,
+          gustKts: s.gust_kts,
+          degrees: s.degrees !== undefined ? s.degrees : (f.current?.degrees || 90),
+          dir: s.direction || f.current?.direction || 'E'
+        };
+      }
+
+      // Day 1: Tomorrow
+      if (dayIdx === 1) {
+        const tmrw = f.schedule_tomorrow_hourly || f.schedule_hourly;
+        if (tmrw && tmrw[hourStr]) {
+          const s = tmrw[hourStr];
+          return {
+            windKts: s.wind_kts,
+            gustKts: s.gust_kts,
+            degrees: s.degrees !== undefined ? s.degrees : 90,
+            dir: s.direction || 'E'
+          };
+        }
+      }
+
+      // Day 2-6: weekly_forecast hourly or diurnal synthesis
+      if (f.weekly_forecast && f.weekly_forecast[dayIdx]) {
+        const wf = f.weekly_forecast[dayIdx];
+        if (wf.hourly && Array.isArray(wf.hourly)) {
+          const s = wf.hourly.find(x => x.hour === hourStr || parseInt(x.hour, 10) === targetH);
+          if (s) {
+            return {
+              windKts: s.wind_kts,
+              gustKts: s.gust_kts,
+              degrees: s.degrees !== undefined ? s.degrees : (wf.degrees || 90),
+              dir: s.direction || wf.direction || 'E'
+            };
+          }
+        }
+        const peakW = wf.wind_peak_kts || wf.wind_avg_kts || 18;
+        const peakG = wf.gust_peak_kts || (peakW + 5);
+        const diff = Math.abs(targetH - 14);
+        const factor = Math.max(0.75, 1.0 - (diff * 0.05));
+        return {
+          windKts: Math.round(peakW * factor * 10) / 10,
+          gustKts: Math.round(peakG * factor * 10) / 10,
+          degrees: wf.degrees || 90,
+          dir: wf.direction || 'E'
+        };
+      }
+
+      return { windKts: 18, gustKts: 23, degrees: 90, dir: 'E' };
+    }
+
+    function findOptimalDepartureTime(dayIdx, estDurationMinutes, endSpotId) {
+      const f = downwindDepartureForecast || state.forecastData;
+      let bestHour = '13:00';
+      let bestScore = -999;
+      let bestReason = 'Thermal trade winds peak with good daylight';
+
+      let dayTides = [];
+      if (f && f.weekly_forecast && f.weekly_forecast[dayIdx]) {
+        dayTides = f.weekly_forecast[dayIdx].tides || [];
+      } else if (f) {
+        dayTides = dayIdx === 0 ? (f.tides || []) : (dayIdx === 1 ? (f.tides_tomorrow || []) : []);
+      }
+
+      const lowTide = dayTides.find(t => t.type === 'Low');
+      let lowTideMin = -1;
+      if (lowTide && lowTide.time) {
+        const p = lowTide.time.split(':');
+        lowTideMin = parseInt(p[0], 10) * 60 + parseInt(p[1], 10);
+      }
+
+      DOWNWIND_TIME_SLOTS.forEach(hStr => {
+        const hNum = parseInt(hStr.split(':')[0], 10);
+        const depMins = hNum * 60;
+        const arrMins = depMins + estDurationMinutes;
+
+        const wData = getDepartureSpotHourlyWind(dayIdx, hStr);
+        let score = (wData.windKts || 18) * 2;
+
+        // Daylight constraint (sunset ~17:30, dusk 17:15)
+        if (arrMins > 1035) { // after 17:15
+          score -= 90;
+        } else if (arrMins > 990) { // after 16:30
+          score -= 30;
+        }
+
+        // Midday thermal window bonus
+        if (hNum >= 12 && hNum <= 14) {
+          score += 20;
+        } else if (hNum === 15) {
+          score += 10;
+        }
+
+        // Tide hazard at arrival spot
+        if (endSpotId === 'taiba' || endSpotId === 'paracuru') {
+          if (lowTideMin >= 0) {
+            const diffFromLow = Math.abs(arrMins - lowTideMin);
+            if (diffFromLow <= 75) {
+              score -= 60; // low tide exposed rock slabs
+            } else if (diffFromLow >= 150) {
+              score += 25; // high / incoming safe water
+            }
+          }
+        }
+
+        if (score > bestScore) {
+          bestScore = score;
+          bestHour = hStr;
+          if (endSpotId === 'taiba' && lowTideMin >= 0 && Math.abs(arrMins - lowTideMin) >= 150) {
+            bestReason = `Peak ${Math.round(wData.windKts)} kts & incoming tide safely covers Taíba reef slabs`;
+          } else if (hNum >= 12 && hNum <= 14) {
+            bestReason = `Strongest thermal trades (${Math.round(wData.windKts)} kts) & safe daylight arrival`;
+          } else {
+            bestReason = `Steady breeze (${Math.round(wData.windKts)} kts) with safe arrival well before sunset`;
+          }
+        }
+      });
+
+      return { bestHour, bestReason };
+    }
 
     function renderDownwindDayPills() {
       const container = document.getElementById('downwind-day-pills-container');
       if (!container) return;
 
-      const weekly = (state.forecastData && state.forecastData.weekly_forecast && state.forecastData.weekly_forecast.length >= 7)
-        ? state.forecastData.weekly_forecast
+      const f = downwindDepartureForecast || state.forecastData;
+      const weekly = (f && f.weekly_forecast && f.weekly_forecast.length >= 7)
+        ? f.weekly_forecast
         : null;
 
       const baseNow = new Date();
@@ -8141,7 +8350,6 @@
         let dateDisp = '';
         let windKts = 18;
         let windDir = 'E';
-        let windDeg = 90;
 
         if (weekly && weekly[i]) {
           const wItem = weekly[i];
@@ -8149,7 +8357,6 @@
           dateDisp = wItem.date_display ? wItem.date_display.split(',')[1] || wItem.date_display : '';
           windKts = Math.round(wItem.wind_peak_kts || wItem.wind_avg_kts || 18);
           windDir = wItem.direction || 'E';
-          windDeg = wItem.degrees !== undefined ? wItem.degrees : 90;
         } else {
           const d = new Date(baseNow);
           d.setDate(baseNow.getDate() + i);
@@ -8183,19 +8390,62 @@
       }
     }
 
+    function renderDownwindTimePills() {
+      const container = document.getElementById('downwind-time-pills-container');
+      if (!container) return;
+
+      let html = '';
+      DOWNWIND_TIME_SLOTS.forEach(hStr => {
+        const isSelected = (hStr === selectedDownwindTime);
+        const isOptimal = (hStr === optimalDownwindTime);
+        const wData = getDepartureSpotHourlyWind(selectedDownwindDayIdx, hStr);
+        const kts = Math.round(wData.windKts);
+
+        let activeClass = isSelected
+          ? 'bg-gradient-to-r from-amber-500/30 to-orange-500/30 text-amber-200 border-amber-400 font-bold shadow-md shadow-amber-500/20'
+          : (isOptimal
+            ? 'bg-amber-950/40 text-amber-300 hover:text-white border-amber-500/40'
+            : 'bg-slate-950/80 text-slate-400 hover:text-white hover:bg-slate-800 border-slate-800');
+
+        html += `
+          <button type="button" onclick="selectDownwindTime('${hStr}')" class="flex-shrink-0 px-3 py-1.5 rounded-xl border text-[11px] transition active:scale-95 flex flex-col items-center min-w-[64px] ${activeClass}">
+            <span class="font-bold flex items-center space-x-0.5">
+              <span>${hStr}</span>
+              ${isOptimal ? '<span class="text-[9px]">⭐</span>' : ''}
+            </span>
+            <span class="text-[9.5px] font-mono ${isSelected ? 'text-amber-300 font-bold' : 'text-slate-400'} mt-0.5">${kts} kts</span>
+          </button>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function selectDownwindTime(timeStr) {
+      selectedDownwindTime = timeStr;
+      renderDownwindTimePills();
+      calculateDownwind();
+    }
+
+    function selectRecommendedDepartureTime() {
+      selectedDownwindTime = optimalDownwindTime;
+      renderDownwindTimePills();
+      calculateDownwind();
+    }
+
     function selectDownwindDay(dayIdx) {
       selectedDownwindDayIdx = dayIdx;
       renderDownwindDayPills();
 
-      // Synchronize wind direction with the forecasted day
+      const f = downwindDepartureForecast || state.forecastData;
       let dayDeg = 95;
-      if (state.forecastData && state.forecastData.weekly_forecast && state.forecastData.weekly_forecast[dayIdx]) {
-        const wf = state.forecastData.weekly_forecast[dayIdx];
+      if (f && f.weekly_forecast && f.weekly_forecast[dayIdx]) {
+        const wf = f.weekly_forecast[dayIdx];
         if (typeof wf.degrees === 'number') {
           dayDeg = wf.degrees;
         }
-      } else if (state.forecastData && state.forecastData.current && typeof state.forecastData.current.degrees === 'number') {
-        dayDeg = state.forecastData.current.degrees;
+      } else if (f && f.current && typeof f.current.degrees === 'number') {
+        dayDeg = f.current.degrees;
       }
 
       activeDownwindWindDeg = dayDeg;
@@ -8274,6 +8524,7 @@
         const endSel = document.getElementById('downwind-end-select');
         if (startSel) startSel.value = route.start;
         if (endSel) endSel.value = route.end;
+        updateDownwindDepartureForecast(route.start);
       }
       renderDownwindPresets();
       calculateDownwind();
@@ -8281,6 +8532,10 @@
 
     function onDownwindPointsChanged() {
       selectedDownwindPresetId = '';
+      const startSel = document.getElementById('downwind-start-select');
+      if (startSel && startSel.value) {
+        updateDownwindDepartureForecast(startSel.value);
+      }
       renderDownwindPresets();
       calculateDownwind();
     }
@@ -8399,32 +8654,43 @@
         reachIconEl.className = `w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${pillColor === 'emerald' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : pillColor === 'amber' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : pillColor === 'sky' ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'}`;
       }
 
-      // 6. Selected Day Forecast, Tides & Best Gear Advise
-      let dayWindKts = 18;
-      let dayGustKts = 23;
-      let dayTides = [];
-      let dayName = selectedDownwindDayIdx === 0 ? 'Today' : (selectedDownwindDayIdx === 1 ? 'Tomorrow' : 'Selected Day');
+      // 6. Optimal Departure Time & Hourly Timing Calculation
+      const opt = findOptimalDepartureTime(selectedDownwindDayIdx, estMinutes, endId);
+      optimalDownwindTime = opt.bestHour;
 
-      if (state.forecastData && state.forecastData.weekly_forecast && state.forecastData.weekly_forecast[selectedDownwindDayIdx]) {
-        const wf = state.forecastData.weekly_forecast[selectedDownwindDayIdx];
-        dayWindKts = wf.wind_peak_kts || wf.wind_avg_kts || 18;
-        dayGustKts = wf.gust_peak_kts || (dayWindKts + 5);
-        dayTides = wf.tides || [];
-        dayName = wf.day_name || dayName;
-      } else if (state.forecastData) {
-        if (selectedDownwindDayIdx === 0) {
-          dayWindKts = state.forecastData.current ? state.forecastData.current.wind_kts : 18;
-          dayGustKts = state.forecastData.current ? state.forecastData.current.gust_kts : 23;
-          dayTides = state.forecastData.tides || [];
-        } else if (selectedDownwindDayIdx === 1) {
-          dayTides = state.forecastData.tides_tomorrow || [];
-        }
+      const bestTimeBadge = document.getElementById('downwind-best-time-badge');
+      if (bestTimeBadge) bestTimeBadge.innerText = 'Suggested: ' + opt.bestHour;
+      const bestTimeBtn = document.getElementById('downwind-best-time-btn');
+      if (bestTimeBtn) bestTimeBtn.title = opt.bestReason;
+
+      renderDownwindTimePills();
+
+      // Read wind for the selected day and specific departure hour
+      const timeWindData = getDepartureSpotHourlyWind(selectedDownwindDayIdx, selectedDownwindTime);
+      const dayWindKts = timeWindData.windKts;
+      const dayGustKts = timeWindData.gustKts;
+
+      // Calculate exact arrival time (Departure Time + Duration)
+      const depParts = selectedDownwindTime.split(':').map(Number);
+      const depTotalMin = depParts[0] * 60 + (depParts[1] || 0);
+      const arrTotalMin = depTotalMin + estMinutes;
+      const arrH = Math.floor(arrTotalMin / 60) % 24;
+      const arrM = arrTotalMin % 60;
+      const arrTimeStr = `${String(arrH).padStart(2, '0')}:${String(arrM).padStart(2, '0')}`;
+
+      const timeWindDetailEl = document.getElementById('downwind-time-wind-detail');
+      if (timeWindDetailEl) {
+        timeWindDetailEl.innerText = `Departure: ${selectedDownwindTime} · ${Math.round(dayWindKts)} kts (gusts ${Math.round(dayGustKts)} kts)`;
+      }
+      const arrDetailEl = document.getElementById('downwind-arrival-time-detail');
+      if (arrDetailEl) {
+        arrDetailEl.innerText = `Est. Arrival: ~${arrTimeStr} (${timeStr} ride)`;
       }
 
       // Downwind Apparent Wind Reduction (-3.5 kts rule)
       const apparentKts = Math.max(10, Math.round((dayWindKts - 3.5) * 10) / 10);
 
-      // Best Gear Recommendation from packed quiver
+      // 7. Best Gear from Rider's Quiver for Planned Day & Hour
       const recKiteEl = document.getElementById('downwind-rec-kite');
       const recKiteSizeEl = document.getElementById('downwind-rec-kite-size');
       const recBoardEl = document.getElementById('downwind-rec-board');
@@ -8436,23 +8702,31 @@
       const userWeight = state.user.weight || 75.0;
       const idealKiteSize = Math.max(6, Math.min(17, Math.round((userWeight / (apparentKts * 0.40)) * 2) / 2));
 
+      // Check packed quiver alternatives
+      const activeKites = (state.inventory || []).filter(k => k.active !== false);
+      const packedSizes = activeKites.map(k => `${k.size}m`).join(', ');
+
       if (gearRec && gearRec.combo) {
         const c = gearRec.combo;
         if (recKiteEl) recKiteEl.innerText = `${c.kBrand || ''} ${c.kModel || 'Kite'}`.trim();
-        if (recKiteSizeEl) recKiteSizeEl.innerText = `${c.kSize}m · ${gearRec.inSweet ? '🎯 Sweet Spot (+1m Downwind)' : 'Rideable'}`;
+        if (recKiteSizeEl) recKiteSizeEl.innerText = `${c.kSize}m · ${gearRec.inSweet ? '🎯 Sweet Spot for ' + selectedDownwindTime : 'Rideable'}`;
         if (recBoardEl) recBoardEl.innerText = `${c.bBrand || ''} ${c.bModel || c.bType || 'Board'}`.trim();
-        if (recBoardTypeEl) recBoardTypeEl.innerText = c.bType === 'Wave' || c.bType === 'Surfboard' ? '🌊 Wave carving & swell riding' : '⚡ Twintip with deep fins';
+        if (recBoardTypeEl) recBoardTypeEl.innerText = (c.bType === 'Wave' || c.bType === 'Surfboard') ? '🌊 Waveboard · Perfect for downwind wave carving' : '⚡ Twintip with deep fins';
         if (gearBadgeEl) {
-          gearBadgeEl.innerText = gearRec.inSweet ? '🎯 Powered Sweet Spot' : 'Active Quiver Match';
+          gearBadgeEl.innerText = gearRec.inSweet ? `🎯 Sized for ${selectedDownwindTime}` : 'Active Quiver Match';
           gearBadgeEl.className = `px-2 py-0.5 rounded-full text-[9px] font-bold ${gearRec.inSweet ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'}`;
         }
         if (gearRationaleEl) {
-          gearRationaleEl.innerText = `Forecast for ${dayName}: ${Math.round(dayWindKts)} kts (gusts ${Math.round(dayGustKts)} kts). Riding downwind reduces apparent wind to ~${Math.round(apparentKts)} kts across your canopy. Your ${c.kSize}m gives steady drive and bar tension through deep S-curves without luffing.`;
+          let rationale = `At ${selectedDownwindTime}, departure wind is ${Math.round(dayWindKts)} kts. Downwinding reduces apparent wind to ~${Math.round(apparentKts)} kts across your canopy. Your ${c.kSize}m gives steady bar pressure and drive through carves without luffing.`;
+          if (activeKites.length > 1) {
+            rationale += ` (Your available packed quiver: ${packedSizes}).`;
+          }
+          gearRationaleEl.innerText = rationale;
         }
       } else {
         // Fallback when quiver is empty or not matching
         if (recKiteEl) recKiteEl.innerText = `Ideal Size: ${idealKiteSize}m²`;
-        if (recKiteSizeEl) recKiteSizeEl.innerText = `Sized for ${userWeight.toFixed(0)} kg rider`;
+        if (recKiteSizeEl) recKiteSizeEl.innerText = `For ${userWeight.toFixed(0)} kg rider at ${selectedDownwindTime}`;
         if (recBoardEl) recBoardEl.innerText = 'Waveboard or 138cm Twintip';
         if (recBoardTypeEl) recBoardTypeEl.innerText = 'Deep directional fins recommended';
         if (gearBadgeEl) {
@@ -8460,11 +8734,19 @@
           gearBadgeEl.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/40';
         }
         if (gearRationaleEl) {
-          gearRationaleEl.innerText = `Forecast: ${Math.round(dayWindKts)} kts. Downwinding reduces apparent wind to ~${Math.round(apparentKts)} kts. Pack a ${idealKiteSize}m kite (+1m larger than stationary riding) to keep positive line pressure when carving with the swell.`;
+          gearRationaleEl.innerText = `At ${selectedDownwindTime}, wind is ${Math.round(dayWindKts)} kts (apparent ~${Math.round(apparentKts)} kts). Sizing +1m larger (${idealKiteSize}m) ensures constant line pressure when riding with the swell.`;
         }
       }
 
-      // 7. Tide Elements & Hazard Correlation for Selected Day
+      // 8. Tide Elements & Hazard Correlation at Arrival Time
+      const fDep = downwindDepartureForecast || state.forecastData;
+      let dayTides = [];
+      if (fDep && fDep.weekly_forecast && fDep.weekly_forecast[selectedDownwindDayIdx]) {
+        dayTides = fDep.weekly_forecast[selectedDownwindDayIdx].tides || [];
+      } else if (fDep) {
+        dayTides = selectedDownwindDayIdx === 0 ? (fDep.tides || []) : (selectedDownwindDayIdx === 1 ? (fDep.tides_tomorrow || []) : []);
+      }
+
       const tideSummaryEl = document.getElementById('downwind-tide-summary');
       const tidePillsEl = document.getElementById('downwind-tide-pills');
       const tideAdvisoryEl = document.getElementById('downwind-tide-advisory');
@@ -8489,34 +8771,38 @@
           }).join('');
         }
 
-        // Correlate route hazards with tides
+        // Check low tide relative to arrival time (~arrTimeStr)
+        const lowTide = lowTides[0];
+        let lowTideMin = -1;
+        if (lowTide && lowTide.time) {
+          const p = lowTide.time.split(':');
+          lowTideMin = parseInt(p[0], 10) * 60 + parseInt(p[1], 10);
+        }
+
         let adviceHtml = '';
         if (endId === 'taiba') {
-          const midDayLow = lowTides.find(t => {
-            const h = parseInt(t.time.split(':')[0], 10);
-            return h >= 8 && h <= 16;
-          });
-          if (midDayLow) {
-            adviceHtml = `⚠️ <b>Taíba Low-Tide Alert (${midDayLow.time}):</b> Rock slabs and secret spot reefs dry below +0.8m MSL. Avoid landing during peak low tide. Plan departure to arrive around incoming or high tide (+1.0m or higher).`;
+          const diffFromLow = lowTideMin >= 0 ? Math.abs(arrTotalMin - lowTideMin) : 999;
+          if (diffFromLow <= 75) {
+            adviceHtml = `⚠️ <b>Taíba Low-Tide Alert at Arrival (~${arrTimeStr}):</b> Low tide is at ${lowTide.time} (${lowTide.height}m). Flat rock slabs and secret spot reefs dry below +0.8m MSL. Avoid landing at this hour. Delay or start earlier at <b>${optimalDownwindTime}</b>.`;
           } else {
-            adviceHtml = `🟢 <b>Safe Water Levels at Taíba:</b> Good coastal water depth during peak riding hours. Keep 200m offshore when rounding the point.`;
+            adviceHtml = `🟢 <b>Safe Arrival Water Level at Taíba (~${arrTimeStr}):</b> Incoming tide provides safe water depth over rocky slabs. Maintain 200m clearance around the point.`;
           }
         } else if (endId === 'paracuru') {
-          adviceHtml = `🌊 <b>Quebra Mar Reef:</b> Outer barrier reef has shallow sections at low tide. Enter the inside flatwater pool via the main marked channel.`;
+          adviceHtml = `🌊 <b>Quebra Mar Reef (~${arrTimeStr} arrival):</b> Outer barrier reef breaks surf; entry into the inside flatwater pool is safe. Enter via the marked deep channel.`;
         } else if (endId === 'moitas' || endId === 'tatajuba') {
-          adviceHtml = `🚤 <b>River Mouth Tidal Flow:</b> Fast outgoing current during dropping tide. Cross river mouths 200m offshore to avoid standing rip chop.`;
+          adviceHtml = `🚤 <b>River Mouth Tidal Flow (~${arrTimeStr} arrival):</b> Watch for tidal rip currents at the river mouth. Cross 200m offshore for smooth water.`;
         } else {
-          adviceHtml = `🟢 <b>Open Coast Tides:</b> Wide sandy beaches for easy exits at all tides. High tide provides gentle shorebreaks; low tide creates large flat sandbars.`;
+          adviceHtml = `🟢 <b>Open Coast Tides:</b> Wide sandy shores with gentle shorebreak on arrival (~${arrTimeStr}). Easy exits all along the beach.`;
         }
 
         if (tideAdvisoryEl) tideAdvisoryEl.innerHTML = adviceHtml;
       } else {
         if (tideSummaryEl) tideSummaryEl.innerText = 'Micro-tidal / inland water';
-        if (tidePillsEl) tidePillsEl.innerHTML = '<span class="text-slate-400 text-[10px]">No significant tidal amplitude for this spot route.</span>';
+        if (tidePillsEl) tidePillsEl.innerHTML = '<span class="text-slate-400 text-[10px]">No significant tidal amplitude for this route.</span>';
         if (tideAdvisoryEl) tideAdvisoryEl.innerText = 'Constant water levels. Focus on shoreline orientation and wind shadows.';
       }
 
-      // 8. Hazards & Obstacles
+      // 9. Hazards & Obstacles
       const hazardContainer = document.getElementById('downwind-hazard-container');
       if (hazardContainer) {
         const hazards = [];
@@ -8602,7 +8888,11 @@
         populateDownwindSelects();
         renderDownwindPresets();
 
-        renderDownwindDayPills();
+        // Default selection based on current spot
+        const currentSpotId = state.spot ? state.spot.id : 'cumbuco';
+        const matchingPreset = CLASSIC_DOWNWIND_ROUTES.find(r => r.start === currentSpotId);
+        const initialPreset = matchingPreset ? matchingPreset.id : 'cumbuco-taiba';
+        selectDownwindPreset(initialPreset);
 
         // Read current live wind degrees from forecast data
         let liveWind = 95;
@@ -8616,13 +8906,9 @@
         if (inputEl) inputEl.value = liveWind;
         if (badgeEl) badgeEl.innerText = `${liveWind}° ${getCompassSector(liveWind)}`;
 
-        // Default selection based on current spot
-        const currentSpotId = state.spot ? state.spot.id : '';
-        const matchingPreset = CLASSIC_DOWNWIND_ROUTES.find(r => r.start === currentSpotId);
-        if (matchingPreset) {
-          selectDownwindPreset(matchingPreset.id);
-        } else {
-          selectDownwindPreset('cumbuco-taiba');
+        const startSel = document.getElementById('downwind-start-select');
+        if (startSel && startSel.value) {
+          updateDownwindDepartureForecast(startSel.value);
         }
       } catch (err) {
         console.error('Error configuring Downwind modal:', err);
@@ -8645,6 +8931,9 @@
     window.calculateDownwind = calculateDownwind;
     window.selectDownwindDay = selectDownwindDay;
     window.renderDownwindDayPills = renderDownwindDayPills;
+    window.selectDownwindTime = selectDownwindTime;
+    window.selectRecommendedDepartureTime = selectRecommendedDepartureTime;
+    window.updateDownwindDepartureForecast = updateDownwindDepartureForecast;
 
   </script>
 </body>
