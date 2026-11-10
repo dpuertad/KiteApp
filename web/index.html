@@ -129,9 +129,10 @@
     <section class="bg-gradient-to-br from-slate-900/90 to-slate-800/60 rounded-2xl p-4 border border-slate-800 shadow-xl relative overflow-hidden">
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center space-x-2.5 min-w-0 flex-1">
-          <!-- Rider Avatar Button (Click opens Profile / Log Out menu) -->
-          <button id="btn-rider-avatar" type="button" onclick="handleAvatarClick()" title="Rider Profile & Account" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 active:scale-95 flex items-center justify-center text-slate-300 hover:text-white border border-slate-700 hover:border-sky-500/50 transition cursor-pointer flex-shrink-0 group">
-            <i data-lucide="user" class="w-4 h-4 group-hover:scale-110 transition"></i>
+          <!-- Rider Profile Button (Click opens Profile / Log Out menu) -->
+          <button id="btn-rider-avatar" type="button" onclick="handleAvatarClick()" title="Rider Profile & Account" class="px-2.5 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 flex items-center space-x-1.5 text-slate-300 hover:text-white border border-slate-700 hover:border-sky-500/50 transition cursor-pointer flex-shrink-0 group shadow-sm">
+            <i data-lucide="user" class="w-3.5 h-3.5 text-sky-400 group-hover:scale-110 transition"></i>
+            <span class="text-xs font-bold tracking-wide">Profile</span>
           </button>
           <div class="min-w-0 flex-1">
             <div class="flex items-center space-x-2">
@@ -166,14 +167,13 @@
         <!-- Divider -->
         <div class="h-7 w-px bg-slate-800/80"></div>
 
-        <!-- Level Display -->
+        <!-- Level Display (Aligned on first letter) -->
         <div class="flex items-center space-x-2.5">
-          <div class="text-right">
+          <div class="text-left flex flex-col items-start">
             <span class="text-[10px] text-slate-400 font-semibold block uppercase tracking-wide">Rider Level</span>
-            <span id="profile-level-display" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">Medium</span>
-          </div>
-          <div class="w-8 h-8 rounded-xl bg-slate-800/80 group-hover:bg-sky-500/20 border border-slate-700/80 group-hover:border-sky-500/40 flex items-center justify-center text-slate-400 group-hover:text-sky-300 transition flex-shrink-0" title="Edit in Profile">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/></svg>
+            <div class="mt-0.5">
+              <span id="profile-level-display" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">Medium</span>
+            </div>
           </div>
         </div>
       </div>
@@ -5062,9 +5062,9 @@
         }
 
         if (avatarBtn) {
-          avatarBtn.className = "w-8 h-8 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 hover:text-white border border-emerald-500/40 ring-2 ring-emerald-500/25 active:scale-95 transition cursor-pointer flex items-center justify-center flex-shrink-0 group";
+          avatarBtn.className = "px-2.5 py-1 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 hover:text-white border border-emerald-500/40 ring-1 ring-emerald-500/25 active:scale-95 transition cursor-pointer flex items-center space-x-1.5 flex-shrink-0 group shadow-sm";
           avatarBtn.title = `Logged in as ${displayName} (${authUser.email}) - Click to manage profile or log out`;
-          avatarBtn.innerHTML = `<i data-lucide="user-check" class="w-4 h-4 text-emerald-400 group-hover:scale-110 transition"></i>`;
+          avatarBtn.innerHTML = `<i data-lucide="user-check" class="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition"></i><span class="text-xs font-bold tracking-wide">Profile</span>`;
         }
       } else {
         if (loggedInView) loggedInView.classList.add('hidden');
@@ -5085,9 +5085,9 @@
         }
 
         if (avatarBtn) {
-          avatarBtn.className = "w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 hover:border-sky-500/50 active:scale-95 transition cursor-pointer flex items-center justify-center flex-shrink-0 group";
-          avatarBtn.title = "Sign In / Create Account";
-          avatarBtn.innerHTML = `<i data-lucide="user" class="w-4 h-4 group-hover:scale-110 transition"></i>`;
+          avatarBtn.className = "px-2.5 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 hover:border-sky-500/50 active:scale-95 transition cursor-pointer flex items-center space-x-1.5 flex-shrink-0 group shadow-sm";
+          avatarBtn.title = "Sign In / Rider Profile";
+          avatarBtn.innerHTML = `<i data-lucide="user" class="w-3.5 h-3.5 text-sky-400 group-hover:scale-110 transition"></i><span class="text-xs font-bold tracking-wide">Profile</span>`;
         }
       }
 
@@ -7646,7 +7646,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=46').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=47').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
