@@ -579,11 +579,15 @@ def render_admin_dashboard(summary: dict) -> str:
             ${{isClosed ? `
               <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 space-y-1">
                 <div class="flex items-center justify-between text-[10px]">
-                  <span class="font-bold text-emerald-300">↳ Your Answer Sent:</span>
-                  <span class="text-slate-500 font-mono text-[9px]">${{fb.replied_at ? timeAgo(fb.replied_at) : 'Sent'}}</span>
+                  <span class="font-bold text-emerald-300">↳ ${{reply ? 'Your Answer Sent:' : 'Ticket Status:'}}</span>
+                  <span class="text-slate-500 font-mono text-[9px]">${{fb.closed_at ? timeAgo(fb.closed_at) : (fb.replied_at ? timeAgo(fb.replied_at) : 'Closed')}}</span>
                 </div>
-                <p class="text-xs text-emerald-100 font-medium">"${{reply}}"</p>
-                <p class="text-[9px] text-emerald-400/80 font-mono">Dispatched to rider via Web Push & Email</p>
+                ${{reply ? `
+                  <p class="text-xs text-emerald-100 font-medium">"${{reply}}"</p>
+                  <p class="text-[9px] text-emerald-400/80 font-mono">Dispatched to rider via Web Push & Email</p>
+                ` : `
+                  <p class="text-xs text-emerald-200 font-medium">✓ Closed and archived in cloud</p>
+                `}}
               </div>
             ` : `
               <div class="space-y-2 pt-1 border-t border-slate-800/80">
@@ -593,13 +597,22 @@ def render_admin_dashboard(summary: dict) -> str:
                   placeholder="Type answer to ${{name}} (e.g. 'Harlem boards and Thrive v1 added to the catalog!')..." 
                   class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition resize-none"
                 ></textarea>
-                <div class="flex items-center justify-end">
+                <div class="flex items-center justify-end space-x-2">
+                  <button 
+                    type="button" 
+                    onclick="closeFeedbackTicketAdmin('${{id}}', '${{email}}', this)" 
+                    class="py-1.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs font-bold transition flex items-center space-x-1 cursor-pointer"
+                    title="Close ticket without reply"
+                  >
+                    <span>✓ Close Ticket</span>
+                  </button>
                   <button 
                     type="button" 
                     onclick="replyFeedbackTicketAdmin('${{id}}', '${{email}}', this)" 
-                    class="py-1.5 px-3.5 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-400 hover:to-emerald-400 text-slate-950 font-black text-xs shadow-md shadow-sky-500/20 transition flex items-center space-x-1.5 active:scale-95"
+                    class="py-1.5 px-3.5 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-400 hover:to-emerald-400 text-slate-950 font-black text-xs shadow-md shadow-sky-500/20 transition flex items-center space-x-1.5 active:scale-95 cursor-pointer"
+                    title="Send answer and close ticket"
                   >
-                    <span>💬 Reply & Close Ticket</span>
+                    <span>💬 Reply & Close</span>
                   </button>
                 </div>
               </div>
@@ -611,11 +624,35 @@ def render_admin_dashboard(summary: dict) -> str:
       if (window.lucide) lucide.createIcons();
     }}
 
+    async function closeFeedbackTicketAdmin(ticketId, email, btnEl) {{
+      if (btnEl) {{
+        btnEl.disabled = true;
+        btnEl.innerText = "Closing...";
+      }}
+      try {{
+        const res = await fetch('/api/admin/feedback/close', {{
+          method: 'POST',
+          headers: {{ 'Content-Type': 'application/json' }},
+          body: JSON.stringify({{ id: ticketId, email: email }})
+        }});
+        const d = await res.json();
+        if (!res.ok) throw new Error(d.error || 'Failed to close ticket');
+
+        fetchFreshData();
+      }} catch (err) {{
+        alert("⚠️ Failed to close: " + err.message);
+        if (btnEl) {{
+          btnEl.disabled = false;
+          btnEl.innerText = "✓ Close Ticket";
+        }}
+      }}
+    }}
+
     async function replyFeedbackTicketAdmin(ticketId, email, btnEl) {{
       const textarea = document.getElementById(`admin-reply-textarea-${{ticketId}}`);
       const replyMsg = textarea ? textarea.value.trim() : '';
       if (!replyMsg) {{
-        alert("Please write a reply message for the rider.");
+        alert("Please write a reply message for the rider, or click 'Close Ticket' to close without replying.");
         return;
       }}
       if (btnEl) {{
@@ -641,9 +678,10 @@ def render_admin_dashboard(summary: dict) -> str:
         alert("⚠️ Failed to reply: " + err.message);
         if (btnEl) {{
           btnEl.disabled = false;
-          btnEl.innerText = "💬 Reply & Close Ticket";
+          btnEl.innerText = "💬 Reply & Close";
         }}
       }}
+    }}
     }}
 
     function renderDashboard(d) {{

@@ -7410,7 +7410,7 @@
         if (fbBadge) {
           fbBadge.innerText = data.open_feedback_count !== undefined ? data.open_feedback_count : (data.feedback || []).filter(f => f.status === 'open').length;
         }
-        renderAdminFeedbackList('open');
+        renderAdminFeedbackList(_activeFeedbackFilter || 'open');
 
         // Store and render all registered riders quivers
         window._adminAllRiders = data.all_riders || [];
@@ -7512,7 +7512,7 @@
       const container = document.getElementById('admin-feedback-container');
       if (!container) return;
       const all = window._adminFeedbackList || [];
-      const list = filter === 'open' ? all.filter(f => f.status === 'open' || !f.status) : all;
+      const list = filter === 'open' ? all.filter(f => f.status !== 'closed' && !f.reply) : all;
 
       if (!list || list.length === 0) {
         container.innerHTML = `
@@ -7543,7 +7543,7 @@
         }
 
         return `
-          <div class="p-3.5 rounded-2xl bg-slate-950/80 border ${isClosed ? 'border-slate-800/80 opacity-80' : 'border-sky-500/30 shadow-md shadow-sky-500/5'} space-y-2.5 transition">
+          <div id="admin-fb-card-${id}" class="p-3.5 rounded-2xl bg-slate-950/80 border ${isClosed ? 'border-slate-800/80 opacity-85' : 'border-sky-500/30 shadow-md shadow-sky-500/5'} space-y-2.5 transition-all duration-300">
             <div class="flex items-start justify-between gap-2">
               <div class="min-w-0 flex-1">
                 <div class="flex items-center space-x-2">
@@ -7564,17 +7564,21 @@
             </div>
 
             ${isClosed ? `
-              <!-- Existing Reply Display -->
-              <div class="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 space-y-1">
+              <!-- Closed Status & Reply Display -->
+              <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 space-y-1">
                 <div class="flex items-center justify-between text-[10px]">
-                  <span class="font-bold text-emerald-300">↳ Your Reply Sent:</span>
-                  <span class="text-slate-500 font-mono text-[9px]">${fb.replied_at ? new Date(fb.replied_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Sent'}</span>
+                  <span class="font-bold text-emerald-300">↳ ${reply ? 'Your Reply Sent:' : 'Ticket Status:'}</span>
+                  <span class="text-slate-500 font-mono text-[9px]">${fb.closed_at ? new Date(fb.closed_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : (fb.replied_at ? new Date(fb.replied_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Closed')}</span>
                 </div>
-                <p class="text-xs text-emerald-100 font-medium">"${reply}"</p>
-                <p class="text-[9px] text-emerald-400/80 font-mono">Delivered via Native Push Notification & Email</p>
+                ${reply ? `
+                  <p class="text-xs text-emerald-100 font-medium">"${reply}"</p>
+                  <p class="text-[9px] text-emerald-400/80 font-mono">Delivered via Native Push Notification & Email</p>
+                ` : `
+                  <p class="text-xs text-emerald-200 font-medium">✓ Closed and archived in cloud</p>
+                `}
               </div>
             ` : `
-              <!-- Open Ticket Reply Form -->
+              <!-- Open Ticket Actions: Close or Reply & Close -->
               <div class="space-y-2 pt-1 border-t border-slate-800/80">
                 <textarea 
                   id="admin-fb-reply-${id}" 
@@ -7583,12 +7587,23 @@
                   class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700/80 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition resize-none"
                 ></textarea>
                 <div class="flex items-center justify-end space-x-2">
+                  <!-- Option 1: Close Ticket without reply -->
+                  <button 
+                    type="button" 
+                    onclick="closeFeedbackTicket('${escapeHtml(id)}', '${escapeHtml(fb.email)}', this)" 
+                    class="py-1.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 hover:text-white border border-slate-700 text-xs font-bold transition flex items-center space-x-1 cursor-pointer"
+                    title="Close this ticket and store in cloud without sending a reply"
+                  >
+                    <span>✓ Close Ticket</span>
+                  </button>
+                  <!-- Option 2: Send Reply & Close Ticket -->
                   <button 
                     type="button" 
                     onclick="replyFeedbackTicket('${escapeHtml(id)}', '${escapeHtml(fb.email)}', this)" 
-                    class="py-1.5 px-3 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-400 hover:to-emerald-400 text-slate-950 font-black text-xs shadow-md shadow-sky-500/20 transition flex items-center space-x-1.5 active:scale-95"
+                    class="py-1.5 px-3 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-400 hover:to-emerald-400 text-slate-950 font-black text-xs shadow-md shadow-sky-500/20 transition flex items-center space-x-1.5 active:scale-95 cursor-pointer"
+                    title="Send reply via Push Notification & Email, and close ticket"
                   >
-                    <span>💬 Send Reply & Close Ticket</span>
+                    <span>💬 Reply & Close</span>
                   </button>
                 </div>
               </div>
@@ -7600,17 +7615,76 @@
       if (window.lucide) lucide.createIcons();
     }
 
+    async function closeFeedbackTicket(ticketId, riderEmail, btnEl) {
+      if (btnEl) {
+        btnEl.disabled = true;
+        btnEl.innerText = "Closing...";
+      }
+
+      // Optimistically animate out card if in open filter
+      const card = document.getElementById(`admin-fb-card-${ticketId}`);
+      if (card && _activeFeedbackFilter === 'open') {
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.95)';
+      }
+
+      try {
+        const res = await fetch('/api/admin/feedback/close', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: ticketId, email: riderEmail })
+        });
+        const d = await res.json();
+        if (!res.ok) throw new Error(d.error || 'Failed to close ticket');
+
+        // Update local list
+        const all = window._adminFeedbackList || [];
+        for (let item of all) {
+          if (String(item.id) === String(ticketId) || (!ticketId && item.email === riderEmail)) {
+            item.status = 'closed';
+            item.closed_at = new Date().toISOString();
+          }
+        }
+
+        // Update badge count
+        const openCount = all.filter(f => f.status !== 'closed' && !f.reply).length;
+        const fbBadge = document.getElementById('badge-admin-feedback-count');
+        if (fbBadge) fbBadge.innerText = openCount;
+
+        setTimeout(() => {
+          renderAdminFeedbackList(_activeFeedbackFilter);
+        }, 200);
+      } catch (err) {
+        alert("⚠️ Failed to close ticket: " + err.message);
+        if (card) {
+          card.style.opacity = '1';
+          card.style.transform = 'none';
+        }
+        if (btnEl) {
+          btnEl.disabled = false;
+          btnEl.innerText = "✓ Close Ticket";
+        }
+      }
+    }
+
     async function replyFeedbackTicket(ticketId, riderEmail, btnEl) {
       const textarea = document.getElementById(`admin-fb-reply-${ticketId}`);
       const replyMsg = textarea ? textarea.value.trim() : '';
       if (!replyMsg) {
-        alert("Please write a reply message for the rider.");
+        alert("Please write a reply message for the rider, or click 'Close Ticket' to close without replying.");
         return;
       }
       if (btnEl) {
         btnEl.disabled = true;
-        btnEl.innerHTML = `<i data-lucide="loader" class="w-3 h-3 animate-spin inline-block"></i> Delivering Push & Email...`;
+        btnEl.innerHTML = `<i data-lucide="loader" class="w-3 h-3 animate-spin inline-block"></i> Delivering...`;
         if (window.lucide) lucide.createIcons();
+      }
+
+      // Optimistically animate card out if in open view
+      const card = document.getElementById(`admin-fb-card-${ticketId}`);
+      if (card && _activeFeedbackFilter === 'open') {
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.95)';
       }
 
       try {
@@ -7622,16 +7696,39 @@
         const d = await res.json();
         if (!res.ok) throw new Error(d.error || 'Failed to send reply');
 
+        // Update local list
+        const all = window._adminFeedbackList || [];
+        for (let item of all) {
+          if (String(item.id) === String(ticketId) || (!ticketId && item.email === riderEmail)) {
+            item.status = 'closed';
+            item.reply = replyMsg;
+            item.replied_at = new Date().toISOString();
+            item.closed_at = new Date().toISOString();
+          }
+        }
+
+        // Update badge count
+        const openCount = all.filter(f => f.status !== 'closed' && !f.reply).length;
+        const fbBadge = document.getElementById('badge-admin-feedback-count');
+        if (fbBadge) fbBadge.innerText = openCount;
+
         let msg = `✅ Reply sent to ${riderEmail}! Ticket closed.`;
-        if (d.delivered_push) msg += ` (📲 Web Push sent to device)`;
-        if (d.delivered_email) msg += ` (✉️ Email notification sent)`;
+        if (d.delivered_push) msg += ` (📲 Push sent to lock screen)`;
+        if (d.delivered_email) msg += ` (✉️ Email sent)`;
         alert(msg);
-        loadAdminTabOverview();
+
+        setTimeout(() => {
+          renderAdminFeedbackList(_activeFeedbackFilter);
+        }, 200);
       } catch (err) {
         alert("⚠️ Failed to reply: " + err.message);
+        if (card) {
+          card.style.opacity = '1';
+          card.style.transform = 'none';
+        }
         if (btnEl) {
           btnEl.disabled = false;
-          btnEl.innerHTML = `<span>💬 Send Reply & Close Ticket</span>`;
+          btnEl.innerHTML = `<span>💬 Reply & Close</span>`;
         }
       }
     }
@@ -8037,7 +8134,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=54').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=55').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));

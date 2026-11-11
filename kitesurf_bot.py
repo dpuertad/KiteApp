@@ -3801,7 +3801,7 @@ def start_embedded_http_server(port: int = 8080):
                     # All feedback tickets
                     feedback_items = list(db.get("feedback", []))
                     feedback_items.sort(key=lambda x: x.get("created_at") or x.get("timestamp") or "", reverse=True)
-                    open_feedback_count = len([f for f in feedback_items if f.get("status", "open") == "open"])
+                    open_feedback_count = len([f for f in feedback_items if f.get("status", "open") == "open" and not f.get("reply")])
 
                     # Summary list of all registered riders with real quiver breakdown
                     riders_summary = []
@@ -5415,6 +5415,55 @@ def start_embedded_http_server(port: int = 8080):
                     self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
                 return
 
+            # ADMIN: Close Rider Feedback Ticket (without requiring a reply)
+            if parsed.path == "/api/admin/feedback/close":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    data = json.loads(body)
+                    ticket_id = (data.get("id") or "").strip()
+                    user_email = (data.get("email") or "").strip().lower()
+                    admin_note = (data.get("note") or "").strip()
+
+                    db = load_users_db()
+                    feedbacks = db.get("feedback", [])
+                    target_ticket = None
+                    for fb in feedbacks:
+                        if ticket_id and str(fb.get("id")) == str(ticket_id):
+                            target_ticket = fb
+                            break
+                        elif not ticket_id and user_email and fb.get("email", "").lower() == user_email:
+                            target_ticket = fb
+                            break
+
+                    if not target_ticket:
+                        raise ValueError("Feedback ticket not found.")
+
+                    from datetime import datetime, timezone
+                    now_iso = datetime.now(timezone.utc).isoformat() + "Z"
+                    target_ticket["status"] = "closed"
+                    target_ticket["closed_at"] = now_iso
+                    if admin_note:
+                        target_ticket["admin_note"] = admin_note
+
+                    save_users_db(db)
+
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({
+                        "success": True,
+                        "ticket": target_ticket
+                    }).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(400)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
             # ADMIN: Reply to Rider Feedback Ticket & Send Push Notification
             if parsed.path == "/api/admin/feedback/reply":
                 try:
@@ -5449,6 +5498,7 @@ def start_embedded_http_server(port: int = 8080):
                     target_ticket["replied_at"] = now_iso
                     if close_ticket:
                         target_ticket["status"] = "closed"
+                        target_ticket["closed_at"] = now_iso
 
                     save_users_db(db)
 
