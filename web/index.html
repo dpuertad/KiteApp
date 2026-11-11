@@ -1226,16 +1226,34 @@
         </button>
       </div>
 
-      <!-- Selected Spot Banner -->
-      <div class="p-3 rounded-2xl bg-slate-950/80 border border-slate-800 flex items-center justify-between">
-        <div class="flex items-center space-x-2.5">
-          <span class="text-xl" id="alarm-spot-flag">📍</span>
-          <div>
-            <div class="text-xs font-bold text-white" id="alarm-spot-name">Cumbuco, Brazil</div>
-            <div class="text-[10px] text-slate-400">12–48h advance forecast scanner</div>
+      <!-- Active Spot Alarms List Section -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-300">Active Spot Alarms (<span id="alarm-spots-count">0</span>)</span>
+          <span class="text-[10px] text-sky-400 font-medium">12–48h scanner</span>
+        </div>
+
+        <!-- Dynamic List of Alarmed Spots -->
+        <div id="alarm-active-spots-list" class="space-y-2 max-h-48 overflow-y-auto pr-0.5">
+          <!-- Populated dynamically via renderAlarmModalSpots() -->
+        </div>
+
+        <!-- Add Spot to Alarms -->
+        <div class="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2">
+          <div class="flex items-center justify-between text-[11px] font-semibold text-slate-300">
+            <span>Add Spot to Alarms:</span>
+            <span id="alarm-add-spot-hint" class="text-[10px] text-sky-400 font-medium"></span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <select id="alarm-select-spot" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-sky-500">
+              <!-- Populated dynamically from GLOBAL_KITE_SPOTS -->
+            </select>
+            <button type="button" onclick="handleAddSpotAlarmFromSelect()" id="btn-add-alarm-spot" class="px-3 py-1.5 rounded-lg bg-sky-500 hover:bg-sky-400 active:scale-95 text-white font-bold text-xs shadow-md shadow-sky-500/20 transition flex items-center space-x-1 flex-shrink-0">
+              <span>🔔</span>
+              <span>Add</span>
+            </button>
           </div>
         </div>
-        <span id="alarm-spot-status-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">Active</span>
       </div>
 
       <!-- Quiver Matching Info -->
@@ -1319,13 +1337,13 @@
         <p id="alarm-test-feedback" class="text-[11px] text-center mt-1.5 hidden font-medium"></p>
       </div>
 
-      <!-- Save / Cancel Buttons -->
+      <!-- Save / Close Buttons -->
       <div class="flex items-center space-x-2 pt-2 border-t border-slate-800">
         <button type="button" onclick="saveSpotAlarmSettings()" id="btn-save-alarm" class="flex-1 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 active:scale-95 text-white font-bold text-xs shadow-lg shadow-sky-500/25 transition">
-          💾 Save Alarm
+          💾 Save Delivery Settings
         </button>
-        <button type="button" onclick="removeSpotAlarm()" id="btn-remove-alarm" class="py-2.5 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-semibold transition" title="Delete Alarm">
-          🔕 Disable
+        <button type="button" onclick="closeSpotAlarmModal()" class="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition">
+          Close
         </button>
       </div>
     </div>
@@ -7673,7 +7691,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=48').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=49').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
@@ -7809,18 +7827,11 @@
       const modal = document.getElementById('modal-spot-alarm');
       if (!modal) return;
 
-      const nameEl = document.getElementById('alarm-spot-name');
-      const flagEl = document.getElementById('alarm-spot-flag');
       const emailInput = document.getElementById('alarm-input-email');
       const feedbackEl = document.getElementById('alarm-test-feedback');
       const pushStatus = document.getElementById('alarm-push-status');
 
       if (feedbackEl) feedbackEl.classList.add('hidden');
-      if (nameEl) nameEl.innerText = activeAlarmSpot;
-
-      // Find spot flag
-      const foundSpot = GLOBAL_KITE_SPOTS.find(s => s.name === activeAlarmSpot || activeAlarmSpot.includes(s.short_name));
-      if (flagEl) flagEl.innerText = foundSpot ? foundSpot.flag : '📍';
 
       // Prefill email
       const authUser = getAuthUser();
@@ -7858,33 +7869,175 @@
         }
       } catch (e) {}
 
-      updateAlarmQuiverSummary();
+      // Populate spot selector dropdown
+      const selectEl = document.getElementById('alarm-select-spot');
+      if (selectEl && typeof GLOBAL_KITE_SPOTS !== 'undefined') {
+        const currentSelected = activeAlarmSpot;
+        selectEl.innerHTML = GLOBAL_KITE_SPOTS.map(s => {
+          const isSel = (s.name === currentSelected || s.short_name === currentSelected || (currentSelected && currentSelected.includes(s.short_name)));
+          return `<option value="${escapeHtml(s.name)}" ${isSel ? 'selected' : ''}>${s.flag || '📍'} ${escapeHtml(s.short_name || s.name)}</option>`;
+        }).join('');
+      }
 
-      // Reflect current alarm status on badge & disable button
-      const isAlarmSet = isSpotAlarmActive(activeAlarmSpot);
-      const statusBadge = document.getElementById('alarm-spot-status-badge');
-      if (statusBadge) {
-        if (isAlarmSet) {
-          statusBadge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40";
-          statusBadge.innerText = "Alarm Active 🔔";
-        } else {
-          statusBadge.className = "px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-400 border border-slate-700";
-          statusBadge.innerText = "No Alarm 🔕";
-        }
-      }
-      const btnRemove = document.getElementById('btn-remove-alarm');
-      if (btnRemove) {
-        if (isAlarmSet) {
-          btnRemove.classList.remove('opacity-40');
-          btnRemove.title = "Delete this wind alarm";
-        } else {
-          btnRemove.classList.add('opacity-40');
-          btnRemove.title = "Alarm not active for this spot";
-        }
-      }
+      updateAlarmQuiverSummary();
+      renderAlarmModalSpots();
 
       modal.classList.remove('hidden');
       if (window.lucide) lucide.createIcons();
+    }
+
+    function renderAlarmModalSpots() {
+      const listEl = document.getElementById('alarm-active-spots-list');
+      const countEl = document.getElementById('alarm-spots-count');
+      const hintEl = document.getElementById('alarm-add-spot-hint');
+      if (!listEl) return;
+
+      let cfg = { spots: [] };
+      try {
+        const raw = localStorage.getItem('hg_spot_alarms');
+        if (raw) cfg = JSON.parse(raw);
+      } catch (e) {}
+
+      const spots = (cfg && Array.isArray(cfg.spots)) ? cfg.spots : [];
+      if (countEl) countEl.innerText = spots.length;
+
+      // Update hint text
+      if (hintEl) {
+        const isCurrentAlarmed = activeAlarmSpot && isSpotAlarmActive(activeAlarmSpot);
+        const short = activeAlarmSpot ? activeAlarmSpot.split(',')[0].trim() : 'Spot';
+        if (isCurrentAlarmed) {
+          hintEl.innerText = `✓ ${short} alarmed`;
+          hintEl.className = "text-[10px] text-emerald-400 font-medium";
+        } else {
+          hintEl.innerText = `Tap Add for ${short}`;
+          hintEl.className = "text-[10px] text-sky-400 font-medium";
+        }
+      }
+
+      if (spots.length === 0) {
+        listEl.innerHTML = `
+          <div class="p-3.5 rounded-xl bg-slate-950/40 border border-dashed border-slate-800 text-center space-y-1">
+            <div class="text-base">🔕</div>
+            <div class="text-xs font-semibold text-slate-300">No active spot alarms</div>
+            <div class="text-[10px] text-slate-500">Pick a spot below and tap Add to activate wind alerts.</div>
+          </div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = spots.map(spotName => {
+        const clean = spotName.toLowerCase().split(',')[0].trim();
+        const found = (typeof GLOBAL_KITE_SPOTS !== 'undefined')
+          ? GLOBAL_KITE_SPOTS.find(s => s.name === spotName || s.name.toLowerCase().includes(clean) || (s.short_name && s.short_name.toLowerCase() === clean))
+          : null;
+        const flag = found ? (found.flag || '📍') : '📍';
+        const displayName = found ? found.name : spotName;
+
+        return `
+          <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between gap-2 transition hover:border-slate-700">
+            <div class="flex items-center space-x-2.5 min-w-0 pr-1">
+              <span class="text-lg flex-shrink-0">${flag}</span>
+              <div class="min-w-0">
+                <div class="text-xs font-bold text-white truncate">${escapeHtml(displayName)}</div>
+                <div class="text-[10px] text-emerald-400 flex items-center space-x-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
+                  <span>12–48h advance sweet-spot scanner</span>
+                </div>
+              </div>
+            </div>
+            <button type="button" onclick="handleRemoveSpotAlarmClick(this)" data-spot="${escapeHtml(spotName)}" class="px-2.5 py-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 active:scale-95 text-rose-300 border border-rose-500/30 text-[11px] font-bold transition flex items-center space-x-1 flex-shrink-0" title="Disable alarm for ${escapeHtml(displayName)}">
+              <span>🔕</span>
+              <span>Disable</span>
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function handleRemoveSpotAlarmClick(btn) {
+      if (!btn) return;
+      const spotName = btn.getAttribute('data-spot');
+      if (spotName) {
+        removeSpotAlarm(spotName);
+      }
+    }
+
+    function handleAddSpotAlarmFromSelect() {
+      const selectEl = document.getElementById('alarm-select-spot');
+      const spotName = selectEl ? selectEl.value : null;
+      if (spotName) {
+        addSpotAlarm(spotName);
+      }
+    }
+
+    async function addSpotAlarm(spotName) {
+      if (!spotName) return;
+
+      const emailInput = document.getElementById('alarm-input-email');
+      const pushToggle = document.getElementById('alarm-toggle-push');
+      const emailToggle = document.getElementById('alarm-toggle-email');
+      const radWeekend = document.getElementById('alarm-radio-weekend');
+
+      const email = (emailInput?.value || '').trim() || (getAuthUser()?.email) || localStorage.getItem('kf_user_email') || '';
+      const pushEnabled = pushToggle ? pushToggle.checked : true;
+      const emailEnabled = emailToggle ? emailToggle.checked : true;
+      const weekendOnly = radWeekend ? radWeekend.checked : true;
+
+      let cfg = { enabled: true, spots: [], enable_push: pushEnabled, enable_email: emailEnabled, weekend_only: weekendOnly };
+      try {
+        const raw = localStorage.getItem('hg_spot_alarms');
+        if (raw) cfg = Object.assign(cfg, JSON.parse(raw));
+      } catch (e) {}
+
+      if (!cfg.spots) cfg.spots = [];
+      const cleanTarget = spotName.toLowerCase().split(',')[0].trim();
+      const alreadyExists = cfg.spots.some(s => {
+        const cleanS = s.toLowerCase().split(',')[0].trim();
+        return s === spotName || cleanS === cleanTarget;
+      });
+
+      if (!alreadyExists) {
+        cfg.spots.push(spotName);
+      }
+      cfg.enabled = true;
+      cfg.enable_push = pushEnabled;
+      cfg.enable_email = emailEnabled;
+      cfg.weekend_only = weekendOnly;
+      localStorage.setItem('hg_spot_alarms', JSON.stringify(cfg));
+
+      // Immediate UI update: new spot appears immediately!
+      renderAlarmModalSpots();
+      renderSpotList();
+      renderProfileFavorites();
+
+      // Background server registration
+      let pushSub = null;
+      if (pushEnabled) {
+        try {
+          pushSub = await subscribeToPushNotifications();
+        } catch (e) {}
+      }
+      try {
+        const payload = {
+          email: email || (getAuthUser()?.email) || 'guest@holygust.com',
+          name: (state.user && state.user.name) || state.user_name || 'Rider',
+          spot: spotName,
+          spots: cfg.spots,
+          enable_push: pushEnabled,
+          enable_email: emailEnabled,
+          weekend_only: weekendOnly,
+          push_subscription: pushSub,
+          gear: (state.inventory && state.inventory.length > 0) ? state.inventory : (state.gear || []),
+          boards: state.boards || [],
+          board: (state.user && state.user.board) || state.board || 'Twintip',
+          weight_kg: (state.user && state.user.weight) || state.weight_kg || 74
+        };
+        fetch('/api/alerts/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }).catch(() => {});
+      } catch (e) {}
     }
 
     function closeSpotAlarmModal() {
@@ -8018,20 +8171,18 @@
         if (raw) localAlarms = Object.assign(localAlarms, JSON.parse(raw));
       } catch (e) {}
 
-      if (activeAlarmSpot && !localAlarms.spots.includes(activeAlarmSpot)) {
-        localAlarms.spots.push(activeAlarmSpot);
-      }
       localAlarms.enable_push = pushEnabled;
       localAlarms.enable_email = emailEnabled;
       localAlarms.weekend_only = weekendOnly;
-      localAlarms.enabled = true;
+      if (localAlarms.spots && localAlarms.spots.length > 0) {
+        localAlarms.enabled = true;
+      }
       localStorage.setItem('hg_spot_alarms', JSON.stringify(localAlarms));
 
       try {
         const payload = {
           email: email || (getAuthUser()?.email) || 'guest@holygust.com',
           name: (state.user && state.user.name) || state.user_name || 'Rider',
-          spot: activeAlarmSpot,
           spots: localAlarms.spots,
           enable_push: pushEnabled,
           enable_email: emailEnabled,
@@ -8053,53 +8204,54 @@
       } finally {
         if (btn) {
           btn.disabled = false;
-          btn.innerText = '💾 Save Alarm';
+          btn.innerText = '💾 Save Delivery Settings';
         }
       }
 
       renderSpotList();
       renderProfileFavorites();
       closeSpotAlarmModal();
-      alert(`🔔 Wind Alarm activated for ${activeAlarmSpot}! HolyGust will scan forecasts 12–48h ahead and alert you when your sweet-spot wind arrives.`);
     }
 
-    async function removeSpotAlarm() {
-      const emailInput = document.getElementById('alarm-input-email');
-      const email = (emailInput?.value || '').trim() || (getAuthUser()?.email) || '';
+    async function removeSpotAlarm(targetSpot) {
+      if (!targetSpot) targetSpot = activeAlarmSpot;
+      if (!targetSpot) return;
 
+      let cfg = { enabled: true, spots: [] };
       try {
         const raw = localStorage.getItem('hg_spot_alarms');
-        if (raw) {
-          let cfg = JSON.parse(raw);
-          if (cfg.spots && activeAlarmSpot) {
-            const cleanTarget = activeAlarmSpot.toLowerCase().split(',')[0].trim();
-            cfg.spots = cfg.spots.filter(s => {
-              const cleanS = s.toLowerCase().split(',')[0].trim();
-              return !(s === activeAlarmSpot || cleanS === cleanTarget || cleanS.includes(cleanTarget) || cleanTarget.includes(cleanS));
-            });
-          }
-          localStorage.setItem('hg_spot_alarms', JSON.stringify(cfg));
-        }
+        if (raw) cfg = Object.assign(cfg, JSON.parse(raw));
       } catch (e) {
         console.warn('removeSpotAlarm storage note:', e);
       }
 
-      if (email && activeAlarmSpot) {
-        try {
-          await fetch('/api/alerts/unsubscribe', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: email, spot: activeAlarmSpot })
-          });
-        } catch (e) {
-          console.warn('removeSpotAlarm API note:', e);
-        }
+      const cleanTarget = targetSpot.toLowerCase().split(',')[0].trim();
+      cfg.spots = (cfg.spots || []).filter(s => {
+        const cleanS = s.toLowerCase().split(',')[0].trim();
+        return !(s === targetSpot || cleanS === cleanTarget || cleanS.includes(cleanTarget) || cleanTarget.includes(cleanS));
+      });
+      if (cfg.spots.length === 0) {
+        cfg.enabled = false;
       }
+      localStorage.setItem('hg_spot_alarms', JSON.stringify(cfg));
 
+      // Instantly re-render modal list so the disabled spot vanishes immediately!
+      renderAlarmModalSpots();
       renderSpotList();
       renderProfileFavorites();
-      closeSpotAlarmModal();
-      alert(`🔕 Wind Alarm removed for ${activeAlarmSpot}.`);
+
+      // Async server unsubscribe
+      const emailInput = document.getElementById('alarm-input-email');
+      const email = (emailInput?.value || '').trim() || (getAuthUser()?.email) || localStorage.getItem('kf_user_email') || '';
+      if (email && targetSpot) {
+        try {
+          fetch('/api/alerts/unsubscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email, spot: targetSpot })
+          }).catch(e => console.warn('removeSpotAlarm API note:', e));
+        } catch (e) {}
+      }
     }
 
     window.isSpotAlarmActive = isSpotAlarmActive;
@@ -8122,6 +8274,10 @@
     window.closeSpotAlarmModal = closeSpotAlarmModal;
     window.saveSpotAlarmSettings = saveSpotAlarmSettings;
     window.removeSpotAlarm = removeSpotAlarm;
+    window.renderAlarmModalSpots = renderAlarmModalSpots;
+    window.addSpotAlarm = addSpotAlarm;
+    window.handleAddSpotAlarmFromSelect = handleAddSpotAlarmFromSelect;
+    window.handleRemoveSpotAlarmClick = handleRemoveSpotAlarmClick;
 
     // ==========================================
     // DOWNWIND ROUTE PLANNER & DTM CALCULATOR (BETA)
