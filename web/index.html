@@ -104,17 +104,17 @@
         </div>
       </div>
 
-      <!-- Row 2: Beta Actions (Trip Advisor, Downwinder, Alarm) - Under Row 1, Right Aligned -->
-      <div id="header-beta-actions" class="flex items-center justify-end space-x-1.5 pt-0.5 hidden">
+      <!-- Row 2: Header Actions (Trip Advisor [Beta], Downwinder, Alarm) - Under Row 1, Right Aligned -->
+      <div id="header-beta-actions" class="flex items-center justify-end space-x-1.5 pt-0.5">
         <button id="header-travel-btn" onclick="openTravelModal()" title="Kite Travel Advisor & Quiver Matcher" class="flex items-center space-x-1 px-2.5 py-1 rounded-xl bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/20 hover:from-amber-500/30 hover:to-orange-500/30 active:scale-95 text-amber-300 hover:text-white border border-amber-500/40 text-[10px] font-bold transition shadow-sm hidden">
           <span>✈️</span>
           <span class="truncate">Trip Advisor</span>
         </button>
-        <button id="header-downwind-btn" onclick="openDownwindModal()" title="Beta Downwind Route Planner" class="flex items-center space-x-1 px-2.5 py-1 rounded-xl bg-gradient-to-r from-cyan-500/20 via-teal-500/20 to-cyan-500/20 hover:from-cyan-500/30 hover:to-teal-500/30 active:scale-95 text-cyan-300 hover:text-white border border-cyan-500/40 text-[10px] font-bold transition shadow-sm hidden">
+        <button id="header-downwind-btn" onclick="openDownwindModal()" title="Downwind Route Planner" class="flex items-center space-x-1 px-2.5 py-1 rounded-xl bg-gradient-to-r from-cyan-500/20 via-teal-500/20 to-cyan-500/20 hover:from-cyan-500/30 hover:to-teal-500/30 active:scale-95 text-cyan-300 hover:text-white border border-cyan-500/40 text-[10px] font-bold transition shadow-sm">
           <span>🏄</span>
           <span class="truncate">Downwinder</span>
         </button>
-        <button id="header-alarm-btn" onclick="openCurrentSpotAlarmModal()" title="Spot Wind Alarms" class="flex items-center space-x-1 px-2.5 py-1 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 active:scale-95 text-sky-300 hover:text-white border border-sky-500/40 text-[10px] font-bold transition shadow-sm hidden">
+        <button id="header-alarm-btn" onclick="openCurrentSpotAlarmModal()" title="Spot Wind Alarms" class="flex items-center space-x-1 px-2.5 py-1 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 active:scale-95 text-sky-300 hover:text-white border border-sky-500/40 text-[10px] font-bold transition shadow-sm">
           <span>🔔</span>
           <span class="truncate">Alarm</span>
         </button>
@@ -1223,7 +1223,7 @@
           <div>
             <h3 class="font-bold text-sm text-white flex items-center space-x-1.5">
               <span>Spot Wind Alarm</span>
-              <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-amber-400/20 text-amber-300 border border-amber-400/40">Beta Lab</span>
+              <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-sky-400/20 text-sky-300 border border-sky-400/40">Smart Alarms</span>
             </h3>
             <p id="alarm-spot-subtext" class="text-[10px] text-sky-400 font-medium">Smart gear-matched wind alerts</p>
           </div>
@@ -1368,7 +1368,7 @@
           <div>
             <h3 class="font-bold text-sm text-white flex items-center space-x-1.5">
               <span>Downwind Route Planner</span>
-              <span class="px-1.5 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-500/40 text-[9px] text-cyan-300 font-mono font-bold uppercase">Beta DTM</span>
+              <span class="px-1.5 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-500/40 text-[9px] text-cyan-300 font-mono font-bold uppercase">DTM Engine</span>
             </h3>
             <p class="text-[10px] text-slate-400">Calculate real tacking distance, stern angle & hazards</p>
           </div>
@@ -4854,11 +4854,11 @@
             <span class="text-sm">${isFav ? '★' : '☆'}</span>
           </button>
         `;
-        const alarmBtn = (typeof isBetaUserActive === 'function' && isBetaUserActive()) ? `
+        const alarmBtn = `
           <button type="button" onclick="event.stopPropagation(); openSpotAlarmModal('${s.name}')" class="p-1 rounded-lg hover:bg-slate-800 transition ${hasAlarm ? 'text-amber-400 font-bold' : 'text-slate-600 hover:text-sky-300'}" title="${hasAlarm ? 'Spot Wind Alarm Active' : 'Set Spot Wind Alarm'}">
             <span class="text-sm">${hasAlarm ? '🔔' : '🔕'}</span>
           </button>
-        ` : '';
+        `;
         const distBadge = s.dist_km !== undefined ? `
           <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${s.dist_km <= 60 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-slate-800 text-slate-400 border border-slate-700'}">
             📍 ${s.dist_km < 1 ? '<1' : Math.round(s.dist_km)} km away
@@ -5821,21 +5821,21 @@
         }
       }
 
-      // 3. Header Buttons (Beta Features: Trip Advisor, Downwinder & Spot Wind Alarms)
+      // 3. Header Buttons (Production: Downwinder & Spot Wind Alarms; Beta: Trip Advisor)
       const headerBetaRow = document.getElementById('header-beta-actions');
       const headerTravelBtn = document.getElementById('header-travel-btn');
       const headerDownwindBtn = document.getElementById('header-downwind-btn');
       const headerAlarmBtn = document.getElementById('header-alarm-btn');
+
+      if (headerBetaRow) headerBetaRow.classList.remove('hidden');
+      if (headerDownwindBtn) headerDownwindBtn.classList.remove('hidden');
+      if (headerAlarmBtn) headerAlarmBtn.classList.remove('hidden');
+
+      // Trip Advisor is exclusively for Beta riders
       if (hasBetaAccess) {
-        if (headerBetaRow) headerBetaRow.classList.remove('hidden');
         if (headerTravelBtn) headerTravelBtn.classList.remove('hidden');
-        if (headerDownwindBtn) headerDownwindBtn.classList.remove('hidden');
-        if (headerAlarmBtn) headerAlarmBtn.classList.remove('hidden');
       } else {
-        if (headerBetaRow) headerBetaRow.classList.add('hidden');
         if (headerTravelBtn) headerTravelBtn.classList.add('hidden');
-        if (headerDownwindBtn) headerDownwindBtn.classList.add('hidden');
-        if (headerAlarmBtn) headerAlarmBtn.classList.add('hidden');
       }
 
       // 4. Render Beta Status Card inside modals
@@ -6218,14 +6218,14 @@
               </div>
             </div>
             <div class="flex items-center space-x-1 flex-shrink-0 ml-2">
-              ${(typeof isBetaUserActive === 'function' && isBetaUserActive()) ? (() => {
-                const hasAlarm = isSpotAlarmActive(s.name) || isSpotAlarmActive(s.short_name) || isSpotAlarmActive(s.id);
+              ${(() => {
+                const hasAlarm = (typeof isSpotAlarmActive === 'function') && (isSpotAlarmActive(s.name) || isSpotAlarmActive(s.short_name) || isSpotAlarmActive(s.id));
                 return `
                   <button type="button" onclick="event.stopPropagation(); openSpotAlarmModal('${s.name}'); closeAllModals();" class="px-2 py-1 rounded-lg ${hasAlarm ? 'bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40' : 'bg-slate-800/80 text-slate-500 hover:text-slate-300'} text-[11px] font-semibold transition" title="${hasAlarm ? 'Spot Wind Alarm Active (Click to edit or remove)' : 'Set Spot Wind Alarm'}">
                     ${hasAlarm ? '🔔' : '🔕'}
                   </button>
                 `;
-              })() : ''}
+              })()}
               <button type="button" onclick="selectSpotFromCatalog('${s.id}'); closeAllModals();" class="px-2.5 py-1 rounded-lg ${isCurrent ? 'bg-sky-600/30 text-sky-300 font-bold border border-sky-500/40' : 'bg-sky-600 hover:bg-sky-500 text-white font-medium'} text-[11px] transition">
                 ${isCurrent ? 'Active' : 'Ride Spot'}
               </button>
@@ -8139,7 +8139,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=57').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=58').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
