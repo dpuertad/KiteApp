@@ -3776,21 +3776,16 @@
         if (f.wave && f.wave.height_m !== undefined && f.wave.height_m > 0 && f.wave.is_ocean_swell !== false) {
           const pStr = f.wave.period_s ? `${f.wave.period_s}s period` : 'Open swell';
           const dStr = f.wave.cardinal ? ` · ${f.wave.cardinal} (${f.wave.direction_deg || 0}°)` : '';
-          const typeBadge = (f.wave.period_s && f.wave.period_s >= 10) ? '🏄 Rolling Wave Sets' : '🌊 Wind Chop & Swell';
           swellCardEl.innerHTML = `
             <div class="flex items-center space-x-2.5 min-w-0">
               <span class="text-base flex-shrink-0">🌊</span>
-              <div class="truncate">
-                <div class="flex items-center space-x-1.5">
-                  <span class="font-bold text-sky-300 text-xs block">Ocean Swell & Wave Period</span>
-                  <span class="px-1.5 py-0.2 rounded text-[9px] font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">${typeBadge}</span>
-                </div>
+              <div class="min-w-0">
+                <span class="font-bold text-sky-300 text-xs block">Ocean Swell & Wave Period</span>
                 <p class="text-[10px] text-slate-400 mt-0.5 truncate">
                   ${f.wave.height_m}m · ${pStr}${dStr}
                 </p>
               </div>
             </div>
-            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-sky-500/20 text-sky-300 font-mono flex-shrink-0 border border-sky-500/40">${f.wave.height_m}m</span>
           `;
           swellCardEl.classList.remove('hidden');
         } else {
@@ -7691,7 +7686,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=49').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=50').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
