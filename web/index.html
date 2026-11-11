@@ -2082,6 +2082,22 @@
     }
     window.getAuthUser = getAuthUser;
 
+    function getAuthToken() {
+      const u = getAuthUser();
+      return (u && (u.session_token || u.token)) || localStorage.getItem('kf_auth_token') || '';
+    }
+    window.getAuthToken = getAuthToken;
+
+    function adminFetch(url, options = {}) {
+      const token = getAuthToken();
+      const headers = Object.assign({}, options.headers || {});
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      return fetch(url, Object.assign({}, options, { headers }));
+    }
+    window.adminFetch = adminFetch;
+
     function isBetaUserActive() {
       const isLabActive = localStorage.getItem('hg_beta_mode') === 'true';
       const isBetaHost = window.location.hostname.startsWith('beta.') || 
@@ -5385,10 +5401,12 @@
         }
 
         if (data.user) {
-          authUser = {
-            email: data.user.email,
-            name: data.user.name
-          };
+          authUser = data.user;
+          if (data.session_token || data.user.session_token) {
+            const tok = data.session_token || data.user.session_token;
+            authUser.session_token = tok;
+            localStorage.setItem('kf_auth_token', tok);
+          }
           localStorage.setItem('kf_auth_user', JSON.stringify(authUser));
           if (data.user.name) {
             state.user.name = data.user.name;
@@ -5466,6 +5484,11 @@
 
         // Successfully registered / logged in!
         authUser = data.user;
+        if (data.session_token || (data.user && data.user.session_token)) {
+          const tok = data.session_token || data.user.session_token;
+          authUser.session_token = tok;
+          localStorage.setItem('kf_auth_token', tok);
+        }
         localStorage.setItem('kf_auth_user', JSON.stringify(authUser));
 
         // Restore rider settings from cloud
@@ -7329,9 +7352,9 @@
 
 
     // ==============================================================================
-    // 👑 ADMIN PROFILE TAB & 1-CLICK BETA APPROVAL
+    // 👑 ADMIN PROFILE TAB & 1-CLICK BETA APPROVAL (Strictly Locked to d_puerta@hotmail.com)
     // ==============================================================================
-    const ADMIN_EMAILS = ['d_puerta@hotmail.com', 'admin.holygust@gmail.com', 'd.puertadiaz@gmail.com'];
+    const ADMIN_EMAILS = ['d_puerta@hotmail.com'];
 
     function isAdminUser() {
       const u = (typeof getAuthUser === 'function') ? getAuthUser() : null;
@@ -7342,7 +7365,7 @@
     async function checkPendingBetaCount() {
       if (!isAdminUser()) return;
       try {
-        const res = await fetch('/api/admin/pending-beta-riders');
+        const res = await adminFetch('/api/admin/pending-beta-riders');
         if (!res.ok) return;
         const data = await res.json();
         const badgeEl = document.getElementById('badge-tab-admin-pending');
@@ -7376,7 +7399,7 @@
       checkAdminDevicePushStatus();
 
       try {
-        const res = await fetch('/api/admin/pending-beta-riders');
+        const res = await adminFetch('/api/admin/pending-beta-riders');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
 
@@ -7634,7 +7657,7 @@
       }
 
       try {
-        const res = await fetch('/api/admin/feedback/close', {
+        const res = await adminFetch('/api/admin/feedback/close', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id: ticketId, email: riderEmail })
@@ -7693,7 +7716,7 @@
       }
 
       try {
-        const res = await fetch('/api/admin/feedback/reply', {
+        const res = await adminFetch('/api/admin/feedback/reply', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id: ticketId, email: riderEmail, reply: replyMsg, close: true })
@@ -7853,7 +7876,7 @@
       }
 
       try {
-        const res = await fetch('/api/admin/approve-beta', {
+        const res = await adminFetch('/api/admin/approve-beta', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: email })
@@ -7886,7 +7909,7 @@
       }
 
       try {
-        const res = await fetch('/api/admin/decline-beta', {
+        const res = await adminFetch('/api/admin/decline-beta', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: email })
@@ -7957,7 +7980,7 @@
 
         const u = getAuthUser();
         const email = u ? u.email : 'd_puerta@hotmail.com';
-        const res = await fetch('/api/admin/push-subscribe', {
+        const res = await adminFetch('/api/admin/push-subscribe', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ subscription: sub, email: email })
@@ -7992,7 +8015,7 @@
       try {
         const u = getAuthUser();
         const email = u ? u.email : 'd_puerta@hotmail.com';
-        const res = await fetch('/api/admin/test-push', {
+        const res = await adminFetch('/api/admin/test-push', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: email })
@@ -8033,7 +8056,7 @@
         if (sub) {
           const subJson = sub.toJSON ? sub.toJSON() : sub;
           const u = getAuthUser();
-          await fetch('/api/admin/push-subscribe', {
+          await adminFetch('/api/admin/push-subscribe', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ subscription: subJson, email: u ? u.email : 'd_puerta@hotmail.com' })
@@ -8139,7 +8162,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=58').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=59').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
@@ -8210,9 +8233,9 @@
       }
       const subJson = sub.toJSON ? sub.toJSON() : sub;
       const authUser = getAuthUser();
-      if (authUser && ['d_puerta@hotmail.com', 'admin.holygust@gmail.com', 'd.puertadiaz@gmail.com'].includes((authUser.email || '').toLowerCase().trim())) {
+      if (authUser && (authUser.email || '').toLowerCase().trim() === 'd_puerta@hotmail.com') {
         try {
-          fetch('/api/admin/push-subscribe', {
+          adminFetch('/api/admin/push-subscribe', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ subscription: subJson, email: authUser.email })
@@ -9315,6 +9338,7 @@
       const estTimeEl = document.getElementById('downwind-est-time');
       const reachIconEl = document.getElementById('downwind-reach-icon');
 
+      // Populate initial values
       if (directEl) directEl.innerText = directKm.toFixed(1);
       if (detourNoteEl) detourNoteEl.innerText = detourNote;
       if (ridingEl) ridingEl.innerText = ridingKm.toFixed(1);
@@ -9330,6 +9354,44 @@
         reachIconEl.innerText = icon;
         reachIconEl.className = `w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${pillColor === 'emerald' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : pillColor === 'amber' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : pillColor === 'sky' ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'}`;
       }
+
+      // Query Server-Side Shielded DTM Engine for Authoritative Calculation
+      fetch('/api/downwind/calculate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          start_lat: startSpot.lat,
+          start_lon: startSpot.lon,
+          end_lat: endSpot.lat,
+          end_lon: endSpot.lon,
+          start_id: startId,
+          end_id: endId,
+          wind_deg: activeDownwindWindDeg,
+          wind_kts: (typeof dayWindKts !== 'undefined' ? dayWindKts : 18.0),
+          gust_kts: (typeof dayGustKts !== 'undefined' ? dayGustKts : 22.0),
+          weight_kg: (state.user && state.user.weight) || 75.0,
+          gear: state.inventory || [],
+          boards: state.boards || []
+        })
+      }).then(r => r.json()).then(srv => {
+        if (srv && srv.success) {
+          if (directEl) directEl.innerText = srv.direct_km.toFixed(1);
+          if (detourNoteEl) detourNoteEl.innerText = srv.detour_note;
+          if (ridingEl) ridingEl.innerText = srv.riding_km.toFixed(1);
+          if (dtmBadgeEl) dtmBadgeEl.innerText = `${srv.dtm.toFixed(2)}× DTM`;
+          if (reachTypeEl) {
+            reachTypeEl.innerText = srv.reach_type;
+            reachTypeEl.className = `font-bold text-xs ${srv.pill_color === 'emerald' ? 'text-emerald-300' : srv.pill_color === 'amber' ? 'text-amber-300' : srv.pill_color === 'sky' ? 'text-sky-300' : 'text-rose-300'}`;
+          }
+          if (sternAngleEl) sternAngleEl.innerText = `${Math.round(srv.stern_angle)}° off stern (bearing ${Math.round(srv.course_deg)}°)`;
+          if (reachDescEl) reachDescEl.innerText = srv.reach_desc;
+          if (estTimeEl) estTimeEl.innerText = srv.time_str;
+          if (reachIconEl) {
+            reachIconEl.innerText = srv.icon;
+            reachIconEl.className = `w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${srv.pill_color === 'emerald' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : srv.pill_color === 'amber' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : srv.pill_color === 'sky' ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'}`;
+          }
+        }
+      }).catch(() => {});
 
       // 6. Optimal Departure Time & Hourly Timing Calculation
       const opt = findOptimalDepartureTime(selectedDownwindDayIdx, estMinutes, endId);

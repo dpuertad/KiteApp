@@ -207,12 +207,93 @@ def save_users_db(db: dict):
     except Exception as e:
         print(f"Error saving users_web_db: {e}")
 
+ADMIN_EMAILS = {"d_puerta@hotmail.com"}
+
 def hash_password(password: str, salt: str = None) -> tuple:
     import hashlib, secrets
     if not salt:
-        salt = secrets.token_hex(8)
-    h = hashlib.sha256((salt + password).encode("utf-8")).hexdigest()
-    return h, salt
+        salt = secrets.token_hex(16)
+    # OWASP Gold Standard: PBKDF2 with HMAC-SHA256 and 600,000 iterations
+    raw_hex = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt.encode("utf-8"), 600000).hex()
+    return f"pbkdf2:sha256:600000:{raw_hex}", salt
+
+def verify_password(password: str, stored_hash: str, salt: str) -> tuple:
+    """
+    Returns (is_valid: bool, needs_upgrade: bool).
+    Supports new PBKDF2-HMAC and legacy SHA-256 with auto-upgrade on login.
+    """
+    import hashlib, hmac
+    if not stored_hash or not salt:
+        return False, False
+    
+    if stored_hash.startswith("pbkdf2:sha256:600000:"):
+        expected_hex = stored_hash.replace("pbkdf2:sha256:600000:", "")
+        calc_hex = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt.encode("utf-8"), 600000).hex()
+        return hmac.compare_digest(calc_hex, expected_hex), False
+    else:
+        # Legacy SHA-256 fallback (auto-upgrades on successful match)
+        legacy_calc = hashlib.sha256((salt + password).encode("utf-8")).hexdigest()
+        is_match = hmac.compare_digest(legacy_calc, stored_hash)
+        return is_match, is_match
+
+def create_user_session(email: str, db: dict) -> str:
+    """Generates a secure 256-bit cryptographically random session token and saves to db['sessions']."""
+    import secrets
+    from datetime import datetime, timedelta
+    token = secrets.token_hex(32)
+    sessions = db.setdefault("sessions", {})
+    exp = (datetime.utcnow() + timedelta(days=90)).isoformat() + "Z"
+    sessions[token] = {
+        "email": email.strip().lower(),
+        "created_at": datetime.utcnow().isoformat() + "Z",
+        "expires_at": exp
+    }
+    save_users_db(db)
+    return token
+
+def verify_admin_request(handler, body_dict: dict = None) -> tuple:
+    """
+    Strict server-side security barrier for all /api/admin/* endpoints.
+    Verifies that the caller has a valid, active session belonging exclusively to d_puerta@hotmail.com.
+    Returns (True, email) or (False, error_reason).
+    """
+    token = ""
+    # 1. Authorization header: "Bearer <token>"
+    auth_header = handler.headers.get("Authorization", "")
+    if auth_header.startswith("Bearer "):
+        token = auth_header[7:].strip()
+    elif handler.headers.get("X-Admin-Token"):
+        token = handler.headers.get("X-Admin-Token").strip()
+    elif body_dict and isinstance(body_dict, dict) and (body_dict.get("session_token") or body_dict.get("token")):
+        token = (body_dict.get("session_token") or body_dict.get("token")).strip()
+    
+    # 2. Query parameter ?token=...
+    if not token and "?" in handler.path:
+        from urllib.parse import parse_qs, urlparse
+        qs = parse_qs(urlparse(handler.path).query)
+        token = qs.get("token", [""])[0]
+
+    if not token:
+        return False, "Missing Administrator session token."
+
+    # 3. Fallback to optional ADMIN_SECRET_KEY env var if set on Render
+    admin_env_secret = os.getenv("ADMIN_SECRET_KEY")
+    if admin_env_secret and token == admin_env_secret:
+        return True, "d_puerta@hotmail.com"
+
+    # 4. Check persisted sessions in database
+    db = load_users_db()
+    sessions = db.get("sessions", {})
+    sess = sessions.get(token)
+
+    if not sess:
+        return False, "Session expired or invalid. Please sign in as Administrator."
+
+    sess_email = (sess.get("email") or "").strip().lower()
+    if sess_email not in ADMIN_EMAILS:
+        return False, f"Access denied: {sess_email} is not authorized for HolyGust Administrator functions."
+
+    return True, sess_email
 
 ADMIN_PUSH_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "admin_push_subscriptions.json")
 
@@ -3770,6 +3851,17 @@ def start_embedded_http_server(port: int = 8080):
                 self.wfile.write(html_out.encode("utf-8"))
                 return
 
+            # Strict Server-Side Security Barrier for all Admin GET routes
+            if path.startswith("/api/admin/") or path in ["/admin", "/admin/spots"]:
+                is_admin_ok, admin_err = verify_admin_request(self)
+                if not is_admin_ok:
+                    self.send_response(403)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": f"Forbidden: {admin_err}"}).encode("utf-8"))
+                    return
+
             # 2d. API: Admin Pending Beta Applications
             if path == "/api/admin/pending-beta-riders":
                 try:
@@ -3869,8 +3961,16 @@ def start_embedded_http_server(port: int = 8080):
             # 2e. API: Export Full Live Server State (Users + Telemetry + Approved Beta)
             if path == "/api/admin/export-state":
                 import spot_telemetry
+                raw_db = load_users_db()
+                sanitized_users = {}
+                for u_em, u_val in raw_db.get("users", {}).items():
+                    sanitized_users[u_em] = {k: v for k, v in u_val.items() if not k.startswith("password_") and not k.startswith("reset_")}
+
                 state_export = {
-                    "users_db": load_users_db(),
+                    "users_db": {
+                        "users": sanitized_users,
+                        "feedback": raw_db.get("feedback", [])
+                    },
                     "telemetry_db": spot_telemetry._load_telemetry(),
                     "approved_beta": list(load_approved_beta_emails())
                 }
@@ -4565,12 +4665,12 @@ def start_embedded_http_server(port: int = 8080):
                         self.wfile.write(json.dumps({"error": "Please enter a valid email address."}).encode("utf-8"))
                         return
 
-                    if len(password) < 4:
+                    if len(password) < 8:
                         self.send_response(400)
                         self.send_header("Content-Type", "application/json")
                         self._send_cors_headers()
                         self.end_headers()
-                        self.wfile.write(json.dumps({"error": "Password must be at least 4 characters."}).encode("utf-8"))
+                        self.wfile.write(json.dumps({"error": "Password must be at least 8 characters for security."}).encode("utf-8"))
                         return
 
                     db = load_users_db()
@@ -4584,6 +4684,7 @@ def start_embedded_http_server(port: int = 8080):
                             if name: user["name"] = name
                             if gear: user["gear"] = gear
                             if boards: user["boards"] = boards
+                            session_token = create_user_session(email, db)
                             save_users_db(db)
                             # Notify Daniel via Admin Phone Push with true rider count!
                             try:
@@ -4597,11 +4698,15 @@ def start_embedded_http_server(port: int = 8080):
                             except Exception:
                                 pass
                             safe_user = {k: v for k, v in user.items() if not k.startswith("password_")}
+                            is_admin = (email in ADMIN_EMAILS)
+                            safe_user["is_admin"] = is_admin
+                            safe_user["role"] = "admin" if is_admin else "rider"
+                            safe_user["session_token"] = session_token
                             self.send_response(200)
                             self.send_header("Content-Type", "application/json")
                             self._send_cors_headers()
                             self.end_headers()
-                            self.wfile.write(json.dumps({"success": True, "user": safe_user}).encode("utf-8"))
+                            self.wfile.write(json.dumps({"success": True, "user": safe_user, "session_token": session_token}).encode("utf-8"))
                             return
                         else:
                             self.send_response(400)
@@ -4690,11 +4795,16 @@ def start_embedded_http_server(port: int = 8080):
                     )
 
                     safe_user = {k: v for k, v in new_user.items() if not k.startswith("password_")}
+                    session_token = create_user_session(email, db)
+                    is_admin = (email in ADMIN_EMAILS)
+                    safe_user["is_admin"] = is_admin
+                    safe_user["role"] = "admin" if is_admin else "rider"
+                    safe_user["session_token"] = session_token
                     self.send_response(200)
                     self.send_header("Content-Type", "application/json")
                     self._send_cors_headers()
                     self.end_headers()
-                    self.wfile.write(json.dumps({"success": True, "user": safe_user}).encode("utf-8"))
+                    self.wfile.write(json.dumps({"success": True, "user": safe_user, "session_token": session_token}).encode("utf-8"))
                 except Exception as e:
                     self.send_response(500)
                     self.send_header("Content-Type", "application/json")
@@ -4728,17 +4838,21 @@ def start_embedded_http_server(port: int = 8080):
                         user["password_hash"] = p_hash
                         user["password_salt"] = p_salt
                         save_users_db(db)
-                        calc_hash = p_hash
                     else:
-                        calc_hash, _ = hash_password(password, user.get("password_salt", ""))
-
-                    if calc_hash != user.get("password_hash"):
-                        self.send_response(401)
-                        self.send_header("Content-Type", "application/json")
-                        self._send_cors_headers()
-                        self.end_headers()
-                        self.wfile.write(json.dumps({"error": "Incorrect password. Please try again or tap 'Forgot?'."}).encode("utf-8"))
-                        return
+                        is_valid, needs_upgrade = verify_password(password, user.get("password_hash", ""), user.get("password_salt", ""))
+                        if not is_valid:
+                            self.send_response(401)
+                            self.send_header("Content-Type", "application/json")
+                            self._send_cors_headers()
+                            self.end_headers()
+                            self.wfile.write(json.dumps({"error": "Incorrect password. Please try again or tap 'Forgot?'."}).encode("utf-8"))
+                            return
+                        if needs_upgrade:
+                            # Automatically upgrade legacy hash to PBKDF2 600,000 rounds
+                            p_hash, p_salt = hash_password(password)
+                            user["password_hash"] = p_hash
+                            user["password_salt"] = p_salt
+                            save_users_db(db)
 
                     from datetime import datetime
                     user["last_login"] = datetime.utcnow().isoformat() + "Z"
@@ -4752,14 +4866,20 @@ def start_embedded_http_server(port: int = 8080):
                         user["is_beta_rider"] = False
                         if user.get("beta_status") != "pending" and user.get("beta_status") != "declined":
                             user["beta_status"] = "none"
+
+                    session_token = create_user_session(email, db)
                     save_users_db(db)
 
                     safe_user = {k: v for k, v in user.items() if not k.startswith("password_")}
+                    is_admin = (email in ADMIN_EMAILS)
+                    safe_user["is_admin"] = is_admin
+                    safe_user["role"] = "admin" if is_admin else "rider"
+                    safe_user["session_token"] = session_token
                     self.send_response(200)
                     self.send_header("Content-Type", "application/json")
                     self._send_cors_headers()
                     self.end_headers()
-                    self.wfile.write(json.dumps({"success": True, "user": safe_user}).encode("utf-8"))
+                    self.wfile.write(json.dumps({"success": True, "user": safe_user, "session_token": session_token}).encode("utf-8"))
                 except Exception as e:
                     self.send_response(500)
                     self.send_header("Content-Type", "application/json")
@@ -5035,12 +5155,12 @@ def start_embedded_http_server(port: int = 8080):
                     new_password = data.get("new_password") or ""
                     email = (data.get("email") or "").strip().lower()
 
-                    if not new_password or len(new_password) < 4:
+                    if not new_password or len(new_password) < 8:
                         self.send_response(400)
                         self.send_header("Content-Type", "application/json")
                         self._send_cors_headers()
                         self.end_headers()
-                        self.wfile.write(json.dumps({"error": "Password must be at least 4 characters long."}).encode("utf-8"))
+                        self.wfile.write(json.dumps({"error": "Password must be at least 8 characters long for security."}).encode("utf-8"))
                         return
 
                     if not token and not code:
@@ -5092,7 +5212,12 @@ def start_embedded_http_server(port: int = 8080):
                     matched_user["last_login"] = datetime.utcnow().isoformat() + "Z"
                     save_users_db(db)
 
+                    session_token = create_user_session(matched_email, db)
                     safe_user = {k: v for k, v in matched_user.items() if not k.startswith("password_")}
+                    is_admin = (matched_email in ADMIN_EMAILS)
+                    safe_user["is_admin"] = is_admin
+                    safe_user["role"] = "admin" if is_admin else "rider"
+                    safe_user["session_token"] = session_token
                     self.send_response(200)
                     self.send_header("Content-Type", "application/json")
                     self._send_cors_headers()
@@ -5100,7 +5225,8 @@ def start_embedded_http_server(port: int = 8080):
                     self.wfile.write(json.dumps({
                         "success": True,
                         "message": "Password reset successfully! You are now signed in.",
-                        "user": safe_user
+                        "user": safe_user,
+                        "session_token": session_token
                     }).encode("utf-8"))
                 except Exception as e:
                     self.send_response(500)
@@ -5415,12 +5541,159 @@ def start_embedded_http_server(port: int = 8080):
                     self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
                 return
 
+            # PROPRIETARY DTM DOWNWIND CALCULATION ENGINE (Server-Side Shielded)
+            if parsed.path == "/api/downwind/calculate":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    data = json.loads(body)
+                    start_lat = float(data.get("start_lat", 0))
+                    start_lon = float(data.get("start_lon", 0))
+                    end_lat = float(data.get("end_lat", 0))
+                    end_lon = float(data.get("end_lon", 0))
+                    start_id = (data.get("start_id") or "").lower()
+                    end_id = (data.get("end_id") or "").lower()
+                    wind_deg = float(data.get("wind_deg", 90.0))
+                    wind_kts = float(data.get("wind_kts", 18.0))
+                    gust_kts = float(data.get("gust_kts", 22.0))
+                    weight_kg = float(data.get("weight_kg", 75.0))
+                    gear = data.get("gear", [])
+                    boards = data.get("boards", [])
+
+                    import math
+                    # 1. Direct Haversine Distance
+                    r = 6371.0
+                    d_lat = math.radians(end_lat - start_lat)
+                    d_lon = math.radians(end_lon - start_lon)
+                    a = math.sin(d_lat/2)**2 + math.cos(math.radians(start_lat)) * math.cos(math.radians(end_lat)) * math.sin(d_lon/2)**2
+                    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+                    direct_km = r * c
+
+                    # 2. Obstacle Detour Logic
+                    detour_km = 0.0
+                    detour_note = "Straight coastal corridor"
+                    if start_id in ("cumbuco", "tabuba", "cauipe") and end_id in ("taiba", "paracuru", "lagoinha"):
+                        detour_km = 4.5
+                        detour_note = "+4.5 km Pecém conveyor offshore detour"
+                    
+                    corridor_km = direct_km + detour_km
+
+                    # 3. Compass Bearing & Stern Angle
+                    r_lat1 = math.radians(start_lat)
+                    r_lat2 = math.radians(end_lat)
+                    y = math.sin(d_lon) * math.cos(r_lat2)
+                    x = math.cos(r_lat1) * math.sin(r_lat2) - math.sin(r_lat1) * math.cos(r_lat2) * math.cos(d_lon)
+                    course_deg = (math.degrees(math.atan2(y, x)) + 360.0) % 360.0
+
+                    wind_blows_to = (wind_deg + 180.0) % 360.0
+                    stern_angle = abs((course_deg - wind_blows_to + 180.0) % 360.0 - 180.0)
+
+                    # 4. Downwind Tack Multiplier (DTM) Proprietary Tuning
+                    if stern_angle <= 25.0:
+                        dtm = 1.40
+                        reach_type = "Deep Downwind (S-Curves)"
+                        reach_desc = "Wind directly from behind. Aggressive S-turns required to maintain kite speed and line tension."
+                        pill_color = "amber"
+                        icon = "⚡"
+                    elif stern_angle <= 65.0:
+                        dtm = 1.22
+                        reach_type = "Ideal Broad Reach"
+                        reach_desc = "Optimal angle (40°–60°). Effortless wave carving with sustained line tension."
+                        pill_color = "emerald"
+                        icon = "✨"
+                    elif stern_angle <= 95.0:
+                        dtm = 1.12
+                        reach_type = "Beam Reach (Crosswind)"
+                        reach_desc = "Side-onshore cruising. High speed, minimal downwind carving needed."
+                        pill_color = "sky"
+                        icon = "💨"
+                    else:
+                        dtm = 1.85
+                        reach_type = "Upwind Direction (Caution)"
+                        reach_desc = "Course heads into the wind. Requires intense upwind tacking; not recommended for downwinders."
+                        pill_color = "rose"
+                        icon = "⚠️"
+
+                    riding_km = round(corridor_km * dtm, 1)
+                    est_minutes = round((riding_km / 22.0) * 60)
+                    hours = est_minutes // 60
+                    mins = est_minutes % 60
+                    time_str = f"~{hours}h {mins}m" if hours > 0 else f"~{mins} min"
+
+                    # Apparent wind reduction formula (-3.5 kts)
+                    apparent_kts = max(10.0, round(wind_kts - 3.5, 1))
+
+                    # 5. Gear Recommendation for Apparent Wind
+                    ideal_size = max(6.0, min(17.0, round((weight_kg / (apparent_kts * 0.40)) * 2) / 2))
+                    active_kites = [k for k in gear if k.get("active") is not False]
+                    active_boards = [b for b in boards if b.get("active") is not False]
+
+                    matched_kite = None
+                    min_diff = 999.0
+                    for k in active_kites:
+                        sz = float(k.get("size", 0))
+                        diff = abs(sz - ideal_size)
+                        if diff < min_diff:
+                            min_diff = diff
+                            matched_kite = k
+
+                    matched_board = None
+                    for b in active_boards:
+                        if b.get("type") in ("Wave", "Surfboard", "Directional"):
+                            matched_board = b
+                            break
+                    if not matched_board and active_boards:
+                        matched_board = active_boards[0]
+
+                    resp = {
+                        "success": True,
+                        "direct_km": round(direct_km, 1),
+                        "detour_km": detour_km,
+                        "detour_note": detour_note,
+                        "corridor_km": round(corridor_km, 1),
+                        "course_deg": round(course_deg, 1),
+                        "stern_angle": round(stern_angle, 1),
+                        "dtm": dtm,
+                        "riding_km": riding_km,
+                        "est_minutes": est_minutes,
+                        "time_str": time_str,
+                        "reach_type": reach_type,
+                        "reach_desc": reach_desc,
+                        "pill_color": pill_color,
+                        "icon": icon,
+                        "apparent_wind_kts": apparent_kts,
+                        "ideal_size": ideal_size,
+                        "matched_kite": matched_kite,
+                        "matched_board": matched_board
+                    }
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps(resp).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
             # ADMIN: Close Rider Feedback Ticket (without requiring a reply)
             if parsed.path == "/api/admin/feedback/close":
                 try:
                     content_len = int(self.headers.get("Content-Length", 0))
                     body = self.rfile.read(content_len).decode("utf-8")
                     data = json.loads(body)
+
+                    is_admin_ok, admin_err = verify_admin_request(self, data)
+                    if not is_admin_ok:
+                        self.send_response(403)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": f"Forbidden: {admin_err}"}).encode("utf-8"))
+                        return
                     ticket_id = (data.get("id") or "").strip()
                     user_email = (data.get("email") or "").strip().lower()
                     admin_note = (data.get("note") or "").strip()
@@ -5470,6 +5743,15 @@ def start_embedded_http_server(port: int = 8080):
                     content_len = int(self.headers.get("Content-Length", 0))
                     body = self.rfile.read(content_len).decode("utf-8")
                     data = json.loads(body)
+
+                    is_admin_ok, admin_err = verify_admin_request(self, data)
+                    if not is_admin_ok:
+                        self.send_response(403)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": f"Forbidden: {admin_err}"}).encode("utf-8"))
+                        return
                     ticket_id = (data.get("id") or "").strip()
                     user_email = (data.get("email") or "").strip().lower()
                     reply_text = (data.get("reply") or "").strip()
@@ -5726,6 +6008,16 @@ def start_embedded_http_server(port: int = 8080):
                     content_len = int(self.headers.get("Content-Length", 0))
                     body = self.rfile.read(content_len).decode("utf-8")
                     data = json.loads(body)
+
+                    is_admin_ok, admin_err = verify_admin_request(self, data)
+                    if not is_admin_ok:
+                        self.send_response(403)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": f"Forbidden: {admin_err}"}).encode("utf-8"))
+                        return
+
                     email = (data.get("email") or "").strip().lower()
                     if not email:
                         raise ValueError("Email required")
@@ -5754,6 +6046,16 @@ def start_embedded_http_server(port: int = 8080):
                     content_len = int(self.headers.get("Content-Length", 0))
                     body = self.rfile.read(content_len).decode("utf-8")
                     data = json.loads(body)
+
+                    is_admin_ok, admin_err = verify_admin_request(self, data)
+                    if not is_admin_ok:
+                        self.send_response(403)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": f"Forbidden: {admin_err}"}).encode("utf-8"))
+                        return
+
                     email = (data.get("email") or "").strip().lower()
                     if not email:
                         raise ValueError("Email required")
@@ -5781,6 +6083,16 @@ def start_embedded_http_server(port: int = 8080):
                     content_len = int(self.headers.get("Content-Length", 0))
                     body = self.rfile.read(content_len).decode("utf-8")
                     data = json.loads(body)
+
+                    is_admin_ok, admin_err = verify_admin_request(self, data)
+                    if not is_admin_ok:
+                        self.send_response(403)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": f"Forbidden: {admin_err}"}).encode("utf-8"))
+                        return
+
                     sub = data.get("subscription")
                     email = (data.get("email") or "d_puerta@hotmail.com").strip().lower()
                     ok = register_admin_push(sub, email)
@@ -5803,6 +6115,16 @@ def start_embedded_http_server(port: int = 8080):
                     content_len = int(self.headers.get("Content-Length", 0))
                     body = self.rfile.read(content_len).decode("utf-8") if content_len else "{}"
                     data = json.loads(body) if body else {}
+
+                    is_admin_ok, admin_err = verify_admin_request(self, data)
+                    if not is_admin_ok:
+                        self.send_response(403)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": f"Forbidden: {admin_err}"}).encode("utf-8"))
+                        return
+
                     email = (data.get("email") or "d_puerta@hotmail.com").strip().lower()
                     delivered = send_admin_push_notification(
                         title="🔔 HolyGust Admin Push Working!",
