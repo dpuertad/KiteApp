@@ -8055,7 +8055,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=52').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=53').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
@@ -8538,16 +8538,15 @@
       localAlarms.enable_push = pushEnabled;
       localAlarms.enable_email = emailEnabled;
       localAlarms.weekend_only = weekendOnly;
-      if (localAlarms.spots && localAlarms.spots.length > 0) {
-        localAlarms.enabled = true;
-      }
+      localAlarms.enabled = Boolean(localAlarms.spots && localAlarms.spots.length > 0);
       localStorage.setItem('hg_spot_alarms', JSON.stringify(localAlarms));
 
       try {
         const payload = {
           email: email || (getAuthUser()?.email) || 'guest@holygust.com',
           name: (state.user && state.user.name) || state.user_name || 'Rider',
-          spots: localAlarms.spots,
+          spots: localAlarms.spots || [],
+          enabled: localAlarms.enabled,
           enable_push: pushEnabled,
           enable_email: emailEnabled,
           weekend_only: weekendOnly,

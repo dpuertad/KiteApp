@@ -5595,14 +5595,16 @@ def start_embedded_http_server(port: int = 8080):
 
                     # Update spot alerts config
                     spot_alerts = user.get("spot_alerts", {})
-                    spot = data.get("spot")
-                    spots = spot_alerts.get("spots", [])
-                    if spot and spot not in spots:
-                        spots.append(spot)
-                    elif "spots" in data and isinstance(data["spots"], list):
-                        spots = data["spots"]
+                    if "spots" in data and isinstance(data["spots"], list):
+                        spots = [s for s in data["spots"] if s and s.strip()]
+                    else:
+                        spot = data.get("spot")
+                        spots = spot_alerts.get("spots", [])
+                        if spot and spot not in spots:
+                            spots.append(spot)
 
-                    spot_alerts["enabled"] = data.get("enabled", True)
+                    is_enabled = data.get("enabled", True) if len(spots) > 0 else False
+                    spot_alerts["enabled"] = is_enabled
                     spot_alerts["enable_push"] = data.get("enable_push", True)
                     spot_alerts["enable_email"] = data.get("enable_email", True)
                     spot_alerts["weekend_only"] = data.get("weekend_only", False)
@@ -5654,8 +5656,11 @@ def start_embedded_http_server(port: int = 8080):
                                 s for s in user["spot_alerts"]["spots"]
                                 if not (s == spot or s.lower().split(',')[0].strip() == clean_target or clean_target in s.lower() or s.lower() in clean_target)
                             ]
+                            if len(user["spot_alerts"]["spots"]) == 0:
+                                user["spot_alerts"]["enabled"] = False
                         else:
                             user["spot_alerts"]["enabled"] = False
+                            user["spot_alerts"]["spots"] = []
                         save_users_db(db)
 
                     self.send_response(200)
@@ -5818,8 +5823,7 @@ def start_embedded_http_server(port: int = 8080):
                         user["board"] = data["board"]
 
                     s_alerts = user.get("spot_alerts", {})
-                    if spot:
-                        s_alerts["spots"] = list(set(s_alerts.get("spots", []) + [spot]))
+                    # DO NOT add test spot to user's persistent alarmed spots
                     if "enable_push" in data:
                         s_alerts["enable_push"] = data["enable_push"]
                     if "enable_email" in data:

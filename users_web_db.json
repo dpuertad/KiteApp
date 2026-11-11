@@ -56,14 +56,11 @@
       "registered_at": "2026-11-04T22:00:00Z",
       "last_login": "2026-11-09T20:15:31.502699+00:00Z",
       "spot_alerts": {
-        "enabled": true,
+        "enabled": false,
         "enable_push": true,
         "enable_email": false,
         "weekend_only": false,
-        "spots": [
-          "Cumbuco, Brazil",
-          "Praia de Maceió (Camocim), Brazil"
-        ]
+        "spots": []
       },
       "spot": {
         "name": "Icaraí de Amontada (Icaraizinho), Brazil",

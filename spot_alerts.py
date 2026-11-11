@@ -429,18 +429,24 @@ def check_and_dispatch_alerts_for_user(user_email: str, force_test: bool = False
     if not spot_alerts and not force_test:
         return {"success": True, "message": "No spot alerts configured"}
 
+    if not force_test:
+        if not spot_alerts.get("enabled", False):
+            return {"success": True, "message": "Spot alerts disabled"}
+        spots = [s for s in spot_alerts.get("spots", []) if s and s.strip()]
+        if not spots:
+            return {"success": True, "message": "No active spots alarmed"}
+    else:
+        spots = [s for s in spot_alerts.get("spots", []) if s and s.strip()]
+        if not spots:
+            default_spot = (user.get("spot") or {}).get("name") if isinstance(user.get("spot"), dict) else user.get("spot")
+            spots = [default_spot or "Praia de Maceió (Camocim), Brazil"]
+
     rider_name = user.get("name") or user_email.split("@")[0].title()
     push_sub = user.get("push_subscription")
     email_enabled = spot_alerts.get("enable_email", True)
     push_enabled = spot_alerts.get("enable_push", True)
     if force_test and not email_enabled and not push_enabled:
         email_enabled = True
-    spots = spot_alerts.get("spots", [])
-
-    # If testing and no spots configured, default to current spot or Cumbuco
-    if force_test and not spots:
-        default_spot = (user.get("spot") or {}).get("name") if isinstance(user.get("spot"), dict) else user.get("spot")
-        spots = [default_spot or "Cumbuco, Brazil"]
 
     history = load_alert_history()
     dispatched_count = 0
@@ -554,7 +560,11 @@ def run_all_beta_alerts_cycle():
                 continue
 
             alerts_pref = u.get("spot_alerts", {})
-            if not alerts_pref or not alerts_pref.get("enabled", True):
+            if not alerts_pref or not alerts_pref.get("enabled", False):
+                continue
+
+            configured_spots = [s for s in alerts_pref.get("spots", []) if s and s.strip()]
+            if not configured_spots:
                 continue
 
             total_checked += 1
