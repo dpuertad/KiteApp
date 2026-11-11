@@ -1,4 +1,4 @@
-const CACHE_NAME = 'holygust-v56';
+const CACHE_NAME = 'holygust-v57';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',

@@ -8139,7 +8139,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=56').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=57').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
@@ -9385,16 +9385,26 @@
 
       if (gearRec && gearRec.combo) {
         const c = gearRec.combo;
-        if (recKiteEl) recKiteEl.innerText = `${c.kBrand || ''} ${c.kModel || 'Kite'}`.trim();
-        if (recKiteSizeEl) recKiteSizeEl.innerText = `${c.kSize}m · ${gearRec.inSweet ? '🎯 Sweet Spot for ' + selectedDownwindTime : 'Rideable'}`;
-        if (recBoardEl) recBoardEl.innerText = `${c.bBrand || ''} ${c.bModel || c.bType || 'Board'}`.trim();
-        if (recBoardTypeEl) recBoardTypeEl.innerText = (c.bType === 'Wave' || c.bType === 'Surfboard') ? '🌊 Waveboard · Perfect for downwind wave carving' : '⚡ Twintip with deep fins';
+        const kItem = c.item || {};
+        const bItem = c.board || {};
+        const kBrand = kItem.brand || c.kBrand || '';
+        const kModel = kItem.model || c.kModel || 'Kite';
+        const kSize = kItem.size !== undefined ? kItem.size : (c.kSize !== undefined ? c.kSize : '');
+        const bBrand = bItem.brand || c.bBrand || '';
+        const bModel = bItem.model || c.bModel || bItem.type || c.bType || 'Board';
+        const bType = bItem.type || c.bType || 'Twintip';
+        const inSweet = Boolean(c.inSweet || gearRec.status === 'sweet');
+
+        if (recKiteEl) recKiteEl.innerText = `${kBrand} ${kModel}`.trim();
+        if (recKiteSizeEl) recKiteSizeEl.innerText = `${kSize}m · ${inSweet ? '🎯 Sweet Spot for ' + selectedDownwindTime : 'Rideable'}`;
+        if (recBoardEl) recBoardEl.innerText = `${bBrand} ${bModel}`.trim();
+        if (recBoardTypeEl) recBoardTypeEl.innerText = (bType === 'Wave' || bType === 'Surfboard') ? '🌊 Waveboard · Perfect for downwind wave carving' : '⚡ Twintip with deep fins';
         if (gearBadgeEl) {
-          gearBadgeEl.innerText = gearRec.inSweet ? `🎯 Sized for ${selectedDownwindTime}` : 'Active Quiver Match';
-          gearBadgeEl.className = `px-2 py-0.5 rounded-full text-[9px] font-bold ${gearRec.inSweet ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'}`;
+          gearBadgeEl.innerText = inSweet ? `🎯 Sized for ${selectedDownwindTime}` : 'Active Quiver Match';
+          gearBadgeEl.className = `px-2 py-0.5 rounded-full text-[9px] font-bold ${inSweet ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'}`;
         }
         if (gearRationaleEl) {
-          let rationale = `At ${selectedDownwindTime}, departure wind is ${Math.round(dayWindKts)} kts. Downwinding reduces apparent wind to ~${Math.round(apparentKts)} kts across your canopy. Your ${c.kSize}m gives steady bar pressure and drive through carves without luffing.`;
+          let rationale = `At ${selectedDownwindTime}, departure wind is ${Math.round(dayWindKts)} kts. Downwinding reduces apparent wind to ~${Math.round(apparentKts)} kts across your canopy. Your ${kSize}m gives steady bar pressure and drive through carves without luffing.`;
           if (activeKites.length > 1) {
             rationale += ` (Your available packed quiver: ${packedSizes}).`;
           }
@@ -9418,10 +9428,18 @@
       // 8. Tide Elements & Hazard Correlation at Arrival Time
       const fDep = downwindDepartureForecast || state.forecastData;
       let dayTides = [];
-      if (fDep && fDep.weekly_forecast && fDep.weekly_forecast[selectedDownwindDayIdx]) {
-        dayTides = fDep.weekly_forecast[selectedDownwindDayIdx].tides || [];
-      } else if (fDep) {
-        dayTides = selectedDownwindDayIdx === 0 ? (fDep.tides || []) : (selectedDownwindDayIdx === 1 ? (fDep.tides_tomorrow || []) : []);
+      if (fDep) {
+        if (fDep.weekly_forecast && fDep.weekly_forecast[selectedDownwindDayIdx] && Array.isArray(fDep.weekly_forecast[selectedDownwindDayIdx].tides) && fDep.weekly_forecast[selectedDownwindDayIdx].tides.length > 0) {
+          dayTides = fDep.weekly_forecast[selectedDownwindDayIdx].tides;
+        } else if (selectedDownwindDayIdx === 0 && fDep.tides && fDep.tides.length > 0) {
+          dayTides = fDep.tides;
+        } else if (selectedDownwindDayIdx === 1 && fDep.tides_tomorrow && fDep.tides_tomorrow.length > 0) {
+          dayTides = fDep.tides_tomorrow;
+        } else if (fDep.weekly_tides && fDep.weekly_tides[selectedDownwindDayIdx] && fDep.weekly_tides[selectedDownwindDayIdx].length > 0) {
+          dayTides = fDep.weekly_tides[selectedDownwindDayIdx];
+        } else if (fDep.tides && fDep.tides.length > 0) {
+          dayTides = fDep.tides;
+        }
       }
 
       const tideSummaryEl = document.getElementById('downwind-tide-summary');
