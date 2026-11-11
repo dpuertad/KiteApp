@@ -5440,7 +5440,7 @@ def start_embedded_http_server(port: int = 8080):
                         raise ValueError("Feedback ticket not found.")
 
                     from datetime import datetime, timezone
-                    now_iso = datetime.now(timezone.utc).isoformat() + "Z"
+                    now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
                     target_ticket["status"] = "closed"
                     target_ticket["closed_at"] = now_iso
                     if admin_note:
@@ -5493,7 +5493,7 @@ def start_embedded_http_server(port: int = 8080):
                         raise ValueError("Feedback ticket not found.")
 
                     from datetime import datetime, timezone
-                    now_iso = datetime.now(timezone.utc).isoformat() + "Z"
+                    now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
                     target_ticket["reply"] = reply_text
                     target_ticket["replied_at"] = now_iso
                     if close_ticket:

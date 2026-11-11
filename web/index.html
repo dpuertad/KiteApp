@@ -7534,13 +7534,18 @@
         const isClosed = fb.status === 'closed' || Boolean(fb.reply);
         const reply = fb.reply ? escapeHtml(fb.reply) : '';
 
-        let dateStr = 'Recently';
-        if (fb.created_at || fb.timestamp) {
+        const formatFbDate = (iso) => {
+          if (!iso) return 'Recently';
           try {
-            const d = new Date(fb.created_at || fb.timestamp);
-            dateStr = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-          } catch (e) {}
-        }
+            const clean = String(iso).replace('+00:00Z', 'Z').replace('+00:00', 'Z');
+            const d = new Date(clean);
+            return isNaN(d.getTime()) ? 'Recently' : d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+          } catch (e) {
+            return 'Recently';
+          }
+        };
+
+        const dateStr = formatFbDate(fb.created_at || fb.timestamp);
 
         return `
           <div id="admin-fb-card-${id}" class="p-3.5 rounded-2xl bg-slate-950/80 border ${isClosed ? 'border-slate-800/80 opacity-85' : 'border-sky-500/30 shadow-md shadow-sky-500/5'} space-y-2.5 transition-all duration-300">
@@ -7568,7 +7573,7 @@
               <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 space-y-1">
                 <div class="flex items-center justify-between text-[10px]">
                   <span class="font-bold text-emerald-300">↳ ${reply ? 'Your Reply Sent:' : 'Ticket Status:'}</span>
-                  <span class="text-slate-500 font-mono text-[9px]">${fb.closed_at ? new Date(fb.closed_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : (fb.replied_at ? new Date(fb.replied_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Closed')}</span>
+                  <span class="text-slate-500 font-mono text-[9px]">${formatFbDate(fb.closed_at || fb.replied_at)}</span>
                 </div>
                 ${reply ? `
                   <p class="text-xs text-emerald-100 font-medium">"${reply}"</p>
@@ -8134,7 +8139,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=55').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=56').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
