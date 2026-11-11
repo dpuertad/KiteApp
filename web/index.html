@@ -4733,7 +4733,6 @@
         datalist.appendChild(opt);
       });
     }
-    }
 
     function onAddBoardFormSubmit(e) {
       e.preventDefault();
@@ -7757,16 +7756,6 @@
       if (btnText) btnText.innerText = isHidden ? 'Hide' : 'View Details';
       if (chev) chev.innerText = isHidden ? '▲' : '▼';
     }
-      } catch (err) {
-        if (container) {
-          container.innerHTML = `
-            <div class="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs text-center">
-              ⚠️ Failed to load pending riders: ${escapeHtml(err.message)}
-            </div>
-          `;
-        }
-      }
-    }
 
     async function approveBetaRiderFromProfile(email, btnEl) {
       if (!email) return;
@@ -8066,7 +8055,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=51').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=52').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
