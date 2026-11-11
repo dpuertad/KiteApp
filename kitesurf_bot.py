@@ -157,7 +157,7 @@ def load_users_db() -> dict:
     except Exception as e:
         print(f"Error reconciling users from telemetry: {e}")
 
-    # Purge any legacy test gear/boards (k_beat_*, b_beat_*) and enforce approved_set beta status
+    # Enforce approved_set beta status
     approved_set = load_approved_beta_emails()
     # Ensure any user already approved in users db is retained in approved_set across restarts
     changed_approved = False
@@ -176,10 +176,6 @@ def load_users_db() -> dict:
 
     for em, u in db.get("users", {}).items():
         em_clean = em.lower().strip()
-        if isinstance(u.get("gear"), list):
-            u["gear"] = [g for g in u["gear"] if not str(g.get("id", "")).startswith("k_beat_")]
-        if isinstance(u.get("boards"), list):
-            u["boards"] = [b for b in u["boards"] if not str(b.get("id", "")).startswith("b_beat_")]
         if u.get("beta_status") in ("left", "declined"):
             u["is_beta_rider"] = False
             continue
@@ -4882,13 +4878,11 @@ def start_embedded_http_server(port: int = 8080):
                     if "nationality" in data and data["nationality"]:
                         user["nationality"] = data["nationality"].strip()
                     if "gear" in data and isinstance(data["gear"], list):
-                        clean_gear = [g for g in data["gear"] if not str(g.get("id", "")).startswith("k_beat_")]
-                        if len(clean_gear) > 0 or not user.get("gear"):
-                            user["gear"] = clean_gear
+                        if len(data["gear"]) > 0 or not user.get("gear"):
+                            user["gear"] = data["gear"]
                     if "boards" in data and isinstance(data["boards"], list):
-                        clean_boards = [b for b in data["boards"] if not str(b.get("id", "")).startswith("b_beat_")]
-                        if len(clean_boards) > 0 or not user.get("boards"):
-                            user["boards"] = clean_boards
+                        if len(data["boards"]) > 0 or not user.get("boards"):
+                            user["boards"] = data["boards"]
                     if "weight_kg" in data and data["weight_kg"] is not None:
                         try:
                             user["weight_kg"] = float(data["weight_kg"])

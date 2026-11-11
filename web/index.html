@@ -5718,22 +5718,6 @@
     async function refreshUserProfile(silent = true) {
       if (!authUser || !authUser.email) return;
       try {
-        // Purge any legacy test items (k_beat_*, b_beat_*) from local storage before syncing
-        if (Array.isArray(state.inventory)) {
-          const filteredInv = state.inventory.filter(g => !String(g.id || '').startsWith('k_beat_'));
-          if (filteredInv.length !== state.inventory.length) {
-            state.inventory = filteredInv;
-            localStorage.setItem('kf_inventory', JSON.stringify(state.inventory));
-          }
-        }
-        if (Array.isArray(state.boards)) {
-          const filteredBoards = state.boards.filter(b => !String(b.id || '').startsWith('b_beat_'));
-          if (filteredBoards.length !== state.boards.length) {
-            state.boards = filteredBoards;
-            localStorage.setItem('kf_boards', JSON.stringify(state.boards));
-          }
-        }
-
         const res = await fetch('/api/auth/sync', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -5766,16 +5750,14 @@
             localStorage.setItem('kf_nationality', data.user.nationality);
           }
           if (data.user.gear && Array.isArray(data.user.gear) && data.user.gear.length > 0) {
-            const cleanServerGear = data.user.gear.filter(g => !String(g.id || '').startsWith('k_beat_'));
-            if ((!state.inventory || state.inventory.length === 0) && cleanServerGear.length > 0) {
-              state.inventory = cleanServerGear;
+            if (!state.inventory || state.inventory.length === 0) {
+              state.inventory = data.user.gear;
               localStorage.setItem('kf_inventory', JSON.stringify(state.inventory));
             }
           }
           if (data.user.boards && Array.isArray(data.user.boards) && data.user.boards.length > 0) {
-            const cleanServerBoards = data.user.boards.filter(b => !String(b.id || '').startsWith('b_beat_'));
-            if ((!state.boards || state.boards.length === 0) && cleanServerBoards.length > 0) {
-              state.boards = cleanServerBoards;
+            if (!state.boards || state.boards.length === 0) {
+              state.boards = data.user.boards;
               localStorage.setItem('kf_boards', JSON.stringify(state.boards));
             }
           }
@@ -8055,7 +8037,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=53').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=54').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));

@@ -86,8 +86,51 @@
       "nationality": "Swiss",
       "registered_at": "2026-11-08T00:39:35.595561Z",
       "last_login": "2026-11-08T01:00:39Z",
-      "gear": [],
-      "boards": [],
+      "gear": [
+        {
+          "id": "k_beat_evo12",
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Duotone",
+          "model": "Evo",
+          "size": 12,
+          "year": 2025,
+          "active": true
+        },
+        {
+          "id": "k_beat_evo9",
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Duotone",
+          "model": "Evo",
+          "size": 9,
+          "year": 2025,
+          "active": true
+        },
+        {
+          "id": "k_beat_reb7",
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Duotone",
+          "model": "Rebel",
+          "size": 7,
+          "year": 2024,
+          "active": true
+        }
+      ],
+      "boards": [
+        {
+          "id": "b_beat_jaime139",
+          "type": "Twintip",
+          "brand": "Duotone",
+          "model": "Jaime",
+          "size": "139",
+          "volume": null,
+          "mast": null,
+          "carbon": true,
+          "active": true
+        }
+      ],
       "weight_kg": 93.0,
       "level": "advanced",
       "board": "Twintip",
@@ -184,7 +227,38 @@
       "nationality": "German",
       "registered_at": "2026-11-07T12:11:00Z",
       "last_login": "2026-11-07T12:11:00Z",
-      "gear": [],
+      "gear": [
+        {
+          "id": "k_marzena_reb8",
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Duotone",
+          "model": "Rebel SLS",
+          "size": 8,
+          "year": 2024,
+          "active": true
+        },
+        {
+          "id": "k_marzena_reb10",
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Duotone",
+          "model": "Rebel SLS",
+          "size": 10,
+          "year": 2024,
+          "active": true
+        },
+        {
+          "id": "k_marzena_evo12",
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Duotone",
+          "model": "Evo",
+          "size": 12,
+          "year": 2023,
+          "active": true
+        }
+      ],
       "boards": [
         {
           "id": "b_marzena_1",
@@ -218,8 +292,51 @@
       "nationality": "Spanish",
       "registered_at": "2026-11-08T06:29:00Z",
       "last_login": "2026-11-08T06:29:00Z",
-      "gear": [],
-      "boards": [],
+      "gear": [
+        {
+          "id": "k_rafa_xr8_9",
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Core",
+          "model": "XR8",
+          "size": 9,
+          "year": 2024,
+          "active": true
+        },
+        {
+          "id": "k_rafa_xr8_11",
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Core",
+          "model": "XR8",
+          "size": 11,
+          "year": 2024,
+          "active": true
+        },
+        {
+          "id": "k_rafa_xr7_7",
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Core",
+          "model": "XR7",
+          "size": 7,
+          "year": 2023,
+          "active": true
+        }
+      ],
+      "boards": [
+        {
+          "id": "b_rafa_fusion137",
+          "type": "Twintip",
+          "brand": "Core",
+          "model": "Fusion 5",
+          "size": "137",
+          "volume": null,
+          "mast": null,
+          "carbon": true,
+          "active": true
+        }
+      ],
       "weight_kg": 75.0,
       "level": "advanced",
       "board": "Twintip",
@@ -238,8 +355,51 @@
       "nationality": "German",
       "registered_at": "2026-11-08T07:48:00Z",
       "last_login": "2026-11-08T07:53:00Z",
-      "gear": [],
-      "boards": [],
+      "gear": [
+        {
+          "id": "k_maurice_orbit9",
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "North",
+          "model": "Orbit",
+          "size": 9,
+          "year": 2024,
+          "active": true
+        },
+        {
+          "id": "k_maurice_orbit11",
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "North",
+          "model": "Orbit",
+          "size": 11,
+          "year": 2024,
+          "active": true
+        },
+        {
+          "id": "k_maurice_reach7",
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "North",
+          "model": "Reach",
+          "size": 7,
+          "year": 2024,
+          "active": true
+        }
+      ],
+      "boards": [
+        {
+          "id": "b_maurice_atmos138",
+          "type": "Twintip",
+          "brand": "North",
+          "model": "Atmos Hybrid",
+          "size": "138",
+          "volume": null,
+          "mast": null,
+          "carbon": false,
+          "active": true
+        }
+      ],
       "weight_kg": 73.0,
       "level": "intermediate",
       "board": "Twintip",
@@ -258,8 +418,41 @@
       "nationality": "Swiss",
       "registered_at": "2026-11-08T08:41:00Z",
       "last_login": "2026-11-09T11:44:55Z",
-      "gear": [],
-      "boards": [],
+      "gear": [
+        {
+          "id": "k_raphi_thrive9",
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Harlem",
+          "model": "Thrive V1",
+          "size": 9,
+          "year": 2024,
+          "active": true
+        },
+        {
+          "id": "k_raphi_thrive12",
+          "category": "kite",
+          "kite_type": "tube",
+          "brand": "Harlem",
+          "model": "Thrive V1",
+          "size": 12,
+          "year": 2024,
+          "active": true
+        }
+      ],
+      "boards": [
+        {
+          "id": "b_raphi_aspect138",
+          "type": "Twintip",
+          "brand": "Harlem",
+          "model": "Aspect",
+          "size": "138",
+          "volume": null,
+          "mast": null,
+          "carbon": true,
+          "active": true
+        }
+      ],
       "weight_kg": 75.0,
       "level": "intermediate",
       "board": "Twintip",
@@ -311,7 +504,19 @@
           "active": true
         }
       ],
-      "boards": [],
+      "boards": [
+        {
+          "id": "b_tot_atmos138",
+          "type": "Twintip",
+          "brand": "North",
+          "model": "Atmos Pro Carbon",
+          "size": "138",
+          "volume": null,
+          "mast": null,
+          "carbon": true,
+          "active": true
+        }
+      ],
       "weight_kg": 95.0,
       "level": "intermediate",
       "board": "Twintip",
