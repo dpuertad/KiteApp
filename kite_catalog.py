@@ -10,6 +10,7 @@ KITE_CATALOG = {
             "type": "5-Strut High-Performance Big Air / Booster",
             "material": "Aramid / Boom Airframe",
             "sizes": {
+                5: {"min": 25, "sweet": (29, 41), "max": 47},
                 6: {"min": 23, "sweet": (27, 38), "max": 44},
                 7: {"min": 20.5, "sweet": (24.5, 35), "max": 41},
                 8: {"min": 18.5, "sweet": (22.5, 32), "max": 38},
@@ -17,6 +18,7 @@ KITE_CATALOG = {
                 10: {"min": 15, "sweet": (18.5, 26.5), "max": 32},
                 11: {"min": 13.5, "sweet": (17.0, 24.5), "max": 30},
                 12: {"min": 12.5, "sweet": (16.0, 23.0), "max": 28},
+                13: {"min": 11.5, "sweet": (14.5, 21.5), "max": 26},
             }
         },
         "Vertigo": {
@@ -24,34 +26,44 @@ KITE_CATALOG = {
             "material": "Dacron DP175LL",
             "sizes": {
                 5: {"min": 24, "sweet": (27, 37), "max": 42},
+                6: {"min": 21, "sweet": (24.5, 34), "max": 40},
                 7: {"min": 19, "sweet": (22.5, 31.5), "max": 38},
+                8: {"min": 17, "sweet": (20.5, 29), "max": 36},
                 9: {"min": 15, "sweet": (18.5, 27), "max": 34},
+                10: {"min": 13.5, "sweet": (17, 25), "max": 31},
                 11: {"min": 12.5, "sweet": (15.5, 23), "max": 29},
+                12: {"min": 11.5, "sweet": (14.5, 21.5), "max": 27},
                 13: {"min": 10.5, "sweet": (13.5, 20), "max": 25},
+                14: {"min": 9.5, "sweet": (12.5, 18.5), "max": 23},
             }
         },
         "Elips": {
             "type": "3-Strut Wave / Drift / Foil",
             "material": "Teijin T9669 Triple Ripstop",
             "sizes": {
+                4: {"min": 26, "sweet": (30, 42), "max": 46},
                 5: {"min": 23, "sweet": (26.5, 37), "max": 41},
                 6: {"min": 20, "sweet": (23.5, 33), "max": 38},
                 7: {"min": 18, "sweet": (21, 30), "max": 36},
                 8: {"min": 16, "sweet": (19, 27.5), "max": 34},
                 9: {"min": 14, "sweet": (17, 25), "max": 32},
                 10: {"min": 12.5, "sweet": (15, 22.5), "max": 29},
+                11: {"min": 11.5, "sweet": (14, 21), "max": 27},
+                12: {"min": 10.5, "sweet": (13, 19.5), "max": 25},
             }
         },
         "Strutless": {
             "type": "0-Strut Ultra-Lightwind & Hydrofoil",
             "material": "Ultra-Light 2D Tech",
             "sizes": {
+                5: {"min": 18, "sweet": (21, 29), "max": 35},
                 7: {"min": 15, "sweet": (18, 26), "max": 31},
                 9: {"min": 12.5, "sweet": (15, 22), "max": 27},
                 11: {"min": 10.5, "sweet": (13, 19), "max": 24},
                 13: {"min": 9, "sweet": (11, 16.5), "max": 21},
                 15: {"min": 8, "sweet": (9.5, 14.5), "max": 19},
                 17: {"min": 7, "sweet": (8.5, 13), "max": 17},
+                19: {"min": 6.5, "sweet": (8, 12), "max": 15},
             }
         },
         "Freewave": {
@@ -59,9 +71,27 @@ KITE_CATALOG = {
             "material": "Standard Dacron",
             "sizes": {
                 5: {"min": 24, "sweet": (27, 36), "max": 41},
+                6: {"min": 21, "sweet": (24, 33), "max": 39},
                 7: {"min": 19, "sweet": (22.5, 31), "max": 37},
+                8: {"min": 17, "sweet": (20.5, 28.5), "max": 35},
                 9: {"min": 15, "sweet": (18.5, 26.5), "max": 33},
+                10: {"min": 13.5, "sweet": (17, 24.5), "max": 30},
                 11: {"min": 12.5, "sweet": (15.5, 22.5), "max": 28},
+                12: {"min": 11.5, "sweet": (14.5, 21), "max": 26},
+            }
+        },
+        "Unik": {
+            "type": "1-Strut Lightwind, Foil & Wave Minimalist",
+            "material": "Ultra-light Dacron / Teijin",
+            "sizes": {
+                3.2: {"min": 25, "sweet": (28, 40), "max": 45},
+                4.2: {"min": 22, "sweet": (25, 36), "max": 41},
+                5.2: {"min": 19, "sweet": (22.5, 32), "max": 37},
+                6.8: {"min": 16, "sweet": (19, 27.5), "max": 33},
+                8: {"min": 14, "sweet": (16.5, 24), "max": 29},
+                9: {"min": 12.5, "sweet": (15, 22), "max": 27},
+                10.2: {"min": 11, "sweet": (13.5, 19.5), "max": 24},
+                12.9: {"min": 9.5, "sweet": (11.5, 17), "max": 21},
             }
         }
     },
@@ -182,6 +212,21 @@ KITE_CATALOG = {
                 12: {"min": 11.5, "sweet": (14.5, 23.5), "max": 29},
             }
         },
+        "Thrive V1": {
+            "type": "3-Strut All-Round / Big Air / Loop (Hadlow & Grösel)",
+            "material": "Brainchild PRO Weld / Twincross FlyLite",
+            "sizes": {
+                6: {"min": 21, "sweet": (24.5, 33), "max": 39},
+                7: {"min": 19, "sweet": (22.5, 31.5), "max": 37},
+                8: {"min": 17, "sweet": (20.5, 29.5), "max": 35},
+                9: {"min": 15, "sweet": (18.5, 26.5), "max": 33},
+                10: {"min": 13.5, "sweet": (17, 25), "max": 31},
+                11: {"min": 12.5, "sweet": (15.5, 23), "max": 28},
+                12: {"min": 11.5, "sweet": (14.5, 21.5), "max": 26},
+                13: {"min": 10.5, "sweet": (13.5, 20), "max": 24},
+                15: {"min": 9.5, "sweet": (11.5, 17.5), "max": 21},
+            }
+        },
         "Thrive": {
             "type": "3-Strut All-Round / Big Air / Loop (Hadlow & Grösel)",
             "material": "Brainchild PRO Weld / Twincross FlyLite",
@@ -206,6 +251,20 @@ KITE_CATALOG = {
                 9: {"min": 15, "sweet": (18.5, 26.5), "max": 33},
                 10: {"min": 13.5, "sweet": (17, 25), "max": 31},
                 12: {"min": 11.5, "sweet": (14.5, 21.5), "max": 26},
+            }
+        },
+        "Pace": {
+            "type": "3-Strut Dynamic Freeride & Big Air",
+            "material": "Brainchild PRO Weld / Stiff Rigid Frame",
+            "sizes": {
+                6: {"min": 21, "sweet": (24.5, 33), "max": 39},
+                7: {"min": 19, "sweet": (22.5, 31.5), "max": 37},
+                8: {"min": 17, "sweet": (20.5, 29.5), "max": 35},
+                9: {"min": 15, "sweet": (18.5, 26.5), "max": 33},
+                10: {"min": 13.5, "sweet": (17, 25), "max": 31},
+                11: {"min": 12.5, "sweet": (15.5, 23), "max": 28},
+                12: {"min": 11.5, "sweet": (14.5, 21.5), "max": 26},
+                13: {"min": 10.5, "sweet": (13.5, 20), "max": 24},
             }
         },
         "Light": {

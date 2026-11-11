@@ -108,6 +108,31 @@ def render_admin_dashboard(summary: dict) -> str:
       </div>
     </div>
 
+    <!-- 💬 RIDER FEEDBACK & FEATURE REQUESTS (Interactive Support System) -->
+    <div class="bg-gradient-to-br from-slate-900/95 to-slate-900/70 border border-sky-500/30 rounded-3xl p-5 sm:p-6 shadow-xl space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xl">💬</span>
+            <h3 class="font-extrabold text-base text-white tracking-tight">Rider Feedback, Missing Gear & Support Tickets</h3>
+            <span id="stat-feedback-badge" class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase font-mono bg-sky-500/20 text-sky-300 border border-sky-500/30">
+              0 Tickets
+            </span>
+          </div>
+          <p class="text-xs text-slate-400 mt-1">Review feedback, answer riders directly with 1-click, and send native push notifications & emails automatically.</p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button type="button" id="admin-fb-filter-open" onclick="filterFeedbackDashboard('open')" class="px-2.5 py-1 rounded-xl bg-sky-500/20 text-sky-300 border border-sky-500/30 text-xs font-bold transition">Open Tickets</button>
+          <button type="button" id="admin-fb-filter-all" onclick="filterFeedbackDashboard('all')" class="px-2.5 py-1 rounded-xl bg-slate-800 text-slate-400 hover:text-white border border-slate-700/80 text-xs font-semibold transition">All Tickets</button>
+        </div>
+      </div>
+
+      <!-- Feedback Cards Grid -->
+      <div id="feedback-tickets-container" class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+        <!-- Dynamic feedback tickets -->
+      </div>
+    </div>
+
     <!-- 👥 REGISTERED RIDERS DIRECTORY SECTION -->
     <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-sm space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
@@ -358,6 +383,13 @@ def render_admin_dashboard(summary: dict) -> str:
                 <span class="px-2 py-0.5 rounded-lg bg-slate-900 border border-slate-800 text-sky-300 font-medium">
                   ${{flag}} ${{r.nationality}}
                 </span>` : ''}}
+              ${{(r.gear_count > 0 || r.boards_count > 0) ? `
+                <span class="px-2 py-0.5 rounded-lg bg-sky-500/15 border border-sky-500/30 text-sky-300 font-mono font-bold">
+                  🪁 ${{r.gear_count}} ${{r.gear_count === 1 ? 'Kite' : 'Kites'}} · 🏄 ${{r.boards_count}} ${{r.boards_count === 1 ? 'Board' : 'Boards'}}
+                </span>` : `
+                <span class="px-2 py-0.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-500 font-mono text-[10px]">
+                  ⚠️ Gear setup pending by rider
+                </span>`}}
             </div>
 
             <!-- Stored Cloud Gear & Boards (Expandable Dropdowns) -->
@@ -476,9 +508,148 @@ def render_admin_dashboard(summary: dict) -> str:
       renderRidersList(filtered);
     }}
 
+    let allFeedback = [];
+    let activeFbFilter = 'open';
+
+    function filterFeedbackDashboard(filter) {{
+      activeFbFilter = filter;
+      const btnOpen = document.getElementById('admin-fb-filter-open');
+      const btnAll = document.getElementById('admin-fb-filter-all');
+      if (btnOpen && btnAll) {{
+        if (filter === 'open') {{
+          btnOpen.className = "px-2.5 py-1 rounded-xl bg-sky-500/20 text-sky-300 border border-sky-500/30 text-xs font-bold transition";
+          btnAll.className = "px-2.5 py-1 rounded-xl bg-slate-800 text-slate-400 hover:text-white border border-slate-700/80 text-xs font-semibold transition";
+        }} else {{
+          btnAll.className = "px-2.5 py-1 rounded-xl bg-sky-500/20 text-sky-300 border border-sky-500/30 text-xs font-bold transition";
+          btnOpen.className = "px-2.5 py-1 rounded-xl bg-slate-800 text-slate-400 hover:text-white border border-slate-700/80 text-xs font-semibold transition";
+        }}
+      }}
+      renderFeedbackDashboard(filter);
+    }}
+
+    function renderFeedbackDashboard(filter = 'open') {{
+      const container = document.getElementById('feedback-tickets-container');
+      if (!container) return;
+      const list = filter === 'open' 
+        ? allFeedback.filter(f => f.status === 'open' || !f.status || (!f.status && !f.reply)) 
+        : allFeedback;
+
+      if (!list || list.length === 0) {{
+        container.innerHTML = `
+          <div class="col-span-full p-6 rounded-2xl bg-slate-950/40 border border-slate-800 text-center space-y-1.5">
+            <span class="text-xl">💬</span>
+            <p class="text-sm font-bold text-slate-300">${{filter === 'open' ? 'No open rider feedback tickets' : 'No feedback tickets received yet'}}</p>
+            <p class="text-xs text-slate-500">${{filter === 'open' ? 'All rider feedback and gear requests have been addressed.' : 'Suggestions from riders will appear here.'}}</p>
+          </div>
+        `;
+        return;
+      }}
+
+      container.innerHTML = list.map((fb, idx) => {{
+        const id = fb.id || `fb_${{idx}}`;
+        const name = fb.name || 'Anonymous Rider';
+        const email = fb.email || '';
+        const spot = fb.spot || '';
+        const msg = fb.message || fb.feedback || '';
+        const isClosed = fb.status === 'closed' || Boolean(fb.reply);
+        const reply = fb.reply || '';
+        const dateStr = fb.created_at || fb.timestamp ? timeAgo(fb.created_at || fb.timestamp) : 'Recently';
+
+        return `
+          <div class="p-4 rounded-2xl bg-slate-950/80 border ${{isClosed ? 'border-slate-800 opacity-75' : 'border-sky-500/40 shadow-lg shadow-sky-500/5'}} space-y-3 transition">
+            <div class="flex items-start justify-between gap-2">
+              <div class="min-w-0 flex-1 truncate">
+                <div class="flex items-center space-x-2 truncate">
+                  <h4 class="font-extrabold text-sm text-white truncate">${{name}}</h4>
+                  <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase font-mono tracking-wider ${{isClosed ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse'}}">
+                    ${{isClosed ? '✓ Resolved' : '⏳ Open Ticket'}}
+                  </span>
+                </div>
+                <p class="text-xs text-sky-400 font-mono truncate mt-0.5">${{email}}</p>
+                ${{spot ? `<p class="text-[11px] text-slate-400 mt-0.5">📍 ${{spot}}</p>` : ''}}
+              </div>
+              <span class="text-[10px] text-slate-500 font-mono flex-shrink-0">${{dateStr}}</span>
+            </div>
+
+            <!-- Feedback Message -->
+            <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-200 leading-relaxed font-sans">
+              "${{msg}}"
+            </div>
+
+            ${{isClosed ? `
+              <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 space-y-1">
+                <div class="flex items-center justify-between text-[10px]">
+                  <span class="font-bold text-emerald-300">↳ Your Answer Sent:</span>
+                  <span class="text-slate-500 font-mono text-[9px]">${{fb.replied_at ? timeAgo(fb.replied_at) : 'Sent'}}</span>
+                </div>
+                <p class="text-xs text-emerald-100 font-medium">"${{reply}}"</p>
+                <p class="text-[9px] text-emerald-400/80 font-mono">Dispatched to rider via Web Push & Email</p>
+              </div>
+            ` : `
+              <div class="space-y-2 pt-1 border-t border-slate-800/80">
+                <textarea 
+                  id="admin-reply-textarea-${{id}}" 
+                  rows="2" 
+                  placeholder="Type answer to ${{name}} (e.g. 'Harlem boards and Thrive v1 added to the catalog!')..." 
+                  class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition resize-none"
+                ></textarea>
+                <div class="flex items-center justify-end">
+                  <button 
+                    type="button" 
+                    onclick="replyFeedbackTicketAdmin('${{id}}', '${{email}}', this)" 
+                    class="py-1.5 px-3.5 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-400 hover:to-emerald-400 text-slate-950 font-black text-xs shadow-md shadow-sky-500/20 transition flex items-center space-x-1.5 active:scale-95"
+                  >
+                    <span>💬 Reply & Close Ticket</span>
+                  </button>
+                </div>
+              </div>
+            `}}
+          </div>
+        `;
+      }}).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }}
+
+    async function replyFeedbackTicketAdmin(ticketId, email, btnEl) {{
+      const textarea = document.getElementById(`admin-reply-textarea-${{ticketId}}`);
+      const replyMsg = textarea ? textarea.value.trim() : '';
+      if (!replyMsg) {{
+        alert("Please write a reply message for the rider.");
+        return;
+      }}
+      if (btnEl) {{
+        btnEl.disabled = true;
+        btnEl.innerText = "Delivering Push & Email...";
+      }}
+
+      try {{
+        const res = await fetch('/api/admin/feedback/reply', {{
+          method: 'POST',
+          headers: {{ 'Content-Type': 'application/json' }},
+          body: JSON.stringify({{ id: ticketId, email: email, reply: replyMsg, close: true }})
+        }});
+        const d = await res.json();
+        if (!res.ok) throw new Error(d.error || 'Failed to reply');
+
+        let alertText = `✅ Reply sent to ${{email}}! Ticket closed.`;
+        if (d.delivered_push) alertText += ` (📲 Web Push sent to device)`;
+        if (d.delivered_email) alertText += ` (✉️ Email sent)`;
+        alert(alertText);
+        fetchFreshData();
+      }} catch (err) {{
+        alert("⚠️ Failed to reply: " + err.message);
+        if (btnEl) {{
+          btnEl.disabled = false;
+          btnEl.innerText = "💬 Reply & Close Ticket";
+        }}
+      }}
+    }}
+
     function renderDashboard(d) {{
       const summary = d.summary || {{}};
       allRiders = (d.registered_riders || []);
+      allFeedback = (d.feedback || []);
 
       // 1. Core KPIs
       const regRidersEl = document.getElementById('stat-registered-riders');
@@ -489,6 +660,13 @@ def render_admin_dashboard(summary: dict) -> str:
 
       const badgeEl = document.getElementById('stat-riders-badge');
       if (badgeEl) badgeEl.innerText = `${{summary.total_registered_riders || allRiders.length}} Verified Accounts`;
+
+      const fbBadge = document.getElementById('stat-feedback-badge');
+      if (fbBadge) {{
+        const openFbCount = allFeedback.filter(f => f.status === 'open' || !f.status || (!f.status && !f.reply)).length;
+        fbBadge.innerText = `${{openFbCount}} Open / ${{allFeedback.length}} Total`;
+      }}
+      renderFeedbackDashboard(activeFbFilter);
 
       document.getElementById('stat-total-views').innerText = summary.total_views || 0;
       document.getElementById('stat-total-spots').innerText = (d.top_spots || []).length;

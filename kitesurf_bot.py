@@ -159,21 +159,49 @@ def load_users_db() -> dict:
 
     # Purge any legacy test gear/boards (k_beat_*, b_beat_*) and enforce approved_set beta status
     approved_set = load_approved_beta_emails()
+    # Ensure any user already approved in users db is retained in approved_set across restarts
+    changed_approved = False
     for em, u in db.get("users", {}).items():
+        em_clean = em.lower().strip()
+        if (u.get("beta_status") == "approved" or u.get("is_beta_rider") is True) and u.get("beta_status") not in ("left", "declined"):
+            if em_clean not in approved_set:
+                approved_set.add(em_clean)
+                changed_approved = True
+    if changed_approved:
+        try:
+            with open(APPROVED_BETA_FILE, "w", encoding="utf-8") as f:
+                json.dump(list(approved_set), f, indent=2)
+        except Exception:
+            pass
+
+    for em, u in db.get("users", {}).items():
+        em_clean = em.lower().strip()
         if isinstance(u.get("gear"), list):
             u["gear"] = [g for g in u["gear"] if not str(g.get("id", "")).startswith("k_beat_")]
         if isinstance(u.get("boards"), list):
             u["boards"] = [b for b in u["boards"] if not str(b.get("id", "")).startswith("b_beat_")]
-        if u.get("beta_status") == "left":
+        if u.get("beta_status") in ("left", "declined"):
             u["is_beta_rider"] = False
             continue
-        if em in approved_set:
+        if em_clean in approved_set:
             u["is_beta_rider"] = True
             u["beta_status"] = "approved"
         else:
             u["is_beta_rider"] = False
             if u.get("beta_status") == "approved":
                 u["beta_status"] = "none"
+
+    # Normalize feedback tickets
+    if "feedback" in db and isinstance(db["feedback"], list):
+        for idx, fb in enumerate(db["feedback"]):
+            if not fb.get("id"):
+                fb["id"] = f"fb_{idx+1}_{abs(hash(fb.get('email', '') + fb.get('created_at', '') + str(idx)))}"
+            if not fb.get("status"):
+                fb["status"] = "closed" if fb.get("reply") else "open"
+            if not fb.get("message") and fb.get("feedback"):
+                fb["message"] = fb["feedback"]
+            if not fb.get("created_at") and fb.get("timestamp"):
+                fb["created_at"] = fb["timestamp"]
     return db
 
 def save_users_db(db: dict):
@@ -3773,13 +3801,48 @@ def start_embedded_http_server(port: int = 8080):
                             })
                     pending.sort(key=lambda x: x.get("applied_at") or "", reverse=True)
                     subs = load_admin_push_subscriptions()
+
+                    # All feedback tickets
+                    feedback_items = list(db.get("feedback", []))
+                    feedback_items.sort(key=lambda x: x.get("created_at") or x.get("timestamp") or "", reverse=True)
+                    open_feedback_count = len([f for f in feedback_items if f.get("status", "open") == "open"])
+
+                    # Summary list of all registered riders with real quiver breakdown
+                    riders_summary = []
+                    for r_em, r_u in users.items():
+                        g_list = r_u.get("gear", [])
+                        b_list = r_u.get("boards", [])
+                        g_str = ", ".join([f"{g.get('brand','')} {g.get('model','')} {g.get('size','')}m".strip() for g in g_list[:3]])
+                        b_str = ", ".join([f"{b.get('brand','')} {b.get('model','')} {b.get('size','')}".strip() for b in b_list[:2]])
+                        riders_summary.append({
+                            "email": r_em,
+                            "name": r_u.get("name") or r_em.split("@")[0].title(),
+                            "nationality": r_u.get("nationality") or "",
+                            "weight_kg": r_u.get("weight_kg", 75),
+                            "level": r_u.get("level", "intermediate"),
+                            "is_beta": bool(r_u.get("is_beta_rider") or r_u.get("beta_status") == "approved"),
+                            "beta_status": r_u.get("beta_status", "none"),
+                            "kites_count": len(g_list),
+                            "boards_count": len(b_list),
+                            "gear_summary": g_str or "No kites yet",
+                            "boards_summary": b_str or "No boards yet",
+                            "kites": g_list,
+                            "boards": b_list,
+                            "registered_at": r_u.get("registered_at") or r_u.get("created_at") or "",
+                            "last_active": r_u.get("last_login") or r_u.get("last_sync") or ""
+                        })
+                    riders_summary.sort(key=lambda x: x.get("last_active") or x.get("registered_at") or "", reverse=True)
+
                     resp_data = {
                         "success": True,
                         "pending": pending,
                         "pending_count": len(pending),
                         "approved_count": approved_count,
                         "total_riders": len(users),
-                        "admin_push_count": len(subs)
+                        "admin_push_count": len(subs),
+                        "feedback": feedback_items,
+                        "open_feedback_count": open_feedback_count,
+                        "all_riders": riders_summary
                     }
                     self.send_response(200)
                     self.send_header("Content-Type", "application/json")
@@ -5314,11 +5377,16 @@ def start_embedded_http_server(port: int = 8080):
                     from datetime import datetime
                     now_str = datetime.utcnow().isoformat() + "Z"
                     entry = {
+                        "id": f"fb_{int(time.time() * 1000)}",
                         "name": name,
                         "email": email,
                         "spot": spot,
                         "message": msg,
-                        "created_at": now_str
+                        "created_at": now_str,
+                        "status": "open",
+                        "reply": None,
+                        "replied_at": None,
+                        "push_subscription": data.get("push_subscription")
                     }
                     db = load_users_db()
                     if "feedback" not in db:
@@ -5347,6 +5415,135 @@ def start_embedded_http_server(port: int = 8080):
                     self.wfile.write(json.dumps({"success": True, "message": "Thank you! The HolyGust team has received your feedback."}).encode("utf-8"))
                 except Exception as e:
                     self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # ADMIN: Reply to Rider Feedback Ticket & Send Push Notification
+            if parsed.path == "/api/admin/feedback/reply":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    data = json.loads(body)
+                    ticket_id = (data.get("id") or "").strip()
+                    user_email = (data.get("email") or "").strip().lower()
+                    reply_text = (data.get("reply") or "").strip()
+                    close_ticket = data.get("close", True)
+
+                    if not reply_text:
+                        raise ValueError("Reply text is required.")
+
+                    db = load_users_db()
+                    feedbacks = db.get("feedback", [])
+                    target_ticket = None
+                    for fb in feedbacks:
+                        if ticket_id and str(fb.get("id")) == str(ticket_id):
+                            target_ticket = fb
+                            break
+                        elif not ticket_id and user_email and fb.get("email", "").lower() == user_email:
+                            target_ticket = fb
+                            break
+
+                    if not target_ticket:
+                        raise ValueError("Feedback ticket not found.")
+
+                    from datetime import datetime, timezone
+                    now_iso = datetime.now(timezone.utc).isoformat() + "Z"
+                    target_ticket["reply"] = reply_text
+                    target_ticket["replied_at"] = now_iso
+                    if close_ticket:
+                        target_ticket["status"] = "closed"
+
+                    save_users_db(db)
+
+                    # Send Native Web Push Notification to the Rider!
+                    delivered_push = False
+                    try:
+                        import spot_alerts
+                        # Find push subscription:
+                        # 1. Directly in ticket
+                        # 2. In user profile in users_web_db
+                        # 3. In spot_alerts
+                        sub = target_ticket.get("push_subscription")
+                        if not sub:
+                            u_obj = db.get("users", {}).get(target_ticket.get("email", "").lower(), {})
+                            sub = u_obj.get("push_subscription")
+                            if not sub and isinstance(u_obj.get("spot_alerts"), dict):
+                                sub = u_obj["spot_alerts"].get("push_subscription")
+
+                        if sub and sub.get("endpoint"):
+                            push_payload = {
+                                "title": "💬 HolyGust Feedback Reply",
+                                "body": f"Daniel: {reply_text}",
+                                "url": "/?open_profile=1",
+                                "icon": "/icon-192.png",
+                                "badge": "/icon-192.png"
+                            }
+                            ok, status = spot_alerts.send_web_push(sub, push_payload)
+                            if ok:
+                                delivered_push = True
+                                print(f"[AdminFeedback] Delivered Web Push to {target_ticket.get('email')}")
+                    except Exception as pe:
+                        print(f"[AdminFeedback] Web push error: {pe}")
+
+                    # Also send Email via Resend if email is valid
+                    delivered_email = False
+                    rider_email = target_ticket.get("email", "")
+                    if "@" in rider_email and not rider_email.startswith("Not provided"):
+                        rider_name = target_ticket.get("name") or rider_email.split("@")[0].title()
+                        original_msg = target_ticket.get("message") or target_ticket.get("feedback") or ""
+                        html_reply = f"""<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="margin: 0; padding: 24px 0; background-color: #0b1120; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <div style="max-width: 520px; margin: 0 auto; background: #0f172a; border-radius: 20px; overflow: hidden; border: 1px solid #1e293b; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+    <div style="padding: 24px 20px; text-align: center; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
+      <div style="font-size: 30px; margin-bottom: 4px;">💬</div>
+      <h1 style="margin: 0; color: #ffffff; font-size: 20px; font-weight: 800;">HolyGust Team Update</h1>
+      <p style="margin: 4px 0 0; color: rgba(255,255,255,0.9); font-size: 13px; font-weight: 600;">Response to Your Feedback</p>
+    </div>
+    <div style="padding: 26px 22px; color: #f8fafc;">
+      <h2 style="margin: 0 0 10px; font-size: 16px; color: #ffffff; font-weight: 700;">Aloha {rider_name},</h2>
+      <p style="margin: 0 0 14px; font-size: 13px; line-height: 1.6; color: #94a3b8;">
+        Thank you for helping us make HolyGust better! Daniel and the team have responded to your ticket:
+      </p>
+      <div style="background: rgba(15, 23, 42, 0.8); border-left: 3px solid #38bdf8; border-radius: 8px; padding: 12px 14px; margin: 16px 0;">
+        <p style="margin: 0 0 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; font-weight: 700;">Your Message:</p>
+        <p style="margin: 0; font-size: 13px; color: #cbd5e1; font-style: italic;">"{original_msg}"</p>
+      </div>
+      <div style="background: rgba(14, 165, 233, 0.12); border: 1px solid rgba(14, 165, 233, 0.35); border-radius: 12px; padding: 16px; margin: 18px 0;">
+        <p style="margin: 0 0 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #38bdf8; font-weight: 800;">Response from HolyGust:</p>
+        <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #f0f9ff; font-weight: 600;">{reply_text}</p>
+      </div>
+      <div style="text-align: center; margin: 24px 0 12px;">
+        <a href="https://holygust.com" style="display: inline-block; background: #0ea5e9; color: #ffffff; font-weight: 800; font-size: 13px; padding: 12px 28px; border-radius: 10px; text-decoration: none;">
+          Launch HolyGust
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>"""
+                        try:
+                            send_email_via_resend(rider_email, "💬 HolyGust Team replied to your feedback", html_reply)
+                            delivered_email = True
+                        except Exception as ee:
+                            print(f"[AdminFeedback] Email reply error: {ee}")
+
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({
+                        "success": True,
+                        "delivered_push": delivered_push,
+                        "delivered_email": delivered_email,
+                        "ticket": target_ticket
+                    }).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(400)
                     self.send_header("Content-Type", "application/json")
                     self._send_cors_headers()
                     self.end_headers()

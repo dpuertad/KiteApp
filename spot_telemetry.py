@@ -324,9 +324,11 @@ def get_spot_analytics_summary() -> dict:
             "total_pending_beta": total_pending,
             "total_riders_tracked": len(set(v.get("email") for v in views if v.get("email") and v.get("email") != "anonymous")),
             "total_searches": sum(s_totals.values()),
-            "total_travel_inquiries": len(travel_inquiries)
+            "total_travel_inquiries": len(travel_inquiries),
+            "total_feedback": len(users_db.get("feedback", []))
         },
         "registered_riders": registered_riders,
+        "feedback": users_db.get("feedback", []),
         "top_spots": top_spots,
         "top_nationalities": top_nationalities,
         "recent_views": views[:30],

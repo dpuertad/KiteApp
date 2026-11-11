@@ -62,11 +62,11 @@
         "weekend_only": false,
         "spots": [
           "Cumbuco, Brazil",
-          "Praia de Macei\u00f3 (Camocim), Brazil"
+          "Praia de Maceió (Camocim), Brazil"
         ]
       },
       "spot": {
-        "name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
+        "name": "Icaraí de Amontada (Icaraizinho), Brazil",
         "lat": -3.0232,
         "lon": -39.6433,
         "timezone": "America/Fortaleza",
@@ -95,12 +95,12 @@
       "level": "advanced",
       "board": "Twintip",
       "favorite_spots": [
-        "Icara\u00ed de Amontada (Icaraizinho), Brazil"
+        "Icaraí de Amontada (Icaraizinho), Brazil"
       ],
       "is_beta_rider": false,
       "beta_status": "none",
       "spot": {
-        "name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
+        "name": "Icaraí de Amontada (Icaraizinho), Brazil",
         "lat": -3.0232,
         "lon": -39.6433
       }
@@ -166,19 +166,20 @@
       "level": "intermediate",
       "board": "Twintip",
       "favorite_spots": [
-        "Icara\u00ed de Amontada (Icaraizinho), Brazil"
+        "Icaraí de Amontada (Icaraizinho), Brazil"
       ],
-      "is_beta_rider": false,
-      "beta_status": "none",
+      "is_beta_rider": true,
+      "beta_status": "approved",
       "spot": {
-        "name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
+        "name": "Icaraí de Amontada (Icaraizinho), Brazil",
         "lat": -3.0232,
         "lon": -39.6433,
         "timezone": "America/Fortaleza",
         "beach_angle": 55,
         "model_label": "ECMWF (9km) + Bay Venturi"
       },
-      "last_sync": "2026-11-09T19:46:40.600569Z"
+      "last_sync": "2026-11-09T19:46:40.600569Z",
+      "beta_approved_at": "2026-11-09T20:00:00Z"
     },
     "maja.jan@gmx.de": {
       "email": "maja.jan@gmx.de",
@@ -229,7 +230,7 @@
       "is_beta_rider": false,
       "beta_status": "none",
       "spot": {
-        "name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
+        "name": "Icaraí de Amontada (Icaraizinho), Brazil",
         "lat": -3.0232,
         "lon": -39.6433
       }
@@ -249,7 +250,7 @@
       "is_beta_rider": false,
       "beta_status": "none",
       "spot": {
-        "name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
+        "name": "Icaraí de Amontada (Icaraizinho), Brazil",
         "lat": -3.0232,
         "lon": -39.6433
       }
@@ -266,13 +267,13 @@
       "level": "intermediate",
       "board": "Twintip",
       "favorite_spots": [
-        "Icara\u00ed de Amontada (Icaraizinho), Brazil",
-        "Praia de Macei\u00f3 (Camocim), Brazil"
+        "Icaraí de Amontada (Icaraizinho), Brazil",
+        "Praia de Maceió (Camocim), Brazil"
       ],
       "is_beta_rider": false,
       "beta_status": "none",
       "spot": {
-        "name": "Praia de Macei\u00f3 (Camocim), Brazil",
+        "name": "Praia de Maceió (Camocim), Brazil",
         "lat": -2.8935,
         "lon": -40.8654,
         "beach_angle": 25.0
@@ -319,12 +320,12 @@
       "board": "Twintip",
       "favorite_spots": [
         "Tatajuba (Camocim), Brazil",
-        "Praia de Macei\u00f3 (Camocim), Brazil"
+        "Praia de Maceió (Camocim), Brazil"
       ],
       "is_beta_rider": false,
       "beta_status": "none",
       "spot": {
-        "name": "Praia de Macei\u00f3 (Camocim), Brazil",
+        "name": "Praia de Maceió (Camocim), Brazil",
         "lat": -2.88,
         "lon": -40.83,
         "timezone": "America/Fortaleza",
@@ -396,12 +397,12 @@
       "level": "advanced",
       "board": "Twintip",
       "favorite_spots": [
-        "Icara\u00ed de Amontada (Icaraizinho), Brazil"
+        "Icaraí de Amontada (Icaraizinho), Brazil"
       ],
       "is_beta_rider": true,
       "beta_status": "approved",
       "spot": {
-        "name": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
+        "name": "Icaraí de Amontada (Icaraizinho), Brazil",
         "lat": -3.0232,
         "lon": -39.6433,
         "timezone": "America/Fortaleza",
@@ -417,30 +418,46 @@
     {
       "name": "Sebastian",
       "email": "lipp.spam@gmail.com",
-      "spot": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
+      "spot": "Icaraí de Amontada (Icaraizinho), Brazil",
       "feedback": "Looks really professional.",
-      "timestamp": "2026-11-07T09:29:00Z"
+      "timestamp": "2026-11-07T09:29:00Z",
+      "id": "fb_1_1794361196",
+      "status": "open",
+      "message": "Looks really professional.",
+      "created_at": "2026-11-07T09:29:00Z"
     },
     {
       "name": "Raphi",
       "email": "raphael.joss@gmail.com",
-      "spot": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
+      "spot": "Icaraí de Amontada (Icaraizinho), Brazil",
       "feedback": "My kite model is missing: Harlem Thrive v1",
-      "timestamp": "2026-11-08T08:41:00Z"
+      "timestamp": "2026-11-08T08:41:00Z",
+      "id": "fb_2_1794361196",
+      "status": "open",
+      "message": "My kite model is missing: Harlem Thrive v1",
+      "created_at": "2026-11-08T08:41:00Z"
     },
     {
       "name": "Banana Gorilla",
       "email": "tot3030@gmail.com",
       "spot": "Tatajuba (Camocim), Brazil",
       "feedback": "Kit selection: if you select one kite, the next kite should start with the same kite as before for faster selection",
-      "timestamp": "2026-11-08T08:44:00Z"
+      "timestamp": "2026-11-08T08:44:00Z",
+      "id": "fb_3_1794361196",
+      "status": "open",
+      "message": "Kit selection: if you select one kite, the next kite should start with the same kite as before for faster selection",
+      "created_at": "2026-11-08T08:44:00Z"
     },
     {
       "name": "Raphi",
       "email": "raphael.joss@gmail.com",
-      "spot": "Icara\u00ed de Amontada (Icaraizinho), Brazil",
+      "spot": "Icaraí de Amontada (Icaraizinho), Brazil",
       "feedback": "My board type is missing: Harlem Aspect",
-      "timestamp": "2026-11-08T08:46:00Z"
+      "timestamp": "2026-11-08T08:46:00Z",
+      "id": "fb_4_1794361196",
+      "status": "open",
+      "message": "My board type is missing: Harlem Aspect",
+      "created_at": "2026-11-08T08:46:00Z"
     }
   ]
 }
