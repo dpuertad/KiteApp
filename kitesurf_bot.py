@@ -5638,27 +5638,52 @@ def start_embedded_http_server(port: int = 8080):
                     # Apparent wind reduction formula (-3.5 kts)
                     apparent_kts = max(10.0, round(wind_kts - 3.5, 1))
 
-                    # 5. Gear Recommendation for Apparent Wind
-                    ideal_size = max(6.0, min(17.0, round((weight_kg / (apparent_kts * 0.40)) * 2) / 2))
+                    # 5. Gear Recommendation for Apparent Wind & Discipline
+                    discipline = (data.get("discipline") or "").strip().lower()
                     active_kites = [k for k in gear if k.get("active") is not False]
                     active_boards = [b for b in boards if b.get("active") is not False]
 
+                    has_wings = any((k.get("category") == "wing" or k.get("kite_type") == "wing") for k in active_kites)
+                    has_wing_board = any("wing" in (b.get("type") or "").lower() for b in active_boards)
+                    is_wing_mode = "wing" in discipline or (has_wings and has_wing_board and "kite" not in discipline)
+                    is_foil_mode = ("foil" in discipline or any("foil" in (b.get("type") or "").lower() for b in active_boards)) and not is_wing_mode
+
+                    if is_wing_mode:
+                        ideal_size = max(3.0, min(7.0, round((weight_kg / (apparent_kts * 0.90)) * 2) / 2))
+                        candidate_traction = [k for k in active_kites if k.get("category") == "wing" or k.get("kite_type") == "wing"]
+                        candidate_boards = [b for b in active_boards if "wing" in (b.get("type") or "").lower()]
+                    elif is_foil_mode:
+                        ideal_size = max(5.0, min(14.0, round(((weight_kg * 0.68) / (apparent_kts * 0.40)) * 2) / 2))
+                        candidate_traction = [k for k in active_kites if k.get("category") != "wing"]
+                        candidate_boards = [b for b in active_boards if "foil" in (b.get("type") or "").lower() and "wing" not in (b.get("type") or "").lower()]
+                    else:
+                        mult = 0.88 if ("surf" in discipline or "wave" in discipline) else 1.0
+                        ideal_size = max(6.0, min(17.0, round(((weight_kg * mult) / (apparent_kts * 0.40)) * 2) / 2))
+                        candidate_traction = [k for k in active_kites if k.get("category") != "wing"]
+                        if "surf" in discipline or "wave" in discipline:
+                            candidate_boards = [b for b in active_boards if b.get("type") in ("Wave", "Surfboard", "Directional", "Surf / Strapless")]
+                        else:
+                            candidate_boards = [b for b in active_boards if "wing" not in (b.get("type") or "").lower()]
+
+                    if not candidate_traction and active_kites:
+                        candidate_traction = active_kites
+                    if not candidate_boards and active_boards:
+                        candidate_boards = active_boards
+
                     matched_kite = None
                     min_diff = 999.0
-                    for k in active_kites:
+                    for k in candidate_traction:
                         sz = float(k.get("size", 0))
                         diff = abs(sz - ideal_size)
                         if diff < min_diff:
                             min_diff = diff
                             matched_kite = k
 
-                    matched_board = None
-                    for b in active_boards:
-                        if b.get("type") in ("Wave", "Surfboard", "Directional"):
-                            matched_board = b
-                            break
-                    if not matched_board and active_boards:
-                        matched_board = active_boards[0]
+                    matched_board = candidate_boards[0] if candidate_boards else None
+
+                    foil_hazard_warning = ""
+                    if is_foil_mode or is_wing_mode or (matched_board and "foil" in (matched_board.get("type") or "").lower()):
+                        foil_hazard_warning = "⚠️ FOIL MAST GROUNDING HAZARD: Route contains shallow sandbars/reefs. Maintain > 1.4m depth clearance or plan arrival near high tide."
 
                     resp = {
                         "success": True,

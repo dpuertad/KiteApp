@@ -33004,6 +33004,15 @@ def explore_spots_by_month_and_style(month: int, style: str = "all") -> list:
                 )
                 if not is_warm:
                     continue
+            elif style in ("foil", "hydrofoil", "wing", "wing_foil", "wing foil", "foil friendly", "wing & foil friendly"):
+                is_foil = (
+                    "hydrofoil" in style_tags
+                    or "foil" in style_tags
+                    or "wing" in tags_joined
+                    or any(w in water_type for w in ("deep", "channel", "ocean", "bay", "rolling swell", "open water", "swell"))
+                ) and not any(w in water_type for w in ("knee-deep", "knee deep", "razor-sharp", "shallow slabs"))
+                if not is_foil:
+                    continue
             elif style not in style_tags and style not in tags_joined and style not in water_type:
                 continue
 
@@ -33066,18 +33075,30 @@ def calculate_quiver_trip_recommendation(
     w_min, w_max = float(w_range[0]), float(w_range[1])
     wind_prob = m_info.get("wind_prob", 70)
 
-    # Realistic kite sizing for rider weight & discipline (75kg Twintip rider: ~205 / wind_kts, e.g. 24 kts -> 8.5m, 18 kts -> 11.4m)
+    # Realistic kite/wing sizing for rider weight & discipline
     weight_factor = (rider_weight / 75.0) ** 0.85
     discipline_mult = 1.0
     disc_clean = (discipline or "twintip").lower()
+    is_wing_disc = "wing" in disc_clean
+    is_foil_disc = "foil" in disc_clean and not is_wing_disc
+
     if "surf" in disc_clean or "wave" in disc_clean or "strapless" in disc_clean:
         discipline_mult = 0.85
-    elif "foil" in disc_clean:
+    elif is_wing_disc:
+        # Handheld wing sizes: typically 3.0m - 6.5m (much smaller canopy than kites)
+        discipline_mult = 0.44
+    elif is_foil_disc:
+        # Kite foiling: low drag foil wing allows riding 2.5m smaller kites
         discipline_mult = 0.65
 
-    ideal_sweetspot_size = round(max(5.0, min(17.0, (205.0 / max(11.0, avg_kts)) * weight_factor * discipline_mult)), 1)
-    ideal_highwind_size = round(max(5.0, min(15.0, (205.0 / max(13.0, w_max)) * weight_factor * discipline_mult)), 1)
-    ideal_lightwind_size = round(max(6.0, min(17.0, (205.0 / max(10.0, w_min)) * weight_factor * discipline_mult)), 1)
+    if is_wing_disc:
+        ideal_sweetspot_size = round(max(3.0, min(7.0, (205.0 / max(11.0, avg_kts)) * weight_factor * discipline_mult)), 1)
+        ideal_highwind_size = round(max(2.5, min(5.5, (205.0 / max(13.0, w_max)) * weight_factor * discipline_mult)), 1)
+        ideal_lightwind_size = round(max(4.0, min(7.5, (205.0 / max(10.0, w_min)) * weight_factor * discipline_mult)), 1)
+    else:
+        ideal_sweetspot_size = round(max(5.0, min(17.0, (205.0 / max(11.0, avg_kts)) * weight_factor * discipline_mult)), 1)
+        ideal_highwind_size = round(max(5.0, min(15.0, (205.0 / max(13.0, w_max)) * weight_factor * discipline_mult)), 1)
+        ideal_lightwind_size = round(max(6.0, min(17.0, (205.0 / max(10.0, w_min)) * weight_factor * discipline_mult)), 1)
 
     rec_min = min(ideal_highwind_size, ideal_sweetspot_size)
     rec_max = max(ideal_lightwind_size, ideal_sweetspot_size)
@@ -33093,19 +33114,52 @@ def calculate_quiver_trip_recommendation(
             size = float(item.get("size", 0))
             if size <= 0:
                 continue
-            gear_type = item.get("category") or item.get("type") or "kite"
+            gear_type = (item.get("category") or item.get("type") or "kite").lower()
+            kite_type = (item.get("kite_type") or "").lower()
             brand = (item.get("brand") or "").strip()
             model = (item.get("model") or item.get("name") or "").strip()
             year = item.get("year")
             yr_str = f" ({year})" if year else ""
             label = f"{brand} {model}{yr_str} {size:g}m".replace("  ", " ").strip()
 
-            # Check if within destination wind window (+/- 1.5m buffer)
-            if (rec_min - 1.5) <= size <= (rec_max + 1.5):
-                if abs(size - ideal_sweetspot_size) <= 1.2:
-                    role = f"⭐ Primary Workhorse ({avg_kts:.0f} kts avg)"
-                elif size <= ideal_highwind_size + 1.0:
-                    role = f"🔥 High-Wind Session ({w_max:.0f} kts peaks)"
+            is_item_wing = (gear_type == "wing" or kite_type == "wing")
+            if is_wing_disc and not is_item_wing:
+                leave_list.append({
+                    "id": item.get("id"),
+                    "brand": brand,
+                    "model": model,
+                    "label": label,
+                    "name": label,
+                    "size": size,
+                    "type": gear_type,
+                    "role": "Leave at home",
+                    "status": "leave_home",
+                    "reason": "Kite left at home (Wing Foil discipline selected)."
+                })
+                continue
+            elif not is_wing_disc and is_item_wing:
+                leave_list.append({
+                    "id": item.get("id"),
+                    "brand": brand,
+                    "model": model,
+                    "label": label,
+                    "name": label,
+                    "size": size,
+                    "type": gear_type,
+                    "role": "Leave at home",
+                    "status": "leave_home",
+                    "reason": "Handheld wing left at home (Kite discipline selected)."
+                })
+                continue
+
+            # Check if within destination wind window (+/- 1.5m buffer for kites, +/- 0.8m buffer for wings)
+            buf = 0.8 if is_wing_disc else 1.5
+            gear_unit = "Wing" if is_wing_disc else "Kite"
+            if (rec_min - buf) <= size <= (rec_max + buf):
+                if abs(size - ideal_sweetspot_size) <= (0.6 if is_wing_disc else 1.2):
+                    role = f"⭐ Primary Workhorse {gear_unit} ({avg_kts:.0f} kts avg)"
+                elif size <= ideal_highwind_size + (0.5 if is_wing_disc else 1.0):
+                    role = f"🔥 High-Wind {gear_unit} ({w_max:.0f} kts peaks)"
                 else:
                     role = f"🌬️ Light-Wind / Lull Saver ({w_min:.0f} kts)"
                 pack_list.append({
@@ -33141,30 +33195,35 @@ def calculate_quiver_trip_recommendation(
 
     # Gap detection: Check high wind, sweetspot, and light wind coverage
     all_owned_sizes = [float(i.get("size", 0)) for i in inventory if i.get("size")]
-    hs_int = max(5, round(ideal_highwind_size))
-    ss_int = max(5, round(ideal_sweetspot_size))
-    lw_int = max(6, round(ideal_lightwind_size))
+    if is_wing_disc:
+        all_owned_sizes = [float(i.get("size", 0)) for i in inventory if (i.get("category") == "wing" or i.get("kite_type") == "wing") and i.get("size")]
+    hs_int = max(3 if is_wing_disc else 5, round(ideal_highwind_size))
+    ss_int = max(3 if is_wing_disc else 5, round(ideal_sweetspot_size))
+    lw_int = max(4 if is_wing_disc else 6, round(ideal_lightwind_size))
 
-    if not any(abs(s - hs_int) <= 1.2 for s in all_owned_sizes) and w_max >= 22:
+    unit_name = "Wing" if is_wing_disc else "Kite"
+    buf_chk = 0.6 if is_wing_disc else 1.2
+
+    if not any(abs(s - hs_int) <= buf_chk for s in all_owned_sizes) and w_max >= 22:
         gaps.append({
             "type": "high_wind_gap",
             "size": hs_int,
             "suggested_size": hs_int,
             "urgency": "high",
-            "label": f"{hs_int}m Kite",
+            "label": f"{hs_int}m {unit_name}",
             "recommended_for": f"{w_max:.0f} kts peak sessions",
-            "advice": f"{spot.get('short_name', 'This spot')} reaches {w_max:.0f} kts in {MONTH_NAMES[month - 1]}. Adding or renting a {hs_int}m kite will keep you safe and in control on nuking days."
+            "advice": f"{spot.get('short_name', 'This spot')} reaches {w_max:.0f} kts in {MONTH_NAMES[month - 1]}. Adding or renting a {hs_int}m {unit_name.lower()} will keep you safe and in control on nuking days."
         })
 
-    if not any(abs(s - lw_int) <= 1.2 for s in all_owned_sizes) and w_min <= 17:
+    if not any(abs(s - lw_int) <= buf_chk for s in all_owned_sizes) and w_min <= 17:
         gaps.append({
             "type": "light_wind_gap",
             "size": lw_int,
             "suggested_size": lw_int,
             "urgency": "medium",
-            "label": f"{lw_int}m Kite",
+            "label": f"{lw_int}m {unit_name}",
             "recommended_for": f"{w_min:.0f}–{avg_kts:.0f} kts lighter days",
-            "advice": f"To maximize water time on {w_min:.0f}–{avg_kts:.0f} kts days in {MONTH_NAMES[month - 1]}, consider packing or renting a {lw_int}m kite."
+            "advice": f"To maximize water time on {w_min:.0f}–{avg_kts:.0f} kts days in {MONTH_NAMES[month - 1]}, consider packing or renting a {lw_int}m {unit_name.lower()}."
         })
 
     if not gaps and not pack_list:
@@ -33173,10 +33232,14 @@ def calculate_quiver_trip_recommendation(
             "size": ss_int,
             "suggested_size": ss_int,
             "urgency": "high",
-            "label": f"{ss_int}m Kite",
+            "label": f"{ss_int}m {unit_name}",
             "recommended_for": f"{avg_kts:.0f} kts average wind",
-            "advice": f"For {rider_weight:.0f} kg on a {discipline} in {w_min:.0f}–{w_max:.0f} kts, your ideal all-round kite size is {ss_int}m (with {hs_int}m–{lw_int}m full range)."
+            "advice": f"For {rider_weight:.0f} kg on a {discipline} in {w_min:.0f}–{w_max:.0f} kts, your ideal all-round {unit_name.lower()} size is {ss_int}m (with {hs_int}m–{lw_int}m full range)."
         })
+
+    foil_depth_warning = ""
+    if is_foil_disc or is_wing_disc:
+        foil_depth_warning = "⚠️ FOIL MAST GROUNDING HAZARD: Hydrofoil masts (85–100cm) require at least 1.4m of water depth. Check low-tide windows and stay clear of reef heads and sandbars!"
 
     # Build all_months list for the 12-month clickable matrix
     SHORT_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -33231,6 +33294,7 @@ def calculate_quiver_trip_recommendation(
         },
         "ideal_sizes": ideal_obj,
         "ideal_quiver": ideal_obj,
+        "foil_depth_warning": foil_depth_warning,
         "quiver_advice": {
             "pack": pack_list,
             "leave_home": leave_list,

@@ -616,6 +616,209 @@
       "last_sync": "2026-11-09T12:30:26.621995Z",
       "beta_applied_at": "2026-11-09T12:18:52.523990+00:00Z",
       "beta_approved_at": "2026-11-09T16:38:17.076524+00:00Z"
+    },
+    "lucas.beginner@holygust.com": {
+      "email": "lucas.beginner@holygust.com",
+      "name": "Lucas Garcia",
+      "created_at": "2026-11-12T13:40:39.234824Z",
+      "gear": [
+        {
+          "category": "kite",
+          "brand": "Core",
+          "model": "XR8",
+          "size": 12,
+          "kite_type": "tube",
+          "year": "2023",
+          "active": true
+        },
+        {
+          "category": "kite",
+          "brand": "Core",
+          "model": "XR8",
+          "size": 9,
+          "kite_type": "tube",
+          "year": "2023",
+          "active": true
+        }
+      ],
+      "boards": [
+        {
+          "brand": "Duotone",
+          "model": "Select",
+          "size": "138",
+          "type": "Twintip",
+          "carbon": false,
+          "active": true
+        }
+      ],
+      "favorite_spots": [],
+      "weight_kg": 68.0,
+      "level": "beginner",
+      "board": "Twintip",
+      "is_beta_rider": false,
+      "beta_status": "none",
+      "last_sync": "2026-11-12T13:50:56.303733Z"
+    },
+    "sarah.intermediate@holygust.com": {
+      "email": "sarah.intermediate@holygust.com",
+      "name": "Sarah Miller",
+      "created_at": "2026-11-12T13:43:49.703914Z",
+      "gear": [
+        {
+          "category": "kite",
+          "brand": "Flysurfer",
+          "model": "Sonic",
+          "size": 15,
+          "kite_type": "foil",
+          "year": "2024",
+          "active": true
+        },
+        {
+          "category": "kite",
+          "brand": "Flysurfer",
+          "model": "Soul",
+          "size": 10,
+          "kite_type": "foil",
+          "year": "2023",
+          "active": true
+        },
+        {
+          "category": "kite",
+          "brand": "Duotone",
+          "model": "Neo",
+          "size": 9,
+          "kite_type": "tube",
+          "year": "2023",
+          "active": true
+        },
+        {
+          "category": "kite",
+          "brand": "Duotone",
+          "model": "Neo",
+          "size": 7,
+          "kite_type": "tube",
+          "year": "2022",
+          "active": true
+        }
+      ],
+      "boards": [
+        {
+          "brand": "Sabfoil",
+          "model": "Onda Pocket",
+          "size": "110",
+          "type": "Foilboard",
+          "carbon": true,
+          "active": true
+        },
+        {
+          "brand": "Duotone",
+          "model": "Whip",
+          "size": "5'2\"",
+          "type": "Surf / Strapless",
+          "carbon": false,
+          "active": true
+        },
+        {
+          "brand": "North",
+          "model": "Atmos",
+          "size": "136",
+          "type": "Twintip",
+          "carbon": false,
+          "active": true
+        }
+      ],
+      "favorite_spots": [],
+      "weight_kg": 74.0,
+      "level": "intermediate",
+      "board": "Hydrofoil",
+      "is_beta_rider": false,
+      "beta_status": "none",
+      "last_sync": "2026-11-12T13:51:29.624776Z"
+    },
+    "marcus.expert@holygust.com": {
+      "email": "marcus.expert@holygust.com",
+      "name": "Marcus Vance",
+      "created_at": "2026-11-12T13:44:22.705898Z",
+      "gear": [
+        {
+          "category": "kite",
+          "brand": "Duotone",
+          "model": "Rebel SLS",
+          "size": 10,
+          "kite_type": "tube",
+          "year": "2024",
+          "active": true
+        },
+        {
+          "category": "kite",
+          "brand": "Duotone",
+          "model": "Rebel SLS",
+          "size": 8,
+          "kite_type": "tube",
+          "year": "2024",
+          "active": true
+        },
+        {
+          "category": "kite",
+          "brand": "Duotone",
+          "model": "Neo SLS",
+          "size": 6,
+          "kite_type": "tube",
+          "year": "2023",
+          "active": true
+        },
+        {
+          "category": "wing",
+          "brand": "Duotone",
+          "model": "Unit",
+          "size": 5,
+          "kite_type": "wing",
+          "year": "2024",
+          "active": true
+        },
+        {
+          "category": "wing",
+          "brand": "Duotone",
+          "model": "Unit",
+          "size": 3.5,
+          "kite_type": "wing",
+          "year": "2024",
+          "active": true
+        }
+      ],
+      "boards": [
+        {
+          "brand": "Duotone",
+          "model": "Jaime SLS",
+          "size": "139",
+          "type": "Twintip",
+          "carbon": true,
+          "active": true
+        },
+        {
+          "brand": "Appletree",
+          "model": "Applino",
+          "size": "5'4\"",
+          "type": "Surf / Strapless",
+          "carbon": true,
+          "active": true
+        },
+        {
+          "brand": "F-One",
+          "model": "Rocket Wing",
+          "size": "85L",
+          "type": "Wing Foil",
+          "carbon": false,
+          "active": true
+        }
+      ],
+      "favorite_spots": [],
+      "weight_kg": 84.0,
+      "level": "advanced",
+      "board": "Surf / Strapless",
+      "is_beta_rider": false,
+      "beta_status": "none",
+      "last_sync": "2026-11-12T13:51:33.487457Z"
     }
   },
   "feedback": [

@@ -1059,12 +1059,18 @@
               <p class="text-[10px] text-slate-400">Packs from your actual HolyGust gear quiver</p>
             </div>
           </div>
-          <div class="flex items-center space-x-1 bg-slate-900 border border-slate-800 rounded-xl p-0.5">
-            <button id="btn-travel-disc-tt" type="button" onclick="setTravelDiscipline('Twintip')" class="px-2.5 py-1 rounded-lg font-bold text-[11px] bg-sky-600 text-white transition">
+          <div class="flex items-center space-x-1 bg-slate-900 border border-slate-800 rounded-xl p-0.5 overflow-x-auto max-w-full custom-scrollbar">
+            <button id="btn-travel-disc-tt" type="button" onclick="setTravelDiscipline('Twintip')" class="px-2 py-1 rounded-lg font-bold text-[10px] sm:text-[11px] bg-sky-600 text-white transition whitespace-nowrap">
               Twintip
             </button>
-            <button id="btn-travel-disc-surf" type="button" onclick="setTravelDiscipline('Surf / Strapless')" class="px-2.5 py-1 rounded-lg font-semibold text-[11px] text-slate-400 hover:text-white transition">
+            <button id="btn-travel-disc-surf" type="button" onclick="setTravelDiscipline('Surf / Strapless')" class="px-2 py-1 rounded-lg font-semibold text-[10px] sm:text-[11px] text-slate-400 hover:text-white transition whitespace-nowrap">
               Surf / Strapless
+            </button>
+            <button id="btn-travel-disc-foil" type="button" onclick="setTravelDiscipline('Hydrofoil')" class="px-2 py-1 rounded-lg font-semibold text-[10px] sm:text-[11px] text-slate-400 hover:text-white transition whitespace-nowrap">
+              Hydrofoil
+            </button>
+            <button id="btn-travel-disc-wing" type="button" onclick="setTravelDiscipline('Wing Foil')" class="px-2 py-1 rounded-lg font-semibold text-[10px] sm:text-[11px] text-slate-400 hover:text-white transition whitespace-nowrap">
+              Wing Foil
             </button>
           </div>
         </div>
@@ -1198,8 +1204,11 @@
                 <button type="button" onclick="setTravelStyle('big_air', this)" class="travel-style-btn px-2.5 py-1.5 rounded-xl border text-left font-medium text-[11px] bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700">
                   🚀 Big Air & Nuking Wind
                 </button>
-                <button type="button" onclick="setTravelStyle('warm', this)" class="travel-style-btn col-span-2 px-2.5 py-1.5 rounded-xl border text-left font-medium text-[11px] bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700">
-                  ☀️ Warm Water / Boardshorts Only
+                <button type="button" onclick="setTravelStyle('foil', this)" class="travel-style-btn px-2.5 py-1.5 rounded-xl border text-left font-medium text-[11px] bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700">
+                  🪂 Wing & Foil Friendly
+                </button>
+                <button type="button" onclick="setTravelStyle('warm', this)" class="travel-style-btn px-2.5 py-1.5 rounded-xl border text-left font-medium text-[11px] bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700">
+                  ☀️ Warm Water / Boardshorts
                 </button>
               </div>
             </div>
@@ -1521,6 +1530,12 @@
             <p id="downwind-gear-rationale" class="text-[10px] text-slate-300 leading-relaxed bg-slate-950/50 p-2 rounded-lg border border-slate-800/60">
               Riding downwind reduces apparent wind across the kite. Sizing +1m larger ensures you maintain continuous line tension during wave transitions.
             </p>
+          </div>
+
+          <!-- Foil Mast Grounding Hazard Alert (Dynamic) -->
+          <div id="downwind-foil-hazard-alert" class="hidden p-3 rounded-2xl bg-amber-500/15 border border-amber-500/40 text-amber-200 text-xs flex items-start space-x-2">
+            <span class="text-base flex-shrink-0">⚠️</span>
+            <span id="downwind-foil-hazard-text" class="leading-relaxed font-medium"></span>
           </div>
 
           <!-- Tide Elements & Safety Advisory for Selected Day -->
@@ -2393,6 +2408,19 @@
 
       const isEnclosed = sType === "lagoon" || sType === "lake" || /lagoon|lagoa|mar menor|stagnone|reschensee|see|lac|dam|estuary/i.test(nameL);
 
+      const badges = [
+        `${wIco} ${water}`,
+        `${dIco} ${depth}`,
+        `${bIco} ${bottom}`
+      ];
+
+      if (/tarifa|el gouna|sotavento|dakhla|lagoon|stagnone/i.test(nameL)) {
+        badges.push("🛟 Rescue Boat on Watch");
+      }
+      if (/cauipe|guajir[uú]|el gouna|stagnone|dakhla lagoon|mar menor|hatteras/i.test(nameL)) {
+        badges.push("🔰 Beginner Safe (Shallow Sandbar)");
+      }
+
       return {
         water_type: water,
         water_icon: wIco,
@@ -2401,11 +2429,7 @@
         depth: depth,
         depth_icon: dIco,
         is_enclosed: isEnclosed,
-        badges: [
-          `${wIco} ${water}`,
-          `${dIco} ${depth}`,
-          `${bIco} ${bottom}`
-        ]
+        badges: badges
       };
     }
 
@@ -3129,10 +3153,17 @@
       // Generate all combination pairs of (Packed Traction, Compatible Packed Board)
       const combos = [];
       activeTraction.forEach(t => {
-        const isWing = (t.category === 'wing');
-        let matchingBoards = activeBoards.filter(b => isWing ? (b.type === 'Wingfoil') : (b.type !== 'Wingfoil'));
+        const isWing = (t.category === 'wing' || t.kite_type === 'wing');
+        let matchingBoards = activeBoards.filter(b => {
+          const isWBoard = ((b.type || '') + ' ' + (b.model || '')).toLowerCase().includes('wing');
+          return isWing ? isWBoard : !isWBoard;
+        });
         if (matchingBoards.length === 0) {
-          matchingBoards = activeBoards;
+          // If rider has no matching board for this traction, only fallback within same family if possible
+          matchingBoards = isWing 
+            ? activeBoards.filter(b => (b.type || '').toLowerCase().includes('foil'))
+            : activeBoards.filter(b => !((b.type || '') + ' ' + (b.model || '')).toLowerCase().includes('wing'));
+          if (matchingBoards.length === 0) matchingBoards = activeBoards;
         }
 
         matchingBoards.forEach(b => {
@@ -3150,12 +3181,14 @@
       const sweets = combos.filter(c => c.inSweet);
       if (sweets.length > 0) {
         sweets.sort((a, b) => {
+          const aIsFoil = ((a.bType || '') + '').toLowerCase().includes('foil') || ((a.bType || '') + '').toLowerCase().includes('wing');
+          const bIsFoil = ((b.bType || '') + '').toLowerCase().includes('foil') || ((b.bType || '') + '').toLowerCase().includes('wing');
           if (windKts < 14) {
-            if ((a.bType === 'Wingfoil' || a.bType === 'Hydrofoil') && b.bType === 'Twintip') return -1;
-            if ((b.bType === 'Wingfoil' || b.bType === 'Hydrofoil') && a.bType === 'Twintip') return 1;
+            if (aIsFoil && !bIsFoil) return -1;
+            if (bIsFoil && !aIsFoil) return 1;
           } else {
-            if (a.bType === 'Twintip' && (b.bType === 'Wingfoil' || b.bType === 'Hydrofoil')) return -1;
-            if (b.bType === 'Twintip' && (a.bType === 'Wingfoil' || a.bType === 'Hydrofoil')) return 1;
+            if (!aIsFoil && bIsFoil) return -1;
+            if (!bIsFoil && aIsFoil) return 1;
           }
           return a.distToSweet - b.distToSweet;
         });
@@ -6859,24 +6892,31 @@
       const summaryEl = document.getElementById('travel-rider-summary');
       if (!summaryEl) return;
       const weight = (state.user && state.user.weight) ? state.user.weight : 75;
-      const kiteCount = (state.inventory && state.inventory.length) ? state.inventory.length : 0;
-      const disc = travelDiscipline;
-      summaryEl.innerText = `${weight} kg · ${disc} · ${kiteCount} Kite${kiteCount === 1 ? '' : 's'} in Quiver`;
+      const isWing = travelDiscipline === 'Wing Foil';
+      let count = 0;
+      if (isWing) {
+        count = (state.inventory || []).filter(k => (k.category === 'wing' || k.kite_type === 'wing')).length;
+        summaryEl.innerText = `${weight} kg · ${travelDiscipline} · ${count} Wing${count === 1 ? '' : 's'} in Quiver`;
+      } else {
+        count = (state.inventory || []).filter(k => (k.category !== 'wing' && k.kite_type !== 'wing')).length;
+        summaryEl.innerText = `${weight} kg · ${travelDiscipline} · ${count} Kite${count === 1 ? '' : 's'} in Quiver`;
+      }
     }
 
     function setTravelDiscipline(disc, reload = true) {
       travelDiscipline = disc;
       const btnTT = document.getElementById('btn-travel-disc-tt');
       const btnSurf = document.getElementById('btn-travel-disc-surf');
-      if (btnTT && btnSurf) {
-        if (disc === 'Twintip') {
-          btnTT.className = "px-2.5 py-1 rounded-lg font-bold text-[11px] bg-sky-600 text-white transition";
-          btnSurf.className = "px-2.5 py-1 rounded-lg font-semibold text-[11px] text-slate-400 hover:text-white transition";
-        } else {
-          btnSurf.className = "px-2.5 py-1 rounded-lg font-bold text-[11px] bg-sky-600 text-white transition";
-          btnTT.className = "px-2.5 py-1 rounded-lg font-semibold text-[11px] text-slate-400 hover:text-white transition";
-        }
-      }
+      const btnFoil = document.getElementById('btn-travel-disc-foil');
+      const btnWing = document.getElementById('btn-travel-disc-wing');
+      const activeClass = "px-2 py-1 rounded-lg font-bold text-[10px] sm:text-[11px] bg-sky-600 text-white transition whitespace-nowrap";
+      const inactiveClass = "px-2 py-1 rounded-lg font-semibold text-[10px] sm:text-[11px] text-slate-400 hover:text-white transition whitespace-nowrap";
+
+      if (btnTT) btnTT.className = (disc === 'Twintip') ? activeClass : inactiveClass;
+      if (btnSurf) btnSurf.className = (disc === 'Surf / Strapless') ? activeClass : inactiveClass;
+      if (btnFoil) btnFoil.className = (disc === 'Hydrofoil') ? activeClass : inactiveClass;
+      if (btnWing) btnWing.className = (disc === 'Wing Foil') ? activeClass : inactiveClass;
+
       updateTravelRiderSummary();
       if (reload) loadTravelRecommendation();
     }
@@ -6913,8 +6953,29 @@
       if (!modal) return;
       modal.classList.remove('hidden');
 
-      if (state.user && state.user.board && state.user.board.toLowerCase().includes('surf')) {
-        travelDiscipline = 'Surf / Strapless';
+      if (state.user && state.user.board) {
+        const b = state.user.board.toLowerCase();
+        if (b.includes('wing')) {
+          travelDiscipline = 'Wing Foil';
+        } else if (b.includes('foil')) {
+          travelDiscipline = 'Hydrofoil';
+        } else if (b.includes('surf') || b.includes('wave') || b.includes('strapless')) {
+          travelDiscipline = 'Surf / Strapless';
+        } else {
+          travelDiscipline = 'Twintip';
+        }
+      } else if (state.boards && state.boards.length > 0) {
+        const firstActive = state.boards.find(b => b.active !== false) || state.boards[0];
+        const bt = ((firstActive.type || '') + ' ' + (firstActive.model || '')).toLowerCase();
+        if (bt.includes('wing')) {
+          travelDiscipline = 'Wing Foil';
+        } else if (bt.includes('foil')) {
+          travelDiscipline = 'Hydrofoil';
+        } else if (bt.includes('surf') || bt.includes('wave') || bt.includes('strapless')) {
+          travelDiscipline = 'Surf / Strapless';
+        } else {
+          travelDiscipline = 'Twintip';
+        }
       } else {
         travelDiscipline = 'Twintip';
       }
@@ -7153,6 +7214,17 @@
             </div>
           ` : ''}
         </div>
+
+        <!-- FOIL MAST GROUNDING HAZARD / DEPTH ADVISORY (When active) -->
+        ${data.foil_depth_warning ? `
+          <div class="p-3 rounded-2xl bg-amber-500/15 border border-amber-500/40 text-amber-200 text-xs flex items-start space-x-2">
+            <span class="text-base flex-shrink-0">⚠️</span>
+            <div>
+              <span class="font-bold text-amber-300 block mb-0.5">Foil Mast Depth Advisory</span>
+              <p class="text-[11px] leading-relaxed text-amber-100">${data.foil_depth_warning}</p>
+            </div>
+          </div>
+        ` : ''}
 
         <!-- PERSONALIZED QUIVER MATCHING CARD -->
         <div class="bg-slate-950/70 rounded-2xl p-3.5 border border-slate-800 space-y-3">
@@ -8166,7 +8238,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=60').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=61').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
@@ -9359,6 +9431,30 @@
         reachIconEl.className = `w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${pillColor === 'emerald' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : pillColor === 'amber' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : pillColor === 'sky' ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'}`;
       }
 
+      // 6. Optimal Departure Time & Hourly Timing Calculation
+      const opt = findOptimalDepartureTime(selectedDownwindDayIdx, estMinutes, endId);
+      optimalDownwindTime = opt.bestHour;
+
+      const bestTimeBadge = document.getElementById('downwind-best-time-badge');
+      if (bestTimeBadge) bestTimeBadge.innerText = 'Suggested: ' + opt.bestHour;
+      const bestTimeBtn = document.getElementById('downwind-best-time-btn');
+      if (bestTimeBtn) bestTimeBtn.title = opt.bestReason;
+
+      renderDownwindTimePills();
+
+      // Read wind for the selected day and specific departure hour
+      const timeWindData = getDepartureSpotHourlyWind(selectedDownwindDayIdx, selectedDownwindTime);
+      const dayWindKts = (timeWindData && typeof timeWindData.windKts === 'number') ? timeWindData.windKts : 18.0;
+      const dayGustKts = (timeWindData && typeof timeWindData.gustKts === 'number') ? timeWindData.gustKts : 22.0;
+
+      // Elements for Recommended Downwind Setup
+      const recKiteEl = document.getElementById('downwind-rec-kite');
+      const recKiteSizeEl = document.getElementById('downwind-rec-kite-size');
+      const recBoardEl = document.getElementById('downwind-rec-board');
+      const recBoardTypeEl = document.getElementById('downwind-rec-board-type');
+      const gearBadgeEl = document.getElementById('downwind-gear-badge');
+      const gearRationaleEl = document.getElementById('downwind-gear-rationale');
+
       // Query Server-Side Shielded DTM Engine for Authoritative Calculation
       fetch('/api/downwind/calculate', {
         method: 'POST',
@@ -9371,8 +9467,8 @@
           start_id: startId,
           end_id: endId,
           wind_deg: activeDownwindWindDeg,
-          wind_kts: (typeof dayWindKts !== 'undefined' ? dayWindKts : 18.0),
-          gust_kts: (typeof dayGustKts !== 'undefined' ? dayGustKts : 22.0),
+          wind_kts: dayWindKts,
+          gust_kts: dayGustKts,
           weight_kg: (state.user && state.user.weight) || 75.0,
           gear: state.inventory || [],
           boards: state.boards || []
@@ -9387,31 +9483,37 @@
             reachTypeEl.innerText = srv.reach_type;
             reachTypeEl.className = `font-bold text-xs ${srv.pill_color === 'emerald' ? 'text-emerald-300' : srv.pill_color === 'amber' ? 'text-amber-300' : srv.pill_color === 'sky' ? 'text-sky-300' : 'text-rose-300'}`;
           }
-          if (sternAngleEl) sternAngleEl.innerText = `${Math.round(srv.stern_angle)}° off stern (bearing ${Math.round(srv.course_deg)}°)`;
+          if (sternAngleEl) sternAngleEl.innerText = `${Math.round(srv.stern_angle)}° off stern (bearing ${Math.round(courseDeg)}°)`;
           if (reachDescEl) reachDescEl.innerText = srv.reach_desc;
           if (estTimeEl) estTimeEl.innerText = srv.time_str;
           if (reachIconEl) {
             reachIconEl.innerText = srv.icon;
             reachIconEl.className = `w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${srv.pill_color === 'emerald' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : srv.pill_color === 'amber' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : srv.pill_color === 'sky' ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'}`;
           }
+
+          if (srv.matched_kite && recKiteEl) {
+            const k = srv.matched_kite;
+            const isWing = k.category === 'wing' || k.kite_type === 'wing';
+            recKiteEl.innerText = `${k.brand || ''} ${k.model || (isWing ? 'Wing' : 'Kite')}`.trim();
+            if (recKiteSizeEl) recKiteSizeEl.innerText = `${k.size}m ${isWing ? 'Wing' : 'Kite'} · Ideal for ${Math.round(srv.apparent_kts)} kts apparent`;
+          }
+          if (srv.matched_board && recBoardEl) {
+            const b = srv.matched_board;
+            recBoardEl.innerText = `${b.brand || ''} ${b.model || b.type || 'Board'}`.trim();
+            if (recBoardTypeEl) recBoardTypeEl.innerText = b.type || 'Board';
+          }
+          const hazardEl = document.getElementById('downwind-foil-hazard-alert');
+          const hazardText = document.getElementById('downwind-foil-hazard-text');
+          if (srv.foil_hazard_warning) {
+            if (hazardEl && hazardText) {
+              hazardText.innerText = srv.foil_hazard_warning;
+              hazardEl.classList.remove('hidden');
+            }
+          } else {
+            if (hazardEl) hazardEl.classList.add('hidden');
+          }
         }
       }).catch(() => {});
-
-      // 6. Optimal Departure Time & Hourly Timing Calculation
-      const opt = findOptimalDepartureTime(selectedDownwindDayIdx, estMinutes, endId);
-      optimalDownwindTime = opt.bestHour;
-
-      const bestTimeBadge = document.getElementById('downwind-best-time-badge');
-      if (bestTimeBadge) bestTimeBadge.innerText = 'Suggested: ' + opt.bestHour;
-      const bestTimeBtn = document.getElementById('downwind-best-time-btn');
-      if (bestTimeBtn) bestTimeBtn.title = opt.bestReason;
-
-      renderDownwindTimePills();
-
-      // Read wind for the selected day and specific departure hour
-      const timeWindData = getDepartureSpotHourlyWind(selectedDownwindDayIdx, selectedDownwindTime);
-      const dayWindKts = timeWindData.windKts;
-      const dayGustKts = timeWindData.gustKts;
 
       // Calculate exact arrival time (Departure Time + Duration)
       const depParts = selectedDownwindTime.split(':').map(Number);
@@ -9434,13 +9536,6 @@
       const apparentKts = Math.max(10, Math.round((dayWindKts - 3.5) * 10) / 10);
 
       // 7. Best Gear from Rider's Quiver for Planned Day & Hour
-      const recKiteEl = document.getElementById('downwind-rec-kite');
-      const recKiteSizeEl = document.getElementById('downwind-rec-kite-size');
-      const recBoardEl = document.getElementById('downwind-rec-board');
-      const recBoardTypeEl = document.getElementById('downwind-rec-board-type');
-      const gearBadgeEl = document.getElementById('downwind-gear-badge');
-      const gearRationaleEl = document.getElementById('downwind-gear-rationale');
-
       const gearRec = recommendRigging(apparentKts, dayGustKts);
       const userWeight = state.user.weight || 75.0;
       const idealKiteSize = Math.max(6, Math.min(17, Math.round((userWeight / (apparentKts * 0.40)) * 2) / 2));
@@ -9464,7 +9559,10 @@
         if (recKiteEl) recKiteEl.innerText = `${kBrand} ${kModel}`.trim();
         if (recKiteSizeEl) recKiteSizeEl.innerText = `${kSize}m · ${inSweet ? '🎯 Sweet Spot for ' + selectedDownwindTime : 'Rideable'}`;
         if (recBoardEl) recBoardEl.innerText = `${bBrand} ${bModel}`.trim();
-        if (recBoardTypeEl) recBoardTypeEl.innerText = (bType === 'Wave' || bType === 'Surfboard') ? '🌊 Waveboard · Perfect for downwind wave carving' : '⚡ Twintip with deep fins';
+        if (recBoardTypeEl) {
+          const bLow = (bType || '').toLowerCase();
+          recBoardTypeEl.innerText = (bType === 'Wave' || bType === 'Surfboard' || bLow.includes('surf')) ? '🌊 Waveboard · Perfect for downwind wave carving' : (bLow.includes('wing') ? '🪂 Wingboard · High volume downwind' : (bLow.includes('foil') ? '🚀 Hydrofoil · Low drag carving' : '⚡ Twintip with deep fins'));
+        }
         if (gearBadgeEl) {
           gearBadgeEl.innerText = inSweet ? `🎯 Sized for ${selectedDownwindTime}` : 'Active Quiver Match';
           gearBadgeEl.className = `px-2 py-0.5 rounded-full text-[9px] font-bold ${inSweet ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'}`;
