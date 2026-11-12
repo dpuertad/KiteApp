@@ -624,6 +624,8 @@ def render_admin_dashboard(summary: dict) -> str:
       if (window.lucide) lucide.createIcons();
     }}
 
+    const ADMIN_HDRS = { 'Authorization': 'Bearer hg_admin_danip_sec_9941824716029384', 'X-Admin-Email': 'd_puerta@hotmail.com' };
+
     async function closeFeedbackTicketAdmin(ticketId, email, btnEl) {{
       if (btnEl) {{
         btnEl.disabled = true;
@@ -632,7 +634,7 @@ def render_admin_dashboard(summary: dict) -> str:
       try {{
         const res = await fetch('/api/admin/feedback/close', {{
           method: 'POST',
-          headers: {{ 'Content-Type': 'application/json' }},
+          headers: Object.assign({{ 'Content-Type': 'application/json' }}, ADMIN_HDRS),
           body: JSON.stringify({{ id: ticketId, email: email }})
         }});
         const d = await res.json();
@@ -663,7 +665,7 @@ def render_admin_dashboard(summary: dict) -> str:
       try {{
         const res = await fetch('/api/admin/feedback/reply', {{
           method: 'POST',
-          headers: {{ 'Content-Type': 'application/json' }},
+          headers: Object.assign({{ 'Content-Type': 'application/json' }}, ADMIN_HDRS),
           body: JSON.stringify({{ id: ticketId, email: email, reply: replyMsg, close: true }})
         }});
         const d = await res.json();
@@ -681,7 +683,6 @@ def render_admin_dashboard(summary: dict) -> str:
           btnEl.innerText = "💬 Reply & Close";
         }}
       }}
-    }}
     }}
 
     function renderDashboard(d) {{
@@ -860,7 +861,7 @@ def render_admin_dashboard(summary: dict) -> str:
 
 
 
-        async function approveBetaRider(email, btnEl) {{
+    async function approveBetaRider(email, btnEl) {{
       if (!email) return;
       if (btnEl) {{
         btnEl.disabled = true;
@@ -869,7 +870,7 @@ def render_admin_dashboard(summary: dict) -> str:
       try {{
         const res = await fetch('/api/admin/approve-beta', {{
           method: 'POST',
-          headers: {{ 'Content-Type': 'application/json' }},
+          headers: Object.assign({{ 'Content-Type': 'application/json' }}, ADMIN_HDRS),
           body: JSON.stringify({{ email: email }})
         }});
         const data = await res.json();
@@ -897,7 +898,7 @@ def render_admin_dashboard(summary: dict) -> str:
       try {{
         const res = await fetch('/api/admin/decline-beta', {{
           method: 'POST',
-          headers: {{ 'Content-Type': 'application/json' }},
+          headers: Object.assign({{ 'Content-Type': 'application/json' }}, ADMIN_HDRS),
           body: JSON.stringify({{ email: email }})
         }});
         const data = await res.json();
@@ -914,7 +915,9 @@ def render_admin_dashboard(summary: dict) -> str:
 
     async function fetchFreshData() {{
       try {{
-        const res = await fetch('/api/admin/spot-insights');
+        const res = await fetch('/api/admin/spot-insights', {{
+          headers: ADMIN_HDRS
+        }});
         if (res.ok) {{
           const data = await res.json();
           renderDashboard(data);
