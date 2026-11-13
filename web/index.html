@@ -8322,9 +8322,9 @@
         renderQuiver();
       }
 
-      // Register PWA Service Worker (with cache bust & auto-update)
+      // Register PWA Service Worker (with cache bust, auto-update & cold-start shield)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=64').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=65').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
@@ -8338,6 +8338,13 @@
           }
         });
       }
+
+      // Background Keep-Alive Heartbeat: keep server warm while app is open
+      setInterval(() => {
+        if (navigator.onLine) {
+          fetch('/api/health', { cache: 'no-store' }).catch(() => {});
+        }
+      }, 8 * 60 * 1000);
 
       // Open Admin Profile tab directly if launched from an Admin Push Notification (?open_admin=1)
       try {

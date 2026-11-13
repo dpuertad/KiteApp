@@ -1,4 +1,4 @@
-const CACHE_NAME = 'holygust-v64';
+const CACHE_NAME = 'holygust-v65';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',
@@ -35,9 +35,37 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // APP NAVIGATION: Serve cached HolyGust app shell instantly (0.01s).
+  // Completely shields riders from EVER seeing Render's cold-start "Starting the Instance" screen!
+  if (event.request.mode === 'navigate' || event.request.destination === 'document') {
+    event.respondWith(
+      caches.match('/').then((cached) => {
+        const networkFetch = fetch(event.request).then((res) => {
+          if (res && res.status === 200) {
+            const resClone = res.clone();
+            resClone.text().then((text) => {
+              // Only update cache if response is authentic HolyGust and NOT Render's cold-start screen
+              if (text && text.includes('HolyGust') && !text.includes('STARTING THE INSTANCE') && !text.includes('WELCOME TO RENDER')) {
+                caches.open(CACHE_NAME).then((cache) => cache.put(event.request, res.clone()));
+              }
+            }).catch(() => {});
+          }
+          return res;
+        }).catch(() => null);
+
+        // Instant return of cached HolyGust app shell
+        if (cached) {
+          return cached;
+        }
+        return networkFetch.then((nRes) => nRes || caches.match('/'));
+      })
+    );
+    return;
+  }
+
   event.respondWith(
-    fetch(event.request).catch(() => {
-      return caches.match(event.request);
+    caches.match(event.request).then((cached) => {
+      return cached || fetch(event.request);
     })
   );
 });
