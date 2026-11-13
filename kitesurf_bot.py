@@ -53,7 +53,24 @@ if hasattr(sys.stdout, "reconfigure"):
 CONFIG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
 CACHE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "forecast_cache.json")
 USERS_DB_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "users_web_db.json")
+CHANGE_REQUESTS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "CHANGE_REQUESTS_QUEUE.json")
 PUBLIC_SPOTS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "public_spots_db.json")
+
+def load_change_requests() -> list:
+    if os.path.exists(CHANGE_REQUESTS_FILE):
+        try:
+            with open(CHANGE_REQUESTS_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return []
+
+def save_change_requests(requests: list):
+    try:
+        with open(CHANGE_REQUESTS_FILE, "w", encoding="utf-8") as f:
+            json.dump(requests, f, indent=2, ensure_ascii=False)
+    except Exception as e:
+        print(f"Error saving CHANGE_REQUESTS_QUEUE: {e}")
 
 def load_public_spots() -> list:
     if os.path.exists(PUBLIC_SPOTS_FILE):
@@ -4421,6 +4438,36 @@ def start_embedded_http_server(port: int = 8080):
                 self.wfile.write(json.dumps({"lat": lat, "lon": lon, "name": res_name}).encode("utf-8"))
                 return
 
+            # 4a. API: Rider Active Feedback Conversation Threads
+            if path == "/api/feedback/my-threads":
+                try:
+                    rider_email = (params.get("email", [""])[0] or "").strip().lower()
+                    if not rider_email:
+                        raise ValueError("Email is required.")
+                    db = load_users_db()
+                    feedbacks = db.get("feedback", [])
+                    user_threads = [
+                        fb for fb in feedbacks
+                        if fb.get("email", "").lower() == rider_email and (fb.get("reply") or fb.get("thread"))
+                    ]
+                    user_threads.sort(key=lambda x: x.get("updated_at") or x.get("replied_at") or x.get("created_at") or "", reverse=True)
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Cache-Control", "no-cache")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({
+                        "success": True,
+                        "threads": user_threads
+                    }).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(400)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
             # 4b. API: Spot Verification & Live Forecast Testing
             if path == "/api/spots/verify":
                 try:
@@ -6144,11 +6191,34 @@ def start_embedded_http_server(port: int = 8080):
 
                     from datetime import datetime, timezone
                     now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+                    # Initialize conversation thread if not present
+                    if not target_ticket.get("thread") or not isinstance(target_ticket.get("thread"), list):
+                        orig_text = target_ticket.get("message") or target_ticket.get("feedback") or ""
+                        target_ticket["thread"] = []
+                        if orig_text:
+                            target_ticket["thread"].append({
+                                "sender": "rider",
+                                "name": target_ticket.get("name") or "Rider",
+                                "text": orig_text,
+                                "time": target_ticket.get("created_at") or target_ticket.get("timestamp") or now_iso
+                            })
+
+                    target_ticket["thread"].append({
+                        "sender": "admin",
+                        "name": "HolyGust Team",
+                        "text": reply_text,
+                        "time": now_iso
+                    })
                     target_ticket["reply"] = reply_text
                     target_ticket["replied_at"] = now_iso
+                    target_ticket["updated_at"] = now_iso
+
                     if close_ticket:
                         target_ticket["status"] = "closed"
                         target_ticket["closed_at"] = now_iso
+                    else:
+                        target_ticket["status"] = "awaiting_rider"
 
                     save_users_db(db)
 
@@ -6156,10 +6226,6 @@ def start_embedded_http_server(port: int = 8080):
                     delivered_push = False
                     try:
                         import spot_alerts
-                        # Find push subscription:
-                        # 1. Directly in ticket
-                        # 2. In user profile in users_web_db
-                        # 3. In spot_alerts
                         sub = target_ticket.get("push_subscription")
                         if not sub:
                             u_obj = db.get("users", {}).get(target_ticket.get("email", "").lower(), {})
@@ -6169,8 +6235,8 @@ def start_embedded_http_server(port: int = 8080):
 
                         if sub and sub.get("endpoint"):
                             push_payload = {
-                                "title": "💬 HolyGust Feedback Reply",
-                                "body": f"Daniel: {reply_text}",
+                                "title": "💬 HolyGust Team Reply",
+                                "body": f"HolyGust Team: {reply_text}",
                                 "url": "/?open_profile=1",
                                 "icon": "/icon-192.png",
                                 "badge": "/icon-192.png"
@@ -6201,19 +6267,19 @@ def start_embedded_http_server(port: int = 8080):
     <div style="padding: 26px 22px; color: #f8fafc;">
       <h2 style="margin: 0 0 10px; font-size: 16px; color: #ffffff; font-weight: 700;">Aloha {rider_name},</h2>
       <p style="margin: 0 0 14px; font-size: 13px; line-height: 1.6; color: #94a3b8;">
-        Thank you for helping us make HolyGust better! Daniel and the team have responded to your ticket:
+        Thank you for helping us make HolyGust better! The HolyGust Team has responded to your ticket:
       </p>
       <div style="background: rgba(15, 23, 42, 0.8); border-left: 3px solid #38bdf8; border-radius: 8px; padding: 12px 14px; margin: 16px 0;">
         <p style="margin: 0 0 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; font-weight: 700;">Your Message:</p>
         <p style="margin: 0; font-size: 13px; color: #cbd5e1; font-style: italic;">"{original_msg}"</p>
       </div>
       <div style="background: rgba(14, 165, 233, 0.12); border: 1px solid rgba(14, 165, 233, 0.35); border-radius: 12px; padding: 16px; margin: 18px 0;">
-        <p style="margin: 0 0 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #38bdf8; font-weight: 800;">Response from HolyGust:</p>
+        <p style="margin: 0 0 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #38bdf8; font-weight: 800;">Response from HolyGust Team:</p>
         <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #f0f9ff; font-weight: 600;">{reply_text}</p>
       </div>
       <div style="text-align: center; margin: 24px 0 12px;">
         <a href="https://holygust.com" style="display: inline-block; background: #0ea5e9; color: #ffffff; font-weight: 800; font-size: 13px; padding: 12px 28px; border-radius: 10px; text-decoration: none;">
-          Launch HolyGust
+          Launch HolyGust & Reply
         </a>
       </div>
     </div>
@@ -6234,6 +6300,178 @@ def start_embedded_http_server(port: int = 8080):
                         "success": True,
                         "delivered_push": delivered_push,
                         "delivered_email": delivered_email,
+                        "ticket": target_ticket
+                    }).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(400)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # ADMIN: Push Rider Feedback to Changes (AI Development Backlog)
+            if parsed.path == "/api/admin/feedback/push-to-changes":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    data = json.loads(body)
+
+                    is_admin_ok, admin_err = verify_admin_request(self, data)
+                    if not is_admin_ok:
+                        self.send_response(403)
+                        self.send_header("Content-Type", "application/json")
+                        self._send_cors_headers()
+                        self.end_headers()
+                        self.wfile.write(json.dumps({"error": f"Forbidden: {admin_err}"}).encode("utf-8"))
+                        return
+
+                    ticket_id = (data.get("id") or "").strip()
+                    user_email = (data.get("email") or "").strip().lower()
+                    notes = (data.get("notes") or "").strip()
+
+                    db = load_users_db()
+                    feedbacks = db.get("feedback", [])
+                    target_ticket = None
+                    for fb in feedbacks:
+                        if ticket_id and str(fb.get("id")) == str(ticket_id):
+                            target_ticket = fb
+                            break
+                        elif not ticket_id and user_email and fb.get("email", "").lower() == user_email:
+                            target_ticket = fb
+                            break
+
+                    if not target_ticket:
+                        raise ValueError("Feedback ticket not found.")
+
+                    from datetime import datetime, timezone
+                    now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+                    target_ticket["status"] = "in_changes_queue"
+                    target_ticket["pushed_to_changes_at"] = now_iso
+                    if notes:
+                        target_ticket["admin_note"] = notes
+                    save_users_db(db)
+
+                    # Append / Update in CHANGE_REQUESTS_QUEUE.json
+                    queue = load_change_requests()
+                    existing_entry = None
+                    for item in queue:
+                        if item.get("ticket_id") == str(target_ticket.get("id")):
+                            existing_entry = item
+                            break
+
+                    if existing_entry:
+                        existing_entry["status"] = "pending_ai_implementation"
+                        existing_entry["admin_notes"] = notes or existing_entry.get("admin_notes", "")
+                        existing_entry["updated_at"] = now_iso
+                        cr_entry = existing_entry
+                    else:
+                        cr_entry = {
+                            "id": f"cr_{int(time.time()*1000)}",
+                            "ticket_id": str(target_ticket.get("id")),
+                            "rider_name": target_ticket.get("name") or "Rider",
+                            "rider_email": target_ticket.get("email", ""),
+                            "spot": target_ticket.get("spot", ""),
+                            "request_text": target_ticket.get("message") or target_ticket.get("feedback") or "",
+                            "admin_notes": notes or "Pushed from HolyGust Admin panel for AI implementation",
+                            "status": "pending_ai_implementation",
+                            "created_at": now_iso
+                        }
+                        queue.append(cr_entry)
+
+                    save_change_requests(queue)
+
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({
+                        "success": True,
+                        "change_request": cr_entry,
+                        "ticket": target_ticket
+                    }).encode("utf-8"))
+                except Exception as e:
+                    self.send_response(400)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+                return
+
+            # RIDER: 2-Way Reply back to HolyGust Team Conversation Thread
+            if parsed.path == "/api/feedback/rider-reply":
+                try:
+                    content_len = int(self.headers.get("Content-Length", 0))
+                    body = self.rfile.read(content_len).decode("utf-8")
+                    data = json.loads(body)
+
+                    ticket_id = (data.get("id") or "").strip()
+                    rider_email = (data.get("email") or "").strip().lower()
+                    reply_text = (data.get("text") or "").strip()
+
+                    if not reply_text:
+                        raise ValueError("Reply text is required.")
+
+                    db = load_users_db()
+                    feedbacks = db.get("feedback", [])
+                    target_ticket = None
+                    for fb in feedbacks:
+                        if ticket_id and str(fb.get("id")) == str(ticket_id):
+                            target_ticket = fb
+                            break
+                        elif not ticket_id and rider_email and fb.get("email", "").lower() == rider_email:
+                            target_ticket = fb
+                            break
+
+                    if not target_ticket:
+                        raise ValueError("Feedback thread not found.")
+
+                    from datetime import datetime, timezone
+                    now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+                    target_ticket.setdefault("thread", [])
+                    if not target_ticket["thread"]:
+                        orig_text = target_ticket.get("message") or target_ticket.get("feedback") or ""
+                        if orig_text:
+                            target_ticket["thread"].append({
+                                "sender": "rider",
+                                "name": target_ticket.get("name") or "Rider",
+                                "text": orig_text,
+                                "time": target_ticket.get("created_at") or target_ticket.get("timestamp") or now_iso
+                            })
+
+                    target_ticket["thread"].append({
+                        "sender": "rider",
+                        "name": target_ticket.get("name") or "Rider",
+                        "text": reply_text,
+                        "time": now_iso
+                    })
+                    target_ticket["status"] = "needs_admin"
+                    target_ticket["updated_at"] = now_iso
+                    save_users_db(db)
+
+                    # Alert Admin device via push notification
+                    try:
+                        import spot_alerts
+                        admin_subs = load_admin_push_subscriptions()
+                        r_name = target_ticket.get("name") or target_ticket.get("email") or "Rider"
+                        for s in admin_subs:
+                            spot_alerts.send_web_push(s, {
+                                "title": f"💬 New Reply from {r_name}",
+                                "body": reply_text[:120],
+                                "url": "/?open_admin=1",
+                                "icon": "/icon-192.png",
+                                "badge": "/icon-192.png"
+                            })
+                    except Exception as ex:
+                        print(f"Error alerting admin of rider reply: {ex}")
+
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self._send_cors_headers()
+                    self.end_headers()
+                    self.wfile.write(json.dumps({
+                        "success": True,
                         "ticket": target_ticket
                     }).encode("utf-8"))
                 except Exception as e:

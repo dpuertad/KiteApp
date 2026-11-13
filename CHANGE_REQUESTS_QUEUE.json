@@ -1,0 +1,13 @@
+[
+  {
+    "id": "cr_1794593114203",
+    "ticket_id": "fb_1794530881157",
+    "rider_name": "Raphi",
+    "rider_email": "raphael.joss@gmail.com",
+    "spot": "Barra Grande (Piauí), Brazil",
+    "request_text": "Raphi iPhone test: feedback modal works perfectly!",
+    "admin_notes": "Pushed from HolyGust Admin panel for AI implementation",
+    "status": "pending_ai_implementation",
+    "created_at": "2026-11-13T18:05:14Z"
+  }
+]

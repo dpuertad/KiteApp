@@ -1238,10 +1238,32 @@
       "spot": "Barra Grande",
       "message": "Testing fix for feedback",
       "created_at": "2026-11-13T00:36:53.561388Z",
-      "status": "open",
-      "reply": null,
-      "replied_at": null,
-      "push_subscription": null
+      "status": "closed",
+      "reply": "Thanks for testing Raphi! We received it loud and clear.",
+      "replied_at": "2026-11-13T18:05:07Z",
+      "push_subscription": null,
+      "thread": [
+        {
+          "sender": "rider",
+          "name": "Raphi",
+          "text": "Testing fix for feedback",
+          "time": "2026-11-13T00:36:53.561388Z"
+        },
+        {
+          "sender": "admin",
+          "name": "HolyGust Team",
+          "text": "Thanks for testing Raphi! We received it loud and clear.",
+          "time": "2026-11-13T18:05:07Z"
+        },
+        {
+          "sender": "rider",
+          "name": "Raphi",
+          "text": "Awesome, notifications work on my iPhone!",
+          "time": "2026-11-13T18:05:10Z"
+        }
+      ],
+      "updated_at": "2026-11-13T18:05:10Z",
+      "closed_at": "2026-11-13T18:05:16Z"
     },
     {
       "id": "fb_1794530881157",
@@ -1250,10 +1272,11 @@
       "spot": "Barra Grande (Piauí), Brazil",
       "message": "Raphi iPhone test: feedback modal works perfectly!",
       "created_at": "2026-11-13T00:48:01.157774Z",
-      "status": "open",
+      "status": "in_changes_queue",
       "reply": null,
       "replied_at": null,
-      "push_subscription": null
+      "push_subscription": null,
+      "pushed_to_changes_at": "2026-11-13T18:05:14Z"
     }
   ],
   "sessions": {

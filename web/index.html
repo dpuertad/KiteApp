@@ -1927,6 +1927,7 @@
               </div>
               <div class="flex items-center space-x-1">
                 <button type="button" id="btn-filter-fb-open" onclick="filterAdminFeedback('open')" class="text-[10px] px-2 py-0.5 rounded-lg bg-sky-500/20 text-sky-300 font-bold border border-sky-500/30">Open</button>
+                <button type="button" id="btn-filter-fb-changes" onclick="filterAdminFeedback('changes')" class="text-[10px] px-2 py-0.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white">In Changes</button>
                 <button type="button" id="btn-filter-fb-all" onclick="filterAdminFeedback('all')" class="text-[10px] px-2 py-0.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white">All</button>
               </div>
             </div>
@@ -1995,6 +1996,17 @@
           <span>Send to HolyGust Team</span>
         </button>
       </form>
+
+      <!-- Active Conversations with HolyGust Team -->
+      <div id="rider-feedback-threads-section" class="hidden space-y-2.5 pt-3 border-t border-slate-800">
+        <div class="flex items-center justify-between">
+          <span class="text-[11px] font-bold text-sky-400 flex items-center space-x-1">
+            <span>💬 Replies from HolyGust Team</span>
+          </span>
+          <span id="rider-threads-count-badge" class="text-[9px] px-1.5 py-0.2 rounded-full bg-sky-500/20 text-sky-300 font-mono font-bold"></span>
+        </div>
+        <div id="rider-threads-list" class="space-y-2 max-h-52 overflow-y-auto pr-1"></div>
+      </div>
     </div>
   </div>
 
@@ -6323,6 +6335,106 @@
       }
     }
 
+    async function loadRiderFeedbackThreads() {
+      const email = (authUser && authUser.email) || localStorage.getItem('kf_user_email') || document.getElementById('feedback-email')?.value || '';
+      const section = document.getElementById('rider-feedback-threads-section');
+      const listEl = document.getElementById('rider-threads-list');
+      if (!email || !section || !listEl) return;
+
+      try {
+        const res = await fetch(`/api/feedback/my-threads?email=${encodeURIComponent(email)}&_t=${Date.now()}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        const threads = data.threads || [];
+        if (threads.length === 0) {
+          section.classList.add('hidden');
+          return;
+        }
+
+        section.classList.remove('hidden');
+        const badge = document.getElementById('rider-threads-count-badge');
+        if (badge) badge.innerText = `${threads.length} active`;
+
+        listEl.innerHTML = threads.map(t => {
+          const tId = t.id;
+          const msgList = t.thread && t.thread.length > 0 ? t.thread : [
+            { sender: 'rider', name: 'You', text: t.message || t.feedback || '', time: t.created_at },
+            { sender: 'admin', name: 'HolyGust Team', text: t.reply, time: t.replied_at }
+          ];
+
+          return `
+            <div class="p-2.5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2">
+              <div class="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+                ${msgList.map(m => {
+                  const isAdminMsg = m.sender === 'admin';
+                  return `
+                    <div class="p-2 rounded-xl text-xs ${isAdminMsg ? 'bg-sky-500/10 border border-sky-500/30 ml-2' : 'bg-slate-900 border border-slate-800 mr-2'}">
+                      <div class="flex items-center justify-between text-[10px] mb-0.5">
+                        <span class="font-bold ${isAdminMsg ? 'text-sky-300' : 'text-slate-300'}">${isAdminMsg ? '💬 HolyGust Team' : 'You'}</span>
+                        <span class="text-slate-500 font-mono text-[9px]">${formatThreadTime(m.time)}</span>
+                      </div>
+                      <p class="${isAdminMsg ? 'text-sky-100' : 'text-slate-200'} leading-relaxed font-sans">${escapeHtml(m.text)}</p>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+
+              <!-- Reply Back Composer -->
+              <div class="flex items-center space-x-1.5 pt-1 border-t border-slate-800">
+                <input id="rider-reply-input-${tId}" type="text" placeholder="Reply back to HolyGust Team..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500">
+                <button type="button" onclick="sendRiderFeedbackReply('${tId}', this)" class="py-1.5 px-3 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs transition active:scale-95 flex-shrink-0 cursor-pointer">
+                  Send
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (e) {
+        console.warn("Could not load rider feedback threads:", e);
+      }
+    }
+
+    async function sendRiderFeedbackReply(ticketId, btnEl) {
+      const input = document.getElementById(`rider-reply-input-${ticketId}`);
+      const text = input ? input.value.trim() : '';
+      const email = (authUser && authUser.email) || localStorage.getItem('kf_user_email') || document.getElementById('feedback-email')?.value || '';
+      if (!text) return;
+
+      if (btnEl) {
+        btnEl.disabled = true;
+        btnEl.innerText = "...";
+      }
+
+      try {
+        const res = await fetch('/api/feedback/rider-reply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: ticketId, email: email, text: text })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to send');
+        if (input) input.value = '';
+        await loadRiderFeedbackThreads();
+      } catch (err) {
+        alert("⚠️ Failed to send reply: " + err.message);
+      } finally {
+        if (btnEl) {
+          btnEl.disabled = false;
+          btnEl.innerText = "Send";
+        }
+      }
+    }
+
+    function formatThreadTime(iso) {
+      if (!iso) return 'Just now';
+      try {
+        const d = new Date(iso);
+        return isNaN(d.getTime()) ? 'Just now' : d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+      } catch (e) {
+        return 'Just now';
+      }
+    }
+
     function openMetricModal(metricKey) {
       const modal = document.getElementById('modal-metric-detail');
       if (!modal) return;
@@ -6704,6 +6816,9 @@
       if (id === 'modal-profile' || id === 'modal-auth') {
         renderProfileFavorites();
         refreshUserProfile();
+      }
+      if (id === 'modal-feedback' && !el.classList.contains('hidden')) {
+        if (typeof loadRiderFeedbackThreads === 'function') loadRiderFeedbackThreads();
       }
     }
 
@@ -8232,15 +8347,18 @@
     function filterAdminFeedback(filter) {
       _activeFeedbackFilter = filter;
       const btnOpen = document.getElementById('btn-filter-fb-open');
+      const btnChanges = document.getElementById('btn-filter-fb-changes');
       const btnAll = document.getElementById('btn-filter-fb-all');
-      if (btnOpen && btnAll) {
-        if (filter === 'open') {
-          btnOpen.className = "text-[10px] px-2 py-0.5 rounded-lg bg-sky-500/20 text-sky-300 font-bold border border-sky-500/30";
-          btnAll.className = "text-[10px] px-2 py-0.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white";
-        } else {
-          btnAll.className = "text-[10px] px-2 py-0.5 rounded-lg bg-sky-500/20 text-sky-300 font-bold border border-sky-500/30";
-          btnOpen.className = "text-[10px] px-2 py-0.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white";
-        }
+      
+      [btnOpen, btnChanges, btnAll].forEach(b => {
+        if (b) b.className = "text-[10px] px-2 py-0.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition";
+      });
+      if (filter === 'open' && btnOpen) {
+        btnOpen.className = "text-[10px] px-2 py-0.5 rounded-lg bg-sky-500/20 text-sky-300 font-bold border border-sky-500/30";
+      } else if (filter === 'changes' && btnChanges) {
+        btnChanges.className = "text-[10px] px-2 py-0.5 rounded-lg bg-purple-500/20 text-purple-300 font-bold border border-purple-500/30";
+      } else if (filter === 'all' && btnAll) {
+        btnAll.className = "text-[10px] px-2 py-0.5 rounded-lg bg-sky-500/20 text-sky-300 font-bold border border-sky-500/30";
       }
       renderAdminFeedbackList(filter);
     }
@@ -8249,18 +8367,44 @@
       const container = document.getElementById('admin-feedback-container');
       if (!container) return;
       const all = window._adminFeedbackList || [];
-      const list = filter === 'open' ? all.filter(f => f.status !== 'closed' && !f.reply) : all;
+      
+      let list = all;
+      if (filter === 'open') {
+        list = all.filter(f => f.status !== 'closed' && f.status !== 'in_changes_queue');
+      } else if (filter === 'changes') {
+        list = all.filter(f => f.status === 'in_changes_queue');
+      }
 
       if (!list || list.length === 0) {
+        let emptyTitle = 'No Open Feedback Tickets';
+        let emptyDesc = 'All rider questions & requests have been addressed.';
+        if (filter === 'changes') {
+          emptyTitle = 'No Requests in Changes Queue';
+          emptyDesc = 'Tickets pushed to changes will appear here for AI development.';
+        } else if (filter === 'all') {
+          emptyTitle = 'No Feedback Received Yet';
+          emptyDesc = 'Suggestions from riders will appear here.';
+        }
         container.innerHTML = `
           <div class="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 text-center space-y-1">
             <span class="text-lg">💬</span>
-            <p class="text-xs font-bold text-slate-300">${filter === 'open' ? 'No Open Feedback Tickets' : 'No Feedback Received Yet'}</p>
-            <p class="text-[11px] text-slate-500">${filter === 'open' ? 'All rider questions & requests have been addressed.' : 'Suggestions from riders will appear here.'}</p>
+            <p class="text-xs font-bold text-slate-300">${emptyTitle}</p>
+            <p class="text-[11px] text-slate-500">${emptyDesc}</p>
           </div>
         `;
         return;
       }
+
+      const formatFbDate = (iso) => {
+        if (!iso) return 'Recently';
+        try {
+          const clean = String(iso).replace('+00:00Z', 'Z').replace('+00:00', 'Z');
+          const d = new Date(clean);
+          return isNaN(d.getTime()) ? 'Recently' : d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        } catch (e) {
+          return 'Recently';
+        }
+      };
 
       container.innerHTML = list.map((fb, idx) => {
         const id = fb.id || `fb_${idx}`;
@@ -8268,31 +8412,35 @@
         const email = escapeHtml(fb.email || '');
         const spot = fb.spot ? escapeHtml(fb.spot) : '';
         const msg = escapeHtml(fb.message || fb.feedback || '');
-        const isClosed = fb.status === 'closed' || Boolean(fb.reply);
-        const reply = fb.reply ? escapeHtml(fb.reply) : '';
+        const status = fb.status || (fb.reply ? 'closed' : 'open');
+        const isClosed = status === 'closed';
+        const inChanges = status === 'in_changes_queue';
+        const needsAdmin = status === 'needs_admin';
+        const awaitingRider = status === 'awaiting_rider';
+        const thread = Array.isArray(fb.thread) && fb.thread.length > 0 ? fb.thread : null;
+        const dateStr = formatFbDate(fb.updated_at || fb.created_at || fb.timestamp);
 
-        const formatFbDate = (iso) => {
-          if (!iso) return 'Recently';
-          try {
-            const clean = String(iso).replace('+00:00Z', 'Z').replace('+00:00', 'Z');
-            const d = new Date(clean);
-            return isNaN(d.getTime()) ? 'Recently' : d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-          } catch (e) {
-            return 'Recently';
-          }
-        };
-
-        const dateStr = formatFbDate(fb.created_at || fb.timestamp);
+        // Badge determination
+        let badgeHtml = '';
+        if (inChanges) {
+          badgeHtml = `<span class="text-[9px] px-1.5 py-0.2 rounded-full font-mono font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">🚀 In Changes</span>`;
+        } else if (needsAdmin) {
+          badgeHtml = `<span class="text-[9px] px-1.5 py-0.2 rounded-full font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30 animate-pulse">🔥 Rider Replied</span>`;
+        } else if (awaitingRider) {
+          badgeHtml = `<span class="text-[9px] px-1.5 py-0.2 rounded-full font-mono font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">⏳ Awaiting Rider</span>`;
+        } else if (isClosed) {
+          badgeHtml = `<span class="text-[9px] px-1.5 py-0.2 rounded-full font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">✓ Closed</span>`;
+        } else {
+          badgeHtml = `<span class="text-[9px] px-1.5 py-0.2 rounded-full font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">⏳ Open Ticket</span>`;
+        }
 
         return `
-          <div id="admin-fb-card-${id}" class="p-3.5 rounded-2xl bg-slate-950/80 border ${isClosed ? 'border-slate-800/80 opacity-85' : 'border-sky-500/30 shadow-md shadow-sky-500/5'} space-y-2.5 transition-all duration-300">
+          <div id="admin-fb-card-${id}" class="p-3.5 rounded-2xl bg-slate-950/80 border ${isClosed ? 'border-slate-800/80 opacity-85' : inChanges ? 'border-purple-500/30 shadow-md shadow-purple-500/5' : needsAdmin ? 'border-rose-500/40 shadow-md shadow-rose-500/10' : 'border-sky-500/30 shadow-md shadow-sky-500/5'} space-y-2.5 transition-all duration-300">
             <div class="flex items-start justify-between gap-2">
               <div class="min-w-0 flex-1">
                 <div class="flex items-center space-x-2">
                   <span class="font-extrabold text-white text-xs truncate">${name}</span>
-                  <span class="text-[9px] px-1.5 py-0.2 rounded-full font-mono font-bold ${isClosed ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse'}">
-                    ${isClosed ? '✓ Resolved' : '⏳ Open Ticket'}
-                  </span>
+                  ${badgeHtml}
                 </div>
                 <p class="text-[11px] text-sky-400 font-mono truncate mt-0.5">${email}</p>
                 ${spot ? `<p class="text-[10px] text-slate-400 mt-0.5">📍 ${spot}</p>` : ''}
@@ -8300,56 +8448,86 @@
               <span class="text-[9px] text-slate-500 font-mono flex-shrink-0">${dateStr}</span>
             </div>
 
-            <!-- Rider Message Box -->
-            <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-200 leading-relaxed font-sans">
-              "${msg}"
-            </div>
-
-            ${isClosed ? `
-              <!-- Closed Status & Reply Display -->
-              <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 space-y-1">
-                <div class="flex items-center justify-between text-[10px]">
-                  <span class="font-bold text-emerald-300">↳ ${reply ? 'Your Reply Sent:' : 'Ticket Status:'}</span>
-                  <span class="text-slate-500 font-mono text-[9px]">${formatFbDate(fb.closed_at || fb.replied_at)}</span>
-                </div>
-                ${reply ? `
-                  <p class="text-xs text-emerald-100 font-medium">"${reply}"</p>
-                  <p class="text-[9px] text-emerald-400/80 font-mono">Delivered via Native Push Notification & Email</p>
-                ` : `
-                  <p class="text-xs text-emerald-200 font-medium">✓ Closed and archived in cloud</p>
-                `}
+            ${thread ? `
+              <!-- Multi-Turn Conversation Thread -->
+              <div class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                ${thread.map(m => {
+                  const isAdminMsg = m.sender === 'admin';
+                  return `
+                    <div class="p-2 rounded-xl text-xs ${isAdminMsg ? 'bg-sky-500/10 border border-sky-500/30 ml-3' : 'bg-slate-900 border border-slate-800 mr-3'}">
+                      <div class="flex items-center justify-between text-[10px] mb-0.5">
+                        <span class="font-bold ${isAdminMsg ? 'text-sky-300' : 'text-slate-300'}">${isAdminMsg ? '💬 HolyGust Team' : escapeHtml(m.name || 'Rider')}</span>
+                        <span class="text-slate-500 font-mono text-[9px]">${formatFbDate(m.time)}</span>
+                      </div>
+                      <p class="${isAdminMsg ? 'text-sky-100' : 'text-slate-200'} leading-relaxed font-sans">${escapeHtml(m.text)}</p>
+                    </div>
+                  `;
+                }).join('')}
               </div>
             ` : `
-              <!-- Open Ticket Actions: Close or Reply & Close -->
-              <div class="space-y-2 pt-1 border-t border-slate-800/80">
+              <!-- Single Rider Message Box -->
+              <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-200 leading-relaxed font-sans">
+                "${msg}"
+              </div>
+            `}
+
+            <!-- 3 Core Admin Options: Close, Reply, Push to Changes -->
+            <div class="space-y-2 pt-1 border-t border-slate-800/80">
+              <div class="flex items-center justify-end space-x-2 flex-wrap gap-y-1.5">
+                <!-- Option 1: Close Ticket -->
+                <button 
+                  type="button" 
+                  onclick="closeFeedbackTicket('${escapeHtml(id)}', '${escapeHtml(fb.email)}', this)" 
+                  class="py-1 px-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 hover:text-white border border-slate-700 text-[11px] font-bold transition flex items-center space-x-1 cursor-pointer"
+                  title="Close and archive ticket"
+                >
+                  <span>✓ Close</span>
+                </button>
+
+                <!-- Option 2: Toggle Reply Box -->
+                <button 
+                  type="button" 
+                  onclick="toggleAdminReplyBox('${escapeHtml(id)}')" 
+                  class="py-1 px-2.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/40 text-[11px] font-bold transition flex items-center space-x-1 active:scale-95 cursor-pointer"
+                  title="Reply to rider as HolyGust Team"
+                >
+                  <span>💬 Reply</span>
+                </button>
+
+                <!-- Option 3: Push to Changes -->
+                <button 
+                  type="button" 
+                  onclick="pushFeedbackToChanges('${escapeHtml(id)}', this)" 
+                  class="py-1 px-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-extrabold text-[11px] shadow-sm shadow-purple-500/20 transition flex items-center space-x-1 active:scale-95 cursor-pointer"
+                  title="Queue for Antigravity AI implementation during active session"
+                >
+                  <span>🚀 Push to Changes</span>
+                </button>
+              </div>
+
+              <!-- Collapsible Admin Reply Composer -->
+              <div id="admin-fb-reply-box-${id}" class="${needsAdmin ? '' : 'hidden'} space-y-2 pt-1 border-t border-slate-800/60 transition-all">
                 <textarea 
                   id="admin-fb-reply-${id}" 
                   rows="2" 
-                  placeholder="Type reply to ${name} (e.g. 'Harlem Aspect and Thrive v1 added! Enjoy')..." 
+                  placeholder="Reply as HolyGust Team to ${name}..." 
                   class="w-full p-2.5 rounded-xl bg-slate-900 border border-slate-700/80 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition resize-none"
                 ></textarea>
-                <div class="flex items-center justify-end space-x-2">
-                  <!-- Option 1: Close Ticket without reply -->
-                  <button 
-                    type="button" 
-                    onclick="closeFeedbackTicket('${escapeHtml(id)}', '${escapeHtml(fb.email)}', this)" 
-                    class="py-1.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 hover:text-white border border-slate-700 text-xs font-bold transition flex items-center space-x-1 cursor-pointer"
-                    title="Close this ticket and store in cloud without sending a reply"
-                  >
-                    <span>✓ Close Ticket</span>
-                  </button>
-                  <!-- Option 2: Send Reply & Close Ticket -->
+                <div class="flex items-center justify-between">
+                  <label class="flex items-center space-x-1.5 text-[11px] text-slate-400 cursor-pointer select-none">
+                    <input type="checkbox" id="admin-fb-keepopen-${id}" checked class="rounded border-slate-700 bg-slate-900 text-sky-500 focus:ring-0">
+                    <span>Keep open for rider reply</span>
+                  </label>
                   <button 
                     type="button" 
                     onclick="replyFeedbackTicket('${escapeHtml(id)}', '${escapeHtml(fb.email)}', this)" 
                     class="py-1.5 px-3 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-400 hover:to-emerald-400 text-slate-950 font-black text-xs shadow-md shadow-sky-500/20 transition flex items-center space-x-1.5 active:scale-95 cursor-pointer"
-                    title="Send reply via Push Notification & Email, and close ticket"
                   >
-                    <span>💬 Reply & Close</span>
+                    <span>💬 Send as HolyGust Team</span>
                   </button>
                 </div>
               </div>
-            `}
+            </div>
           </div>
         `;
       }).join('');
@@ -8357,17 +8535,23 @@
       if (window.lucide) lucide.createIcons();
     }
 
+    function toggleAdminReplyBox(ticketId) {
+      const box = document.getElementById(`admin-fb-reply-box-${ticketId}`);
+      if (!box) return;
+      const isHidden = box.classList.contains('hidden');
+      if (isHidden) {
+        box.classList.remove('hidden');
+        const ta = document.getElementById(`admin-fb-reply-${ticketId}`);
+        if (ta) ta.focus();
+      } else {
+        box.classList.add('hidden');
+      }
+    }
+
     async function closeFeedbackTicket(ticketId, riderEmail, btnEl) {
       if (btnEl) {
         btnEl.disabled = true;
         btnEl.innerText = "Closing...";
-      }
-
-      // Optimistically animate out card if in open filter
-      const card = document.getElementById(`admin-fb-card-${ticketId}`);
-      if (card && _activeFeedbackFilter === 'open') {
-        card.style.opacity = '0';
-        card.style.transform = 'scale(0.95)';
       }
 
       try {
@@ -8389,22 +8573,16 @@
         }
 
         // Update badge count
-        const openCount = all.filter(f => f.status !== 'closed' && !f.reply).length;
+        const openCount = all.filter(f => f.status !== 'closed' && f.status !== 'in_changes_queue').length;
         const fbBadge = document.getElementById('badge-admin-feedback-count');
         if (fbBadge) fbBadge.innerText = openCount;
 
-        setTimeout(() => {
-          renderAdminFeedbackList(_activeFeedbackFilter);
-        }, 200);
+        renderAdminFeedbackList(_activeFeedbackFilter);
       } catch (err) {
         alert("⚠️ Failed to close ticket: " + err.message);
-        if (card) {
-          card.style.opacity = '1';
-          card.style.transform = 'none';
-        }
         if (btnEl) {
           btnEl.disabled = false;
-          btnEl.innerText = "✓ Close Ticket";
+          btnEl.innerText = "✓ Close";
         }
       }
     }
@@ -8413,64 +8591,97 @@
       const textarea = document.getElementById(`admin-fb-reply-${ticketId}`);
       const replyMsg = textarea ? textarea.value.trim() : '';
       if (!replyMsg) {
-        alert("Please write a reply message for the rider, or click 'Close Ticket' to close without replying.");
+        alert("Please write a reply message for the rider.");
         return;
       }
+      const keepOpen = document.getElementById(`admin-fb-keepopen-${ticketId}`)?.checked ?? true;
+
       if (btnEl) {
         btnEl.disabled = true;
-        btnEl.innerHTML = `<i data-lucide="loader" class="w-3 h-3 animate-spin inline-block"></i> Delivering...`;
+        btnEl.innerHTML = `<i data-lucide="loader" class="w-3 h-3 animate-spin inline-block"></i> Sending...`;
         if (window.lucide) lucide.createIcons();
-      }
-
-      // Optimistically animate card out if in open view
-      const card = document.getElementById(`admin-fb-card-${ticketId}`);
-      if (card && _activeFeedbackFilter === 'open') {
-        card.style.opacity = '0';
-        card.style.transform = 'scale(0.95)';
       }
 
       try {
         const res = await adminFetch('/api/admin/feedback/reply', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: ticketId, email: riderEmail, reply: replyMsg, close: true })
+          body: JSON.stringify({ id: ticketId, email: riderEmail, reply: replyMsg, close: !keepOpen })
         });
         const d = await res.json();
         if (!res.ok) throw new Error(d.error || 'Failed to send reply');
 
-        // Update local list
+        // Update local ticket with new thread & status
         const all = window._adminFeedbackList || [];
         for (let item of all) {
           if (String(item.id) === String(ticketId) || (!ticketId && item.email === riderEmail)) {
-            item.status = 'closed';
-            item.reply = replyMsg;
-            item.replied_at = new Date().toISOString();
-            item.closed_at = new Date().toISOString();
+            if (d.ticket) {
+              Object.assign(item, d.ticket);
+            } else {
+              item.status = keepOpen ? 'awaiting_rider' : 'closed';
+              item.reply = replyMsg;
+              item.replied_at = new Date().toISOString();
+              item.updated_at = new Date().toISOString();
+            }
           }
         }
 
-        // Update badge count
-        const openCount = all.filter(f => f.status !== 'closed' && !f.reply).length;
+        const openCount = all.filter(f => f.status !== 'closed' && f.status !== 'in_changes_queue').length;
         const fbBadge = document.getElementById('badge-admin-feedback-count');
         if (fbBadge) fbBadge.innerText = openCount;
 
-        let msg = `✅ Reply sent to ${riderEmail}! Ticket closed.`;
-        if (d.delivered_push) msg += ` (📲 Push sent to lock screen)`;
+        let msg = `✅ Reply sent to ${riderEmail} as HolyGust Team!`;
+        if (d.delivered_push) msg += ` (📲 Push sent)`;
         if (d.delivered_email) msg += ` (✉️ Email sent)`;
         alert(msg);
 
-        setTimeout(() => {
-          renderAdminFeedbackList(_activeFeedbackFilter);
-        }, 200);
+        renderAdminFeedbackList(_activeFeedbackFilter);
       } catch (err) {
         alert("⚠️ Failed to reply: " + err.message);
-        if (card) {
-          card.style.opacity = '1';
-          card.style.transform = 'none';
-        }
         if (btnEl) {
           btnEl.disabled = false;
-          btnEl.innerHTML = `<span>💬 Reply & Close</span>`;
+          btnEl.innerHTML = `<span>💬 Send as HolyGust Team</span>`;
+        }
+      }
+    }
+
+    async function pushFeedbackToChanges(ticketId, btnEl) {
+      const all = window._adminFeedbackList || [];
+      const ticket = all.find(f => String(f.id) === String(ticketId));
+      if (!ticket) return;
+
+      const confirmPush = confirm(`🚀 Push this request to the Changes Queue?\n\nRider: ${ticket.name || 'Anonymous'}\nFeedback: "${(ticket.message || ticket.feedback || '').slice(0, 100)}..."\n\nThis will add it directly to the AI task queue for implementation.`);
+      if (!confirmPush) return;
+
+      if (btnEl) {
+        btnEl.disabled = true;
+        btnEl.innerText = "Pushing...";
+      }
+
+      try {
+        const res = await adminFetch('/api/admin/feedback/push-to-changes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: ticketId })
+        });
+        const d = await res.json();
+        if (!res.ok) throw new Error(d.error || 'Failed to push to changes');
+
+        ticket.status = 'in_changes_queue';
+        ticket.in_changes_at = new Date().toISOString();
+
+        // Update badge count
+        const openCount = all.filter(f => f.status !== 'closed' && f.status !== 'in_changes_queue').length;
+        const fbBadge = document.getElementById('badge-admin-feedback-count');
+        if (fbBadge) fbBadge.innerText = openCount;
+
+        alert(`🚀 Successfully pushed to Changes Queue!\n\nTask ID: ${d.change_request?.id || 'created'}\nAntigravity can now read and implement this change request.`);
+        renderAdminFeedbackList(_activeFeedbackFilter);
+      } catch (err) {
+        alert("⚠️ Failed to push to changes: " + err.message);
+        if (btnEl) {
+          btnEl.disabled = false;
+          btnEl.innerText = "🚀 Push to Changes";
         }
       }
     }
@@ -8890,7 +9101,7 @@
 
       // Register PWA Service Worker (with cache bust, auto-update & cold-start shield)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=68').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=69').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
