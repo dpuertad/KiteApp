@@ -528,6 +528,10 @@
           </h3>
           <span id="tides-marine-temp-badge" class="text-[10px] text-cyan-300 font-mono font-semibold"></span>
         </div>
+
+        <!-- Windguru Visual Graphic Tide Curve -->
+        <div id="tides-graphic-container" class="w-full overflow-hidden rounded-xl bg-slate-950/80 border border-slate-800/80 p-2 sm:p-2.5 relative"></div>
+
         <div id="tides-container" class="grid grid-cols-2 gap-2 text-xs">
           <div class="bg-slate-950/60 rounded-xl p-3 border border-slate-800/80">
             <span class="text-slate-400">Loading tides...</span>
@@ -3980,7 +3984,8 @@
       document.getElementById('live-temp-str').innerText = `${Math.round(heroTemp)}°C`;
       document.getElementById('compass-cardinal').innerText = heroCard;
       document.getElementById('compass-degrees').innerText = `${heroDeg}° (From ${heroCard})`;
-      document.getElementById('compass-needle').style.transform = `rotate(${heroDeg}deg)`;
+      // Arrow points in direction wind is blowing towards (downwind trajectory)
+      document.getElementById('compass-needle').style.transform = `rotate(${(heroDeg + 180) % 360}deg)`;
 
       // A. Beginner Go / No-Go Rating Badge (Only when rider level === 'beginner')
       const beginnerBadgeEl = document.getElementById('hero-beginner-rating');
@@ -4283,9 +4288,17 @@
       // Render SVG Wind Chart
       renderWindChart(schedule);
 
-      // Render Tides
+      // Render Tides & Visual Wave Graphic (Windguru Style)
       const tides = isTomorrow ? (f.tides_tomorrow || []) : (f.tides || []);
+      const hourlyTideCurve = isTomorrow ? (f.tide_curve_tomorrow || []) : (f.tide_curve_today || []);
       const tidesContainer = document.getElementById('tides-container');
+
+      try {
+        renderTidesGraphic(tides, hourlyTideCurve, isTomorrow, f.timezone || (state.spot && state.spot.timezone));
+      } catch (err) {
+        console.warn("Graphic tides render non-critical warning:", err);
+      }
+
       if (tides.length === 0) {
         tidesContainer.innerHTML = '<div class="text-slate-400 text-center py-2 col-span-2">Tide model data unavailable for spot.</div>';
       } else {
@@ -4388,6 +4401,195 @@
             <stop offset="100%" stop-color="#0284c7" />
           </linearGradient>
         </defs>
+      `;
+    }
+
+    // ==========================================
+    // 🌊 WINDGURU VISUAL TIDE GRAPHIC GENERATOR
+    // ==========================================
+    function renderTidesGraphic(tides, hourlyCurve, isTomorrow, spotTimezone) {
+      const container = document.getElementById('tides-graphic-container');
+      if (!container) return;
+
+      if ((!tides || tides.length === 0) && (!hourlyCurve || hourlyCurve.length === 0)) {
+        container.classList.add('hidden');
+        return;
+      }
+      container.classList.remove('hidden');
+
+      // 1. Prepare 24 hourly curve values
+      let curve = [];
+      if (Array.isArray(hourlyCurve) && hourlyCurve.length >= 24) {
+        curve = hourlyCurve.slice(0, 24).map(v => (v !== null && !isNaN(v)) ? Number(v) : 0);
+      } else if (tides && tides.length > 0) {
+        // Reconstruct smooth sinusoidal tide wave from extreme points
+        const highTides = tides.filter(t => t.type === 'High');
+        const lowTides = tides.filter(t => t.type === 'Low');
+        const maxH = highTides.length ? Math.max(...highTides.map(t => t.height)) : 1.5;
+        const minH = lowTides.length ? Math.min(...lowTides.map(t => t.height)) : -0.5;
+        const midH = (maxH + minH) / 2;
+        const ampH = Math.max(0.3, (maxH - minH) / 2);
+        
+        let firstHighHour = 6;
+        if (highTides.length && highTides[0].time) {
+          const parts = highTides[0].time.split(':');
+          firstHighHour = parseInt(parts[0], 10) + (parseInt(parts[1], 10) || 0) / 60;
+        }
+        for (let h = 0; h < 24; h++) {
+          const val = midH + ampH * Math.cos(2 * Math.PI * (h - firstHighHour) / 12.42);
+          curve.push(Number(val.toFixed(2)));
+        }
+      }
+
+      if (curve.length < 24) {
+        container.classList.add('hidden');
+        return;
+      }
+
+      // 2. Dimensions & Padding
+      const W = 500;
+      const H = 125;
+      const padL = 28;
+      const padR = 24;
+      const padT = 24;
+      const padB = 22;
+      const plotW = W - padL - padR;
+      const plotH = H - padT - padB;
+
+      const minVal = Math.min(...curve, ...(tides || []).map(t => t.height));
+      const maxVal = Math.max(...curve, ...(tides || []).map(t => t.height));
+      const margin = Math.max(0.2, (maxVal - minVal) * 0.15);
+      const yMin = minVal - margin;
+      const yMax = maxVal + margin;
+      const yRange = (yMax - yMin) || 1.0;
+
+      const getX = (h) => padL + (h / 23) * plotW;
+      const getY = (v) => padT + (1 - (v - yMin) / yRange) * plotH;
+
+      // 3. Create Smooth Bezier Path (Catmull-Rom to Cubic Spline)
+      const pts = curve.map((v, i) => [getX(i), getY(v)]);
+      let linePath = `M ${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+      for (let i = 0; i < pts.length - 1; i++) {
+        const p0 = pts[Math.max(0, i - 1)];
+        const p1 = pts[i];
+        const p2 = pts[i + 1];
+        const p3 = pts[Math.min(pts.length - 1, i + 2)];
+        const c1x = p1[0] + (p2[0] - p0[0]) / 6;
+        const c1y = p1[1] + (p2[1] - p0[1]) / 6;
+        const c2x = p2[0] - (p3[0] - p1[0]) / 6;
+        const c2y = p2[1] - (p3[1] - p1[1]) / 6;
+        linePath += ` C ${c1x.toFixed(1)} ${c1y.toFixed(1)}, ${c2x.toFixed(1)} ${c2y.toFixed(1)}, ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`;
+      }
+
+      const bottomY = H - padB;
+      const areaPath = `${linePath} L ${pts[pts.length - 1][0].toFixed(1)} ${bottomY} L ${pts[0][0].toFixed(1)} ${bottomY} Z`;
+
+      // 4. Mean Sea Level (0.0m) dashed line
+      let zeroLineHtml = '';
+      if (yMin <= 0 && yMax >= 0) {
+        const y0 = getY(0);
+        zeroLineHtml = `
+          <line x1="${padL}" y1="${y0.toFixed(1)}" x2="${W - padR}" y2="${y0.toFixed(1)}" stroke="#334155" stroke-dasharray="3 3" stroke-width="1" />
+          <text x="${W - padR + 3}" y="${(y0 + 3).toFixed(1)}" fill="#64748b" font-size="8" font-family="monospace">0m</text>
+        `;
+      }
+
+      // 5. Time Grid Ticks (00h, 04h, 08h, 12h, 16h, 20h, 24h)
+      const hourTicks = [0, 4, 8, 12, 16, 20, 23];
+      const gridTicksHtml = hourTicks.map(h => {
+        const x = getX(h);
+        const label = h === 23 ? '24h' : `${h < 10 ? '0' : ''}${h}h`;
+        return `
+          <line x1="${x.toFixed(1)}" y1="${padT}" x2="${x.toFixed(1)}" y2="${bottomY}" stroke="#1e293b" stroke-width="1" />
+          <text x="${x.toFixed(1)}" y="${H - 6}" fill="#64748b" font-size="9" font-family="monospace" text-anchor="middle">${label}</text>
+        `;
+      }).join('');
+
+      // 6. High & Low Tide Points with Badges
+      const tideNodesHtml = (tides || []).map(t => {
+        const parts = (t.time || '12:00').split(':');
+        const hDecimal = Math.max(0, Math.min(23, parseInt(parts[0], 10) + (parseInt(parts[1], 10) || 0) / 60));
+        const px = getX(hDecimal);
+        const py = getY(t.height);
+        const isHigh = t.type === 'High';
+        const color = isHigh ? '#38bdf8' : '#94a3b8';
+        const sign = t.height > 0 ? '+' : '';
+        const hLabel = `${sign}${t.height.toFixed(2)}m`;
+        const badgeY = isHigh ? Math.max(12, py - 11) : Math.min(bottomY - 4, py + 14);
+
+        return `
+          <g>
+            <circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="3.5" fill="${color}" stroke="#090d16" stroke-width="1.5" />
+            <text x="${px.toFixed(1)}" y="${badgeY.toFixed(1)}" fill="${isHigh ? '#7dd3fc' : '#cbd5e1'}" font-size="8.5" font-weight="bold" font-family="monospace" text-anchor="middle">
+              ${isHigh ? '▲' : '▼'} ${hLabel}
+            </text>
+          </g>
+        `;
+      }).join('');
+
+      // 7. "NOW" indicator (if viewing today's forecast)
+      let nowHtml = '';
+      if (!isTomorrow) {
+        let nowHours = 12;
+        try {
+          const tz = spotTimezone || (state.spot && state.spot.timezone) || 'auto';
+          const now = new Date();
+          if (tz && tz !== 'auto') {
+            const locStr = now.toLocaleTimeString('en-US', { timeZone: tz, hour12: false });
+            const p = locStr.split(':');
+            nowHours = parseInt(p[0], 10) + (parseInt(p[1], 10) || 0) / 60;
+          } else {
+            nowHours = now.getHours() + now.getMinutes() / 60;
+          }
+        } catch (e) {
+          nowHours = new Date().getHours();
+        }
+
+        if (nowHours >= 0 && nowHours <= 23.9) {
+          const nx = getX(nowHours);
+          const idx = Math.min(22, Math.floor(nowHours));
+          const frac = nowHours - idx;
+          const curVal = curve[idx] + (curve[idx + 1] - curve[idx]) * frac;
+          const ny = getY(curVal);
+
+          nowHtml = `
+            <g>
+              <line x1="${nx.toFixed(1)}" y1="${padT - 6}" x2="${nx.toFixed(1)}" y2="${bottomY}" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="2 2" />
+              <circle cx="${nx.toFixed(1)}" cy="${ny.toFixed(1)}" r="4.5" fill="#f59e0b" stroke="#090d16" stroke-width="1.5" />
+              <rect x="${(nx - 14).toFixed(1)}" y="${(padT - 16).toFixed(1)}" width="28" height="11" rx="3" fill="#f59e0b" />
+              <text x="${nx.toFixed(1)}" y="${(padT - 7.5).toFixed(1)}" fill="#090d16" font-size="7.5" font-weight="900" font-family="monospace" text-anchor="middle">NOW</text>
+            </g>
+          `;
+        }
+      }
+
+      container.innerHTML = `
+        <div class="flex items-center justify-between mb-1 px-1">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center space-x-1">
+            <span>24h Water Level Curve (MSL)</span>
+          </span>
+          <span class="text-[9px] text-cyan-400/90 font-mono font-medium">Windguru Visual Tide</span>
+        </div>
+        <svg viewBox="0 0 ${W} ${H}" class="w-full h-auto max-h-[140px] select-none block overflow-visible">
+          <defs>
+            <linearGradient id="hgTideAreaGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.35" />
+              <stop offset="60%" stop-color="#0891b2" stop-opacity="0.12" />
+              <stop offset="100%" stop-color="#0284c7" stop-opacity="0.0" />
+            </linearGradient>
+            <linearGradient id="hgTideStrokeGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#38bdf8" />
+              <stop offset="50%" stop-color="#22d3ee" />
+              <stop offset="100%" stop-color="#06b6d4" />
+            </linearGradient>
+          </defs>
+          ${gridTicksHtml}
+          ${zeroLineHtml}
+          <path d="${areaPath}" fill="url(#hgTideAreaGrad)" />
+          <path d="${linePath}" fill="none" stroke="url(#hgTideStrokeGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+          ${tideNodesHtml}
+          ${nowHtml}
+        </svg>
       `;
     }
 
@@ -4537,8 +4739,19 @@
       if (consTag) consTag.innerText = `Consensus: ${m.confidence_pct || 90}%`;
       if (spreadDesc) spreadDesc.innerText = `Spread: ${m.spread_kts !== undefined ? m.spread_kts : 1.2} kts (${m.label || 'High Agreement'})`;
 
-      // 3. Webcam
+      // 3. Webcam (Admin Only preview while individual beach cams are curated)
+      const webcamCard = document.getElementById('beta-webcam-card');
+      const isAdmin = (typeof isAdminUser === 'function' && isAdminUser()) || window.location.search.includes('admin=1');
       const w = betaIntel.webcam || {};
+
+      if (webcamCard) {
+        if (!isAdmin || !w || !w.url || w.is_available === false) {
+          webcamCard.classList.add('hidden');
+        } else {
+          webcamCard.classList.remove('hidden');
+        }
+      }
+
       const wTitle = document.getElementById('beta-webcam-title');
       const wSub = document.getElementById('beta-webcam-sub');
       const wBadge = document.getElementById('beta-webcam-whitecaps-badge');
@@ -8677,7 +8890,7 @@
 
       // Register PWA Service Worker (with cache bust, auto-update & cold-start shield)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=67').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=68').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));

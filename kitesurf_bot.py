@@ -1439,7 +1439,7 @@ def fetch_tides_both_days(lat: float, lon: float, timezone_str: str = "auto") ->
                 tmrw_sst = round(sum(valid_tmrw) / len(valid_tmrw), 1)
 
         if not times or not levels:
-            return [], [], today_sst, tmrw_sst, {}
+            return [], [], today_sst, tmrw_sst, {}, [], []
 
         today_tides = []
         tomorrow_tides = []
@@ -1463,10 +1463,12 @@ def fetch_tides_both_days(lat: float, lon: float, timezone_str: str = "auto") ->
                     elif i < 48:
                         tomorrow_tides.append(tide_item)
 
-        return today_tides, tomorrow_tides, today_sst, tmrw_sst, weekly_tides
+        today_hourly_levels = [round(float(x), 2) if x is not None else None for x in levels[:24]]
+        tmrw_hourly_levels = [round(float(x), 2) if x is not None else None for x in levels[24:48]]
+        return today_tides, tomorrow_tides, today_sst, tmrw_sst, weekly_tides, today_hourly_levels, tmrw_hourly_levels
     except Exception as e:
         print(f"Error fetching tides & SST: {e}")
-        return [], [], None, None, {}
+        return [], [], None, None, {}, [], []
 
 
 GLOBAL_THERMAL_SPOTS = {
@@ -1746,6 +1748,22 @@ CURATED_SPOT_WEBCAMS = {
         "has_whitecaps": True,
         "provider": "Lineup.surf Jericoacoara"
     },
+    "barra_grande": {
+        "title": "Barra Grande (Piauí)",
+        "url": "",
+        "stream_url": "",
+        "has_whitecaps": False,
+        "is_available": False,
+        "provider": "No active public live stream available"
+    },
+    "barra grande": {
+        "title": "Barra Grande (Piauí)",
+        "url": "",
+        "stream_url": "",
+        "has_whitecaps": False,
+        "is_available": False,
+        "provider": "No active public live stream available"
+    },
     # SPAIN & CANARY ISLANDS
     "tarifa": {
         "title": "Tarifa (Los Lances Norte & Arte Vida)",
@@ -1963,111 +1981,31 @@ def resolve_spot_webcam(spot: dict, cur_wind: float = 15.0) -> dict:
     lat = float(spot.get("lat", 0))
     lon = float(spot.get("lon", 0))
 
-    # 1. Match direct curated catalog
+    # 1. Match direct curated catalog (verified 1-by-1)
     for key, cam in CURATED_SPOT_WEBCAMS.items():
         if key in s_id or key in s_name or (key == "tarifa" and ("lances" in s_name or "valdevaqueros" in s_name)):
+            if cam.get("is_available") is False:
+                return {
+                    "title": cam.get("title", f"{spot.get('name')} Beach Observation"),
+                    "url": "",
+                    "stream_url": "",
+                    "has_whitecaps": False,
+                    "is_available": False,
+                    "provider": cam.get("provider", "No active public live stream available")
+                }
             res = dict(cam)
             res["has_whitecaps"] = (cur_wind >= 14.0)
+            res["is_available"] = True
             return res
 
-    # 2. Regional direct beach camera network fallbacks (ALL verified 200 OK, zero app nags)
-    # Brazil (Ceará, Piauí, Maranhão, Rio Grande do Norte, Santa Catarina)
-    if -35.0 <= lat <= 5.0 and -75.0 <= lon <= -30.0:
-        return {
-            "title": f"{spot.get('name')} Beach Observation",
-            "url": "https://lineup.surf/",
-            "stream_url": "https://lineup.surf/praia/praia-do-cumbuco",
-            "has_whitecaps": (cur_wind >= 14.0),
-            "provider": "Lineup.surf Brazil Coastal Cams"
-        }
-
-    # Spain / Canary Islands
-    if (27.0 <= lat <= 29.5 and -19.0 <= lon <= -13.0) or (35.0 <= lat <= 44.0 and -10.0 <= lon <= 4.0):
-        return {
-            "title": f"{spot.get('name')} Coastal Observation",
-            "url": "https://www.skylinewebcams.com/en/webcam/espana.html",
-            "stream_url": "https://surfcentertarifa.com/webcam/",
-            "has_whitecaps": (cur_wind >= 14.0),
-            "provider": "SkylineWebcams Spain Network"
-        }
-
-    # Italy & Alpine Lakes
-    if 36.0 <= lat <= 47.0 and 6.0 <= lon <= 19.0:
-        return {
-            "title": f"{spot.get('name')} Live Water View",
-            "url": "https://www.addicted-sports.com/webcam/gardasee/torbole/",
-            "stream_url": "https://www.whatsupcams.com/en/webcams/italy/sardinia/palau/porto-pollo-beach/",
-            "has_whitecaps": (cur_wind >= 14.0),
-            "provider": "Addicted Sports & Alpine Cams"
-        }
-
-    # Germany / Netherlands / Baltic / North Sea
-    if 50.0 <= lat <= 56.0 and 2.0 <= lon <= 15.0:
-        return {
-            "title": f"{spot.get('name')} Panoramic Observation",
-            "url": "https://fehmarn.panomax.com/",
-            "stream_url": "https://brouwersdam.panomax.com/",
-            "has_whitecaps": (cur_wind >= 14.0),
-            "provider": "Panomax 360° Coastal Network"
-        }
-
-    # Switzerland
-    if 45.5 <= lat <= 48.0 and 5.5 <= lon <= 11.0:
-        return {
-            "title": f"{spot.get('name')} Lake Live Stream",
-            "url": "https://www.kitesailing.ch/",
-            "stream_url": "https://www.kitesailing.ch/",
-            "has_whitecaps": (cur_wind >= 14.0),
-            "provider": "Swiss Kitesurf Live Stream"
-        }
-
-    # Portugal
-    if 36.5 <= lat <= 42.5 and -10.0 <= lon <= -6.0:
-        return {
-            "title": f"{spot.get('name')} Beach Observation",
-            "url": "https://beachcam.meo.pt/livecams/praia-do-guincho/",
-            "stream_url": "https://beachcam.meo.pt/",
-            "has_whitecaps": (cur_wind >= 14.0),
-            "provider": "MEO Beachcam Portugal"
-        }
-
-    # South Africa
-    if -35.0 <= lat <= -25.0 and 15.0 <= lon <= 35.0:
-        return {
-            "title": f"{spot.get('name')} Surf Observation",
-            "url": "https://www.wavehub.co.za/",
-            "stream_url": "https://www.wavehub.co.za/",
-            "has_whitecaps": (cur_wind >= 14.0),
-            "provider": "WaveHub South Africa Surf Cams"
-        }
-
-    # Caribbean
-    if 10.0 <= lat <= 26.0 and -85.0 <= lon <= -60.0:
-        return {
-            "title": f"{spot.get('name')} Kite Beach Observation",
-            "url": "https://www.whatsupcams.com/en/webcams/dominican-republic/puerto-plata/cabarete/kite-club-kite-beach-cabarete/",
-            "stream_url": "https://www.whatsupcams.com/en/webcams/dominican-republic/puerto-plata/cabarete/gokite-cabarete-kite-beach/",
-            "has_whitecaps": (cur_wind >= 14.0),
-            "provider": "WhatsUpCams Caribbean Network"
-        }
-
-    # North America (USA / Canada)
-    if 24.0 <= lat <= 60.0 and -130.0 <= lon <= -65.0:
-        return {
-            "title": f"{spot.get('name')} Wind Cam Observation",
-            "url": "https://www.sailworks.com/bp/Gorge_Wind_Cams.html",
-            "stream_url": "https://www.sailworks.com/bp/Gorge_Wind_Cams.html",
-            "has_whitecaps": (cur_wind >= 14.0),
-            "provider": "Columbia Gorge & Coastal Cams"
-        }
-
-    # Global high-grade web camera network fallback
+    # 2. If spot does not have a 1-by-1 verified public live stream, return unavailable
     return {
-        "title": f"{spot.get('name')} Beach Observation",
-        "url": "https://www.whatsupcams.com/en/live-cams/",
-        "stream_url": "https://www.skylinewebcams.com/",
-        "has_whitecaps": (cur_wind >= 14.0),
-        "provider": "World Beachcam Live Stream Network"
+        "title": f"{spot.get('name', 'Spot')} Live Cam",
+        "url": "",
+        "stream_url": "",
+        "has_whitecaps": False,
+        "is_available": False,
+        "provider": "No verified public live stream for this spot yet"
     }
 
 FORECAST_MEM_CACHE = {}
@@ -2849,8 +2787,12 @@ def fetch_live_forecast(spot: dict) -> dict:
         return copy.deepcopy(cached_entry[1])
 
     tides_res = fetch_tides_both_days(spot["lat"], spot["lon"], spot.get("timezone", "auto"))
-    if len(tides_res) == 5:
-        today_tides, tomorrow_tides, today_sst, tomorrow_sst, weekly_tides = tides_res
+    today_hourly_tides = []
+    tomorrow_hourly_tides = []
+    if len(tides_res) >= 7:
+        today_tides, tomorrow_tides, today_sst, tomorrow_sst, weekly_tides, today_hourly_tides, tomorrow_hourly_tides = tides_res[:7]
+    elif len(tides_res) >= 5:
+        today_tides, tomorrow_tides, today_sst, tomorrow_sst, weekly_tides = tides_res[:5]
     else:
         today_tides, tomorrow_tides, today_sst, tomorrow_sst = tides_res[:4]
         weekly_tides = {}
@@ -2935,6 +2877,8 @@ def fetch_live_forecast(spot: dict) -> dict:
 
     forecast["tides"] = today_tides
     forecast["tides_tomorrow"] = tomorrow_tides
+    forecast["tide_curve_today"] = today_hourly_tides
+    forecast["tide_curve_tomorrow"] = tomorrow_hourly_tides
     forecast["weekly_tides"] = weekly_tides
     forecast["sea_temp"] = forecast.get("sea_temp") if forecast.get("sea_temp") is not None else today_sst
     forecast["tomorrow_sea_temp"] = forecast.get("tomorrow_sea_temp") if forecast.get("tomorrow_sea_temp") is not None else tomorrow_sst
