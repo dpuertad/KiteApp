@@ -1,6 +1,39 @@
 {
   "spot_views": [
     {
+      "timestamp": "2026-11-13T11:42:34.231164+00:00Z",
+      "spot_name": "Tarifa (Los Lances), Spain",
+      "lat": 36.0143,
+      "lon": -5.6044,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "68878501",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-13T11:42:31.877787+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "68878501",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-13T11:42:28.928584+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "68878501",
+      "action": "view_forecast"
+    },
+    {
       "timestamp": "2026-11-13T02:14:16.380431+00:00Z",
       "spot_name": "Cumbuco, Brazil",
       "lat": -3.6247,
@@ -1283,9 +1316,9 @@
     "Praia de Maceió (Camocim), Brazil": 10,
     "Mar Menor (Los Alcázares), Spain": 2,
     "Pozo Izquierdo (Gran Canaria), Spain": 1,
-    "Cumbuco, Brazil": 39,
+    "Cumbuco, Brazil": 41,
     "Jericoacoara, Brazil": 3,
-    "Tarifa (Los Lances), Spain": 2,
+    "Tarifa (Los Lances), Spain": 3,
     "Taíba, Brazil": 4,
     "Lake Silvaplana, Switzerland": 3,
     "Lagoa do Cauípe (Cumbuco), Brazil": 2,

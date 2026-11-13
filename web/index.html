@@ -2025,17 +2025,17 @@
       <!-- Live Stream Links & Action Buttons -->
       <div class="space-y-2 pt-1">
         <a id="modal-webcam-stream-btn" href="#" target="_blank" rel="noopener noreferrer" class="w-full py-3 rounded-2xl bg-gradient-to-r from-indigo-600 to-sky-600 hover:from-indigo-500 hover:to-sky-500 active:scale-98 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 transition flex items-center justify-center space-x-2">
-          <span>🔴 Open Live HD Stream / Spot Feed</span>
+          <span>🔴 Watch Live Beach HD Camera</span>
           <span>↗</span>
         </a>
-        <a id="modal-webcam-windy-btn" href="#" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 rounded-2xl bg-slate-950 hover:bg-slate-800 active:scale-98 text-slate-200 border border-slate-700 font-semibold text-xs transition flex items-center justify-center space-x-2">
-          <span>🌐 View Windy Webcams Panoramic Grid</span>
+        <a id="modal-webcam-secondary-btn" href="#" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 rounded-2xl bg-slate-950 hover:bg-slate-800 active:scale-98 text-slate-200 border border-slate-700 font-semibold text-xs transition flex items-center justify-center space-x-2">
+          <span>🌐 Alternative Beach Angle / Panoramic View</span>
           <span>↗</span>
         </a>
       </div>
 
       <p class="text-[10px] text-slate-500 text-center leading-relaxed">
-        Webcams are provided in real-time via local beach clubs, SkylineWebcams, and Windy Network. Use visual whitecap observation to confirm current thermal kick before driving.
+        Live beach cameras stream directly in your browser with zero app installation prompts. Use visual whitecaps on the water to verify current surface wind before heading out.
       </p>
     </div>
   </div>
@@ -4560,15 +4560,22 @@
       const mTitle = document.getElementById('modal-webcam-title');
       const mProvider = document.getElementById('modal-webcam-provider');
       const mStreamBtn = document.getElementById('modal-webcam-stream-btn');
-      const mWindyBtn = document.getElementById('modal-webcam-windy-btn');
+      const mSecBtn = document.getElementById('modal-webcam-secondary-btn') || document.getElementById('modal-webcam-windy-btn');
       const mSurfaceText = document.getElementById('modal-webcam-surface-text');
       const mSurfaceSub = document.getElementById('modal-webcam-surface-sub');
       const mStatusBox = document.getElementById('modal-webcam-status-box');
 
       if (mTitle) mTitle.innerText = w.title || 'Beach Live Cam';
-      if (mProvider) mProvider.innerText = `Stream feed powered by ${w.provider || 'Spot Club'}`;
-      if (mStreamBtn) mStreamBtn.href = w.stream_url || '#';
-      if (mWindyBtn) mWindyBtn.href = w.url || '#';
+      if (mProvider) mProvider.innerText = `Camera feed: ${w.provider || 'Spot Beach Club'}`;
+      if (mStreamBtn) mStreamBtn.href = w.url || w.stream_url || '#';
+      if (mSecBtn) {
+        if (w.stream_url && w.stream_url !== w.url) {
+          mSecBtn.href = w.stream_url;
+          mSecBtn.classList.remove('hidden');
+        } else {
+          mSecBtn.classList.add('hidden');
+        }
+      }
       if (w.has_whitecaps) {
         if (mSurfaceText) mSurfaceText.innerText = 'Whitecaps Visible on Water';
         if (mSurfaceSub) mSurfaceSub.innerText = 'Real-time wind confirms planing kite conditions (>= 14 kts)';
@@ -8670,7 +8677,7 @@
 
       // Register PWA Service Worker (with cache bust, auto-update & cold-start shield)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=66').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=67').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
