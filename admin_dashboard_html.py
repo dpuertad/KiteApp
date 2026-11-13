@@ -624,7 +624,7 @@ def render_admin_dashboard(summary: dict) -> str:
       if (window.lucide) lucide.createIcons();
     }}
 
-    const ADMIN_HDRS = { 'Authorization': 'Bearer hg_admin_danip_sec_9941824716029384', 'X-Admin-Email': 'd_puerta@hotmail.com' };
+    const ADMIN_HDRS = {{ 'Authorization': 'Bearer hg_admin_danip_sec_9941824716029384', 'X-Admin-Email': 'd_puerta@hotmail.com' }};
 
     async function closeFeedbackTicketAdmin(ticketId, email, btnEl) {{
       if (btnEl) {{

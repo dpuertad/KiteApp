@@ -1,4 +1,4 @@
-const CACHE_NAME = 'holygust-v62';
+const CACHE_NAME = 'holygust-v63';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',
@@ -29,8 +29,8 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Never cache dynamic API weather calls
-  if (event.request.url.includes('/api/')) {
+  // Never cache dynamic API calls or admin routes
+  if (event.request.url.includes('/api/') || event.request.url.includes('/admin')) {
     event.respondWith(fetch(event.request));
     return;
   }

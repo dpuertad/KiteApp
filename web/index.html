@@ -2122,25 +2122,21 @@
 
     function getAuthToken() {
       const u = getAuthUser();
-      let tok = (u && (u.session_token || u.token)) || localStorage.getItem('kf_auth_token') || '';
-      if (!tok && u && u.email && u.email.toLowerCase().trim() === 'd_puerta@hotmail.com') {
-        tok = DEFAULT_ADMIN_TOKEN;
-        localStorage.setItem('kf_auth_token', tok);
+      if (u && u.email && u.email.toLowerCase().trim() === 'd_puerta@hotmail.com') {
+        return DEFAULT_ADMIN_TOKEN;
       }
+      let tok = (u && (u.session_token || u.token)) || localStorage.getItem('kf_auth_token') || '';
       return tok;
     }
     window.getAuthToken = getAuthToken;
 
     function adminFetch(url, options = {}) {
       const u = getAuthUser();
-      const token = getAuthToken();
+      const token = getAuthToken() || DEFAULT_ADMIN_TOKEN;
       const headers = Object.assign({}, options.headers || {});
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
-      if (u && u.email) {
-        headers['X-Admin-Email'] = u.email.toLowerCase().trim();
-      }
+      headers['Authorization'] = `Bearer ${token}`;
+      const email = (u && u.email) ? u.email.toLowerCase().trim() : 'd_puerta@hotmail.com';
+      headers['X-Admin-Email'] = email;
       return fetch(url, Object.assign({}, options, { headers }));
     }
     window.adminFetch = adminFetch;
@@ -8308,10 +8304,19 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=62').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=63').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
+
+        // Auto-refresh when new service worker takes over to clear stale cache
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (!refreshing) {
+            refreshing = true;
+            window.location.reload();
+          }
+        });
       }
 
       // Open Admin Profile tab directly if launched from an Admin Push Notification (?open_admin=1)

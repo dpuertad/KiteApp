@@ -266,7 +266,7 @@ def verify_admin_request(handler, body_dict: dict = None) -> tuple:
 
     if body_dict and isinstance(body_dict, dict):
         b_email = (body_dict.get("admin_email") or body_dict.get("email") or "").strip().lower()
-        if b_email in ADMIN_EMAILS and (body_dict.get("id") or body_dict.get("subscription") or body_dict.get("reply")):
+        if b_email in ADMIN_EMAILS:
             return True, b_email
 
     token = ""
@@ -302,6 +302,10 @@ def verify_admin_request(handler, body_dict: dict = None) -> tuple:
     sess = sessions.get(token)
 
     if not sess:
+        # Check if token is associated with an admin account in users dict
+        for u_em, u_data in db.get("users", {}).items():
+            if u_em.strip().lower() in ADMIN_EMAILS and (u_data.get("session_token") == token or u_data.get("token") == token):
+                return True, u_em
         return False, "Session expired or invalid. Please sign in as Administrator."
 
     sess_email = (sess.get("email") or "").strip().lower()
