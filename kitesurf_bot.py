@@ -4620,6 +4620,8 @@ def start_embedded_http_server(port: int = 8080):
             self.wfile.write(b"Not Found\n")
 
         def do_POST(self):
+            import time
+            from datetime import datetime, timezone
             parsed = urllib.parse.urlparse(self.path)
             # Redirect old onrender.com domain POST requests preserving method/body (HTTP 308)
             host = (self.headers.get("Host") or "").lower().split(":")[0]
@@ -5529,19 +5531,15 @@ def start_embedded_http_server(port: int = 8080):
                     db["feedback"].append(entry)
                     save_users_db(db)
 
-                    # Send Instant Alert to Daniel on Telegram!
-                    tele_text = (
-                        f"💡 New KiteApp Feedback / Suggestion!\n\n"
-                        f"👤 From: {name} ({email})\n"
-                        f"📍 Spot: {spot}\n\n"
-                        f"💬 Message:\n\"{msg}\"\n\n"
-                        f"📊 Total Feedback Received: {len(db['feedback'])}"
-                    )
-                    send_admin_push_notification(
-                        title="💬 New Rider Feedback!",
-                        body=f"From {name} ({email}): {msg[:80]}",
-                        url="/?open_admin=1"
-                    )
+                    # Send Instant Alert to Daniel on Telegram & Push!
+                    try:
+                        send_admin_push_notification(
+                            title="💬 New Rider Feedback!",
+                            body=f"From {name} ({email}): {msg[:80]}",
+                            url="/?open_admin=1"
+                        )
+                    except Exception as push_ex:
+                        print(f"[Feedback AdminPush Exception]: {push_ex}")
 
                     self.send_response(200)
                     self.send_header("Content-Type", "application/json")

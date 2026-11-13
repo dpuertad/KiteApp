@@ -1,6 +1,391 @@
 {
   "spot_views": [
     {
+      "timestamp": "2026-11-13T00:47:56.815399+00:00Z",
+      "spot_name": "Barra Grande (Piauí), Brazil",
+      "lat": -2.915,
+      "lon": -41.442,
+      "email": "raphael.joss@gmail.com",
+      "rider_name": "Raphi",
+      "nationality": "Swiss",
+      "ip_hash": "91096110",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-13T00:47:51.130888+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "91096110",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:30:27.255772+00:00Z",
+      "spot_name": "Jericoacoara, Brazil",
+      "lat": -2.7958,
+      "lon": -40.5142,
+      "email": "anonymous",
+      "rider_name": "Carlos Mendes",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:30:22.571659+00:00Z",
+      "spot_name": "Cape Town (Bloubergstrand), South Africa",
+      "lat": -33.8167,
+      "lon": 18.4667,
+      "email": "anonymous",
+      "rider_name": "Emma Larsson",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:26:44.855747+00:00Z",
+      "spot_name": "Preá, Brazil",
+      "lat": -2.8139,
+      "lon": -40.4189,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:26:43.806196+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:26:43.786226+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:26:23.464735+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:26:23.443034+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:26:21.296993+00:00Z",
+      "spot_name": "Lake Silvaplana, Switzerland",
+      "lat": 46.4592,
+      "lon": 9.7917,
+      "email": "mateo.rossi@holygust.com",
+      "rider_name": "Mateo Rossi",
+      "nationality": "Undefined",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:26:04.927463+00:00Z",
+      "spot_name": "Taíba, Brazil",
+      "lat": -3.5042,
+      "lon": -38.8953,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:26:03.886745+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:26:03.867134+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:25:18.031864+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:25:18.015606+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:25:16.415207+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:25:14.260082+00:00Z",
+      "spot_name": "Lake Silvaplana, Switzerland",
+      "lat": 46.4592,
+      "lon": 9.7917,
+      "email": "mateo.rossi@holygust.com",
+      "rider_name": "Mateo Rossi",
+      "nationality": "Undefined",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:24:57.272007+00:00Z",
+      "spot_name": "Taíba, Brazil",
+      "lat": -3.5042,
+      "lon": -38.8953,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:24:56.221836+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:24:56.202929+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:22:09.571476+00:00Z",
+      "spot_name": "Preá, Brazil",
+      "lat": -2.8139,
+      "lon": -40.4189,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:22:07.233276+00:00Z",
+      "spot_name": "Preá, Brazil",
+      "lat": -2.8139,
+      "lon": -40.4189,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:22:06.176131+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:22:06.163031+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:21:48.634007+00:00Z",
+      "spot_name": "Lagoa do Cauípe (Cumbuco), Brazil",
+      "lat": -3.5936,
+      "lon": -38.7886,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:21:46.063820+00:00Z",
+      "spot_name": "Lagoa do Cauípe (Cumbuco), Brazil",
+      "lat": -3.5936,
+      "lon": -38.7886,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:21:45.468859+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:21:45.455407+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:21:42.870007+00:00Z",
+      "spot_name": "Lake Silvaplana, Switzerland",
+      "lat": 46.4592,
+      "lon": 9.7917,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:21:27.130264+00:00Z",
+      "spot_name": "Taíba, Brazil",
+      "lat": -3.5042,
+      "lon": -38.8953,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:21:24.621389+00:00Z",
+      "spot_name": "Taíba, Brazil",
+      "lat": -3.5042,
+      "lon": -38.8953,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:21:23.585288+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:21:23.563576+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:20:05.877573+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-12T15:20:03.530454+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "95750776",
+      "action": "view_forecast"
+    },
+    {
       "timestamp": "2026-11-12T13:51:55.260423+00:00Z",
       "spot_name": "Tarifa (Los Lances), Spain",
       "lat": 36.0143,
@@ -850,23 +1235,30 @@
   ],
   "spot_totals": {
     "Icaraí de Amontada (Icaraizinho), Brazil": 43,
-    "Preá, Brazil": 2,
+    "Preá, Brazil": 5,
     "Praia de Maceió (Camocim), Brazil": 10,
     "Mar Menor (Los Alcázares), Spain": 2,
     "Pozo Izquierdo (Gran Canaria), Spain": 1,
-    "Cumbuco, Brazil": 15,
-    "Jericoacoara, Brazil": 2,
-    "Tarifa (Los Lances), Spain": 2
+    "Cumbuco, Brazil": 35,
+    "Jericoacoara, Brazil": 3,
+    "Tarifa (Los Lances), Spain": 2,
+    "Taíba, Brazil": 4,
+    "Lake Silvaplana, Switzerland": 3,
+    "Lagoa do Cauípe (Cumbuco), Brazil": 2,
+    "Cape Town (Bloubergstrand), South Africa": 1,
+    "Barra Grande (Piauí), Brazil": 1
   },
   "nationality_totals": {
-    "Swiss": 15,
+    "Swiss": 16,
     "Spanish": 36,
-    "German": 4
+    "German": 4,
+    "Undefined": 2
   },
   "spot_by_nationality": {
     "Swiss": {
       "Icaraí de Amontada (Icaraizinho), Brazil": 12,
-      "Praia de Maceió (Camocim), Brazil": 3
+      "Praia de Maceió (Camocim), Brazil": 3,
+      "Barra Grande (Piauí), Brazil": 1
     },
     "Spanish": {
       "Preá, Brazil": 2,
@@ -875,11 +1267,342 @@
     },
     "German": {
       "Icaraí de Amontada (Icaraizinho), Brazil": 4
+    },
+    "Undefined": {
+      "Lake Silvaplana, Switzerland": 2
     }
   },
   "searches": [],
   "search_totals": {},
   "travel_inquiries": [
+    {
+      "timestamp": "2026-11-12T15:26:47.571622+00:00Z",
+      "spot_id": "sal_ponta_preta",
+      "spot_name": "Sal (Ponta Preta & Santa Maria), Cape Verde",
+      "country": "Cape Verde",
+      "month": 2,
+      "month_name": "Feb",
+      "style": "All",
+      "weight_kg": 78.0,
+      "discipline": "Surf / Strapless",
+      "quiver_sizes": [
+        10,
+        8,
+        6
+      ],
+      "recommended_pack": [
+        8.0,
+        10.0
+      ],
+      "gear_gaps": [
+        {
+          "type": "light_wind_gap",
+          "size": 15,
+          "suggested_size": 15,
+          "urgency": "medium",
+          "label": "15m Kite",
+          "recommended_for": "12–16 kts lighter days",
+          "advice": "To maximize water time on 12–16 kts days in February, consider packing or renting a 15m kite."
+        }
+      ],
+      "email": "carlos.mendes@holygust.com",
+      "rider_name": "Carlos 'Charly' Mendes",
+      "nationality": "Not specified"
+    },
+    {
+      "timestamp": "2026-11-12T15:26:47.552979+00:00Z",
+      "spot_id": "sal_ponta_preta",
+      "spot_name": "Sal (Ponta Preta & Santa Maria), Cape Verde",
+      "country": "Cape Verde",
+      "month": 2,
+      "month_name": "Feb",
+      "style": "All",
+      "weight_kg": 78.0,
+      "discipline": "Surf / Strapless",
+      "quiver_sizes": [
+        10,
+        8,
+        6
+      ],
+      "recommended_pack": [
+        8.0,
+        10.0
+      ],
+      "gear_gaps": [
+        {
+          "type": "light_wind_gap",
+          "size": 15,
+          "suggested_size": 15,
+          "urgency": "medium",
+          "label": "15m Kite",
+          "recommended_for": "12–16 kts lighter days",
+          "advice": "To maximize water time on 12–16 kts days in February, consider packing or renting a 15m kite."
+        }
+      ],
+      "email": "carlos.mendes@holygust.com",
+      "rider_name": "Carlos 'Charly' Mendes",
+      "nationality": "Not specified"
+    },
+    {
+      "timestamp": "2026-11-12T15:26:27.271934+00:00Z",
+      "spot_id": "garda",
+      "spot_name": "Torbole (Lake Garda), Italy",
+      "country": "Italy",
+      "month": 6,
+      "month_name": "Jun",
+      "style": "All",
+      "weight_kg": 98.0,
+      "discipline": "Hydrofoil",
+      "quiver_sizes": [
+        18,
+        12,
+        15
+      ],
+      "recommended_pack": [],
+      "gear_gaps": [
+        {
+          "type": "high_wind_gap",
+          "size": 6,
+          "suggested_size": 6,
+          "urgency": "high",
+          "label": "6m Kite",
+          "recommended_for": "29 kts peak sessions",
+          "advice": "Lake Garda reaches 29 kts in June. Adding or renting a 6m kite will keep you safe and in control on nuking days."
+        },
+        {
+          "type": "light_wind_gap",
+          "size": 10,
+          "suggested_size": 10,
+          "urgency": "medium",
+          "label": "10m Kite",
+          "recommended_for": "17–22 kts lighter days",
+          "advice": "To maximize water time on 17–22 kts days in June, consider packing or renting a 10m kite."
+        }
+      ],
+      "email": "mateo.rossi@holygust.com",
+      "rider_name": "Mateo Rossi",
+      "nationality": "Not specified"
+    },
+    {
+      "timestamp": "2026-11-12T15:26:27.242391+00:00Z",
+      "spot_id": "garda",
+      "spot_name": "Torbole (Lake Garda), Italy",
+      "country": "Italy",
+      "month": 6,
+      "month_name": "Jun",
+      "style": "All",
+      "weight_kg": 98.0,
+      "discipline": "Hydrofoil",
+      "quiver_sizes": [
+        18,
+        12,
+        15
+      ],
+      "recommended_pack": [],
+      "gear_gaps": [
+        {
+          "type": "high_wind_gap",
+          "size": 6,
+          "suggested_size": 6,
+          "urgency": "high",
+          "label": "6m Kite",
+          "recommended_for": "29 kts peak sessions",
+          "advice": "Lake Garda reaches 29 kts in June. Adding or renting a 6m kite will keep you safe and in control on nuking days."
+        },
+        {
+          "type": "light_wind_gap",
+          "size": 10,
+          "suggested_size": 10,
+          "urgency": "medium",
+          "label": "10m Kite",
+          "recommended_for": "17–22 kts lighter days",
+          "advice": "To maximize water time on 17–22 kts days in June, consider packing or renting a 10m kite."
+        }
+      ],
+      "email": "mateo.rossi@holygust.com",
+      "rider_name": "Mateo Rossi",
+      "nationality": "Not specified"
+    },
+    {
+      "timestamp": "2026-11-12T15:26:07.632484+00:00Z",
+      "spot_id": "cape_town_blouberg",
+      "spot_name": "Cape Town (Blouberg / Kite Beach), South Africa",
+      "country": "South Africa",
+      "month": 1,
+      "month_name": "Jan",
+      "style": "All",
+      "weight_kg": 56.0,
+      "discipline": "Twintip",
+      "quiver_sizes": [
+        9,
+        7,
+        6
+      ],
+      "recommended_pack": [
+        6.0,
+        7.0,
+        9.0
+      ],
+      "gear_gaps": [],
+      "email": "emma.larsson@holygust.com",
+      "rider_name": "Emma Larsson",
+      "nationality": "Not specified"
+    },
+    {
+      "timestamp": "2026-11-12T15:26:07.618789+00:00Z",
+      "spot_id": "cape_town_blouberg",
+      "spot_name": "Cape Town (Blouberg / Kite Beach), South Africa",
+      "country": "South Africa",
+      "month": 1,
+      "month_name": "Jan",
+      "style": "All",
+      "weight_kg": 56.0,
+      "discipline": "Twintip",
+      "quiver_sizes": [
+        9,
+        7,
+        6
+      ],
+      "recommended_pack": [
+        6.0,
+        7.0,
+        9.0
+      ],
+      "gear_gaps": [],
+      "email": "emma.larsson@holygust.com",
+      "rider_name": "Emma Larsson",
+      "nationality": "Not specified"
+    },
+    {
+      "timestamp": "2026-11-12T15:25:20.175200+00:00Z",
+      "spot_id": "garda",
+      "spot_name": "Torbole (Lake Garda), Italy",
+      "country": "Italy",
+      "month": 6,
+      "month_name": "Jun",
+      "style": "All",
+      "weight_kg": 98.0,
+      "discipline": "Hydrofoil",
+      "quiver_sizes": [
+        18,
+        12,
+        15
+      ],
+      "recommended_pack": [],
+      "gear_gaps": [
+        {
+          "type": "high_wind_gap",
+          "size": 6,
+          "suggested_size": 6,
+          "urgency": "high",
+          "label": "6m Kite",
+          "recommended_for": "29 kts peak sessions",
+          "advice": "Lake Garda reaches 29 kts in June. Adding or renting a 6m kite will keep you safe and in control on nuking days."
+        },
+        {
+          "type": "light_wind_gap",
+          "size": 10,
+          "suggested_size": 10,
+          "urgency": "medium",
+          "label": "10m Kite",
+          "recommended_for": "17–22 kts lighter days",
+          "advice": "To maximize water time on 17–22 kts days in June, consider packing or renting a 10m kite."
+        }
+      ],
+      "email": "mateo.rossi@holygust.com",
+      "rider_name": "Mateo Rossi",
+      "nationality": "Not specified"
+    },
+    {
+      "timestamp": "2026-11-12T15:25:20.156160+00:00Z",
+      "spot_id": "garda",
+      "spot_name": "Torbole (Lake Garda), Italy",
+      "country": "Italy",
+      "month": 6,
+      "month_name": "Jun",
+      "style": "All",
+      "weight_kg": 98.0,
+      "discipline": "Hydrofoil",
+      "quiver_sizes": [
+        18,
+        12,
+        15
+      ],
+      "recommended_pack": [],
+      "gear_gaps": [
+        {
+          "type": "high_wind_gap",
+          "size": 6,
+          "suggested_size": 6,
+          "urgency": "high",
+          "label": "6m Kite",
+          "recommended_for": "29 kts peak sessions",
+          "advice": "Lake Garda reaches 29 kts in June. Adding or renting a 6m kite will keep you safe and in control on nuking days."
+        },
+        {
+          "type": "light_wind_gap",
+          "size": 10,
+          "suggested_size": 10,
+          "urgency": "medium",
+          "label": "10m Kite",
+          "recommended_for": "17–22 kts lighter days",
+          "advice": "To maximize water time on 17–22 kts days in June, consider packing or renting a 10m kite."
+        }
+      ],
+      "email": "mateo.rossi@holygust.com",
+      "rider_name": "Mateo Rossi",
+      "nationality": "Not specified"
+    },
+    {
+      "timestamp": "2026-11-12T15:24:59.988709+00:00Z",
+      "spot_id": "cape_town_blouberg",
+      "spot_name": "Cape Town (Blouberg / Kite Beach), South Africa",
+      "country": "South Africa",
+      "month": 1,
+      "month_name": "Jan",
+      "style": "All",
+      "weight_kg": 56.0,
+      "discipline": "Twintip",
+      "quiver_sizes": [
+        9,
+        7,
+        6
+      ],
+      "recommended_pack": [
+        6.0,
+        7.0,
+        9.0
+      ],
+      "gear_gaps": [],
+      "email": "emma.larsson@holygust.com",
+      "rider_name": "Emma Larsson",
+      "nationality": "Not specified"
+    },
+    {
+      "timestamp": "2026-11-12T15:24:59.972654+00:00Z",
+      "spot_id": "cape_town_blouberg",
+      "spot_name": "Cape Town (Blouberg / Kite Beach), South Africa",
+      "country": "South Africa",
+      "month": 1,
+      "month_name": "Jan",
+      "style": "All",
+      "weight_kg": 56.0,
+      "discipline": "Twintip",
+      "quiver_sizes": [
+        9,
+        7,
+        6
+      ],
+      "recommended_pack": [
+        6.0,
+        7.0,
+        9.0
+      ],
+      "gear_gaps": [],
+      "email": "emma.larsson@holygust.com",
+      "rider_name": "Emma Larsson",
+      "nationality": "Not specified"
+    },
     {
       "timestamp": "2026-11-12T13:51:23.871151+00:00Z",
       "spot_id": "dakhla",
@@ -1005,16 +1728,24 @@
   ],
   "travel_destinations": {
     "El Gouna (Mangroovy & Element), Egypt": 2,
-    "Dakhla (Lagoon & Speed Spot), Morocco": 2
+    "Dakhla (Lagoon & Speed Spot), Morocco": 2,
+    "Cape Town (Blouberg / Kite Beach), South Africa": 4,
+    "Torbole (Lake Garda), Italy": 4,
+    "Sal (Ponta Preta & Santa Maria), Cape Verde": 2
   },
   "travel_months": {
     "10": 2,
-    "7": 2
+    "7": 2,
+    "1": 4,
+    "6": 4,
+    "2": 2
   },
   "travel_gear_gaps": {
     "8": 1,
     "14": 1,
-    "6": 1,
-    "7": 1
+    "6": 5,
+    "7": 1,
+    "10": 4,
+    "15": 2
   }
 }

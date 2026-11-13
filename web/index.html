@@ -391,68 +391,96 @@
       </button>
     </div>
 
-    <!-- FORECAST SCHEDULE LIST -->
-    <section id="section-schedule" class="space-y-2.5">
-      <div class="flex items-center justify-between text-xs text-slate-400 px-1">
-        <span class="font-bold uppercase tracking-wider flex items-center space-x-1">
-          <i data-lucide="calendar" class="w-3.5 h-3.5 text-sky-400"></i>
-          <span id="schedule-title-date">Schedule (07:00 – 19:00)</span>
-        </span>
-        <!-- Schedule View Toggle: 2h vs 1h -->
-        <div id="schedule-view-toggle-bar" class="flex items-center bg-slate-950 p-0.5 rounded-xl border border-slate-800 text-[10px]">
-          <button id="btn-view-2h" onclick="setScheduleView('2h')" class="px-2.5 py-0.5 rounded-lg font-bold bg-sky-600 text-white transition">2h Slots</button>
-          <button id="btn-view-1h" onclick="setScheduleView('1h')" class="px-2.5 py-0.5 rounded-lg font-medium text-slate-400 hover:text-white transition">Hourly (1h)</button>
+    <!-- DETAILED FORECAST CONTAINER (Hourly Schedule, Timeline & Tides with Guest Freemium Blur) -->
+    <div id="forecast-details-wrapper" class="relative space-y-4">
+      <!-- FORECAST SCHEDULE LIST -->
+      <section id="section-schedule" class="space-y-2.5 transition-all duration-300">
+        <div class="flex items-center justify-between text-xs text-slate-400 px-1">
+          <span class="font-bold uppercase tracking-wider flex items-center space-x-1">
+            <i data-lucide="calendar" class="w-3.5 h-3.5 text-sky-400"></i>
+            <span id="schedule-title-date">Schedule (07:00 – 19:00)</span>
+          </span>
+          <!-- Schedule View Toggle: 2h vs 1h -->
+          <div id="schedule-view-toggle-bar" class="flex items-center bg-slate-950 p-0.5 rounded-xl border border-slate-800 text-[10px]">
+            <button id="btn-view-2h" onclick="setScheduleView('2h')" class="px-2.5 py-0.5 rounded-lg font-bold bg-sky-600 text-white transition">2h Slots</button>
+            <button id="btn-view-1h" onclick="setScheduleView('1h')" class="px-2.5 py-0.5 rounded-lg font-medium text-slate-400 hover:text-white transition">Hourly (1h)</button>
+          </div>
+        </div>
+
+        <div id="schedule-cards-container" class="space-y-2">
+          <!-- Rendered dynamically -->
+          <div class="bg-slate-900/60 rounded-xl p-4 text-center text-xs text-slate-400 border border-slate-800">
+            Loading weather forecast...
+          </div>
+        </div>
+      </section>
+
+      <!-- INTERACTIVE WIND GRAPH (VISUAL CHART) -->
+      <section id="section-chart" class="bg-slate-900/70 rounded-2xl p-4 border border-slate-800 shadow-md space-y-3 transition-all duration-300">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
+            <i data-lucide="bar-chart-2" class="w-4 h-4 text-sky-400"></i>
+            <span id="wind-chart-title">Wind & Gust Timeline</span>
+          </h3>
+          <span class="text-[11px] text-slate-400 flex items-center space-x-2">
+            <span class="inline-block w-2.5 h-2.5 rounded bg-sky-500"></span> <span id="wind-chart-legend-wind">Wind</span>
+            <span class="inline-block w-2.5 h-2.5 rounded bg-amber-500"></span> <span id="wind-chart-legend-gust">Gusts</span>
+          </span>
+        </div>
+
+        <!-- SVG Bar Graph -->
+        <div class="w-full h-36 bg-slate-950/80 rounded-xl p-3 border border-slate-800/80 flex items-end justify-around relative">
+          <svg id="wind-chart-svg" class="w-full h-full overflow-visible"></svg>
+        </div>
+      </section>
+
+      <!-- TIDES & OCEAN SWELL CARD -->
+      <section id="section-tides" class="bg-slate-900/70 rounded-2xl p-4 border border-slate-800 shadow-md space-y-2.5 transition-all duration-300">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
+            <i data-lucide="waves" class="w-4 h-4 text-cyan-400"></i>
+            <span>Tide Heights & Ocean Swell</span>
+          </h3>
+          <span id="tides-marine-temp-badge" class="text-[10px] text-cyan-300 font-mono font-semibold"></span>
+        </div>
+        <div id="tides-container" class="grid grid-cols-2 gap-2 text-xs">
+          <div class="bg-slate-950/60 rounded-xl p-3 border border-slate-800/80">
+            <span class="text-slate-400">Loading tides...</span>
+          </div>
+        </div>
+        <!-- Marine Swell Details for Tides Card -->
+        <div id="tides-swell-detail" class="hidden pt-2 border-t border-slate-800/80 text-[11px] text-slate-300 flex items-center justify-between">
+        </div>
+      </section>
+
+      <!-- GUEST BLURRED PREVIEW OVERLAY (Active when not logged in) -->
+      <div id="guest-preview-overlay" class="hidden absolute inset-0 z-20 flex flex-col items-center justify-start pt-14 sm:pt-20 p-4 text-center bg-gradient-to-b from-slate-950/10 via-slate-950/85 to-slate-950 backdrop-blur-[3px] rounded-3xl">
+        <div class="max-w-xs w-full bg-slate-900/95 border border-sky-500/40 p-5 rounded-3xl shadow-2xl backdrop-blur-xl space-y-3.5">
+          <div class="w-12 h-12 mx-auto rounded-2xl bg-gradient-to-tr from-sky-500/20 to-amber-500/20 border border-sky-500/30 flex items-center justify-center text-2xl shadow-inner select-none">
+            🔒
+          </div>
+          <div>
+            <h3 class="font-bold text-sm text-white">Full Hourly Schedule & Tides</h3>
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Create a free Rider Account to unlock hourly wind slots, gust timelines, tides, and smart gear recommendations tailored to your quiver.
+            </p>
+          </div>
+          <button type="button" onclick="openAuthModal('register')" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-sky-500 via-cyan-500 to-emerald-500 hover:from-sky-400 hover:to-emerald-400 font-bold text-xs text-slate-950 shadow-lg shadow-sky-500/25 transition active:scale-95 cursor-pointer">
+            ✨ Create Free Account / Sign In
+          </button>
+          <div class="flex items-center justify-center space-x-2 text-[10px] text-slate-400">
+            <span>✓ 100% Free</span>
+            <span>•</span>
+            <span>✓ Instant Access</span>
+            <span>•</span>
+            <span>✓ Cloud Quiver</span>
+          </div>
         </div>
       </div>
+    </div>
 
-      <div id="schedule-cards-container" class="space-y-2">
-        <!-- Rendered dynamically -->
-        <div class="bg-slate-900/60 rounded-xl p-4 text-center text-xs text-slate-400 border border-slate-800">
-          Loading weather forecast...
-        </div>
-      </div>
-    </section>
-
-    <!-- INTERACTIVE WIND GRAPH (VISUAL CHART) -->
-    <section id="section-chart" class="bg-slate-900/70 rounded-2xl p-4 border border-slate-800 shadow-md space-y-3">
-      <div class="flex items-center justify-between">
-        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
-          <i data-lucide="bar-chart-2" class="w-4 h-4 text-sky-400"></i>
-          <span id="wind-chart-title">Wind & Gust Timeline</span>
-        </h3>
-        <span class="text-[11px] text-slate-400 flex items-center space-x-2">
-          <span class="inline-block w-2.5 h-2.5 rounded bg-sky-500"></span> <span id="wind-chart-legend-wind">Wind</span>
-          <span class="inline-block w-2.5 h-2.5 rounded bg-amber-500"></span> <span id="wind-chart-legend-gust">Gusts</span>
-        </span>
-      </div>
-
-      <!-- SVG Bar Graph -->
-      <div class="w-full h-36 bg-slate-950/80 rounded-xl p-3 border border-slate-800/80 flex items-end justify-around relative">
-        <svg id="wind-chart-svg" class="w-full h-full overflow-visible"></svg>
-      </div>
-    </section>
-
-    <!-- TIDES & OCEAN SWELL CARD -->
-    <section id="section-tides" class="bg-slate-900/70 rounded-2xl p-4 border border-slate-800 shadow-md space-y-2.5">
-      <div class="flex items-center justify-between">
-        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
-          <i data-lucide="waves" class="w-4 h-4 text-cyan-400"></i>
-          <span>Tide Heights & Ocean Swell</span>
-        </h3>
-        <span id="tides-marine-temp-badge" class="text-[10px] text-cyan-300 font-mono font-semibold"></span>
-      </div>
-      <div id="tides-container" class="grid grid-cols-2 gap-2 text-xs">
-        <div class="bg-slate-950/60 rounded-xl p-3 border border-slate-800/80">
-          <span class="text-slate-400">Loading tides...</span>
-        </div>
-      </div>
-      <!-- Marine Swell Details for Tides Card -->
-      <div id="tides-swell-detail" class="hidden pt-2 border-t border-slate-800/80 text-[11px] text-slate-300 flex items-center justify-between">
-      </div>
-    </section>
-
-    <!-- GEAR INVENTORY SECTION -->
-    <section id="section-gear-inventory" class="bg-slate-900/80 rounded-3xl p-5 border border-slate-800 shadow-xl space-y-4">
+    <!-- GEAR INVENTORY SECTION (Hidden from Main Page - Managed exclusively inside Rider Profile) -->
+    <section id="section-gear-inventory" class="hidden bg-slate-900/80 rounded-3xl p-5 border border-slate-800 shadow-xl space-y-4">
       <div class="flex items-center justify-between">
         <div>
           <h2 class="text-sm font-bold text-white flex items-center space-x-2">
@@ -2800,6 +2828,7 @@
           }
         }
         if (headerSpotName) headerSpotName.innerText = state.spot.name.split(',')[0];
+        updateGuestForecastBlur();
         return true;
       }
     }
@@ -3328,25 +3357,21 @@
       const activeBoards = (state.boards || []).filter(b => b.active !== false).length;
       const homeBoards = (state.boards || []).length - activeBoards;
 
-      const isBeta = (typeof isBetaUserActive === 'function' && isBetaUserActive());
+      // Gear inventory is exclusively managed in the Rider Profile modal
       const sectionGear = document.getElementById('section-gear-inventory');
       if (sectionGear) {
-        if (isBeta) {
-          sectionGear.classList.add('hidden');
-        } else {
-          sectionGear.classList.remove('hidden');
-        }
+        sectionGear.classList.add('hidden');
       }
 
       const totalPacked = activeTraction + activeBoards;
       const totalHome = homeTraction + homeBoards;
       const badgeCountEl = document.getElementById('backpack-count-badge');
       if (badgeCountEl) {
-        if (isBeta) {
-          badgeCountEl.innerText = "Manage packed gear in profile";
-          badgeCountEl.className = "text-[11px] text-slate-400 font-medium truncate";
+        if (authUser && authUser.email) {
+          badgeCountEl.innerText = `🎒 ${totalPacked} gear packed · ${totalHome} at home (tap to edit)`;
+          badgeCountEl.className = "text-[11px] text-slate-400 font-medium truncate cursor-pointer";
         } else {
-          badgeCountEl.innerText = `🎒 ${totalPacked} gear packed · ${totalHome} at home`;
+          badgeCountEl.innerText = "Log in to save quiver & get smart gear matches";
           badgeCountEl.className = "text-[11px] text-slate-400 truncate";
         }
       }
@@ -5145,6 +5170,34 @@
       authUser = JSON.parse(localStorage.getItem('kf_auth_user'));
     } catch (e) {}
 
+    function updateGuestForecastBlur() {
+      const u = getAuthUser();
+      const isLogged = Boolean(u && u.email);
+      const overlay = document.getElementById('guest-preview-overlay');
+      const secSchedule = document.getElementById('section-schedule');
+      const secChart = document.getElementById('section-chart');
+      const secTides = document.getElementById('section-tides');
+      const dayTabs = document.getElementById('section-day-tabs');
+
+      if (isLogged) {
+        if (overlay) overlay.classList.add('hidden');
+        [secSchedule, secChart, secTides].forEach(el => {
+          if (el) {
+            el.classList.remove('filter', 'blur-sm', 'pointer-events-none', 'select-none', 'opacity-40');
+          }
+        });
+        if (dayTabs) dayTabs.classList.remove('pointer-events-none', 'opacity-60');
+      } else {
+        if (overlay) overlay.classList.remove('hidden');
+        [secSchedule, secChart, secTides].forEach(el => {
+          if (el) {
+            el.classList.add('filter', 'blur-sm', 'pointer-events-none', 'select-none', 'opacity-40');
+          }
+        });
+        if (dayTabs) dayTabs.classList.add('pointer-events-none', 'opacity-60');
+      }
+    }
+
     function updateAuthUI() {
       const loggedInView = document.getElementById('auth-logged-in-view');
       const formsView = document.getElementById('auth-forms-view');
@@ -5277,6 +5330,7 @@
       }
 
       renderBetaUI();
+      updateGuestForecastBlur();
       if (window.lucide) lucide.createIcons();
     }
 
@@ -5670,17 +5724,28 @@
     // FEEDBACK SUBMISSION
     async function onSubmitFeedback(e) {
       e.preventDefault();
-      const name = document.getElementById('feedback-name').value.trim() || state.user.name || (authUser && authUser.name) || "Anonymous";
-      const email = document.getElementById('feedback-email').value.trim() || (authUser && authUser.email) || "";
-      const msg = document.getElementById('feedback-message').value.trim();
-      const spot = state.spot.name || "Cumbuco";
+      const name = (document.getElementById('feedback-name')?.value || '').trim() || (state.user && state.user.name) || (authUser && authUser.name) || "Anonymous";
+      const email = (document.getElementById('feedback-email')?.value || '').trim() || (authUser && authUser.email) || "";
+      const msg = (document.getElementById('feedback-message')?.value || '').trim();
+      const spot = (state.spot && state.spot.name) ? state.spot.name : "Cumbuco";
       const statusBox = document.getElementById('feedback-status');
       const btn = document.getElementById('btn-submit-feedback');
 
-      statusBox.className = "text-xs py-1.5 px-2.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30";
-      statusBox.innerText = "Sending to HolyGust team...";
-      statusBox.classList.remove('hidden');
-      btn.disabled = true;
+      if (!msg) {
+        if (statusBox) {
+          statusBox.className = "text-xs py-1.5 px-2.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30";
+          statusBox.innerText = "Please write a suggestion or message.";
+          statusBox.classList.remove('hidden');
+        }
+        return;
+      }
+
+      if (statusBox) {
+        statusBox.className = "text-xs py-1.5 px-2.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30";
+        statusBox.innerText = "Sending to HolyGust team...";
+        statusBox.classList.remove('hidden');
+      }
+      if (btn) btn.disabled = true;
 
       try {
         const res = await fetch('/api/feedback', {
@@ -5691,18 +5756,23 @@
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Failed to send");
 
-        statusBox.className = "text-xs py-1.5 px-2.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
-        statusBox.innerText = "✅ Sent directly to the HolyGust team!";
-        document.getElementById('feedback-message').value = "";
+        if (statusBox) {
+          statusBox.className = "text-xs py-1.5 px-2.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+          statusBox.innerText = "✅ Sent directly to the HolyGust team!";
+        }
+        const msgEl = document.getElementById('feedback-message');
+        if (msgEl) msgEl.value = "";
         setTimeout(() => {
           toggleModal('modal-feedback');
-          statusBox.classList.add('hidden');
+          if (statusBox) statusBox.classList.add('hidden');
         }, 1800);
       } catch (err) {
-        statusBox.className = "text-xs py-1.5 px-2.5 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/30";
-        statusBox.innerText = err.message;
+        if (statusBox) {
+          statusBox.className = "text-xs py-1.5 px-2.5 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/30";
+          statusBox.innerText = "⚠️ " + (err.message || "Failed to send feedback");
+        }
       } finally {
-        btn.disabled = false;
+        if (btn) btn.disabled = false;
       }
     }
 
@@ -8238,7 +8308,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=61').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=62').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));

@@ -419,45 +419,46 @@
       "name": "Raphi",
       "nationality": "Swiss",
       "registered_at": "2026-11-08T08:41:00Z",
-      "last_login": "2026-11-09T11:44:55Z",
+      "last_login": "2026-11-13T00:47:56.815399+00:00Z",
       "gear": [
         {
-          "id": "k_raphi_thrive9",
-          "category": "kite",
-          "kite_type": "tube",
           "brand": "Harlem",
-          "model": "Thrive V1",
-          "size": 9,
-          "year": 2024,
+          "model": "Thrive",
+          "size": 12,
           "active": true
         },
         {
-          "id": "k_raphi_thrive12",
-          "category": "kite",
-          "kite_type": "tube",
           "brand": "Harlem",
-          "model": "Thrive V1",
-          "size": 12,
-          "year": 2024,
+          "model": "Thrive",
+          "size": 9,
+          "active": true
+        },
+        {
+          "brand": "Harlem",
+          "model": "Thrive",
+          "size": 6,
           "active": true
         }
       ],
       "boards": [
         {
-          "id": "b_raphi_aspect138",
-          "type": "Twintip",
+          "brand": "Slingshot",
+          "model": "Celero 2021",
+          "size": "5'6\"",
+          "type": "Surf / Strapless",
+          "active": true
+        },
+        {
           "brand": "Harlem",
           "model": "Aspect",
           "size": "138",
-          "volume": null,
-          "mast": null,
-          "carbon": true,
+          "type": "Twintip",
           "active": true
         }
       ],
       "weight_kg": 75.0,
-      "level": "intermediate",
-      "board": "Twintip",
+      "level": "advanced",
+      "board": "Surf / Strapless",
       "favorite_spots": [
         "Icaraí de Amontada (Icaraizinho), Brazil",
         "Praia de Maceió (Camocim), Brazil"
@@ -465,11 +466,11 @@
       "is_beta_rider": false,
       "beta_status": "none",
       "spot": {
-        "name": "Praia de Maceió (Camocim), Brazil",
-        "lat": -2.8935,
-        "lon": -40.8654,
-        "beach_angle": 25.0
-      }
+        "name": "Barra Grande (Piauí), Brazil",
+        "lat": -2.915,
+        "lon": -41.442
+      },
+      "last_sync": "2026-11-13T00:47:56.203749Z"
     },
     "tot3030@gmail.com": {
       "email": "tot3030@gmail.com",
@@ -819,6 +820,207 @@
       "is_beta_rider": false,
       "beta_status": "none",
       "last_sync": "2026-11-12T13:51:33.487457Z"
+    },
+    "emma.larsson@holygust.com": {
+      "email": "emma.larsson@holygust.com",
+      "name": "Emma Larsson",
+      "created_at": "2026-11-12T15:00:00.000000Z",
+      "gear": [
+        {
+          "category": "kite",
+          "brand": "Ozone",
+          "model": "Edge V11",
+          "size": 9,
+          "kite_type": "tube",
+          "year": "2023",
+          "active": true
+        },
+        {
+          "category": "kite",
+          "brand": "Core",
+          "model": "XR7",
+          "size": 7,
+          "kite_type": "tube",
+          "year": "2022",
+          "active": true
+        },
+        {
+          "category": "kite",
+          "brand": "Ozone",
+          "model": "Reo V7",
+          "size": 6,
+          "kite_type": "tube",
+          "year": "2024",
+          "active": true
+        }
+      ],
+      "boards": [
+        {
+          "brand": "Lieuwe",
+          "model": "Shotgun",
+          "size": "133",
+          "type": "Twintip",
+          "carbon": true,
+          "active": true
+        },
+        {
+          "brand": "Appletree",
+          "model": "Klokhouse",
+          "size": "5'1\"",
+          "type": "Surf / Strapless",
+          "carbon": true,
+          "active": true
+        }
+      ],
+      "favorite_spots": [
+        "cape_town_kitebeach",
+        "tarifa_valdevaqueros",
+        "le_morne_lagoon"
+      ],
+      "weight_kg": 56.0,
+      "level": "advanced",
+      "board": "Twintip",
+      "is_beta_rider": true,
+      "beta_status": "approved",
+      "beta_approved_at": "2026-11-12T15:05:00.000000Z",
+      "last_sync": "2026-11-12T15:26:01.238194Z"
+    },
+    "mateo.rossi@holygust.com": {
+      "email": "mateo.rossi@holygust.com",
+      "name": "Mateo Rossi",
+      "created_at": "2026-11-12T15:00:00.000000Z",
+      "gear": [
+        {
+          "category": "kite",
+          "brand": "Flysurfer",
+          "model": "VMG2",
+          "size": 18,
+          "kite_type": "foil",
+          "year": "2024",
+          "active": true
+        },
+        {
+          "category": "kite",
+          "brand": "Flysurfer",
+          "model": "Soul",
+          "size": 12,
+          "kite_type": "foil",
+          "year": "2023",
+          "active": true
+        },
+        {
+          "category": "kite",
+          "brand": "Ozone",
+          "model": "Chrono V4",
+          "size": 15,
+          "kite_type": "foil",
+          "year": "2023",
+          "active": true
+        }
+      ],
+      "boards": [
+        {
+          "brand": "Sabfoil",
+          "model": "Onda Pocket",
+          "size": "110",
+          "type": "Hydrofoil",
+          "carbon": true,
+          "active": true
+        },
+        {
+          "brand": "Levitaz",
+          "model": "Race Foil",
+          "size": "112",
+          "type": "Hydrofoil",
+          "carbon": true,
+          "active": true
+        }
+      ],
+      "favorite_spots": [
+        "silvaplana",
+        "garda_torbole",
+        "dongo"
+      ],
+      "weight_kg": 98.0,
+      "level": "expert",
+      "board": "Hydrofoil",
+      "is_beta_rider": true,
+      "beta_status": "approved",
+      "beta_approved_at": "2026-11-12T15:05:00.000000Z",
+      "last_sync": "2026-11-12T15:26:21.445624Z",
+      "last_login": "2026-11-12T15:26:21.296993+00:00Z",
+      "spot": {
+        "name": "Lake Silvaplana, Switzerland",
+        "lat": 46.4592,
+        "lon": 9.7917,
+        "timezone": "Europe/Zurich",
+        "beach_angle": 50,
+        "model_label": "ICON-D2 (2km Swiss High-Res) + Maloja Thermal"
+      }
+    },
+    "carlos.mendes@holygust.com": {
+      "email": "carlos.mendes@holygust.com",
+      "name": "Carlos 'Charly' Mendes",
+      "created_at": "2026-11-12T15:00:00.000000Z",
+      "gear": [
+        {
+          "category": "kite",
+          "brand": "Duotone",
+          "model": "Neo SLS",
+          "size": 10,
+          "kite_type": "tube",
+          "year": "2024",
+          "active": true
+        },
+        {
+          "category": "kite",
+          "brand": "Duotone",
+          "model": "Neo SLS",
+          "size": 8,
+          "kite_type": "tube",
+          "year": "2024",
+          "active": true
+        },
+        {
+          "category": "kite",
+          "brand": "Duotone",
+          "model": "Neo SLS",
+          "size": 6,
+          "kite_type": "tube",
+          "year": "2023",
+          "active": true
+        }
+      ],
+      "boards": [
+        {
+          "brand": "Duotone",
+          "model": "Wam D/LAB",
+          "size": "5'7\"",
+          "type": "Surf / Strapless",
+          "carbon": true,
+          "active": true
+        },
+        {
+          "brand": "HB Surfkite",
+          "model": "Lafayette",
+          "size": "5'6\"",
+          "type": "Surf / Strapless",
+          "carbon": false,
+          "active": true
+        }
+      ],
+      "favorite_spots": [
+        "ponta_preta",
+        "guincho",
+        "pacasmayo"
+      ],
+      "weight_kg": 78.0,
+      "level": "advanced",
+      "board": "Surf / Strapless",
+      "is_beta_rider": true,
+      "beta_status": "approved",
+      "beta_approved_at": "2026-11-12T15:05:00.000000Z",
+      "last_sync": "2026-11-12T15:26:41.158649Z"
     }
   },
   "feedback": [
@@ -868,6 +1070,30 @@
       "reply": "Harlem Aspect board and Thrive v1 kites have been added to the catalog and to your quiver! Enjoy!",
       "replied_at": "2026-11-11T14:00:00Z",
       "closed_at": "2026-11-11T14:00:00Z"
+    },
+    {
+      "id": "fb_1794530213561",
+      "name": "Raphi",
+      "email": "raphael.joss@gmail.com",
+      "spot": "Barra Grande",
+      "message": "Testing fix for feedback",
+      "created_at": "2026-11-13T00:36:53.561388Z",
+      "status": "open",
+      "reply": null,
+      "replied_at": null,
+      "push_subscription": null
+    },
+    {
+      "id": "fb_1794530881157",
+      "name": "Raphi",
+      "email": "raphael.joss@gmail.com",
+      "spot": "Barra Grande (Piauí), Brazil",
+      "message": "Raphi iPhone test: feedback modal works perfectly!",
+      "created_at": "2026-11-13T00:48:01.157774Z",
+      "status": "open",
+      "reply": null,
+      "replied_at": null,
+      "push_subscription": null
     }
   ],
   "sessions": {
