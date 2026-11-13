@@ -4526,7 +4526,7 @@ CORE_TRAVEL_SPOTS = [
             "Hydrofoil",
             "Flat Water"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Protected Mediterranean Thermal Bay",
         "months": {
             1: {
@@ -4553,7 +4553,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -4592,7 +4592,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -4605,7 +4605,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -4618,7 +4618,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -4631,7 +4631,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -4705,7 +4705,7 @@ CORE_TRAVEL_SPOTS = [
             "Hydrofoil",
             "Thermal"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Fine Sand Beach with Afternoon Garbí Thermal",
         "months": {
             1: {
@@ -4732,7 +4732,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -4771,7 +4771,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -4784,7 +4784,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -4797,7 +4797,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -4810,7 +4810,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -4884,7 +4884,7 @@ CORE_TRAVEL_SPOTS = [
             "Flat Water",
             "Speed"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Shallow Flat Water Bay on Narrow Sandspit",
         "months": {
             1: {
@@ -4911,7 +4911,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -4950,7 +4950,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -4963,7 +4963,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -4976,7 +4976,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -4989,7 +4989,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -7931,7 +7931,7 @@ CORE_TRAVEL_SPOTS = [
             "Big Air",
             "Flat Water"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Mirror Flat on Aegean Side & Waves on Med Side",
         "months": {
             1: {
@@ -7958,7 +7958,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -7997,7 +7997,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -8010,7 +8010,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -8023,7 +8023,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -8036,7 +8036,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -8111,7 +8111,7 @@ CORE_TRAVEL_SPOTS = [
             "Hydrofoil",
             "Wave"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Thermal Sea Breeze with Afternoon Swell Kickers",
         "months": {
             1: {
@@ -8138,7 +8138,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -8177,7 +8177,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -8190,7 +8190,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -8203,7 +8203,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -8216,7 +8216,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -8291,7 +8291,7 @@ CORE_TRAVEL_SPOTS = [
             "Freeride",
             "Flat Water"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Funnel Channel Flat Water & Venturi Boost",
         "months": {
             1: {
@@ -8318,7 +8318,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -8357,7 +8357,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -8370,7 +8370,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -8383,7 +8383,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -8396,7 +8396,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -8470,7 +8470,7 @@ CORE_TRAVEL_SPOTS = [
             "Freestyle",
             "Big Air"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Crystal Clear Water with Natural Point Venturi",
         "months": {
             1: {
@@ -8497,7 +8497,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -8536,7 +8536,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -8549,7 +8549,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -8562,7 +8562,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -8575,7 +8575,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -8649,7 +8649,7 @@ CORE_TRAVEL_SPOTS = [
             "Hydrofoil",
             "Freestyle"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Clockwork Afternoon Ionian Thermal & Blue Water",
         "months": {
             1: {
@@ -8676,7 +8676,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -8715,7 +8715,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -8728,7 +8728,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -8741,7 +8741,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -8754,7 +8754,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -8828,7 +8828,7 @@ CORE_TRAVEL_SPOTS = [
             "Wave",
             "Freeride"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "3-in-1 Bay: Super Flat, Small Chop & Gentle Waves",
         "months": {
             1: {
@@ -8855,7 +8855,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -8894,7 +8894,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -8907,7 +8907,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -8920,7 +8920,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -8933,7 +8933,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -9007,7 +9007,7 @@ CORE_TRAVEL_SPOTS = [
             "Flat Water",
             "Hydrofoil"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "3km Sand Beach with Thermal Sea Breeze Venturi",
         "months": {
             1: {
@@ -9034,7 +9034,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -9073,7 +9073,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -9086,7 +9086,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -9099,7 +9099,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -9112,7 +9112,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -9186,7 +9186,7 @@ CORE_TRAVEL_SPOTS = [
             "Freestyle",
             "Flat Water"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Enclosed Flatwater Bay & Shallow Banks",
         "months": {
             1: {
@@ -9213,7 +9213,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -9252,7 +9252,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -9265,7 +9265,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -9278,7 +9278,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -9291,7 +9291,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -9365,7 +9365,7 @@ CORE_TRAVEL_SPOTS = [
             "Flat Water",
             "Hydrofoil"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Shallow Warm Thermal Flatwater",
         "months": {
             1: {
@@ -9392,7 +9392,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -9431,7 +9431,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -9444,7 +9444,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -9457,7 +9457,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -9470,7 +9470,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -18328,7 +18328,7 @@ CORE_TRAVEL_SPOTS = [
             "Flat Water",
             "Speed"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "2000-Hectare Knee-Deep Mirror Flat Lagoon",
         "months": {
             1: {
@@ -18355,7 +18355,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -18394,7 +18394,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -18407,7 +18407,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -18420,7 +18420,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -18433,7 +18433,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -18507,7 +18507,7 @@ CORE_TRAVEL_SPOTS = [
             "Big Air",
             "Flat Water"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Double Bay Sandspit with Bonifacio Venturi",
         "months": {
             1: {
@@ -18534,7 +18534,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -18573,7 +18573,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -18586,7 +18586,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -18599,7 +18599,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -18612,7 +18612,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -18686,7 +18686,7 @@ CORE_TRAVEL_SPOTS = [
             "Flat Water",
             "Hydrofoil"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Shallow Enclosed Sand Flat (Mistral & Scirocco)",
         "months": {
             1: {
@@ -18713,7 +18713,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -18752,7 +18752,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -18765,7 +18765,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -18778,7 +18778,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -18791,7 +18791,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -18865,7 +18865,7 @@ CORE_TRAVEL_SPOTS = [
             "Freeride",
             "Flat Water"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Freshwater Alpine Lake (Morning Peler & Afternoon Ora)",
         "months": {
             1: {
@@ -18892,7 +18892,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -18931,7 +18931,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -18944,7 +18944,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -18957,7 +18957,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -18970,7 +18970,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -19044,7 +19044,7 @@ CORE_TRAVEL_SPOTS = [
             "Freestyle",
             "Thermal"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Clockwork Thermal Venturi Sea Breeze",
         "months": {
             1: {
@@ -19071,7 +19071,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -19110,7 +19110,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -19123,7 +19123,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -19136,7 +19136,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -19149,7 +19149,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -24769,7 +24769,7 @@ CORE_TRAVEL_SPOTS = [
             "Hydrofoil",
             "Flat Water"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Protected Mediterranean Thermal Bay",
         "months": {
             1: {
@@ -24796,7 +24796,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -24835,7 +24835,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -24848,7 +24848,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -24861,7 +24861,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -24874,7 +24874,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -24949,7 +24949,7 @@ CORE_TRAVEL_SPOTS = [
             "Hydrofoil",
             "Thermal"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Alpine Thermal Freshwater Lake",
         "months": {
             1: {
@@ -24976,7 +24976,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -25015,7 +25015,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -25028,7 +25028,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -25041,7 +25041,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -25054,7 +25054,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -25129,7 +25129,7 @@ CORE_TRAVEL_SPOTS = [
             "Hydrofoil",
             "Thermal"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Alpine Thermal Freshwater Lake",
         "months": {
             1: {
@@ -25156,7 +25156,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -25195,7 +25195,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -25208,7 +25208,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -25221,7 +25221,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -25234,7 +25234,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -25309,7 +25309,7 @@ CORE_TRAVEL_SPOTS = [
             "Hydrofoil",
             "Thermal"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Alpine Thermal Freshwater Lake",
         "months": {
             1: {
@@ -25336,7 +25336,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -25375,7 +25375,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -25388,7 +25388,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -25401,7 +25401,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -25414,7 +25414,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -25489,7 +25489,7 @@ CORE_TRAVEL_SPOTS = [
             "Hydrofoil",
             "Thermal"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Alpine Thermal Freshwater Lake",
         "months": {
             1: {
@@ -25516,7 +25516,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -25555,7 +25555,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -25568,7 +25568,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -25581,7 +25581,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -25594,7 +25594,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -25669,7 +25669,7 @@ CORE_TRAVEL_SPOTS = [
             "Hydrofoil",
             "Thermal"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Alpine Thermal Freshwater Lake",
         "months": {
             1: {
@@ -25696,7 +25696,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -25735,7 +25735,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -25748,7 +25748,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -25761,7 +25761,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -25774,7 +25774,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -29618,7 +29618,7 @@ CORE_TRAVEL_SPOTS = [
             "Hydrofoil",
             "Thermal"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Alpine Thermal Freshwater Lake",
         "months": {
             1: {
@@ -29645,7 +29645,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -29684,7 +29684,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -29697,7 +29697,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -29710,7 +29710,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -29723,7 +29723,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -29798,7 +29798,7 @@ CORE_TRAVEL_SPOTS = [
             "Hydrofoil",
             "Thermal"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Alpine Thermal Freshwater Lake",
         "months": {
             1: {
@@ -29825,7 +29825,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -29864,7 +29864,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -29877,7 +29877,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -29890,7 +29890,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -29903,7 +29903,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -29978,7 +29978,7 @@ CORE_TRAVEL_SPOTS = [
             "Hydrofoil",
             "Thermal"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Alpine Thermal Freshwater Lake",
         "months": {
             1: {
@@ -30005,7 +30005,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -30044,7 +30044,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -30057,7 +30057,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -30070,7 +30070,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -30083,7 +30083,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -30158,7 +30158,7 @@ CORE_TRAVEL_SPOTS = [
             "Hydrofoil",
             "Thermal"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Alpine Thermal Freshwater Lake",
         "months": {
             1: {
@@ -30185,7 +30185,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -30224,7 +30224,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -30237,7 +30237,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -30250,7 +30250,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -30263,7 +30263,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -30338,7 +30338,7 @@ CORE_TRAVEL_SPOTS = [
             "Hydrofoil",
             "Thermal"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Alpine Thermal Freshwater Lake",
         "months": {
             1: {
@@ -30365,7 +30365,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -30404,7 +30404,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -30417,7 +30417,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -30430,7 +30430,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -30443,7 +30443,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -30518,7 +30518,7 @@ CORE_TRAVEL_SPOTS = [
             "Hydrofoil",
             "Thermal"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Alpine Thermal Freshwater Lake",
         "months": {
             1: {
@@ -30545,7 +30545,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -30584,7 +30584,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -30597,7 +30597,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -30610,7 +30610,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -30623,7 +30623,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -30698,7 +30698,7 @@ CORE_TRAVEL_SPOTS = [
             "Hydrofoil",
             "Thermal"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Alpine Thermal Freshwater Lake",
         "months": {
             1: {
@@ -30725,7 +30725,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -30764,7 +30764,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -30777,7 +30777,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -30790,7 +30790,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -30803,7 +30803,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -30878,7 +30878,7 @@ CORE_TRAVEL_SPOTS = [
             "Freeride",
             "Hydrofoil"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Europe's Largest Warm Shallow Saltwater Lagoon",
         "months": {
             1: {
@@ -30905,7 +30905,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -30944,7 +30944,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -30957,7 +30957,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -30970,7 +30970,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -30983,7 +30983,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -31058,7 +31058,7 @@ CORE_TRAVEL_SPOTS = [
             "Freeride",
             "Hydrofoil"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Europe's Largest Warm Shallow Saltwater Lagoon",
         "months": {
             1: {
@@ -31085,7 +31085,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -31124,7 +31124,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -31137,7 +31137,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -31150,7 +31150,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -31163,7 +31163,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -31238,7 +31238,7 @@ CORE_TRAVEL_SPOTS = [
             "Freeride",
             "Hydrofoil"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Europe's Largest Warm Shallow Saltwater Lagoon",
         "months": {
             1: {
@@ -31265,7 +31265,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -31304,7 +31304,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -31317,7 +31317,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -31330,7 +31330,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -31343,7 +31343,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -31418,7 +31418,7 @@ CORE_TRAVEL_SPOTS = [
             "Freeride",
             "Hydrofoil"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Europe's Largest Warm Shallow Saltwater Lagoon",
         "months": {
             1: {
@@ -31445,7 +31445,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -31484,7 +31484,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -31497,7 +31497,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -31510,7 +31510,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -31523,7 +31523,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -31597,7 +31597,7 @@ CORE_TRAVEL_SPOTS = [
             "Hydrofoil",
             "Thermal"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Fine Sand Beach with Afternoon Garbí Thermal",
         "months": {
             1: {
@@ -31624,7 +31624,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -31663,7 +31663,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -31676,7 +31676,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -31689,7 +31689,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -31702,7 +31702,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -31776,7 +31776,7 @@ CORE_TRAVEL_SPOTS = [
             "Flat Water",
             "Speed"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Shallow Flat Water Bay on Narrow Sandspit",
         "months": {
             1: {
@@ -31803,7 +31803,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -31842,7 +31842,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -31855,7 +31855,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -31868,7 +31868,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -31881,7 +31881,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -32492,7 +32492,7 @@ CORE_TRAVEL_SPOTS = [
             "Hydrofoil",
             "Flat Water"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Protected Mediterranean Thermal Bay",
         "months": {
             1: {
@@ -32519,7 +32519,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -32558,7 +32558,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -32571,7 +32571,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -32584,7 +32584,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -32597,7 +32597,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -32671,7 +32671,7 @@ CORE_TRAVEL_SPOTS = [
             "Hydrofoil",
             "Thermal"
         ],
-        "prime_season": "Jun – Sep (Meltemi Trade Winds)",
+        "prime_season": "May – Sep (Morning Pelèr & Afternoon Ora Thermal)",
         "water_type": "Fine Sand Beach with Afternoon Garbí Thermal",
         "months": {
             1: {
@@ -32698,7 +32698,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 15,
                 "air_temp": 15,
                 "wetsuit": "4/3mm Steamer",
-                "tip": "Off-season Greek island vibe."
+                "tip": "Cold winter alpine air; thermal circulation dormant."
             },
             3: {
                 "wind_prob": 52,
@@ -32737,7 +32737,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 19,
                 "air_temp": 24,
                 "wetsuit": "3/2mm or Shorty",
-                "tip": "First Meltemi cycles blow across the Cyclades and Dodecanese."
+                "tip": "Spring thermals active: morning Pelèr from north, mild afternoon Ora from south."
             },
             6: {
                 "wind_prob": 82,
@@ -32750,7 +32750,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 22,
                 "air_temp": 28,
                 "wetsuit": "Shorty 2mm",
-                "tip": "Meltemi turns on full power! Sunny skies, turquoise warm water."
+                "tip": "Morning Pelèr (18–25 kts north wind for dawn patrols); afternoon Ora (12–18 kts south thermal) like clockwork."
             },
             7: {
                 "wind_prob": 90,
@@ -32763,7 +32763,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 24,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Peak wind machine. 20-30 knots daily, crystal clear Aegean Sea."
+                "tip": "Peak thermal machine: 18–25 kt Pelèr at 06:30–09:00, smooth 14–18 kt Ora from 13:00–17:30."
             },
             8: {
                 "wind_prob": 92,
@@ -32776,7 +32776,7 @@ CORE_TRAVEL_SPOTS = [
                 "sea_temp": 25,
                 "air_temp": 31,
                 "wetsuit": "Boardshorts",
-                "tip": "Rock-solid Meltemi. Prasonisi double-sided beach in full glory."
+                "tip": "Consistent dual-session days: foil or big-air dawn patrol on Pelèr, warm afternoon freeride on Ora."
             },
             9: {
                 "wind_prob": 78,
@@ -32997,6 +32997,19 @@ def explore_spots_by_month_and_style(month: int, style: str = "all") -> list:
                 )
                 if not is_big_air:
                     continue
+            elif style in ("tropical_waves", "waves_warm", "warm_waves", "warm waves", "tropical waves"):
+                is_wave = (
+                    "wave" in style_tags
+                    or "strapless" in style_tags
+                    or any(w in water_type for w in ("wave", "swell", "reef", "pointbreak", "shorebreak", "surf", "kicker"))
+                )
+                is_warm = (
+                    (sea_temp is not None and sea_temp >= 23)
+                    or "boardshorts" in wetsuit
+                    or "shorty" in wetsuit
+                )
+                if not (is_wave and is_warm):
+                    continue
             elif style in ("warm", "warm water", "boardshorts"):
                 is_warm = (
                     (sea_temp is not None and sea_temp >= 25)
@@ -33023,6 +33036,18 @@ def explore_spots_by_month_and_style(month: int, style: str = "all") -> list:
         elif style in ("big_air", "big air") and avg_kts >= 23:
             score += 5.0
 
+        # Dynamic Ocean Swell Season indicator
+        is_wave_spot = ("wave" in style_tags or "strapless" in style_tags or any(w in water_type for w in ("wave", "swell", "reef", "pointbreak", "shorebreak", "surf")))
+        swell_badge = ""
+        if is_wave_spot:
+            lat = s.get("lat") or 0
+            if lat > 0 and month in (11, 12, 1, 2, 3):
+                swell_badge = "🌊 Heavy Atlantic/Pacific Groundswell Season (2m–4m+)"
+            elif lat <= 0 and month in (5, 6, 7, 8, 9):
+                swell_badge = "🌊 Prime Southern Ocean Swell Season (2m–3.5m+)"
+            elif "ceará" in (s.get("region") or "").lower() or "brazil" in (s.get("country") or "").lower():
+                swell_badge = "🌊 Clean Pointbreak Wave Kicking Season"
+
         ranked.append({
             "id": s.get("id"),
             "name": s.get("name"),
@@ -33045,6 +33070,7 @@ def explore_spots_by_month_and_style(month: int, style: str = "all") -> list:
             "air_temp": m_info.get("air_temp"),
             "wetsuit": m_info.get("wetsuit"),
             "tip": m_info.get("tip"),
+            "swell_badge": swell_badge,
             "score": round(score, 1)
         })
 

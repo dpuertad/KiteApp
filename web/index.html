@@ -1238,6 +1238,9 @@
                 <button type="button" onclick="setTravelStyle('warm', this)" class="travel-style-btn px-2.5 py-1.5 rounded-xl border text-left font-medium text-[11px] bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700">
                   ☀️ Warm Water / Boardshorts
                 </button>
+                <button type="button" onclick="setTravelStyle('tropical_waves', this)" class="travel-style-btn px-2.5 py-1.5 rounded-xl border text-left font-medium text-[11px] bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700">
+                  🌴 Tropical Waves (Warm + Swell)
+                </button>
               </div>
             </div>
           </div>
@@ -7292,6 +7295,17 @@
           </div>
         ` : ''}
 
+        <!-- RAM-AIR FOIL KITE LIGHTWIND SAFETY ADVISORY -->
+        ${(travelDiscipline === 'Hydrofoil' || travelDiscipline === 'Wing Foil') ? `
+          <div class="p-2.5 rounded-2xl bg-sky-500/10 border border-sky-500/30 text-sky-200 text-xs flex items-start space-x-2">
+            <span class="text-base flex-shrink-0">🪂</span>
+            <div>
+              <span class="font-bold text-sky-300 block mb-0.5">Ram-Air Foil Kite Deep Water Safety</span>
+              <p class="text-[10px] leading-relaxed text-sky-100">When flying non-inflatable foil kites in light thermal breezes (&lt; 9 kts), pack self-rescue lines; open cells waterlog if dropped offshore in sudden wind drops.</p>
+            </div>
+          </div>
+        ` : ''}
+
         <!-- PERSONALIZED QUIVER MATCHING CARD -->
         <div class="bg-slate-950/70 rounded-2xl p-3.5 border border-slate-800 space-y-3">
           <div class="flex items-center justify-between">
@@ -7454,6 +7468,12 @@
                   <span class="text-[9px] text-slate-500 block font-mono">${s.avg_kts} kts</span>
                 </div>
               </div>
+
+              ${s.swell_badge ? `
+                <div class="px-2 py-0.5 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-[9.5px] font-semibold flex items-center space-x-1.5">
+                  <span class="truncate">${s.swell_badge}</span>
+                </div>
+              ` : ''}
 
               <div class="flex items-center justify-between text-[10px]">
                 <div class="flex flex-wrap gap-1">${tagsHtml}</div>
@@ -8304,7 +8324,7 @@
 
       // Register PWA Service Worker (with cache bust & auto-update)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=63').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=64').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));
@@ -8935,7 +8955,7 @@
         end: 'jericoacoara',
         extraDetourKm: 0,
         hazards: [
-          { type: 'wind', icon: '💨', title: 'Sunset Dune Wind Shadow', desc: 'Wind drops dramatically within 150m of the village beach behind Duna do Pôr do Sol. Land before the dune at Praia da Malhada or keep kite at 12 o\'clock.' }
+          { type: 'wind', icon: '🚨', title: 'Sunset Dune Wind Shadow & Exit Zone', desc: 'CRITICAL LANDING POINT: Wind drops completely dead in the wind shadow behind Duna do Pôr do Sol! Exit and land kite at Praia da Malhada (400m upwind of the dune) — do NOT drift into the dead village bay.' }
         ]
       },
       {
@@ -9766,9 +9786,9 @@
           if (endId === 'jericoacoara') {
             hazards.push({
               type: 'wind',
-              icon: '💨',
-              title: 'Sunset Dune Wind Shadow',
-              desc: 'Wind drops dramatically within 150m of the village beach behind Duna do Pôr do Sol. Land before the dune at Praia da Malhada or keep kite at 12 o\'clock.'
+              icon: '🚨',
+              title: 'Sunset Dune Wind Shadow & Exit Zone',
+              desc: 'CRITICAL LANDING POINT: Wind drops completely dead in the wind shadow behind Duna do Pôr do Sol! Exit and land kite at Praia da Malhada (400m upwind of the dune) — do NOT drift into the dead village bay.'
             });
           }
           if (endId === 'paracuru') {
