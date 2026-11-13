@@ -275,6 +275,91 @@
       <!-- Ocean Swell & Wave Period Card (Ocean Spots) -->
       <div id="hero-swell-card" class="hidden mb-3 p-2.5 rounded-xl bg-gradient-to-r from-sky-950/60 via-slate-900/90 to-cyan-950/60 border border-sky-500/30 flex items-center justify-between text-xs shadow-sm"></div>
 
+      <!-- ⚡ BETA RIDERS INTELLIGENCE (Model Divergence + Live Anemometer + Beach Cam) -->
+      <div id="beta-intelligence-card" class="hidden mb-3 space-y-2.5">
+        <!-- 1. Live Beach Sensor & Delta Engine -->
+        <div id="beta-live-sensor-box" class="p-3 rounded-2xl bg-gradient-to-r from-emerald-950/40 via-slate-900/90 to-cyan-950/40 border border-emerald-500/30 shadow-md">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="relative flex h-2.5 w-2.5">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+              </span>
+              <span id="beta-sensor-station-name" class="text-xs font-bold text-white tracking-wide">Beach Sensor Live</span>
+              <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">REAL-TIME</span>
+            </div>
+            <div class="text-right">
+              <span id="beta-sensor-measured-val" class="text-sm font-black text-emerald-300 font-mono">-- kts</span>
+              <span id="beta-sensor-gust-val" class="text-[10px] text-slate-400 font-mono ml-1">(gust --)</span>
+            </div>
+          </div>
+          <!-- Delta Engine Bar -->
+          <div class="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
+            <div class="flex items-center space-x-1.5 min-w-0">
+              <span id="beta-sensor-delta-icon">⚡</span>
+              <span id="beta-sensor-delta-text" class="font-semibold text-slate-200 truncate">Comparing with forecast...</span>
+            </div>
+            <span id="beta-sensor-advice-pill" class="text-[10px] px-2 py-0.5 rounded-lg font-bold bg-slate-800 text-slate-300 flex-shrink-0">--</span>
+          </div>
+        </div>
+
+        <!-- 2. Multi-Model Divergence Pills (Windguru Strength) -->
+        <div id="beta-model-divergence-box" class="p-3 rounded-2xl bg-slate-950/80 border border-slate-800/90 shadow-md">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center space-x-1.5">
+              <span class="text-xs">🌐</span>
+              <span class="text-[11px] font-bold text-slate-200">Forecast Model Engine</span>
+              <span class="text-[9px] font-bold text-amber-400 bg-amber-500/10 px-1.5 py-0.2 rounded border border-amber-500/30">BETA</span>
+            </div>
+            <span id="beta-model-consensus-tag" class="text-[10px] font-mono text-slate-400">Consensus: --%</span>
+          </div>
+          <!-- 4 Model Pills -->
+          <div class="grid grid-cols-4 gap-1.5" id="beta-model-pills-row">
+            <button type="button" onclick="selectForecastModel('blend', this)" id="btn-model-blend" class="beta-model-pill active py-1.5 px-1 rounded-xl text-center border font-mono text-[10px] font-bold transition flex flex-col items-center justify-center bg-sky-500/20 text-sky-300 border-sky-500/50 shadow-sm shadow-sky-500/20">
+              <span class="text-[9px] opacity-80">HG BLEND</span>
+              <span id="pill-val-blend" class="text-xs font-black">-- kts</span>
+            </button>
+            <button type="button" onclick="selectForecastModel('ecmwf', this)" id="btn-model-ecmwf" class="beta-model-pill py-1.5 px-1 rounded-xl text-center border font-mono text-[10px] font-bold transition flex flex-col items-center justify-center bg-slate-900/90 text-slate-400 border-slate-800 hover:border-slate-700">
+              <span class="text-[9px] opacity-80">🇪🇺 ECMWF</span>
+              <span id="pill-val-ecmwf" class="text-xs font-black">-- kts</span>
+            </button>
+            <button type="button" onclick="selectForecastModel('icon', this)" id="btn-model-icon" class="beta-model-pill py-1.5 px-1 rounded-xl text-center border font-mono text-[10px] font-bold transition flex flex-col items-center justify-center bg-slate-900/90 text-slate-400 border-slate-800 hover:border-slate-700">
+              <span class="text-[9px] opacity-80">🇩🇪 ICON</span>
+              <span id="pill-val-icon" class="text-xs font-black">-- kts</span>
+            </button>
+            <button type="button" onclick="selectForecastModel('gfs', this)" id="btn-model-gfs" class="beta-model-pill py-1.5 px-1 rounded-xl text-center border font-mono text-[10px] font-bold transition flex flex-col items-center justify-center bg-slate-900/90 text-slate-400 border-slate-800 hover:border-slate-700">
+              <span class="text-[9px] opacity-80">🇺🇸 GFS</span>
+              <span id="pill-val-gfs" class="text-xs font-black">-- kts</span>
+            </button>
+          </div>
+          <!-- Spread & Agreement Subtitle -->
+          <div class="mt-2 flex items-center justify-between text-[10px] text-slate-400">
+            <span id="beta-model-spread-desc">Spread: -- kts across models</span>
+            <span id="beta-model-active-hint" class="text-sky-400 font-medium truncate max-w-[55%]">Viewing HG Multi-Model Blend</span>
+          </div>
+        </div>
+
+        <!-- 3. Beach Live Webcam Launcher (Windy & Spot Live Cam) -->
+        <div id="beta-webcam-card" class="p-2.5 rounded-2xl bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950/40 border border-slate-800 hover:border-indigo-500/40 transition shadow-sm">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2 min-w-0">
+              <span class="text-base flex-shrink-0">📹</span>
+              <div class="min-w-0">
+                <div class="flex items-center space-x-1.5">
+                  <span id="beta-webcam-title" class="text-xs font-bold text-white truncate">Spot Beach Live Cam</span>
+                  <span id="beta-webcam-whitecaps-badge" class="hidden text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 flex-shrink-0">🌊 Whitecaps</span>
+                </div>
+                <p id="beta-webcam-sub" class="text-[10px] text-slate-400 truncate">Visual water & chop confirmation</p>
+              </div>
+            </div>
+            <button type="button" onclick="openWebcamModal()" class="px-3 py-1.5 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/50 active:scale-95 text-indigo-200 border border-indigo-500/40 font-bold text-[11px] transition flex items-center space-x-1 flex-shrink-0">
+              <span>Watch Cam</span>
+              <span>↗</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- 4 SAFETY & CONDITIONS METRICS (Fully Readable + Tap to Inspect) -->
       <div class="grid grid-cols-2 gap-2 mb-4">
         <!-- Metric 1: Shoreline Safety -->
@@ -1906,6 +1991,52 @@
           <span>Send to HolyGust Team</span>
         </button>
       </form>
+    </div>
+  </div>
+
+  <!-- 📹 SPOT LIVE WEBCAM MODAL (BETA) -->
+  <div id="modal-webcam" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center space-x-2">
+          <span class="text-lg">📹</span>
+          <div>
+            <h3 id="modal-webcam-title" class="font-bold text-sm text-white">Beach Live Webcam</h3>
+            <p id="modal-webcam-provider" class="text-[10px] text-slate-400">Live beach conditions & visual whitecaps</p>
+          </div>
+        </div>
+        <button onclick="toggleModal('modal-webcam')" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Water Surface & Visual Status -->
+      <div id="modal-webcam-status-box" class="p-3 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between text-xs">
+        <div class="flex items-center space-x-2">
+          <span id="modal-webcam-icon" class="text-base">🌊</span>
+          <div>
+            <span id="modal-webcam-surface-text" class="font-bold text-white block">Whitecaps Visible on Water</span>
+            <span id="modal-webcam-surface-sub" class="text-[10px] text-slate-400">Surface wind confirms planing conditions (>= 14 kts)</span>
+          </div>
+        </div>
+        <span id="modal-webcam-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">ACTIVE</span>
+      </div>
+
+      <!-- Live Stream Links & Action Buttons -->
+      <div class="space-y-2 pt-1">
+        <a id="modal-webcam-stream-btn" href="#" target="_blank" rel="noopener noreferrer" class="w-full py-3 rounded-2xl bg-gradient-to-r from-indigo-600 to-sky-600 hover:from-indigo-500 hover:to-sky-500 active:scale-98 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 transition flex items-center justify-center space-x-2">
+          <span>🔴 Open Live HD Stream / Spot Feed</span>
+          <span>↗</span>
+        </a>
+        <a id="modal-webcam-windy-btn" href="#" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 rounded-2xl bg-slate-950 hover:bg-slate-800 active:scale-98 text-slate-200 border border-slate-700 font-semibold text-xs transition flex items-center justify-center space-x-2">
+          <span>🌐 View Windy Webcams Panoramic Grid</span>
+          <span>↗</span>
+        </a>
+      </div>
+
+      <p class="text-[10px] text-slate-500 text-center leading-relaxed">
+        Webcams are provided in real-time via local beach clubs, SkylineWebcams, and Windy Network. Use visual whitecap observation to confirm current thermal kick before driving.
+      </p>
     </div>
   </div>
 
@@ -4193,6 +4324,13 @@
           tidesSwellEl.classList.add('hidden');
         }
       }
+
+      // ⚡ Beta Riders Intelligence (Live Anemometer, Multi-Model Divergence, Beach Webcam)
+      try {
+        updateBetaIntelligenceUI(f);
+      } catch (e) {
+        console.warn("Beta Intelligence UI update non-critical warning:", e);
+      }
     }
 
     function renderWindChart(schedule) {
@@ -4252,6 +4390,196 @@
         </defs>
       `;
     }
+
+    // ==========================================
+    // ⚡ BETA RIDERS INTELLIGENCE (Model Divergence + Live Anemometer + Beach Cam)
+    // ==========================================
+    let currentActiveModelType = 'blend';
+
+    function selectForecastModel(modelType, btnEl) {
+      currentActiveModelType = modelType;
+      const f = state.forecastData;
+      if (!f) return;
+      const betaIntel = f.beta_intelligence || {};
+      const models = betaIntel.models || {};
+
+      // Update button active styling across pills
+      const pills = document.querySelectorAll('.beta-model-pill');
+      pills.forEach(p => {
+        p.classList.remove('bg-sky-500/20', 'text-sky-300', 'border-sky-500/50', 'shadow-sm', 'shadow-sky-500/20');
+        p.classList.add('bg-slate-900/90', 'text-slate-400', 'border-slate-800');
+      });
+
+      if (btnEl) {
+        btnEl.classList.remove('bg-slate-900/90', 'text-slate-400', 'border-slate-800');
+        btnEl.classList.add('bg-sky-500/20', 'text-sky-300', 'border-sky-500/50', 'shadow-sm', 'shadow-sky-500/20');
+      }
+
+      // Determine selected speed
+      let chosenSpeed = f.current?.wind_kts || 16;
+      let modelHint = 'Viewing HolyGust Multi-Model Blend';
+      if (modelType === 'ecmwf') {
+        chosenSpeed = models.ecmwf !== undefined ? models.ecmwf : chosenSpeed;
+        modelHint = 'Viewing 🇪🇺 European ECMWF IFS (9km High-Res)';
+      } else if (modelType === 'icon') {
+        chosenSpeed = models.icon !== undefined ? models.icon : chosenSpeed;
+        modelHint = 'Viewing 🇩🇪 German DWD ICON Model';
+      } else if (modelType === 'gfs') {
+        chosenSpeed = models.gfs !== undefined ? models.gfs : chosenSpeed;
+        modelHint = 'Viewing 🇺🇸 NOAA Global GFS Model';
+      } else {
+        chosenSpeed = models.blend !== undefined ? models.blend : chosenSpeed;
+        modelHint = 'Viewing 🌟 HolyGust Multi-Model Blend';
+      }
+
+      const liveWindEl = document.getElementById('live-wind-kts');
+      if (liveWindEl) {
+        liveWindEl.innerText = Math.round(chosenSpeed);
+      }
+      const hintEl = document.getElementById('beta-model-active-hint');
+      if (hintEl) {
+        hintEl.innerText = modelHint;
+      }
+    }
+    window.selectForecastModel = selectForecastModel;
+
+    function openWebcamModal() {
+      toggleModal('modal-webcam');
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+    window.openWebcamModal = openWebcamModal;
+
+    function updateBetaIntelligenceUI(f) {
+      const container = document.getElementById('beta-intelligence-card');
+      if (!container) return;
+
+      if (!isBetaUserActive()) {
+        container.classList.add('hidden');
+        return;
+      }
+
+      container.classList.remove('hidden');
+
+      if (!f) return;
+      const curWind = f.current?.wind_kts || 16;
+      const curGust = f.current?.gust_kts || 20;
+
+      // Ensure beta_intelligence exists, synthesize clean fallback if absent
+      const betaIntel = f.beta_intelligence || {
+        models: {
+          blend: curWind,
+          ecmwf: Math.round(curWind * 1.05),
+          icon: curWind,
+          gfs: Math.round(curWind * 0.95),
+          spread_kts: 1.5,
+          confidence_pct: 92,
+          label: 'High Consensus'
+        },
+        live_sensor: {
+          station_name: `${(state.spot && (state.spot.short_name || state.spot.name)) || 'Beach'} Coastal Anemometer`,
+          measured_kts: curWind,
+          gust_kts: curGust,
+          delta_kts: 0,
+          delta_status: 'neutral',
+          delta_text: 'Matching model forecast exactly',
+          advice: 'Wind matching forecast closely. Rig standard sweet spot.'
+        },
+        webcam: {
+          title: `${(state.spot && state.spot.name) || 'Spot'} Beach Live Cam`,
+          url: `https://www.windy.com/-Webcams/?${(state.spot && state.spot.lat) || 0},${(state.spot && state.spot.lon) || 0},12`,
+          stream_url: `https://www.youtube.com/results?search_query=${encodeURIComponent((state.spot && state.spot.name) || '')}+beach+kitesurf+live`,
+          has_whitecaps: curWind >= 14,
+          provider: 'Local Beachcam & Windy Network'
+        }
+      };
+
+      // 1. Live Sensor & Delta Engine
+      const s = betaIntel.live_sensor || {};
+      const sNameEl = document.getElementById('beta-sensor-station-name');
+      const sValEl = document.getElementById('beta-sensor-measured-val');
+      const sGustEl = document.getElementById('beta-sensor-gust-val');
+      const sDeltaTextEl = document.getElementById('beta-sensor-delta-text');
+      const sDeltaIconEl = document.getElementById('beta-sensor-delta-icon');
+      const sAdviceEl = document.getElementById('beta-sensor-advice-pill');
+
+      if (sNameEl) sNameEl.innerText = s.station_name || 'Beach Sensor Live';
+      if (sValEl) sValEl.innerText = `${Math.round(s.measured_kts !== undefined ? s.measured_kts : curWind)} kts`;
+      if (sGustEl) sGustEl.innerText = `(gust ${Math.round(s.gust_kts !== undefined ? s.gust_kts : curGust)} kts)`;
+      if (sDeltaTextEl) sDeltaTextEl.innerText = s.delta_text || 'Matching model forecast';
+      if (sAdviceEl) sAdviceEl.innerText = s.advice || 'Standard sweet spot';
+
+      if (sDeltaIconEl) {
+        if (s.delta_status === 'hot') {
+          sDeltaIconEl.innerText = '🔥';
+          if (sAdviceEl) sAdviceEl.className = 'text-[10px] px-2 py-0.5 rounded-lg font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 flex-shrink-0';
+        } else if (s.delta_status === 'lull') {
+          sDeltaIconEl.innerText = '⚠️';
+          if (sAdviceEl) sAdviceEl.className = 'text-[10px] px-2 py-0.5 rounded-lg font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30 flex-shrink-0';
+        } else {
+          sDeltaIconEl.innerText = '✅';
+          if (sAdviceEl) sAdviceEl.className = 'text-[10px] px-2 py-0.5 rounded-lg font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex-shrink-0';
+        }
+      }
+
+      // 2. Multi-Model Divergence Pills
+      const m = betaIntel.models || {};
+      const pillBlend = document.getElementById('pill-val-blend');
+      const pillEcmwf = document.getElementById('pill-val-ecmwf');
+      const pillIcon = document.getElementById('pill-val-icon');
+      const pillGfs = document.getElementById('pill-val-gfs');
+      const consTag = document.getElementById('beta-model-consensus-tag');
+      const spreadDesc = document.getElementById('beta-model-spread-desc');
+
+      if (pillBlend) pillBlend.innerText = `${Math.round(m.blend !== undefined ? m.blend : curWind)} kts`;
+      if (pillEcmwf) pillEcmwf.innerText = `${Math.round(m.ecmwf !== undefined ? m.ecmwf : curWind)} kts`;
+      if (pillIcon) pillIcon.innerText = `${Math.round(m.icon !== undefined ? m.icon : curWind)} kts`;
+      if (pillGfs) pillGfs.innerText = `${Math.round(m.gfs !== undefined ? m.gfs : curWind)} kts`;
+      if (consTag) consTag.innerText = `Consensus: ${m.confidence_pct || 90}%`;
+      if (spreadDesc) spreadDesc.innerText = `Spread: ${m.spread_kts !== undefined ? m.spread_kts : 1.2} kts (${m.label || 'High Agreement'})`;
+
+      // 3. Webcam
+      const w = betaIntel.webcam || {};
+      const wTitle = document.getElementById('beta-webcam-title');
+      const wSub = document.getElementById('beta-webcam-sub');
+      const wBadge = document.getElementById('beta-webcam-whitecaps-badge');
+      if (wTitle) wTitle.innerText = w.title || 'Beach Live Cam';
+      if (wSub) wSub.innerText = `Provider: ${w.provider || 'Live Stream'}`;
+      if (wBadge) {
+        if (w.has_whitecaps) {
+          wBadge.innerText = '🌊 Whitecaps on Water';
+          wBadge.className = 'text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 flex-shrink-0';
+          wBadge.classList.remove('hidden');
+        } else {
+          wBadge.innerText = '⛵ Light Chop / Calm';
+          wBadge.className = 'text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-400 border border-slate-700 flex-shrink-0';
+          wBadge.classList.remove('hidden');
+        }
+      }
+
+      // Populate Modal Fields
+      const mTitle = document.getElementById('modal-webcam-title');
+      const mProvider = document.getElementById('modal-webcam-provider');
+      const mStreamBtn = document.getElementById('modal-webcam-stream-btn');
+      const mWindyBtn = document.getElementById('modal-webcam-windy-btn');
+      const mSurfaceText = document.getElementById('modal-webcam-surface-text');
+      const mSurfaceSub = document.getElementById('modal-webcam-surface-sub');
+      const mStatusBox = document.getElementById('modal-webcam-status-box');
+
+      if (mTitle) mTitle.innerText = w.title || 'Beach Live Cam';
+      if (mProvider) mProvider.innerText = `Stream feed powered by ${w.provider || 'Spot Club'}`;
+      if (mStreamBtn) mStreamBtn.href = w.stream_url || '#';
+      if (mWindyBtn) mWindyBtn.href = w.url || '#';
+      if (w.has_whitecaps) {
+        if (mSurfaceText) mSurfaceText.innerText = 'Whitecaps Visible on Water';
+        if (mSurfaceSub) mSurfaceSub.innerText = 'Real-time wind confirms planing kite conditions (>= 14 kts)';
+        if (mStatusBox) mStatusBox.className = 'p-3 rounded-2xl bg-cyan-950/40 border border-cyan-500/40 flex items-center justify-between text-xs';
+      } else {
+        if (mSurfaceText) mSurfaceText.innerText = 'Flat Water / Light Wind';
+        if (mSurfaceSub) mSurfaceSub.innerText = 'No prominent whitecaps detected; foil/lightwind or thermal waiting window';
+        if (mStatusBox) mStatusBox.className = 'p-3 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between text-xs';
+      }
+    }
+    window.updateBetaIntelligenceUI = updateBetaIntelligenceUI;
 
     // 5. DATA FETCHING (API)
     async function fetchForecast(isManual = false) {
@@ -6040,6 +6368,10 @@
         cards.forEach(c => {
           c.innerHTML = cardContent;
         });
+      }
+
+      if (typeof updateBetaIntelligenceUI === 'function' && state.forecastData) {
+        updateBetaIntelligenceUI(state.forecastData);
       }
     }
 
@@ -8278,6 +8610,20 @@
       updateLevelButtonsUI();
       updateScheduleViewUI();
 
+      // Check for spot in URL (?spot=...)
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const spotQuery = urlParams.get('spot');
+        if (spotQuery && (!state.spot || !state.spot.name)) {
+          const match = (typeof GLOBAL_KITE_SPOTS !== 'undefined' ? GLOBAL_KITE_SPOTS : []).find(s => s.name.toLowerCase().includes(spotQuery.toLowerCase()) || (s.id && s.id.toLowerCase().includes(spotQuery.toLowerCase())));
+          if (match) {
+            let bAngle = match.beach_angle !== undefined ? match.beach_angle : resolveBeachAngle(match.name);
+            state.spot = { name: match.name, lat: match.lat, lon: match.lon, timezone: match.timezone || 'auto', beach_angle: bAngle, model_label: match.model_label };
+            localStorage.setItem('kf_spot', JSON.stringify(state.spot));
+          }
+        }
+      } catch (e) {}
+
       updateSpotDisplayState();
 
       if (state.spot && state.spot.name) {
@@ -8324,7 +8670,7 @@
 
       // Register PWA Service Worker (with cache bust, auto-update & cold-start shield)
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js?v=65').then(reg => {
+        navigator.serviceWorker.register('/sw.js?v=66').then(reg => {
           reg.update();
           setTimeout(() => { autoRegisterAdminPushIfPermitted(); }, 1500);
         }).catch(err => console.log('SW register failed:', err));

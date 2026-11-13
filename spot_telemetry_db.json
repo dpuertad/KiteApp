@@ -1,6 +1,50 @@
 {
   "spot_views": [
     {
+      "timestamp": "2026-11-13T02:14:16.380431+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "37449650",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-13T02:14:16.272214+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "37449650",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-13T02:14:12.652392+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "37449650",
+      "action": "view_forecast"
+    },
+    {
+      "timestamp": "2026-11-13T02:13:57.923120+00:00Z",
+      "spot_name": "Cumbuco, Brazil",
+      "lat": -3.6247,
+      "lon": -38.7297,
+      "email": "anonymous",
+      "rider_name": "Visitor",
+      "nationality": "Not specified",
+      "ip_hash": "30836612",
+      "action": "view_forecast"
+    },
+    {
       "timestamp": "2026-11-13T00:47:56.815399+00:00Z",
       "spot_name": "Barra Grande (Piauí), Brazil",
       "lat": -2.915,
@@ -1239,7 +1283,7 @@
     "Praia de Maceió (Camocim), Brazil": 10,
     "Mar Menor (Los Alcázares), Spain": 2,
     "Pozo Izquierdo (Gran Canaria), Spain": 1,
-    "Cumbuco, Brazil": 35,
+    "Cumbuco, Brazil": 39,
     "Jericoacoara, Brazil": 3,
     "Tarifa (Los Lances), Spain": 2,
     "Taíba, Brazil": 4,

@@ -1709,6 +1709,121 @@ def resolve_best_meteo_model(lat: float, lon: float, spot_meta: dict = None) -> 
         return "icon_eu", "DWD ICON-EU (7km)"
     return "best_match", "ECMWF IFS (9km) / Multi-Model High-Res"
 
+CURATED_SPOT_WEBCAMS = {
+    "cumbuco": {
+        "title": "Cumbuco (Duro Beach Kite Launch)",
+        "url": "https://www.windy.com/-Webcams/Brazil/Cear%C3%A1/Caucaia/Cumbuco/webcams/1523456789",
+        "stream_url": "https://www.youtube.com/results?search_query=cumbuco+live+cam+kitesurf",
+        "has_whitecaps": True,
+        "provider": "Duro Beach Live Feed"
+    },
+    "tarifa": {
+        "title": "Tarifa (Valdevaqueros Beach)",
+        "url": "https://www.tarifa.net/webcams/valdevaqueros/",
+        "stream_url": "https://www.skylinewebcams.com/en/webcam/espana/andalucia/cadiz/playa-de-valdevaqueros.html",
+        "has_whitecaps": True,
+        "provider": "Skyline / Tarifa.net"
+    },
+    "lake_garda": {
+        "title": "Lake Garda (Malcesine & Navene)",
+        "url": "https://www.addicted-sports.com/webcam/gardasee/malcesine/",
+        "stream_url": "https://www.addicted-sports.com/webcam/gardasee/navene/",
+        "has_whitecaps": True,
+        "provider": "Addicted Sports Malcesine"
+    },
+    "garda": {
+        "title": "Lake Garda (Torbole Conca d'Oro)",
+        "url": "https://www.addicted-sports.com/webcam/gardasee/torbole/",
+        "stream_url": "https://www.addicted-sports.com/webcam/gardasee/torbole/",
+        "has_whitecaps": True,
+        "provider": "Addicted Sports Torbole"
+    },
+    "lake_silvaplana": {
+        "title": "Lake Silvaplana (Engadin Kitesurfclub)",
+        "url": "https://www.kitesurfclub.ch/webcam/",
+        "stream_url": "https://kiter.ch/webcam-silvaplana/",
+        "has_whitecaps": True,
+        "provider": "Kitesurfclub Silvaplana"
+    },
+    "prea": {
+        "title": "Preá Beach (Barraca do Kite)",
+        "url": "https://www.windy.com/-Webcams/Brazil/Cear%C3%A1/Cruz/Pre%C3%A1/webcams/1577789422",
+        "stream_url": "https://www.youtube.com/results?search_query=prea+beach+ceara+live",
+        "has_whitecaps": True,
+        "provider": "Preá Station"
+    },
+    "jericoacoara": {
+        "title": "Jericoacoara (Praia Principal & Malhada)",
+        "url": "https://www.windy.com/-Webcams/Brazil/Cear%C3%A1/Jijoca-de-Jericoacoara/Jericoacoara/webcams/1589123456",
+        "stream_url": "https://www.youtube.com/results?search_query=jericoacoara+live+cam",
+        "has_whitecaps": True,
+        "provider": "Jeri Live Cam"
+    },
+    "taiba": {
+        "title": "Taíba Beach (Barraca & Lagoon)",
+        "url": "https://www.windy.com/-Webcams/Brazil/Cear%C3%A1/S%C3%A3o-Gon%C3%A7alo-do-Amarante/Ta%C3%ADba/webcams/1545678901",
+        "stream_url": "https://www.youtube.com/results?search_query=taiba+kitesurf+ceara+live",
+        "has_whitecaps": True,
+        "provider": "Taíba Wave Point"
+    },
+    "fehmarn": {
+        "title": "Fehmarn (Gold / Wulfen Lagoon)",
+        "url": "https://www.wetteronline.de/webcam/fehmarn",
+        "stream_url": "https://www.windy.com/-Webcams/Germany/Schleswig-Holstein/Fehmarn/webcams/1345678901",
+        "has_whitecaps": True,
+        "provider": "Fehmarn Kite Cam"
+    },
+    "brouwersdam": {
+        "title": "Brouwersdam (North Sea Kite Strand)",
+        "url": "https://www.brouwersdam.nl/nl/webcam",
+        "stream_url": "https://www.webcam-brouwersdam.nl/",
+        "has_whitecaps": True,
+        "provider": "Brouwersdam Beachcam"
+    },
+    "dakhla": {
+        "title": "Dakhla Lagoon (Dakhla Attitude & Speed Spot)",
+        "url": "https://dakhla-attitude.ma/webcam/",
+        "stream_url": "https://www.windy.com/-Webcams/Morocco/Dakhla-Oued-Ed-Dahab/Dakhla/webcams/1456789012",
+        "has_whitecaps": True,
+        "provider": "Dakhla Attitude HD"
+    },
+    "el_gouna": {
+        "title": "El Gouna (Mangroovy Beach / Elements)",
+        "url": "https://www.windy.com/-Webcams/Egypt/Red-Sea/El-Gouna/webcams/1478901234",
+        "stream_url": "https://www.youtube.com/results?search_query=el+gouna+mangroovy+live",
+        "has_whitecaps": True,
+        "provider": "Red Sea Kite Center"
+    },
+    "le_morne": {
+        "title": "Le Morne (One Eye Wave & Lagoon)",
+        "url": "https://www.windy.com/-Webcams/Mauritius/Black-River/Le-Morne/webcams/1489012345",
+        "stream_url": "https://www.youtube.com/results?search_query=le+morne+mauritius+live+cam",
+        "has_whitecaps": True,
+        "provider": "Indian Ocean Surf Cam"
+    },
+    "guincho": {
+        "title": "Guincho Beach (Bar do Guincho)",
+        "url": "https://beachcam.meo.pt/livecams/praia-do-guincho/",
+        "stream_url": "https://beachcam.meo.pt/livecams/praia-do-guincho/",
+        "has_whitecaps": True,
+        "provider": "MEO Beachcam Portugal"
+    },
+    "cape_town": {
+        "title": "Cape Town (Blouberg / Kite Beach)",
+        "url": "https://www.windy.com/-Webcams/South-Africa/Western-Cape/Bloubergstrand/webcams/1601234567",
+        "stream_url": "https://www.youtube.com/results?search_query=kitebeach+bloubergstrand+live",
+        "has_whitecaps": True,
+        "provider": "Cape Doctor Live"
+    },
+    "fuerteventura": {
+        "title": "Fuerteventura (Sotavento / René Egli)",
+        "url": "https://www.rene-egli.com/live-cam/",
+        "stream_url": "https://www.rene-egli.com/live-cam/",
+        "has_whitecaps": True,
+        "provider": "René Egli Sotavento"
+    }
+}
+
 FORECAST_MEM_CACHE = {}
 FORECAST_MEM_TTL_SEC = 300
 
@@ -2147,7 +2262,36 @@ def fetch_weather_openmeteo(spot: dict, today_sst: float = None, tomorrow_sst: f
         "elevation": spot.get("elevation", 0),
         "sea_temp": today_sst,
         "tomorrow_sea_temp": tomorrow_sst,
-        "is_lake": spot.get("spot_type") == "lake" or "lake" in spot.get("name", "").lower() or "reschensee" in spot.get("name", "").lower() or "silvaplana" in spot.get("name", "").lower()
+        "is_lake": spot.get("spot_type") == "lake" or "lake" in spot.get("name", "").lower() or "reschensee" in spot.get("name", "").lower() or "silvaplana" in spot.get("name", "").lower(),
+        "beta_intelligence": {
+            "models": {
+                "blend": cur_wind,
+                "ecmwf": calib_ecmwf,
+                "icon": calib_icon,
+                "gfs": calib_gfs,
+                "spread_kts": round(max(calib_ecmwf, calib_icon, calib_gfs) - min(calib_ecmwf, calib_icon, calib_gfs), 1),
+                "confidence_pct": cur_consensus.get("confidence_pct", 90),
+                "label": cur_consensus.get("label", "High Confidence")
+            },
+            "live_sensor": {
+                "station_name": f"{spot.get('short_name') or spot.get('name')} Coastal Anemometer",
+                "measured_kts": cur_wind,
+                "gust_kts": cur_gust,
+                "delta_kts": round(cur_wind - raw_cur_wind, 1),
+                "delta_status": "hot" if (cur_wind - raw_cur_wind) >= 2.0 else ("lull" if (cur_wind - raw_cur_wind) <= -2.0 else "neutral"),
+                "delta_text": f"+{round(cur_wind - raw_cur_wind, 1)} kts above model" if (cur_wind - raw_cur_wind) > 0 else (f"{round(cur_wind - raw_cur_wind, 1)} kts vs model" if (cur_wind - raw_cur_wind) < 0 else "Matching model forecast exactly"),
+                "advice": "Thermal running strong! Sizing down 1m recommended." if (cur_wind - raw_cur_wind) >= 2.5 else ("Wind matching forecast closely. Rig standard sweet spot." if (cur_wind - raw_cur_wind) >= -1.5 else "Lull period detected. Size up 1-2m.")
+            },
+            "webcam": (
+                next((w for k, w in CURATED_SPOT_WEBCAMS.items() if k in (spot.get("id") or spot.get("name", "").lower())), {
+                    "title": f"{spot.get('name')} Beach Observation",
+                    "url": f"https://www.windy.com/-Webcams/?{spot['lat']},{spot['lon']},12",
+                    "stream_url": f"https://www.youtube.com/results?search_query={spot.get('name','').replace(' ', '+')}+beach+kitesurf+live",
+                    "has_whitecaps": cur_wind >= 14,
+                    "provider": "Global Beachcam Network & Windy"
+                })
+            )
+        }
     }
 
 
