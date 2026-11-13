@@ -1021,6 +1021,166 @@
       "beta_status": "approved",
       "beta_approved_at": "2026-11-12T15:05:00.000000Z",
       "last_sync": "2026-11-12T15:26:41.158649Z"
+    },
+    "nina.schmidt@kitesurf-test.de": {
+      "email": "nina.schmidt@kitesurf-test.de",
+      "name": "Nina Schmidt",
+      "nationality": "Germany",
+      "weight_kg": 62,
+      "level": "Intermediate",
+      "board": "Twintip",
+      "gear": [
+        {
+          "brand": "Duotone",
+          "model": "Evo",
+          "size": 12,
+          "min_kts": 12,
+          "max_kts": 21,
+          "sweet_spot": "14-18 kts"
+        },
+        {
+          "brand": "Duotone",
+          "model": "Evo",
+          "size": 9,
+          "min_kts": 16,
+          "max_kts": 27,
+          "sweet_spot": "18-23 kts"
+        },
+        {
+          "brand": "Duotone",
+          "model": "Evo",
+          "size": 7,
+          "min_kts": 22,
+          "max_kts": 34,
+          "sweet_spot": "24-30 kts"
+        }
+      ],
+      "boards": [
+        {
+          "brand": "Duotone",
+          "model": "Jaime",
+          "size": "134cm",
+          "type": "Twintip",
+          "active": true
+        }
+      ],
+      "is_beta_rider": true,
+      "beta_status": "approved",
+      "registered_at": "2026-11-13T01:19:43.370016Z"
+    },
+    "lucas.silva@kitesurf-brazil.br": {
+      "email": "lucas.silva@kitesurf-brazil.br",
+      "name": "Lucas Silva",
+      "nationality": "Brazil",
+      "weight_kg": 84,
+      "level": "Advanced",
+      "board": "Wing & Hydrofoil",
+      "gear": [
+        {
+          "brand": "Duotone",
+          "model": "Unit D/LAB Wing",
+          "size": 6,
+          "min_kts": 10,
+          "max_kts": 18,
+          "sweet_spot": "12-16 kts"
+        },
+        {
+          "brand": "Duotone",
+          "model": "Unit D/LAB Wing",
+          "size": 5,
+          "min_kts": 14,
+          "max_kts": 25,
+          "sweet_spot": "16-21 kts"
+        },
+        {
+          "brand": "Duotone",
+          "model": "Unit D/LAB Wing",
+          "size": 4,
+          "min_kts": 20,
+          "max_kts": 32,
+          "sweet_spot": "22-28 kts"
+        },
+        {
+          "brand": "Ozone",
+          "model": "Chrono V4 Foil Kite",
+          "size": 13,
+          "min_kts": 6,
+          "max_kts": 15,
+          "sweet_spot": "8-13 kts"
+        }
+      ],
+      "boards": [
+        {
+          "brand": "Fanatic",
+          "model": "Sky Wing",
+          "size": "85L (82cm mast)",
+          "type": "Wing Foil",
+          "active": true
+        },
+        {
+          "brand": "Sabfoil",
+          "model": "Hydrofoil 105",
+          "size": "95cm mast",
+          "type": "Hydrofoil",
+          "active": true
+        }
+      ],
+      "is_beta_rider": true,
+      "beta_status": "approved",
+      "registered_at": "2026-11-13T01:19:43.370016Z"
+    },
+    "antoine.dupont@kitesurf-france.fr": {
+      "email": "antoine.dupont@kitesurf-france.fr",
+      "name": "Antoine Dupont",
+      "nationality": "France",
+      "weight_kg": 82,
+      "level": "Expert",
+      "board": "Surf / Strapless",
+      "gear": [
+        {
+          "brand": "F-One",
+          "model": "Bandit",
+          "size": 10,
+          "min_kts": 14,
+          "max_kts": 24,
+          "sweet_spot": "16-20 kts"
+        },
+        {
+          "brand": "F-One",
+          "model": "Bandit",
+          "size": 8,
+          "min_kts": 18,
+          "max_kts": 30,
+          "sweet_spot": "20-26 kts"
+        },
+        {
+          "brand": "F-One",
+          "model": "Bandit",
+          "size": 6,
+          "min_kts": 24,
+          "max_kts": 38,
+          "sweet_spot": "26-34 kts"
+        }
+      ],
+      "boards": [
+        {
+          "brand": "F-One",
+          "model": "Mitu Pro Flex",
+          "size": "5'8\"",
+          "type": "Surf / Strapless",
+          "active": true
+        },
+        {
+          "brand": "F-One",
+          "model": "Trax Carbon",
+          "size": "136cm",
+          "type": "Twintip",
+          "active": true
+        }
+      ],
+      "is_beta_rider": true,
+      "beta_status": "approved",
+      "registered_at": "2026-11-13T01:19:43.370016Z"
     }
   },
   "feedback": [
